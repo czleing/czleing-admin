@@ -22,4 +22,6 @@ export function useWindowSize (callback) {
   onUnmounted(() => {
     window.removeEventListener('resize', handleResize)
   })
+
+  return { width, height }
 }
