@@ -1,0 +1,50 @@
+<template>
+  <a-sub-menu :key="menuInfo.path">
+    <template v-if="menuInfo.meta?.icon" #icon>
+      <a-icon :type="menuInfo.meta.icon" />
+    </template>
+    <template #title>{{ menuInfo.meta.title }}</template>
+    <template v-for="item in menuInfo.children" :key="item.path">
+      <template v-if="!item.hidden && !item.children">
+        <a-menu-item
+          :key="item.path"
+          @click="handleMenuItem(item)"
+        >
+          <template #icon>
+            <a-icon :type="item.meta.icon" />
+          </template>
+          {{ item.meta.title }}
+        </a-menu-item>
+      </template>
+      <template v-else-if="!item.hidden">
+        <SideItem
+          :menu-info="item"
+          :key="item.path"
+          @menu-click="handleMenuItem"
+        />
+      </template>
+    </template>
+  </a-sub-menu>
+</template>
+
+<script setup>
+defineOptions({
+  name: 'SideItem'
+})
+const props = defineProps({
+  menuInfo: {
+    type: Object,
+    default: () => ({})
+  }
+})
+
+// 定义可触发的事件
+const emit = defineEmits(['menu-click'])
+
+const handleMenuItem = item => {
+  // 触发自定义事件
+  emit('menu-click', item)
+}
+</script>
+
+<style scoped></style>

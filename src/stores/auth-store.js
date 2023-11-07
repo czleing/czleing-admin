@@ -1,0 +1,122 @@
+import { createVNode } from 'vue'
+import { defineStore } from 'pinia'
+import router from '@/router'
+// import axios from '@/api/index'
+import { setAccount } from '@/storage/account'
+import { Modal } from 'ant-design-vue'
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
+import { useMenuStore } from '@/stores/menu-store'
+
+/**
+ * 登录、授权、用户信息相关 store
+ */
+export const useAuthStore = defineStore('auth', {
+  state: () => ({
+    token: null,
+    userInfo: null,
+    permissions: []
+  }),
+  actions: {
+    getCode () {
+      // return axios.get('/auth/code')
+      return null
+    },
+    /**
+     * 登录
+     * @param {} data 
+     */
+    async login (data) {
+      await this.loginByAccount(data)
+    },
+    /**
+     * 账号密码登录
+     * @param {*} param
+     */
+    async loginByAccount ({ account, password, code, remember }) {
+      let menuStore = useMenuStore()
+      // const data = {
+      //   account: window.btoa(window.btoa(account)),
+      //   password: window.btoa(window.btoa(password)),
+      //   code
+      // }
+      // const result = await axios.post('/auth/login', data)
+      const result = {
+        token: 'soiuzodjlkcxdlfjskjoiueodalmxojicmeiznmdlicmiel'
+      }
+      // 保存登录令牌，会自动缓存到 localStorage
+      this.token = result.token
+      // 加密持久化需要记住的账号
+      setAccount(account, password, remember)
+      // 获取菜单生成动态路由
+      await menuStore.loadMenuToRoute()
+      // 获取最新的登录用户信息
+      await this.getUserInfo(true)
+      // 跳转到首页
+      router.replace({ name: 'index' })
+    },
+    /**
+     * 退出登录
+     * @returns 
+     */
+    logout () {
+      const that = this
+      return new Promise((resolve, reject) => {
+        Modal.confirm({
+          title: '退出提示',
+          icon: createVNode(ExclamationCircleOutlined),
+          content: '确认退出登录吗？',
+          async onOk () {
+            // await axios.post('/auth/logout')
+            that.token = null
+            that.userInfo = null
+            that.permissions = []
+            router.replace({ name: 'login' })
+            resolve()
+          },
+          onCancel () {
+            reject()
+          }
+        })
+      })
+    },
+    /**
+     * 获取当前登录用户信息
+     * @param {boolean} force 是否强制获取而不使用缓存
+     * @returns 
+     */
+    async getUserInfo (force) {
+      if (!force && this.userInfo) {
+        return this.userInfo
+      } else {
+        // userInfo.value = await axios.get('/auth/userInfo')
+        console.log('模拟获取用户信息、权限列表')
+        this.userInfo = {
+          id: 1,
+          avatar: new URL('@/assets/images/avatar.jpeg', import.meta.url).href,
+          nickname: '张三',
+          age: 18
+        }
+        // 如果权限列表从用户信息接口返回，此处需要保存权限列表
+        this.permissions = ['system:user:add', 'system:user:list']
+      }
+    }
+  },
+  getters: {
+    /**
+     * 判断是否已登录
+     * @returns boolean 是否已登录
+     */
+    hasLogin () {
+      return !!this.token
+    }
+  },
+  // 使用插件实现持久化
+  persist: {
+    enabled: true, // 开启持久化
+    strategies: [{ // 可以多种方案组合
+      key: 'AUTH_INFO',
+      // storage: window.localStorage, // 使用的持久化方案，默认 sessionStorage
+      paths: ['token'] // 需要持久化的属性，默认所有属性
+    }]
+  }
+})
