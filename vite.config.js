@@ -2,8 +2,9 @@ import { defineConfig } from 'vite'
 import viteVue from '@vitejs/plugin-vue'
 import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
-import {fileURLToPath, URL} from 'node:url'
+import { fileURLToPath, URL } from 'node:url'
 import { theme } from 'ant-design-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
 
 const { defaultAlgorithm, defaultSeed } = theme
 const mapToken = defaultAlgorithm(defaultSeed)
@@ -12,11 +13,12 @@ const mapToken = defaultAlgorithm(defaultSeed)
 export default defineConfig({
   plugins: [
     viteVue(),
+    vueJsx(),
     // ant-design-vue 4.x 的自动按需引入
     Components({
       resolvers: [
         AntDesignVueResolver({
-          importStyle: false, // css in js
+          importStyle: false // css in js
         })
       ]
     })
@@ -25,7 +27,7 @@ export default defineConfig({
   server: {
     host: '127.0.0.1',
     port: 8080,
-    strictPort: false, // 设为 true 时若端口已被占用则会直接退出，而不是尝试下一个可用端口。
+    strictPort: false // 设为 true 时若端口已被占用则会直接退出，而不是尝试下一个可用端口。
     // proxy: {
     //   '/api': {
     //     target: process.env.VITE_APP_DEV_PROXY,
