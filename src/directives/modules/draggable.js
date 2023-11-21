@@ -1,7 +1,7 @@
 /**
  * 使元素可拖动
  * !! 使用 transform: translate 实现，已设置了 translate 的会冲突
- * 1. 可设置单方向拖动，v-draggable:x 或 v-draggable:y
+ * 1. 全方向拖动：v-draggable，可设置单方向拖动，v-draggable:x 或 v-draggable:y
  * 2. 给组件绑定此指令时(尤其第三方组件)，只是想拖动组件内的一个子组件(如：带遮罩的弹出窗，只想拖动弹出窗，不拖动遮罩)，不想拖动整个组件，可以通过设置 v-draggable="{ dragClass: 'ant-modal-header', moveClass: 'ant-modal-content' }" 来指定要拖动的子元素 class 和要执行移动的子元素 class
  * 2.1 dragClass: 触发拖动的元素 class，moveClass：执行移动的子元素 class
  */
@@ -58,9 +58,9 @@ function bindingDrag (el, binding) {
         endX = de.pageX
         endY = de.pageY
         // 限制滚动范围
+        const limitArea = true
         let mx = endX - startX + moveX // mx 相对于初始位置的X偏移量
         let my = endY - startY + moveY
-        const limitArea = true
         if (limitArea) {
           mx = Math.min(Math.max(mx, minX), maxX)
           my = Math.min(Math.max(my, minY), maxY)

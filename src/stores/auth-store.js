@@ -98,6 +98,9 @@ export const useAuthStore = defineStore('auth', {
         }
         // 如果权限列表从用户信息接口返回，此处需要保存权限列表
         this.permissions = ['system:user:add', 'system:user:list']
+        if (import.meta.env.DEV && import.meta.env.VITE_APP_IGNORE_PERMISSION) {
+          this.permissions.unshift('*:*:*') // 具有所有权限
+        }
       }
     }
   },

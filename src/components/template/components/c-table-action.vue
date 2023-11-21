@@ -1,0 +1,92 @@
+<!-- 表格操作按钮组件 -->
+<template>
+  <div class="c-table-action">
+    <template v-for="action in showActions">
+      <CTableActionItem :action="action" />
+    </template>
+    <template v-if="moreActions && moreActions.length > 0">
+      <!-- 更多 -->
+      <a-dropdown :record="record">
+        <a v-hasPermi="morePermissions" href="javascript:;">
+          {{ column.actionMoreName ?? '更多' }}
+          <DownOutlined />
+        </a>
+        <template #overlay>
+          <a-menu>
+            <a-menu-item
+              v-for="action in moreActions"
+              :key="action.name"
+            >
+              <CTableActionItem :action="action" :record="record" />
+            </a-menu-item>
+          </a-menu>
+        </template>
+      </a-dropdown>
+    </template>
+  </div>
+</template>
+
+<script setup>
+import { computed } from 'vue'
+import { DownOutlined } from '@ant-design/icons-vue'
+import { getFnValue } from '@/utils/index'
+import CTableActionItem from './c-table-action-item.vue'
+
+const props = defineProps({
+  column: Object,
+  record: {
+    type: Object,
+    default: () => ({})
+  },
+  permissionConfig: Object
+})
+
+
+/** 所有操作按钮 */
+const currActions = computed(() => {
+  const actions = getFnValue(props.column.action, { record: props.record })
+  if (!actions) return []
+  return actions.map(action => {
+    return {
+      name: action.name,
+      permission: getPermission(action),
+      callback: getCallback(action),
+      confirm: action.confirm ?? action.callback === 'delete'
+    }
+  })
+})
+const showActions = computed(() => {
+  const showNum = props.column.actionShowNum ?? 2
+  return currActions.value.slice(0, showNum)
+})
+const moreActions = computed(() => {
+  const showNum = props.column.actionShowNum ?? 2
+  return currActions.value.slice(showNum)
+})
+const morePermissions = computed(() => {
+  return moreActions.value.map(item => item.permission)
+})
+
+function getPermission (action) {
+  if (typeof action.callback === 'string') {
+    // 预设按钮
+    return props.permissionConfig[action.callback]
+  } else {
+    return action.permission
+  }
+}
+
+function getCallback (action) {
+  if (typeof action.callback === 'string') {
+    return () => emits('action', { action: action.callback, record: props.record })
+  } else {
+    return action.callback
+  }
+}
+
+const emits = defineEmits(['action'])
+
+</script>
+
+<style lang="scss" scoped>
+</style>

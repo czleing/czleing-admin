@@ -155,10 +155,8 @@ function emitChange () {
 <style lang="less" scoped>
 .image-upload {
   display: inline-block;
-  :deep {
-    .ant-upload-list-item {
-      padding: 0 !important;
-    }
+  :deep(.ant-upload-list-item) {
+    padding: 0 !important;
   }
 }
 </style>

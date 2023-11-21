@@ -200,3 +200,12 @@ export function divide (numerator, denominator, digit = 2) {
 export function calcPercent (numerator, denominator, digit = 2) {
   return Number((divide(numerator, denominator, digit + 2) * 100).toFixed(digit))
 }
+
+/** 获得一个值，可能来源于一个函数的结果 */
+export function getFnValue (value, args) {
+  if (typeof value === 'function') {
+    return value(args)
+  } else {
+    return value
+  }
+}

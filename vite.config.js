@@ -4,7 +4,6 @@ import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import { fileURLToPath, URL } from 'node:url'
 import { theme } from 'ant-design-vue'
-import vueJsx from '@vitejs/plugin-vue-jsx'
 
 const { defaultAlgorithm, defaultSeed } = theme
 const mapToken = defaultAlgorithm(defaultSeed)
@@ -13,7 +12,6 @@ const mapToken = defaultAlgorithm(defaultSeed)
 export default defineConfig({
   plugins: [
     viteVue(),
-    vueJsx(),
     // ant-design-vue 4.x 的自动按需引入
     Components({
       resolvers: [

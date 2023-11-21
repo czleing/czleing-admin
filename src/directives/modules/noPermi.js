@@ -4,13 +4,16 @@ import { useAuthStore } from '@/stores/auth-store'
  * v-noPermi="'xxx:xxx:xxx'"
  * v-noPermi="['xxx:xxx:xxx', 'aaa:bbb:ccc']"
  * 多个时为并且，全部没有才算没有权限
- * 拥有 '*:*:*' 表示拥有所有权限
+ * 用户拥有 '*:*:*' 表示拥有所有权限
  */
 export default {
   name: 'noPermi',
   directive: {
     created (el, binding) {
       let permissions = binding.value
+      if (!permissions) {
+        return
+      }
       const authStore = useAuthStore()
       if (typeof permissions === 'string') {
         permissions = [permissions]

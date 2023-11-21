@@ -1,7 +1,7 @@
 <!-- 弹窗组件，分居中弹窗和侧边抽屉弹窗 -->
 <template>
   <div class="modal">
-    <a-modal v-if="currMode === 'modal'" :title="currTitle" v-model:open="visible" :width="currWidth" v-bind="$attrs">
+    <a-modal v-if="currMode === 'modal'" :title="currTitle" v-model:open="visible" :width="currWidth" v-bind="$attrs" @ok="onOkHandle">
       <slot />
       <template v-if="$slots.footer" #footer>
         <slot name="footer" />
@@ -31,6 +31,15 @@ const visible = ref(false)
 const currMode = ref('modal')
 const currTitle = ref('')
 const currWidth = ref('600px')
+let onConfirm = null
+
+function onOkHandle () {
+  if (onConfirm && typeof onConfirm === 'function') {
+    onConfirm(close)
+  }
+  emits('ok')
+}
+
 /**
  * 弹出
  * options.mode 弹窗模式 modal, drawer
@@ -42,12 +51,16 @@ function open (options) {
   currMode.value = options?.mode ?? props.mode
   currTitle.value = options?.title ?? props.title
   currWidth.value = ((options?.width ?? props.width) + 'px').replace('pxpx', 'px')
+  onConfirm = options?.onConfirm
   visible.value = true
 }
 /** 关闭 */
 function close () {
   visible.value = false
 }
+
+const emits = defineEmits(['ok'])
+
 defineExpose({
   open,
   close

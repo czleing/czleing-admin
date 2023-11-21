@@ -32,6 +32,7 @@
 - 代码简洁、清爽、优雅
 - 使用 Javascript
 - 可支持国际化(引入vue-i18n)
+- 自动检测版本更新
 - 系统管理基础功能(开发中...)
 - CRUD 配置化及可视化开发(开发中...)
 
@@ -55,9 +56,8 @@ npm run build
 ### 1、动态样式
 less 中可使用 ant-design 的全局静态变量 @colorPrimary 等，但此变量不会跟随主题动态切换而变化，需要跟随变化请使用动态获取方式，如下：
 ```js
-import { theme } from 'ant-design-vue'
-const { useToken } = theme
-const { token } = useToken()
+import { useThemeToken } from '@/hooks/useThemeToken.js'
+const { token } = useThemeToken()
 // 获取动态主题色
 token.value.colorPrimary
 ```

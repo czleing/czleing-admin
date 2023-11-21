@@ -11,7 +11,7 @@ const themes = [
         colorError: '#c98a7d',
         colorWarning: '#e2b14c',
         colorSuccess: '#80b178',
-        colorInfo: '#d8c49a'
+        colorInfo: '#d2b48c'
       }
     }
   },
@@ -23,7 +23,7 @@ const themes = [
         colorError: '#e88f78',
         colorWarning: '#f0c175',
         colorSuccess: '#85b17e',
-        colorInfo: '#c6d4a2'
+        colorInfo: '#88c7b1'
       }
     }
   },
@@ -35,7 +35,7 @@ const themes = [
         colorError: '#d98f83',
         colorWarning: '#e7c687',
         colorSuccess: '#a3cc9c',
-        colorInfo: '#d8d6a7'
+        colorInfo: '#8db6d2'
       }
     }
   }

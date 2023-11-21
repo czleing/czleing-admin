@@ -44,6 +44,56 @@
       <file-upload accept=".zip" :fileSize="2048" :maxCount="1" />
       <image-upload :fileSize="2048" :maxCount="2" />
     </a-space>
+    <div class="mt20" />
+    <a-form>
+      <a-row :gutter="10">
+        <a-col :sm="8" :lg="6" :xxl="4">
+          <a-form-item label="关键字">
+            <a-input></a-input>
+          </a-form-item>
+        </a-col>
+        <a-col :sm="8" :lg="6" :xxl="4">
+          <a-form-item label="关键地方字">
+            <a-input></a-input>
+          </a-form-item>
+        </a-col>
+        <a-col :sm="8" :lg="6" :xxl="4">
+          <a-form-item label="日期">
+            <a-input></a-input>
+          </a-form-item>
+        </a-col>
+        <a-col :sm="8" :lg="6" :xxl="4">
+          <a-form-item label="日期">
+            <a-input></a-input>
+          </a-form-item>
+        </a-col>
+        <a-col :sm="8" :lg="6" :xxl="4">
+          <a-form-item label="日123期">
+            <a-input></a-input>
+          </a-form-item>
+        </a-col>
+        <a-col :sm="8" :lg="6" :xxl="4">
+          <a-form-item label="日2期">
+            <a-input></a-input>
+          </a-form-item>
+        </a-col>
+        <a-col :sm="8" :lg="6" :xxl="4">
+          <a-form-item label="日333期">
+            <a-input></a-input>
+          </a-form-item>
+        </a-col>
+        <a-col :sm="8" :lg="6" :xxl="4">
+          <a-form-item label="日期">
+            <a-input></a-input>
+          </a-form-item>
+        </a-col>
+        <a-col :sm="8" :lg="6" :xxl="4">
+          <a-form-item label="日期1231232">
+            <a-input></a-input>
+          </a-form-item>
+        </a-col>
+      </a-row>
+    </a-form>
   </div>
 </template>
 

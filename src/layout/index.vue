@@ -14,6 +14,7 @@
         <div class="">
           <Tabs />
         </div>
+        <!-- 右侧工作区 -->
         <div class="view-main flex-auto pa10" :style="themeStyle">
           <router-view v-slot="{ Component, route }">
             <keep-alive :max="20" :include="tabsStore.cachedViews">
@@ -27,7 +28,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { watchEffect, ref } from 'vue'
 import MenuSide from './components/side/index.vue'
 import Header from './components/header/index.vue'
 import Tabs from './components/tabs/index.vue'
@@ -35,18 +36,20 @@ import { useMenuStore } from '@/stores/menu-store.js'
 import { useTabsStore } from '@/stores/tabs-store.js'
 import { useSettingStore } from '@/stores/setting-store.js'
 import { useWindowSize } from '../hooks/useWindowSize'
-import { theme } from 'ant-design-vue'
+import { useThemeToken } from '../hooks/useThemeToken'
 
-const { useToken } = theme
-const { token } = useToken()
 const menuStore = useMenuStore()
 const tabsStore = useTabsStore()
 const settingStore = useSettingStore()
+const { token } = useThemeToken()
+const themeStyle = ref()
+
 /** 使用动态色彩，跟随 ant-design 主题 */
-const themeStyle = computed(() => {
+watchEffect(() => {
   // 设置整个网页的默认字体颜色跟随主题变化
   document.body.style.color = token.value.colorText
-  return {
+  document.body.setAttribute('theme', settingStore.mode)
+  themeStyle.value = {
     backgroundColor: token.value.colorBgContainer,
     color: token.value.colorText,
     borderColor: token.value.colorBorderSecondary
@@ -56,7 +59,7 @@ const themeStyle = computed(() => {
 /**
  * 监听窗体大小变化，自动展开收起左侧菜单栏
  */
-useWindowSize((width, height) => {
+useWindowSize((width) => {
   if (width < 900 && menuStore.isSidebarOpen) {
     menuStore.isSidebarOpen = false
   } else if (width > 900 && !menuStore.isSidebarOpen) {
