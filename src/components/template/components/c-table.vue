@@ -10,6 +10,7 @@
       row-class-name="striped-row"
       :row-selection="currentRowSelection"
       @resizeColumn="(w, col) => col.width = w"
+      @change="onPageChangeHandle"
     >
       <template #headerCell="{ column }">
         <template v-if="column.description">
@@ -34,6 +35,23 @@
         <template v-if="column.action">
           <CTableAction :record="record" :column="column" :permission-config="permissionConfig" @action="onActionHandle" />
         </template>
+      </template>
+      <!-- 使用合计 -->
+      <template v-if="useTotal" #summary>
+        <a-table-summary fixed>
+          <a-table-summary-row>
+            <a-table-summary-cell
+              v-for="(column, index) in currColumns"
+              :key="column.fieldName"
+              :col-span="index === 0 && !noSelect ? 2 : 1"
+              class="tc"
+            >
+              <div v-if="index === 0" class="bold">合计</div>
+              <span v-else-if="column.useTotal">{{ total[column.dataIndex] }}</span>
+              <span v-else>-</span>
+            </a-table-summary-cell>
+          </a-table-summary-row>
+        </a-table-summary>
       </template>
     </a-table>
   </div>
@@ -75,6 +93,22 @@ const dataSource = ref([])
 const currentRowSelection = computed(() => {
   const option = Object.assign({ selectedRowKeys: selectedIds.value, onChange: onSelectChangeHandle, getCheckboxProps: rowSelectDisabled }, props.config?.props?.rowSelection)
   return !props.noSelect ? option : undefined
+})
+// 是否使用合计
+const useTotal = computed(() => currColumns.value.some(col => col.useTotal))
+const total = computed(() => {
+  if (useTotal.value) {
+    return dataSource.value.reduce((t, c) => {
+      currColumns.value.forEach(col => {
+        if (col.useTotal) {
+          t[col.dataIndex] = (t[col.dataIndex] ?? 0) + Number(c[col.dataIndex] ?? 0)
+        }
+      })
+      return t
+    }, {})
+  } else {
+    return {}
+  }
 })
 
 // 伸缩列宽时需要 column 可编辑，所以重新定义了 currColumns
@@ -126,6 +160,11 @@ function rowSelectDisabled (record) {
 function onSelectChangeHandle (ids, objs) {
   selectedIds.value = ids
   selectedObjs.value = objs
+}
+function onPageChangeHandle (page) {
+  pagination.value.current = page.current
+  pagination.value.pageSize = page.pageSize
+  getList()
 }
 
 const data = [

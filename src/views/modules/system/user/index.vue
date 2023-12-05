@@ -74,7 +74,7 @@ const tableConfig = computed(() => ({
     // 参考 a-table props
     bordered: true,
     size: 'small',
-    // pagenation: { pageSizeOptions: [10, 50, 100] } // 重写分页大小选项
+    pageSize: 22 // 重写分页大小选项
   },
   initSearch: true, // 默认 true，初始化时查询
   columns: [
@@ -91,12 +91,13 @@ const tableConfig = computed(() => ({
       resizable: true,
       width: 80,
       minWidth: 40,
-      maxWidth: 200
+      maxWidth: 200,
+      useTotal: true // 使用合计
     },
     {
       title: '合同名称',
       dataIndex: 'name2',
-      hidden: true
+      hidden: true // 该列暂时隐藏，可通过列筛选勾选显示
     },
     {
       title: '合同类型',
@@ -128,7 +129,7 @@ const tableConfig = computed(() => ({
     },
     {
       title: '操作',
-      actionShowNum: 8, // 展示操作按钮数量，剩余的将收进更多里
+      actionShowNum: 2, // 展示操作按钮数量，剩余的将收进更多里
       actionMoreText: '更多', // 更多按钮名称，默认"更多"
       // action: 操作列配置，T[] || ({ record }) => T[]
       action: ({ record }) => {
@@ -160,17 +161,17 @@ const tableConfig = computed(() => ({
           //   }
           // },
           // 更自由的自定义
-          {
-            name: '自定义2', // 操作名称，使用了 confirm: true 后，提示中显示，不使用 confirm 可不设置
-            permission: 'system:user:diy2',
-            confirm: true,
-            customRender: data => {
-              return h('span', { class: 'mx10' }, ['自定义2']) // 定义操作元素外观
-            },
-            callback () { // 点击事件还是使用 callback 方便确认框点击确定时调用
-              console.log('自定义2被点击了')
-            }
-          }
+          // {
+          //   name: '自定义2', // 操作名称，使用了 confirm: true 后，提示中显示，不使用 confirm 可不设置
+          //   permission: 'system:user:diy2',
+          //   confirm: true,
+          //   customRender: data => {
+          //     return h('span', { class: '' }, ['自定义2']) // 定义操作元素外观
+          //   },
+          //   callback () { // 点击事件还是使用 callback 方便确认框点击确定时调用
+          //     console.log('自定义2被点击了')
+          //   }
+          // }
         ]
         if (record.age > 35) {
           btns.push({
@@ -195,7 +196,7 @@ const modalConfig = computed(() => ({
   // fullTitle: '', // 全称，不会自动拼接其他字符串
   width: 700, // 默认600
   mode: 'drawer', // 弹窗模式，modal 或 drawer
-  // 弹窗按钮属性修改
+  // 弹窗按钮属性修改 Object || ({ isAdd, isEdit, isView }) => Object
   buttonConfig: ({ isAdd, isEdit, isView }) => ({
     confirmText: isEdit ? '确认修改' : '确认提交', // 默认是确定
     cancelText: '关闭', // 默认是关闭
@@ -251,13 +252,13 @@ const modalConfig = computed(() => ({
         // 字段分组
         title: '单位信息',
         subTitle: '(2)',
-        // invisible: formData => !formData.userName, // true表示该项不可见(不使用该字段)，Boolean || formData => {}
+        // none: formData => !formData.userName, // true表示该项不可见(不使用该字段)，Boolean || formData => {}
         fields: [
           {
             label: '单位名称1',
             fieldName: 'unitName1',
             type: EControlType.eInput,
-            invisible: isEdit, // 编辑时不可见
+            none: isEdit, // 编辑时不需要该字段
             props: {}
           },
           {

@@ -119,10 +119,10 @@ function isFieldGroup (field) {
   return field?.fields
 }
 function isVisible (field) {
-  if (typeof field.invisible === 'function') {
-    return !field.invisible(formData)
+  if (typeof field.none === 'function') {
+    return !field.none(formData)
   } else {
-    return !field.invisible
+    return !field.none
   }
 }
 function getSubTitle (field) {

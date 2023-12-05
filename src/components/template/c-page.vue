@@ -112,13 +112,13 @@ const selectedIds = ref([])
 const selectedObjs = ref([])
 const searchParams = ref({})
 const checkedFieldNames = ref(props.tableConfig.columns?.filter(item => item.hidden !== true)?.map(item => item.dataIndex))
-const pagination = ref(Object.assign({
+const pagination = ref({
   showSizeChanger: true,
   showTotal: (total, range) => `共 ${total} 条`,
-  pageSize: 15,
+  pageSize: props.tableConfig?.props?.pageSize ?? 10,
   current: 1,
   total: 0
-}, props.tableConfig?.props?.pagenation))
+})
 const tableSlots = computed(() => props.tableConfig?.columns?.filter(column => column.slot))
 const { api } = useApiConfig(props.apiConfig) // 接口
 const { permission } = usePermissionConfig(props.permissionConfig) // 权限
