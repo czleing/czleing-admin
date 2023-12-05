@@ -20,10 +20,12 @@
     :other-tools-btns="otherToolsBtns"
     :before-search="beforeSearch"
     :after-search="afterSearch"
+    :before-submit="beforeSubmit"
+    :transform-detail="transformDetail"
     :table-config="tableConfig"
     :modal-config="modalConfig"
   >
-    <template #table_slot="{ record }">
+    <template #table_slotField="{ record }">
       插槽内容123123==={{ record.age }}
     </template>
   </CPage>
@@ -60,8 +62,8 @@ const otherToolsBtns = [
     props: {
       type: 'link',
       icon: 'EditOutlined',
-      disabled: ({ selectedObjs }) => selectedObjs.some(item => item.status === 1),
-      onClick ({ pagination }) {
+      disabled: ({ selectedIds, selectedObjs, pagination }) => selectedObjs.some(item => item.status === 1),
+      onClick ({ selectedIds, selectedObjs, pagination }) {
         console.log('我被点击了')
       }
     }
@@ -117,7 +119,7 @@ const tableConfig = computed(() => ({
     {
       title: '插槽',
       dataIndex: 'slotField',
-      slot: 'table_slot'
+      slot: 'table_slotField'
     },
     {
       title: '日期自动格式化',
@@ -126,7 +128,7 @@ const tableConfig = computed(() => ({
     },
     {
       title: '操作',
-      actionShowNum: 2, // 展示操作按钮数量，剩余的将收进更多里
+      actionShowNum: 8, // 展示操作按钮数量，剩余的将收进更多里
       actionMoreText: '更多', // 更多按钮名称，默认"更多"
       // action: 操作列配置，T[] || ({ record }) => T[]
       action: ({ record }) => {
@@ -142,19 +144,31 @@ const tableConfig = computed(() => ({
           },
           {
             name: '删除',
-            callback: 'delete'
+            callback: 'delete' // 删除操作默认带确认框
           },
           {
             name: '启/禁用',
             confirm: true,
             callback: 'toggle'
           },
+          // {
+          //   name: '自定义',
+          //   permission: 'system:user:diy',
+          //   confirm: true, // 该按钮是否需要确认操作
+          //   callback ({}) {
+          //     console.log('我被点击了', record)
+          //   }
+          // },
+          // 更自由的自定义
           {
-            name: '自定义',
-            permission: 'system:user:diy',
-            confirm: true, // 该按钮是否需要确认操作
-            callback ({}) {
-              console.log('我被点击了', record)
+            name: '自定义2', // 操作名称，使用了 confirm: true 后，提示中显示，不使用 confirm 可不设置
+            permission: 'system:user:diy2',
+            confirm: true,
+            customRender: data => {
+              return h('span', { class: 'mx10' }, ['自定义2']) // 定义操作元素外观
+            },
+            callback () { // 点击事件还是使用 callback 方便确认框点击确定时调用
+              console.log('自定义2被点击了')
             }
           }
         ]
@@ -286,6 +300,24 @@ function beforeSearch (searchParams) {
  */
 function afterSearch (list) {
   return list
+}
+
+/**
+ * 提交表单数据前处理
+ * @param {Object} submitData 提交的数据
+ * @param {Object} param 其他参数
+ */
+function beforeSubmit (submitData, { isAdd, isEdit, isView, detail }) {
+  return submitData
+}
+
+/**
+ * 编辑回填、详情展示时，对详情数据修改
+ * @param {Object} detail 详情数据
+ * @param {Object} param 其他参数
+ */
+function transformDetail (detail, { isEdit, isView }) {
+  return detail
 }
 </script>
 

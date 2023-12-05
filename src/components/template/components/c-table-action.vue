@@ -48,7 +48,7 @@ const currActions = computed(() => {
   if (!actions) return []
   return actions.map(action => {
     return {
-      name: action.name,
+      ...action,
       permission: getPermission(action),
       callback: getCallback(action),
       confirm: action.confirm ?? action.callback === 'delete'

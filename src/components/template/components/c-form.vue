@@ -171,7 +171,7 @@ function submit () {
     await inputForm.value.validate()
     const submitData = { ...formData }
     if (props.beforeSubmit) {
-      submitData = await props.beforeSubmit(submitData)
+      submitData = await props.beforeSubmit(submitData, { isAdd: props.isAdd, isEdit: props.isEdit, isView: props.isView, detail: props.detail })
     }
     console.log('submitData', submitData)
     if (props.isEdit) {

@@ -95,7 +95,7 @@ export function useActionHandle ({ cModal, cTable, modalConfig, api, apiMethod, 
     // const detail = await axios[apiMethod['detail']](api.detail.replace(':id', id), { id })
     console.log('模拟获取详情数据', detail)
     if (transformDetail) {
-      return transformDetail(detail)
+      return transformDetail(detail, { isEdit: isEdit.value, isView: isView.value })
     }
     return detail
   }
