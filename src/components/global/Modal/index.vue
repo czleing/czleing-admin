@@ -1,43 +1,68 @@
 <!-- 弹窗组件，分居中弹窗和侧边抽屉弹窗 -->
 <template>
   <div class="modal">
-    <a-modal v-if="currMode === 'modal'" :title="currTitle" v-model:open="visible" :width="currWidth" v-bind="$attrs" @ok="onOkHandle">
-      <slot />
-      <template v-if="$slots.footer" #footer>
-        <slot name="footer" />
+    <a-modal v-if="currMode === 'modal'" :title="currTitle" v-model:open="visible" :width="currWidth" v-bind="$attrs" @cancel="close" @ok="onOkHandle">
+      <slot :visible="visible" />
+      <!-- a-modal 自带有确定、取消按钮 -->
+      <template v-if="$attrs.footer !== null" #footer>
+        <slot name="footer">
+          <div class="tr">
+            <a-button :loading="closeLoading" @click="close">{{ currCancelText }}</a-button>
+            <a-button v-if="showConfirm" type="primary" :loading="confirmLoading" @click="onOkHandle">{{ currConfirmText }}</a-button>
+          </div>
+        </slot>
       </template>
     </a-modal>
     <a-drawer v-if="currMode === 'drawer'" :title="currTitle" v-model:open="visible" :width="currWidth" v-bind="$attrs">
       <div class="">
-        <slot />
+        <slot :visible="visible" />
       </div>
-      <template v-if="$slots.footer" #footer>
-        <slot name="footer" />
+      <!-- a-drawer 默认没有按钮 -->
+      <template v-if="$attrs.footer !== null" #footer>
+        <slot name="footer">
+          <div class="tr">
+            <a-button :loading="closeLoading" @click="close">{{ currCancelText }}</a-button>
+            <a-button v-if="showConfirm" type="primary" :loading="confirmLoading" @click="onOkHandle">{{ currConfirmText }}</a-button>
+          </div>
+        </slot>
       </template>
     </a-drawer>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, provide, nextTick } from 'vue'
+import { loadingRequest } from '@/utils/index.js'
+
 const props = defineProps({
   title: String,
-  mode: { type: String, default: 'modal' },
-  width: { type: [String, Number], default: 600 }
+  mode: { type: String, default: 'modal' }, // modal || drawer
+  width: { type: [String, Number], default: 600 },
+  showConfirm: { type: Boolean, default: true },
+  confirmText: { type: String, default: '确定' },
+  cancelText: { type: String, default: '关闭' },
+  beforeCancel: Function,
+  beforeConfirm: Function // async (close) => {}
 })
-// 弹窗是否可见
-const visible = ref(false)
-// 弹窗模式，modal, drawer
-const currMode = ref('modal')
-const currTitle = ref('')
-const currWidth = ref('600px')
+
+const visible = ref(false) // 弹窗是否可见
+const closeLoading = ref(false)
+const confirmLoading = ref(false)
+const currMode = ref(props.mode) // 弹窗模式，modal, drawer
+const currTitle = ref(props.title)
+const currWidth = ref(props.width)
+const currConfirmText = ref(props.confirmText)
+const currCancelText = ref(props.cancelText)
 let onConfirm = null
+let onCancel = null
 
 function onOkHandle () {
-  if (onConfirm && typeof onConfirm === 'function') {
-    onConfirm(close)
-  }
-  emits('ok')
+  loadingRequest(confirmLoading, async () => {
+    if (onConfirm && typeof onConfirm === 'function') {
+      await onConfirm(close)
+    }
+    emits('confirm', close)
+  })
 }
 
 /**
@@ -50,16 +75,29 @@ function onOkHandle () {
 function open (options) {
   currMode.value = options?.mode ?? props.mode
   currTitle.value = options?.title ?? props.title
+  currConfirmText.value = options?.confirmText ?? props.confirmText
+  currCancelText.value = options?.cancelText ?? props.cancelText
   currWidth.value = ((options?.width ?? props.width) + 'px').replace('pxpx', 'px')
-  onConfirm = options?.onConfirm
+  onConfirm = options?.onConfirm ?? props.beforeConfirm
+  onCancel = options?.onCancel ?? props.beforeCancel
   visible.value = true
 }
 /** 关闭 */
-function close () {
-  visible.value = false
+async function close () {
+  loadingRequest(closeLoading, async () => {
+    if (onCancel && typeof onCancel === 'function') {
+      await onCancel()
+    }
+    await nextTick()
+    visible.value = false
+    emits('close')
+  })
 }
 
-const emits = defineEmits(['ok'])
+const emits = defineEmits(['ok', 'close'])
+
+provide('IN_MODAL', true) // 用于子组件判断是否在弹窗组件下面
+provide('CLOSE_MODAL', close)
 
 defineExpose({
   open,

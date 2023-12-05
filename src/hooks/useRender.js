@@ -6,13 +6,23 @@ import { getFnValue } from '@/utils/index'
  * 渲染组件
  * @returns 组件
  */
-export function useRender () {
+export function useRender ({ isView, value }) {
   const formData = inject('FORM_DATA', {})
   const getRenderFn = {
     [EControlType.eInput]: renderInput
   }
+  // 通过字段配置生成控件
   function renderByField (field) {
-    return getRenderFn[field.type](field)
+    const fn = getRenderFn[field.type]
+    if (fn) {
+      return fn(field)
+    } else if (field.type) {
+      return h(resolveComponent(field.type), {
+        ...field.props
+      })
+    } else {
+      console.warn('field.type 不存在')
+    }
   }
   /**
    * 渲染输入框
@@ -20,16 +30,19 @@ export function useRender () {
    * @returns 
    */
   function renderInput (field) {
-    const controlType = EControlType._objectOf(field.type)
+    if (isView) {
+      return h('span', [value ?? '-'])
+    }
+    const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign({
       type: 'text',
       placeholder: `请输入${field.label}`,
       maxlength: 50
-    }, controlType.data.defaultProps ?? {}, field.props)
+    }, controlTypeEnum.data.defaultProps ?? {}, field.props)
     const baseProps = {
       ...props,
-      placeholder: getFnValue(props.placeholder, { formData }),
-      extra: getFnValue(props.extra, { formData })
+      value,
+      placeholder: getFnValue(props.placeholder, { formData })
     }
     const baseEvents = {
       onChange: event => {

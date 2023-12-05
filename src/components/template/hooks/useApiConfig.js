@@ -6,17 +6,19 @@ import { useRoute } from 'vue-router'
  * @returns 接口配置对象
  */
 export function useApiConfig (apiConfig = {}) {
+  const useRestFull = import.meta.env.VITE_APP_USE_RESTFULL ?? false
   const route = useRoute()
   const apiPrex = route.path // /system/user
   const api = {
     ...apiConfig,
-    add: apiConfig?.add ?? apiPrex + '/add', // /system/user/add
-    update: apiConfig?.update ?? apiPrex + '/update',
-    detail: apiConfig?.detail ?? apiPrex + '/detail',
-    list: apiConfig?.list ?? apiPrex + '/list',
-    delete: apiConfig?.delete ?? apiPrex + '/delete',
-    import: apiConfig?.import ?? apiPrex + '/import',
-    export: apiConfig?.export ?? apiPrex + '/export'
+    add: apiConfig?.add ?? (useRestFull ? apiPrex : (apiPrex + '/add')), // /system/user/add
+    update: apiConfig?.update ?? (useRestFull ? apiPrex : (apiPrex + '/update')),
+    detail: apiConfig?.detail ?? (useRestFull ? (apiPrex + '/:id') : (apiPrex + '/detail')),
+    list: apiConfig?.list ?? (useRestFull ? apiPrex : (apiPrex + '/list')),
+    delete: apiConfig?.delete ?? (useRestFull ? apiPrex : (apiPrex + '/delete')),
+    toggle: apiConfig?.toggle ?? (apiPrex + '/toggle'),
+    import: apiConfig?.import ?? (useRestFull ? (apiPrex + '/import') : (apiPrex + '/import')),
+    export: apiConfig?.export ?? (useRestFull ? (apiPrex + '/export') : (apiPrex + '/export'))
   }
   return {
     api

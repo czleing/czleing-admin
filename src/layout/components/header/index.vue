@@ -18,9 +18,9 @@
     </div>
     <iframe
       v-if="settingStore.useWeather"
-      src="http://i.tianqi.com/?c=code&id=17"
-      width="120"
-      height="100%"
+      src="http://i.tianqi.com/?c=code&id=26"
+      width="180"
+      height="25"
       frameborder="0"
       marginwidth="0"
       marginheight="0"

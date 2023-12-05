@@ -100,7 +100,7 @@ function onAddHandle () {
   emits('add')
 }
 function onDeleteHandle () {
-  emits('delete')
+  emits('delete', selectedIds.value)
 }
 function onImportHandle () {
   emits('import')

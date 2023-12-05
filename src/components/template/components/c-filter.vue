@@ -21,9 +21,9 @@
           <a-form-item>
             <a-space>
               <a-button type="primary" :loading="loading" :disabled="loading" :icon="h(SearchOutlined)" html-type="submit">查询</a-button>
-              <a-button :icon="h(UndoOutlined)" @click="onResetHandle">重置</a-button>
+              <a-button v-if="fields.length > 0" :icon="h(UndoOutlined)" @click="onResetHandle">重置</a-button>
               <!-- 记住查询 及 历史查询 -->
-              <a-dropdown-button v-if="config.useCache" placement="bottomLeft" @click="onRememberHandle">
+              <a-dropdown-button v-if="config.useCache && fields.length > 0" placement="bottomLeft" @click="onRememberHandle">
                 {{ config.cacheBtnText || '记住查询' }}
                 <template #overlay>
                   <a-menu>
@@ -60,7 +60,7 @@
 <script setup>
 import { ref, provide, inject, reactive, h, onMounted, computed, toRaw } from 'vue'
 import CComponent from './c-component.js'
-import { SearchOutlined, UndoOutlined, DownOutlined, DeleteOutlined } from '@ant-design/icons-vue'
+import { SearchOutlined, UndoOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useSearchCache } from '@/hooks/useSearchCache.js'
 import { isAllFieldEmpty } from '@/utils/index.js'
 import { message } from 'ant-design-vue'

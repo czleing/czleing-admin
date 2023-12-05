@@ -6,11 +6,13 @@ export default {
     field: {
       type: Object,
       required: true
-    }
+    },
+    isView: Boolean,
+    value: [Object, String, Number, Boolean, Array]
   },
-  setup (props) {
-    const { renderByField } = useRender()
-    return () => renderByField(props.field)
+  render () {
+    const { renderByField } = useRender({ isView: this.isView, value: this.value })
+    return renderByField(this.field)
   }
 }
 

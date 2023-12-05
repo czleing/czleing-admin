@@ -4,7 +4,7 @@
       <SkinOutlined style="font-size: 18px;" @click="openSetting" />
     </a-tooltip>
   </div>
-  <Modal ref="settingModal" title="设置" width="500" mode="drawer">
+  <Modal ref="settingModal" title="设置" width="500" mode="drawer" :footer="null">
     <a-divider>主题</a-divider>
     <a-space class="flex-x">
       <span>选择主题：</span>

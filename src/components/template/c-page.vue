@@ -1,4 +1,4 @@
-<!-- CRUD 组件页面 -->
+<!-- CRUD 页面组件 -->
 <template>
   <div class="c-page">
     <div v-if="treeConfig" class="c-page__tree">
@@ -23,11 +23,15 @@
         :columns="tableConfig?.columns"
         :pagination="pagination"
         @refresh="onRefreshHandle"
+        @add="onAddHandle"
+        @delete="onBatchDeleteHandle"
       />
       <slot name="tools" />
       <!-- 表格数据 -->
       <CTable
         ref="cTable"
+        :primaryKey="primaryKey"
+        :no-select="noSelect"
         :config="tableConfig"
         :api-config="api"
         :api-method-config="apiMethod"
@@ -42,11 +46,10 @@
       </CTable>
       <slot name="table" />
     </div>
-    <!-- 新增修改详情弹窗 -->
-    <slot name="modal">
-      
-    </slot>
-    <slot name="detail"></slot>
+    <!-- 新增修改详情弹窗，如果不想要默认的弹窗或行为可以通过自定义表格中的操作按钮来实现 -->
+    <Modal ref="cModal" :before-cancel="onCancelHandle" :footer="null">
+      <CForm v-if="isAdd || isEdit || isView" ref="cForm" v-bind="{ detail, isAdd, isEdit, isView, primaryKey, formConfig, ...buttonConfig, beforeSubmit, onSubmitHandle }" />
+    </Modal>
   </div>
 </template>
 
@@ -54,25 +57,29 @@
 import CFilter from '@/components/template/components/c-filter.vue'
 import CTools from '@/components/template/components/c-tools.vue'
 import CTable from '@/components/template/components/c-table.vue'
+import CForm from '@/components/template/components/c-form.vue'
 import { ref, provide, computed } from 'vue'
 import { useApiConfig } from './hooks/useApiConfig'
 import { usePermissionConfig } from './hooks/usePermissionConfig'
 import { useApiMethodConfig } from './hooks/useApiMethodConfig'
+import { useActionHandle } from './hooks/useActionHandle'
 
 const props = defineProps({
-  /** 没有新增按钮 */
+  /** 没有新增按钮，可选 */
   noAdd: Boolean,
-  /** 没有删除按钮 */
+  /** 没有删除按钮，可选 */
   noDelete: Boolean,
-  /** 没有表格多选框 */
+  /** 没有表格多选框，可选 */
   noSelect: Boolean,
-  /** 有返回按钮 */
+  /** 有返回按钮，可选 */
   hasGoBack: Boolean,
-  /** 有导入按钮 */
+  /** 有导入按钮，可选 */
   hasImport: Boolean,
-  /** 有导出按钮 */
+  /** 有导出按钮，可选 */
   hasExport: Boolean,
-  /** 操作栏其他操作按钮配置 */
+  /** 主键字段名，默认 id */
+  primaryKey: { type: String, default: 'id' },
+  /** 操作栏其他操作按钮配置，可选 */
   otherToolsBtns: Array,
   /** 接口配置，可选，默认根据路由及功能生成（如：新增：/system/user -> /system/user/add） */
   apiConfig: Object,
@@ -82,19 +89,25 @@ const props = defineProps({
   permissionConfig: Object,
   /** 左侧树形控件配置，可选 */
   treeConfig: Object,
-  /** 过滤条件配置，可选 */
-  filterConfig: Object,
+  /** 过滤条件配置，必须 */
+  filterConfig: { type: Object, required: true },
   /** 表格配置，必须 */
-  tableConfig: Object,
-  /** 增改查弹窗配置，可选 */
-  modalConfig: Object,
+  tableConfig: { type: Object, required: true },
+  /** 增改查弹窗配置，必须 */
+  modalConfig: { type: Object, required: true },
   /** 查询前修改查询参数，可选，params => ({ ...params, type: 1 }) */
   beforeSearch: Function,
   /** 查询后修改查询结果，可选，list => list.map(...) */
-  afterSearch: Function
+  afterSearch: Function,
+  /** 提交表单前修改表单数据，可选，data => ({...}) */
+  beforeSubmit: Function,
+  /** 编辑或查看详情时转换详情数据，可选，detail => ({...}) */
+  transformDetail: Function
 })
 const loading = ref(false)
 const cTable = ref()
+const cModal = ref()
+const cForm = ref()
 const selectedIds = ref([])
 const selectedObjs = ref([])
 const searchParams = ref({})
@@ -107,9 +120,21 @@ const pagination = ref(Object.assign({
   total: 0
 }, props.tableConfig?.props?.pagenation))
 const tableSlots = computed(() => props.tableConfig?.columns?.filter(column => column.slot))
-const { api } = useApiConfig(props.apiConfig)
-const { permission } = usePermissionConfig(props.permissionConfig)
-const { apiMethod } = useApiMethodConfig(props.apiMethodConfig)
+const { api } = useApiConfig(props.apiConfig) // 接口
+const { permission } = usePermissionConfig(props.permissionConfig) // 权限
+const { apiMethod } = useApiMethodConfig(props.apiMethodConfig) // 接口请求方式
+const {
+  isAdd,
+  isEdit,
+  isView,
+  detail,
+  formConfig,
+  buttonConfig,
+  onAddHandle,
+  onBatchDeleteHandle,
+  onActionHandle,
+  onSubmitHandle
+} = useActionHandle({ cModal, cTable, modalConfig: props.modalConfig, api, apiMethod, transformDetail: props.transformDetail, primaryKey: props.primaryKey })
 
 provide('LOADING', loading)
 provide('SELECTED_IDS', selectedIds)
@@ -129,10 +154,11 @@ function onSearchHandle (params) {
 function onRefreshHandle () {
   cTable.value.refresh()
 }
-function onActionHandle ({ action, record }) {
-  
+function onCancelHandle () {
+  cForm.value?.reset()
 }
 
+const emits = defineEmits(['submit-form', 'close-modal'])
 </script>
 
 <style lang="scss" scoped>

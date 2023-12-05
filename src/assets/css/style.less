@@ -5,11 +5,23 @@
   transition: background-color 0.3s;
 }
 
-// 滑动淡入淡出动画
+// 左右滑动淡入淡出动画
 .slide-fade-enter-active, .slide-fade-leave-active {
   transition: all 0.3s ease-out;
 }
 .slide-fade-enter-from, .slide-fade-leave-to {
   transform: translateX(20px);
   opacity: 0;
+}
+
+// 上下展开收起动画
+.expand-enter-active, .expand-leave-active {
+  transition: all 0.2s ease-out;
+  overflow: hidden;
+  transform-origin: 0 0;
+  max-height: 2000px;
+}
+.expand-enter-from, .expand-leave-to {
+  transform: scaleY(0.5);
+  max-height: 0;
 }

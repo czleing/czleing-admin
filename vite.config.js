@@ -24,7 +24,7 @@ export default defineConfig({
   base: process.env.VITE_APP_CONTEXT_PATH, // 公共基础路径，会注入到全局变量 import.meta.env.BASE_URL，创建router时也需要指定根路径为此路径
   server: {
     host: '127.0.0.1',
-    port: 8080,
+    port: 3000,
     strictPort: false // 设为 true 时若端口已被占用则会直接退出，而不是尝试下一个可用端口。
     // proxy: {
     //   '/api': {

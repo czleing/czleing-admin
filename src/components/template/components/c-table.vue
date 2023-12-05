@@ -6,7 +6,9 @@
       :data-source="dataSource"
       :pagination="pagination"
       v-bind="config?.props"
+      :rowKey="primaryKey"
       row-class-name="striped-row"
+      :row-selection="currentRowSelection"
       @resizeColumn="(w, col) => col.width = w"
     >
       <template #headerCell="{ column }">
@@ -25,12 +27,8 @@
           <slot :name="column.slot" :text="text" :record="record" :index="index" :column="column" />
         </template>
         <!-- 日期时间格式化 -->
-        <template v-else-if="column.isDateTime && text">
-          <span>{{ dayjs(text).format('YYYY-MM-DD HH:mm') }}</span>
-        </template>
-        <!-- 日期格式化 -->
-        <template v-else-if="column.isDate && text">
-          <span>{{ dayjs(text).format('YYYY-MM-DD') }}</span>
+        <template v-else-if="column.dateFormat && text">
+          <span>{{ dayjs(text).format(column.dateFormat) }}</span>
         </template>
         <!-- 操作列 -->
         <template v-if="column.action">
@@ -49,7 +47,12 @@ import dayjs from 'dayjs'
 import CTableAction from './c-table-action.vue'
 
 const props = defineProps({
+  /** 不要选择框 */
+  noSelect: Boolean,
+  /** 表格配置 */
   config: Object,
+  /** 表格配置 */
+  primaryKey: { type: String, default: 'id' },
   /** 接口配置 */
   apiConfig: Object,
   /** 接口请求方式配置 */
@@ -64,13 +67,21 @@ const checkedFieldNames = inject('CHECKED_FIELD_NAMES', ref([]))
 const searchParams = inject('SEARCH_PARAMS', ref({}))
 const pagination = inject('PAGINATION', ref({}))
 const loading = inject('LOADING', ref(false))
+const selectedIds = inject('SELECTED_IDS', ref([]))
+const selectedObjs = inject('SELECTED_OBJS', ref([]))
 const currColumns = ref([])
 const dataSource = ref([])
-
+// 表格行选择器定义
+const currentRowSelection = computed(() => {
+  const option = Object.assign({ selectedRowKeys: selectedIds.value, onChange: onSelectChangeHandle, getCheckboxProps: rowSelectDisabled }, props.config?.props?.rowSelection)
+  return !props.noSelect ? option : undefined
+})
 
 // 伸缩列宽时需要 column 可编辑，所以重新定义了 currColumns
 watchEffect(() => {
-  currColumns.value = props.config?.columns.filter(column => column.action || checkedFieldNames.value.includes(column.dataIndex))
+  currColumns.value = props.config?.columns
+  .filter(column => column.action || checkedFieldNames.value.includes(column.dataIndex))
+  .map(column => ({ ...column, align: column.align ?? 'center'}))
 })
 // 初始化后是否查询
 onMounted(() => {
@@ -95,7 +106,7 @@ async function getList () {
     console.log('模拟获取列表数据', url, props.apiMethodConfig['list'], params)
     const result = {
       list: data,
-      total: 1
+      total: 3
     }
     let list = result?.list || result?.rows
     if (typeof props.afterSearch === 'function') {
@@ -108,9 +119,18 @@ async function getList () {
   }
 }
 
+// 可以通过数据中的字段 selectDisabled 控制选择框是否禁用
+function rowSelectDisabled (record) {
+  return { disabled: !!record.selectDisabled }
+}
+function onSelectChangeHandle (ids, objs) {
+  selectedIds.value = ids
+  selectedObjs.value = objs
+}
+
 const data = [
   {
-    key: '1',
+    id: '1',
     name: 'John Brown',
     age: 32,
     address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
@@ -118,7 +138,7 @@ const data = [
     createTime: Date.now()
   },
   {
-    key: '2',
+    id: '2',
     name: 'Jim Green',
     age: 42,
     address: 'London No. 2 Lake Park, London No. 2 Lake Park',
@@ -126,7 +146,7 @@ const data = [
     createTime: Date.now()
   },
   {
-    key: '3',
+    id: '3',
     name: 'Joe Black',
     age: 32,
     address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',

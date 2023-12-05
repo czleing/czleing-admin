@@ -2,6 +2,7 @@
 <template>
   <template v-if="action.confirm">
     <a-popconfirm
+      placement="left"
       :title="`确定要执行[${action.name}]操作吗？`"
       @confirm="action.callback({ record })"
     >
