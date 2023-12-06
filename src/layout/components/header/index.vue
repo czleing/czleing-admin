@@ -25,7 +25,7 @@
       marginwidth="0"
       marginheight="0"
       scrolling="no"
-      style="background-color: rgba(255,255,255,.6);border-radius: 10px;margin-right: 30px;"
+      :style="settingStore.isDark ? 'filter:invert(1);' : ''"
     ></iframe>
     <a-space :size="15">
       <HeaderFullscreen />

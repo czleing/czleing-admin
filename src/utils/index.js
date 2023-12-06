@@ -25,6 +25,7 @@ export function isEmpty (value) {
 
 /**
  * 是否不为空
+ * 字符串，对象，数组
  * @param {string|object|array} value
  * @returns {Boolean}
  */

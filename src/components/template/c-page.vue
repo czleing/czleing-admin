@@ -1,8 +1,9 @@
 <!-- CRUD 页面组件 -->
 <template>
   <div class="c-page">
-    <div v-if="treeConfig" class="c-page__tree">
-      树形组件
+    <div v-if="treeConfig" class="c-page__tree mr10 pr10">
+      <!-- 树 -->
+      <CTree :config="treeConfig" @selected="onTreeSelectHandle" />
     </div>
     <div class="c-page__page">
       <slot name="header" />
@@ -46,7 +47,7 @@
       </CTable>
       <slot name="table" />
     </div>
-    <!-- 新增修改详情弹窗，如果不想要默认的弹窗或行为可以通过自定义表格中的操作按钮来实现 -->
+    <!-- 新增修改详情弹窗，如果不想要默认的弹窗或行为可以通过自定义操作按钮来实现 -->
     <Modal ref="cModal" :before-cancel="onCancelHandle" :footer="null">
       <CForm v-if="isAdd || isEdit || isView" ref="cForm" v-bind="{ detail, isAdd, isEdit, isView, primaryKey, formConfig, ...buttonConfig, beforeSubmit, onSubmitHandle }" />
     </Modal>
@@ -58,6 +59,7 @@ import CFilter from '@/components/template/components/c-filter.vue'
 import CTools from '@/components/template/components/c-tools.vue'
 import CTable from '@/components/template/components/c-table.vue'
 import CForm from '@/components/template/components/c-form.vue'
+import CTree from '@/components/template/components/c-tree.vue'
 import { ref, provide, computed } from 'vue'
 import { useApiConfig } from './hooks/useApiConfig'
 import { usePermissionConfig } from './hooks/usePermissionConfig'
@@ -136,6 +138,7 @@ const {
   onSubmitHandle
 } = useActionHandle({ cModal, cTable, modalConfig: props.modalConfig, api, apiMethod, transformDetail: props.transformDetail, primaryKey: props.primaryKey })
 
+/** 与子组件共享变量 */
 provide('LOADING', loading)
 provide('SELECTED_IDS', selectedIds)
 provide('SELECTED_OBJS', selectedObjs)
@@ -157,15 +160,19 @@ function onRefreshHandle () {
 function onCancelHandle () {
   cForm.value?.reset()
 }
-
-const emits = defineEmits(['submit-form', 'close-modal'])
+function onTreeSelectHandle (orgId) {
+  searchParams.value[props.treeConfig?.searchField ?? 'orgId'] = orgId
+  cTable.value.search()
+}
 </script>
 
 <style lang="scss" scoped>
 .c-page {
   display: flex;
   &__tree {
-    width: 200px;
+    min-width: 180px;
+    max-width: 240px;
+    border-right: solid 1px rgba(100, 100, 100, .1);
   }
   &__page {
     flex: auto;

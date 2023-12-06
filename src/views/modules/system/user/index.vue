@@ -16,6 +16,7 @@
       // 默认根据当前路由生成
       add: 'system:user:add'
     }"
+    :tree-config="treeConfig"
     :filter-config="filterConfig"
     :other-tools-btns="otherToolsBtns"
     :before-search="beforeSearch"
@@ -25,6 +26,7 @@
     :table-config="tableConfig"
     :modal-config="modalConfig"
   >
+    <!-- 表格单元格内容过于复杂时，使用插槽 -->
     <template #table_slotField="{ record }">
       插槽内容123123==={{ record.age }}
     </template>
@@ -36,6 +38,12 @@ import { h, computed, ref } from 'vue'
 import CPage from '@/components/template/c-page.vue'
 import { EControlType } from '@/enum'
 
+const treeConfig = computed(() => ({
+  url: '/system/org/tree',
+  method: 'get',
+  replaceField: { key: 'key', children: 'children', title: 'title' },
+  searchField: 'orgId', // 将选中节点的id作为列表的查询参数的参数名，默认orgId
+}))
 const filterConfig = computed(() => ({
   useCache: true,
   cacheBtnText: '记住查询',
