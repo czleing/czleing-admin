@@ -1,7 +1,7 @@
 import { useRoute } from 'vue-router'
 
 /**
- * 根据当前权限配置及默认配置 生成 权限配置
+ * 根据当前权限配置及默认配置 生成 最终预设操作的权限配置
  * @param {Object} permissionConfig 
  * @returns 权限配置对象
  */

@@ -1,8 +1,8 @@
 <!-- 字段分组-组件 -->
 <template>
-  <div class="field-group">
+  <div class="field-group" :class="{ 'is-expand': showContainer }">
     <div v-if="title" class="field-group__title flex-x-between"
-      :style="{ backgroundColor: token.colorFillTertiary }"
+      :style="{ backgroundColor: token.colorFillTertiary, border: `solid 1px ${token.colorBorder}` }"
     >
       <div>
         <span class="flag" :style="{ backgroundColor: token.colorPrimary }"></span>
@@ -14,7 +14,7 @@
       </span>
     </div>
     <Transition name="expand">
-      <div v-if="$slots.default" v-show="showContainer" class="field-group__container pa10">
+      <div v-if="$slots.default" v-show="showContainer" class="field-group__container px10 pt15 pb2" :style="{ borderColor: token.colorBorder }">
         <slot />
       </div>
     </Transition>
@@ -40,6 +40,7 @@ function toggle () {
 
 <style lang="less" scoped>
 .field-group {
+  margin-bottom: 15px;
   &__title {
     position: relative;
     padding: 8px 15px;
@@ -67,6 +68,14 @@ function toggle () {
   &__container {
     max-height: 800px;
     overflow: auto;
+    border-style: solid;
+    border-width: 0 1px 1px 1px;
+    border-radius: 0 0 5px 5px;
+  }
+  &.is-expand {
+    .field-group__title {
+      border-radius: 5px 5px 0 0;
+    }
   }
 }
 </style>

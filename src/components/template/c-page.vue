@@ -47,6 +47,7 @@
       </CTable>
       <slot name="table" />
     </div>
+    <!-- 弹窗 -->
     <!-- 新增修改详情弹窗，如果不想要默认的弹窗或行为可以通过自定义操作按钮来实现 -->
     <Modal ref="cModal" :before-cancel="onCancelHandle" :footer="null">
       <CForm v-if="isAdd || isEdit || isView" ref="cForm" v-bind="{ detail, isAdd, isEdit, isView, primaryKey, formConfig, ...buttonConfig, beforeSubmit, onSubmitHandle }" />

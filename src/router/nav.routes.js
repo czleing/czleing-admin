@@ -32,6 +32,7 @@ const errorRoutes = [
 const developerRoutes = [
   {
     path: '/index',
+    name: 'index',
     redirect: { name: 'index' },
     hidden: true
   }

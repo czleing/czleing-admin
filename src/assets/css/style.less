@@ -19,9 +19,11 @@
   transition: all 0.2s ease-out;
   overflow: hidden;
   transform-origin: 0 0;
-  max-height: 2000px;
+  max-height: 800px;
 }
 .expand-enter-from, .expand-leave-to {
-  transform: scaleY(0.5);
+  transform: scaleY(0);
+  transform-origin: 0 0;
+  opacity: 0;
   max-height: 0;
 }

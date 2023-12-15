@@ -36,7 +36,7 @@
 <script setup>
 import { h, computed, ref } from 'vue'
 import CPage from '@/components/template/c-page.vue'
-import { EControlType } from '@/enum'
+import { EControlType } from '@/enum/index.js'
 
 const treeConfig = computed(() => ({
   url: '/system/org/tree',
@@ -174,9 +174,9 @@ const tableConfig = computed(() => ({
           //   permission: 'system:user:diy2',
           //   confirm: true,
           //   customRender: data => {
-          //     return h('span', { class: '' }, ['自定义2']) // 定义操作元素外观
+          //     return h('span', { class: '' }, '自定义2') // 定义元素外观
           //   },
-          //   callback () { // 点击事件还是使用 callback 方便确认框点击确定时调用
+          //   callback () { // 点击事件还是使用 callback (方便确认框点击确定时调用)
           //     console.log('自定义2被点击了')
           //   }
           // }
@@ -200,10 +200,10 @@ const tableConfig = computed(() => ({
  * 新增、修改、详情配置
  */
 const modalConfig = computed(() => ({
-  title: '用户', // 弹窗标题，会自动拼上新增、编辑、详情
+  title: '用户', // 弹窗标题，会自动根据类型拼上新增、编辑、详情关键字
   // fullTitle: '', // 全称，不会自动拼接其他字符串
-  width: 700, // 默认600
-  mode: 'drawer', // 弹窗模式，modal 或 drawer
+  width: 700, // 弹窗宽度，默认 600
+  mode: 'modal', // 弹窗模式, modal 或 drawer
   // 弹窗按钮属性修改 Object || ({ isAdd, isEdit, isView }) => Object
   buttonConfig: ({ isAdd, isEdit, isView }) => ({
     confirmText: isEdit ? '确认修改' : '确认提交', // 默认是确定
@@ -222,25 +222,7 @@ const modalConfig = computed(() => ({
         label: '用户姓名',
         fieldName: 'userName',
         type: EControlType.eInput,
-        required: true,
-        props: {
-          allowClear: true
-        }
-      },
-      {
-        label: '用户姓名2',
-        fieldName: 'userName2',
-        type: EControlType.eInput,
-        required: true,
-        props: {
-          allowClear: true
-        }
-      },
-      {
-        label: '用户姓名3',
-        fieldName: 'userName3',
-        type: EControlType.eInput,
-        required: false,
+        // required: true,
         props: {
           allowClear: true
         }
@@ -248,23 +230,33 @@ const modalConfig = computed(() => ({
       {
         label: '年龄',
         fieldName: 'age',
-        type: EControlType.eInput,
-        tooltip: formData => '111', // 字段提示， String || formData => {}
-        extra: formData => '222', // 字段额外说明， String || formData => {}
+        type: EControlType.eNumber,
+        tooltip: formData => '111', // 字段提示， String || formData => String
+        // extra: formData => '222', // 字段额外说明， String || formData => String
+        // required: true, // 是否必填，Boolean || formData => Boolean
         defaultValue: 23,
-        disabled: formData => !formData.userName,
-        rules: [], // object | array
-        props: {} // 控件其他属性
+        disabled: formData => !formData.userName, // 组件是否禁用，Boolean || formData => Boolean
+        rules: [], // object || array
+        props: {
+          // placeholder: '请输入年龄', // 默认"请输入+label"， String || formData => String
+        } // 控件其他属性
       },
       {
         // 字段分组
         title: '单位信息',
         subTitle: '(2)',
-        // none: formData => !formData.userName, // true表示该项不可见(不使用该字段)，Boolean || formData => {}
+        // none: formData => !formData.userName, // true表示该项不可见(不使用该字段)，Boolean || formData => Boolean
         fields: [
           {
             label: '单位名称1',
             fieldName: 'unitName1',
+            type: EControlType.eInput,
+            none: isEdit, // 编辑时不需要该字段
+            props: {}
+          },
+          {
+            label: '单位名称3',
+            fieldName: 'unitName3',
             type: EControlType.eInput,
             none: isEdit, // 编辑时不需要该字段
             props: {}
@@ -277,19 +269,131 @@ const modalConfig = computed(() => ({
             labelCol: { span: 3 },
             wrapperCol: { span: 21 },
             props: {},
-            detailConfig: { // 详情时配置，可对上面(详情时有效的属性)覆盖
+            detailConfig: { // 详情时的配置，可对上面(详情时有效的属性)覆盖
               labelCol: undefined,
               wrapperCol: undefined,
               singleLine: false // 如：详情时不单独占一行，或者更换控件类型等
             }
           },
-          {
-            label: '单位名称2',
-            fieldName: 'unitName2',
-            type: EControlType.eInput,
-            props: {}
-          },
         ]
+      },
+      {
+        label: '密码',
+        fieldName: 'password',
+        type: EControlType.eInput,
+        rules: { pattern: /^[\d\w!@#$%\^&*()]{8,16}$/, message: '密码格式错误，应8-16位数字、字母、!@#$%^&*()特殊符号' },
+        props: {
+          type: 'password',
+          maxlength: 16
+        }
+      },
+      {
+        label: '百分数',
+        fieldName: 'persent',
+        type: EControlType.eNumber,
+        // required: true,
+        props: {
+          addonAfter: '%',
+          precision: 2,
+          min: 0,
+          max: 100
+        }
+      },
+      {
+        label: '金额',
+        fieldName: 'amount',
+        type: EControlType.eNumber,
+        // required: true,
+        tooltip: '描述XXXXXXXX',
+        props: {
+          addonAfter: '元',
+          precision: 2,
+          max: 100,
+          min: 0
+        }
+      },
+      {
+        label: '手机号码',
+        fieldName: 'mobile',
+        type: EControlType.eInput,
+        // required: true,
+        rules: {
+          pattern: new RegExp(/^1[3456789]\d{9}$/),
+          message: '请输入正确的手机号码',
+          trigger: 'change'
+        },
+        props: {
+          maxlength: 11
+        }
+      },
+      {
+        label: '单选按钮',
+        fieldName: 'radio',
+        type: EControlType.eRadio,
+        props: {
+          options: [{ id: 1, name: 'name1' }, { id: 2, name: 'name2' }],
+          // optionType: '', // option 类型， default | button
+          // buttonStyle: '' // RadioButton 的风格样式, outline | solid
+        }
+      },
+      {
+        label: '静态下拉',
+        fieldName: 'staticSelect',
+        type: EControlType.eSelect,
+        props: {
+          useAll: true, // 是否在前面添加全部
+          // allowClear: true,
+          options: [{ id: 1, name: 'name1' }, { id: 2, name: 'name2' }]
+          // mode: '', // 下拉模式 'multiple' | 'tags' | 'combobox'
+        }
+      },
+      {
+        label: '动态下拉',
+        fieldName: 'dmSelect',
+        type: EControlType.eSelect,
+        props: {
+          remote: {
+            url: 'http://121.196.239.220:443/gfwh-api/content/video/list?pageNum=1&pageSize=10&status=3&enabled=1',
+            // method: 'get', // 默认 get
+            params: {
+              // type: 1,
+              type: '{formData.radio:required}' // 动态参数，formData代表表单数据，required代表是否必填，必填时，有值才获取数据源
+            },
+            converter (result) { // 对接口返回数据进行修改
+              return result.rows.map(item => ({ id: item.id, name: item.title }))
+            }
+          }
+        }
+      },
+      {
+        label: '日期',
+        fieldName: 'date',
+        type: EControlType.eDate,
+        props: {
+          // showTime: true // 是否需要时分秒
+        }
+      },
+      {
+        label: '日期范围',
+        fieldName: 'dateRange',
+        type: EControlType.eDateRange,
+        props: {
+          // showTime: true // 是否需要时分秒
+          fieldNames: ['dateRangeStart', 'dataRangeEnd']
+        }
+      },
+      {
+        label: '文本域',
+        fieldName: 'remark',
+        type: EControlType.eTextarea,
+        labelCol: { span: 3 },
+        wrapperCol: { span: 21 },
+        props: {
+          // rows: 5,
+          // maxlength: 100
+        },
+        // required: true,
+        singleLine: true
       }
     ]
   })

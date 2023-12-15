@@ -34,7 +34,13 @@ instance.interceptors.response.use((response) => {
     downloadFile(response)
   } else {
     // 响应数据是有效的 JSON 格式，继续处理
-    return Promise.resolve(data.data)
+    let result = data
+    if (data.list || data.rows) {
+      result = data
+    } else if (data.data) {
+      result = data.data
+    }
+    return Promise.resolve(result)
   }
 }, (error) => {
   // 统一处理错误

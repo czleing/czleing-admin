@@ -9,13 +9,13 @@
       :wrapper-col="wrapperCol"
       autocomplete="off"
     >
-      <a-row>
+      <a-row :gutter="15">
         <template v-for="field in currFields" :key="field.fieldName || field.title">
-          <!-- 控件组 -->
           <template v-if="isFieldGroup(field)">
+            <!-- 控件组 -->
             <a-col span="24">
-              <FieldGroup :title="field.title" :subTitle="getSubTitle(field)">
-                <a-row>
+              <FieldGroup :title="field.title" :subTitle="getFnValue(field.subTitle, formData)">
+                <a-row :gutter="15">
                   <template v-for="child in field.fields" :key="child.fieldName">
                     <a-col :span="child.colSpan">
                       <a-form-item v-bind="formItemProps(child)">
@@ -27,8 +27,8 @@
               </FieldGroup>
             </a-col>
           </template>
-          <!-- 控件 -->
           <template v-else>
+            <!-- 控件 -->
             <a-col :span="field.colSpan">
               <a-form-item v-bind="formItemProps(field)">
                 <CComponent v-model:value="formData[field.fieldName]" :field="field" :is-view="isView" />
@@ -49,16 +49,18 @@
 <script setup>
 import { computed, ref, provide, inject, reactive, watch } from 'vue'
 import CComponent from './c-component.js'
-import { getFnValue, loadingRequest } from '@/utils/index'
+import { isDayjs, getFnValue, loadingRequest } from '@/utils/index'
+import { EControlType } from '@/enum'
 
 const props = defineProps({
   isAdd: Boolean,
   isEdit: Boolean,
   isView: Boolean,
-  detail: { type: Object, default: () => ({}) },
-  formConfig: { type: Object, required: true },
-  beforeSubmit: Function,
-  onSubmitHandle: Function,
+  detail: { type: Object, default: () => ({}) }, // 修改、查看详情时的详情数据
+  formConfig: { type: Object, required: true }, // 表单配置信息
+  beforeSubmit: Function, // 提交表单前，对数据进行手工处理的函数，submitData => modifiedSubmitData
+  onSubmitHandle: Function, // 校验通过之后，对提交的数据进行处理，如请求接口将数据提交到服务器、提交成功提示、刷新列表
+  // 以下为自定义提交、取消按钮属性
   showConfirm: { type: Boolean, default: true },
   confirmText: { type: String, default: '提交' },
   showCancel: { type: Boolean, default: true },
@@ -72,16 +74,28 @@ const formData = reactive({})
 const loading = ref(false)
 const { labelCol, wrapperCol, colSize } = props.formConfig // 已经解构失去响应式
 const colSpan = parseInt(24 / colSize)
+let dateFields = [] // 收集的日期字段数组，便于统一转换格式
+let dateRangeFields = [] // 收集的日期范围字段数组
+let rangeFieldNamesMap = {} // 日期范围，一般有两个值，其字段名用 map 暂存
 const currFields = computed(() => {
+  // 对字段配置信息做初步整理
+  pushDateFields()
+  pushDateRangeFields()
   const initFields = (_fields) => {
-    return _fields.filter(field => isVisible(field)).map(item => {
+    return _fields.filter(field => inUse(field)).map(item => {
       // 字段组，递归处理
       if (isFieldGroup(item)) {
         item.fields = initFields(item.fields)
       }
-      // 详情时，覆盖属性配置
+      // 详情时，使用独有的 detailConfig 覆盖原有属性配置
       if (props.isView && item.detailConfig) {
-        item = Object.assign(item, item.detailConfig)
+        item = Object.assign({ ...item, detailConfig: undefined }, item.detailConfig)
+      }
+      // 日期类型字段收集，便于统一数据转换
+      if (item.type === EControlType.eDate) {
+        pushDateFields(item.fieldName)
+      } else if (item.type === EControlType.eDateRange) {
+        pushDateRangeFields(item.fieldName, item.props.fieldNames)
       }
       item.colSpan = item.singleLine ? 24 : colSpan
       if (!props.isView) {
@@ -94,9 +108,11 @@ const currFields = computed(() => {
   return initFields(props.formConfig.fields)
 })
 
+// 共享给子组件的变量
 provide('FORM_DATA', formData)
-provide('A_FORM', inputForm)
+// provide('A_FORM', inputForm)
 
+// 监听详情数据，同步回填至表单
 watch(
   () => props.detail,
   () => {
@@ -104,6 +120,7 @@ watch(
   },
   { deep: true, immediate: true }
 )
+
 // 设置表单值或默认值
 setFormData(currFields.value)
 function setFormData (fieldTree) {
@@ -115,23 +132,18 @@ function setFormData (fieldTree) {
     }
   })
 }
+
+/** 是否是字段分组 */
 function isFieldGroup (field) {
-  return field?.fields
+  return !!field?.fields
 }
-function isVisible (field) {
-  if (typeof field.none === 'function') {
-    return !field.none(formData)
-  } else {
-    return !field.none
-  }
+
+/** 该字段是否可用 */
+function inUse (field) {
+  return !getFnValue(field.none, formData)
 }
-function getSubTitle (field) {
-  if (typeof field.subTitle === 'function') {
-    return field.subTitle(formData)
-  } else {
-    return field.subTitle
-  }
-}
+
+/** 通过字段配置，生成表单项的属性 */
 function formItemProps (field) {
   return {
     labelCol: field.labelCol ?? labelCol ?? { span: 6 },
@@ -146,6 +158,7 @@ function formItemProps (field) {
   }
 }
 
+/** 重置表单 */
 function reset () {
   inputForm.value.resetFields()
   const resetDatas = (fields) => {
@@ -159,19 +172,61 @@ function reset () {
   }
   resetDatas(currFields.value)
 }
+
+/** 日期数据统一转换 */
+function transferDate (data) {
+  for (const key in data) {
+    const value = data[key]
+    if (dateFields.includes(key) && isDayjs(value)) {
+      // 日期字段处理
+      data[key] = value.valueOf()
+    } else if (dateRangeFields.includes(key) && Array.isArray(value)) {
+      // 日期范围字段处理
+      const fieldNames = rangeFieldNamesMap[key]
+      data[fieldNames[0]] = value[0].valueOf()
+      data[fieldNames[1]] = value[1].valueOf()
+      delete data[key]
+    }
+  }
+}
+function pushDateFields (fieldName) {
+  if (fieldName) {
+    dateFields.push(fieldName)
+  } else {
+    dateFields = []
+  }
+}
+function pushDateRangeFields (fieldName, fieldNames) {
+  if (fieldName) {
+    dateRangeFields.push(fieldName)
+    rangeFieldNamesMap[fieldName] = fieldNames
+  } else {
+    dateRangeFields = []
+    rangeFieldNamesMap = {}
+  }
+}
+
 /** 取消 */
 function cancel () {
   if (closeModal) {
     closeModal()
   }
 }
+
 /** 提交表单 */
 function submit () {
   loadingRequest(loading, async () => {
     await inputForm.value.validate()
-    const submitData = { ...formData }
+    let submitData = { ...formData }
+    // 日期统一转成时间戳
+    transferDate(submitData)
     if (props.beforeSubmit) {
-      submitData = await props.beforeSubmit(submitData, { isAdd: props.isAdd, isEdit: props.isEdit, isView: props.isView, detail: props.detail })
+      submitData = await props.beforeSubmit(submitData, {
+        isAdd: props.isAdd,
+        isEdit: props.isEdit,
+        isView: props.isView,
+        detail: props.detail
+      })
     }
     console.log('submitData', submitData)
     if (props.isEdit) {
@@ -200,6 +255,12 @@ defineExpose({
     ::v-deep(.ant-form-item) {
       margin-bottom: 10px;
     }
+    ::v-deep(.ant-form-item-label) {
+      opacity: .8;
+    }
+    // ::v-deep(.ant-form-item-control) {
+    //   font-weight: bold;
+    // }
   }
 }
 </style>

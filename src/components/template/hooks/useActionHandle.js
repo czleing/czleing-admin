@@ -2,6 +2,7 @@ import { ref, createVNode, computed, nextTick } from 'vue'
 import axios from '@/api/index.js'
 import { message, Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
+import dayjs from 'dayjs'
 
 /**
  * 处理操作相关、表格预设操作等
@@ -90,7 +91,16 @@ export function useActionHandle ({ cModal, cTable, modalConfig, api, apiMethod, 
       name: '张三',
       userName: '张三',
       age: 24,
-      unitName: '广东省XXXX'
+      unitName: '广东省XXXX',
+      radio: 1,
+      password: 123456,
+      persent: 98,
+      amount: 899,
+      mobile: '13800138000',
+      staticSelect: 1,
+      dmSelect: '1729018011857817601',
+      date: Date.now(),
+      remark: '备注内容'
     }
     // const detail = await axios[apiMethod['detail']](api.detail.replace(':id', id), { id })
     console.log('模拟获取详情数据', detail)

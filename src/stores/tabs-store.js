@@ -64,17 +64,11 @@ export const useTabsStore = defineStore('tabs', {
     },
     // 清除左边 Tab
     clearLeftTabs () {
-      if (this.currentIndex > 0) {
-        this.tabList.splice(0, this.currentIndex)
-      }
+      this.tabList = this.tabList.filter((item, index) => item.name === 'index' || index >= this.currentIndex)
     },
     // 清除右边 Tab
     clearRightTabs () {
-      // 当前索引
-      const deleteCount = this.tabList.length - 1 - this.currentIndex
-      if (deleteCount > 0) {
-        this.tabList.splice(this.currentIndex, deleteCount)
-      }
+      this.tabList = this.tabList.filter((item, index) => item.name === 'index' || index <= this.currentIndex)
     },
     // 刷新当前 Tab
     refreshTab () {
@@ -90,6 +84,7 @@ export const useTabsStore = defineStore('tabs', {
       return this.tabList.findIndex(item => item.path === router.currentRoute?.value?.path)
     },
     // 当前 tabList 中支持缓存的路由组件名称数组，用于 Tab 缓存
+    // 从 tabList 中筛选出需要缓存的页面组件名数组，用于 keepalive 缓存
     cachedViews () {
       if (this.tabList.length === 0) {
         return []
@@ -106,11 +101,11 @@ export const useTabsStore = defineStore('tabs', {
           return null
         }
       }).filter(name => {
+        // 刷新中的 Tab 暂时移除缓存
         const noRefreshFilter = !this.refreshing && !!name
         const refreshFilter = this.refreshing && name && name !== currCompName
         return noRefreshFilter || refreshFilter
       })
-      // cachedViews.unshift('RouterView')
       return cachedViews
     }
   }

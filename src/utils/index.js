@@ -59,6 +59,10 @@ export function isAllFieldEmpty (obj, excludeFields = []) {
   return !existValue
 }
 
+export function isDayjs (val) {
+  return val && typeof val === 'object' && val.$isDayjsObject
+}
+
 /**
  * 字符串脱敏
  * stringStar('13800138000', 3, 4) -> 138****8000
