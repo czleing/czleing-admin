@@ -51,6 +51,7 @@ export const useSettingStore = defineStore('setting', {
     mode: 'dark', // 昼夜模式 light or dark
     locale: 'zh', // 当前语言 zh or en
     componentSize: 'small', // 当前组件尺寸
+    useRadius: true, // 是否使用圆角布局
     useWeather: false // 是否使用天气组件
   }),
   actions: {

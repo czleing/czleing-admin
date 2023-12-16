@@ -1,11 +1,11 @@
 <template>
-  <a-layout style="height:100vh;">
-    <a-layout-sider :collapsed="!menuStore.isSidebarOpen" :trigger="null" :theme="settingStore.mode" collapsible>
+  <a-layout class="layout" style="height:100vh;">
+    <a-layout-sider :collapsed="!menuStore.isSidebarOpen" :trigger="null" :theme="settingStore.mode" :class="{ 'is-radius mt6 ml6 mb6': settingStore.useRadius }" collapsible>
       <!-- 左侧菜单 -->
       <MenuSide />
     </a-layout-sider>
     <a-layout>
-      <a-layout-header :style="themeStyle" style="padding:0;">
+      <a-layout-header :style="themeStyle" :class="{ 'is-radius mt6 ml6 mr6': settingStore.useRadius }" style="padding:0;">
         <!-- 右侧头部 -->
         <Header />
       </a-layout-header>
@@ -69,6 +69,15 @@ useWindowSize((width) => {
 </script>
 
 <style scoped lang="less">
+.layout {
+  .ant-layout-header {
+    transition: all .3s;
+  }
+  .is-radius {
+    border-radius: 8px;
+    overflow: hidden;
+  }
+}
 .view-main {
   border-radius: 0 0 5px 5px;
   border: solid 1px;

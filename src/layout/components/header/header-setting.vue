@@ -40,6 +40,10 @@
       <span>暗色模式：</span>
       <a-switch v-model:checked="isDark" checked-children="Dark" un-checked-children="Light" @change="changeMode"></a-switch>
     </a-space>
+    <a-space class="flex-x mt20">
+      <span>圆润布局：</span>
+      <a-switch v-model:checked="settingStore.useRadius" />
+    </a-space>
     <a-divider>语言</a-divider>
     <a-space class="flex-x mt20">
       <span>选择语言：</span>
