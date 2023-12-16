@@ -1,6 +1,6 @@
-# Vue3 + Vite + pinia + Ant design4 + js + axios + vue router + pnpm
+# Vue3 + Vite + Pinia + Ant design4 + js + Axios + VueRouter + pnpm
 
-由于网上 Vue3 + ant-design-vue 框架大都是使用 Typescript 开发，ant-design-vue 也很少有4.x版本的，而且大部分开源框架，功能代码实现不够优雅简洁，另外也很少有真正实现了多级路由缓存的，加上目前公司使用的还是 Vue2.7 + ant-desing1.x 的框架，本人及同事也更倾向于 Javascript，因此，本着边学习新技术边重构基础框架的态度，搭建了这个基础框架，并免费开源
+由于网上 Vue3 + ant-design-vue 框架大都是使用 TypeScript 开发，基本没有 JavaScript 版，ant-design-vue 也很少有4.x版本的，而且大部分开源框架，功能代码实现不够优雅简洁，另外也很少有真正实现了多级路由缓存、基础功能封装的，基本的CRUD还需要编写大量Dom，于是利用业余时间搭建了这个基础框架，并免费开源
 
 ## 环境要求
 - node: 14.19+
@@ -45,6 +45,10 @@
 ### 2. 本地启动
 ```
 npm run dev
+```
+### 3. 停止本地服务，用 q 不用 Ctrl + C
+```
+q
 ```
 
 ## 打包
