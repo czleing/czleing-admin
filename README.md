@@ -36,6 +36,9 @@
 - 系统管理基础功能(开发中...)
 - CRUD 配置化及可视化开发(开发中...)
 
+## 预览
+<img src='./src/doc/light.png' alt="light">
+<img src='./src/doc/dark.png' alt="dark">
 
 ## 初始化
 ### 1. 安装依赖

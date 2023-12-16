@@ -103,17 +103,17 @@ const tableConfig = computed(() => ({
       useTotal: true // 使用合计
     },
     {
-      title: '合同名称',
+      title: '名称2',
       dataIndex: 'name2',
       hidden: true // 该列暂时隐藏，可通过列筛选勾选显示
     },
     {
-      title: '合同类型',
+      title: '类型',
       dataIndex: 'type2',
       customRender: value => '历史'
     },
     {
-      title: '合同状态',
+      title: '状态',
       dataIndex: 'status',
       customRender: (text, record, index, column) => {
         return h('span', {
@@ -123,7 +123,9 @@ const tableConfig = computed(() => ({
     },
     {
       title: '地址',
-      dataIndex: 'address'
+      dataIndex: 'address',
+      hidden: true,
+      ellipsis: true
     },
     {
       title: '插槽',
