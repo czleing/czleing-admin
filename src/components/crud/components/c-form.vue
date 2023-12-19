@@ -49,7 +49,7 @@
 <script setup>
 import { computed, ref, provide, inject, reactive, watch } from 'vue'
 import CComponent from './c-component.js'
-import { isDayjs, getFnValue, loadingRequest } from '@/utils/index'
+import { isDayjs, getFnValue, loadingRequest, isEmpty } from '@/utils/index'
 import { EControlType } from '@/enum'
 
 const props = defineProps({
@@ -96,6 +96,9 @@ const currFields = computed(() => {
         pushDateFields(item.fieldName)
       } else if (item.type === EControlType.eDateRange) {
         pushDateRangeFields(item.fieldName, item.props.fieldNames)
+      } else if (item.type === EControlType.eTable) {
+        // 表格类型，根据 columns 自动生成 rules
+        setTableRules(item)
       }
       item.colSpan = item.singleLine ? 24 : colSpan
       if (!props.isView) {
@@ -206,6 +209,42 @@ function pushDateRangeFields (fieldName, fieldNames) {
   }
 }
 
+/** 动态表格类型组件，表单校验封装 */
+function setTableRules (field) {
+  const columns = field.props?.columns ?? []
+  if (columns.length === 0) return
+  const isRequired = columns.some(item => item.required)
+  const hasValidator = columns.some(item => !!item.validate)
+  field.rules = []
+  if (isRequired) {
+    field.rules.push({ type: 'array', required: true, message: field.label + '不能为空' })
+  }
+  if (hasValidator) {
+    field.rules.push({
+      validator (rule, list) {
+        if (Array.isArray(list) && list.length > 0) {
+          for (let i in list) {
+            const obj = list[i]
+            for (let c in columns) {
+              const column = columns[c]
+              if (column.required && isEmpty(obj[column.dataIndex])) {
+                return Promise.reject(`第[${ Number(i) + 1 }]行[${ column.title }]不能为空`)
+              } else if (typeof column.validate === 'function') {
+                const message = column.validate(Number(i), obj[column.dataIndex], obj)
+                if (message) {
+                  return Promise.reject(message)
+                }
+              }
+            }
+          }
+        }
+        return Promise.resolve()
+      },
+      trigger: 'change'
+    })
+  }
+}
+
 /** 取消 */
 function cancel () {
   if (closeModal) {
@@ -228,7 +267,9 @@ function submit () {
         detail: props.detail
       })
     }
-    console.log('submitData', submitData)
+    if (import.meta.env.VITE_APP_DEBUG_MODE) {
+      console.log('submitData', submitData)
+    }
     if (props.isEdit) {
       submitData.id = props.detail.id
     }

@@ -15,8 +15,8 @@ export const EControlType = {
   eSwitch: Enum('a-switch', '开关'),
   eFileUpload: Enum('FileUpload', '文件上传'),
   eImageUpload: Enum('ImageUpload', '图片上传'),
-  eCheckbox: Enum('a-checkbox', '多选框'),
-  eTable: Enum('a-table', '动态表格'),
+  eCheckbox: Enum('a-checkbox-group', '多选框'),
+  eTable: Enum('DynamicTable', '动态表格', { defaultProps: { bordered: true, size: 'small' } }),
   eCustom: Enum('Custom', '自定义')
 }
 init(EControlType)

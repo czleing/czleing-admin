@@ -12,11 +12,12 @@
       :action="uploadUrl"
       :headers="headers"
       :max-count="maxCount"
+      :accept="accept"
       :before-upload="beforeUploadHandle"
-      v-bind="$attrs"
+      v-bind="{ ...$attrs, onChange: undefined }"
       @change="onChangeHandle"
     >
-      <a-button v-if="fileList.length < maxCount" :disabled="$attrs.disabled">
+      <a-button v-if="!disabled && fileList.length < maxCount">
         <UploadOutlined />
         {{ btnText }}
       </a-button>
@@ -41,7 +42,7 @@ import { Upload } from 'ant-design-vue'
  */
 const props = defineProps({
   // 文件对象数组或文件地址逗号分隔字符串，[file1, file] 或 'file1Url,file2Url', 默认 ''
-  modelValue: [Array, String],
+  value: [Array, String],
   // 最大上传文件数
   maxCount: {
     type: Number,
@@ -52,11 +53,17 @@ const props = defineProps({
     type: Number,
     default: 1024 * 5
   },
+  accept: {
+    type: String,
+    default: 'image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.zip,.rar'
+  },
   // 上传按钮文字
   btnText: {
     type: String,
     default: '上传文件'
-  }
+  },
+  // 是否禁用
+  disabled: Boolean
 })
 const _this = getCurrentInstance().proxy
 const authStore = useAuthStore()
@@ -70,12 +77,12 @@ const fileList = ref([])
 const maxFileSize = computed(() => byteFormat(props.fileSize << 10))
 
 watchEffect(() => {
-  if (props.modelValue) {
-    if (Array.isArray(props.modelValue)) {
-      fileList.value = props.modelValue
+  if (props.value) {
+    if (Array.isArray(props.value)) {
+      fileList.value = props.value
     } else {
       let i = 0
-      fileList.value = props.modelValue.split(',').map(url => {
+      fileList.value = props.value.split(',').map(url => {
         i++
         return {
           uid: Date.now() + i,
@@ -118,13 +125,13 @@ function onChangeHandle ({ file, fileList: files, event }) {
   }
 }
 
-const emit = defineEmits(['update:modelValue', 'update:fileList'])
+const emit = defineEmits(['update:value', 'update:fileList'])
 /** 提交改变 */
 function emitChange () {
-  if (Array.isArray(props.modelValue)) {
-    emit('update:modelValue', fileList.value)
+  if (Array.isArray(props.value)) {
+    emit('update:value', fileList.value)
   } else {
-    emit('update:modelValue', fileList.value.map(file => file.url).join(','))
+    emit('update:value', fileList.value.map(file => file.url).join(','))
   }
   emit('update:fileList', fileList.value)
 }

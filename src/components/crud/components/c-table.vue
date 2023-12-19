@@ -13,9 +13,9 @@
       @change="onPageChangeHandle"
     >
       <template #headerCell="{ column }">
-        <template v-if="column.description">
+        <template v-if="column.tooltip">
           <span>
-            <a-tooltip :title="column.description">
+            <a-tooltip :title="column.tooltip">
               <QuestionCircleOutlined />
             </a-tooltip>
             {{ column.title }}

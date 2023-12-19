@@ -1,6 +1,6 @@
-# Vue3 + Vite + Pinia + Ant design4 + js + Axios + VueRouter + pnpm
+# Vue3 + Vite + Pinia + Ant design4 + JavaScript + axios + vue-router + pnpm
 
-由于网上 Vue3 + ant-design-vue 框架大都是使用 TypeScript 开发，基本没有 JavaScript 版，ant-design-vue 也很少有4.x版本的，而且大部分开源框架，功能代码实现不够优雅简洁，另外也很少有真正实现了多级路由缓存、基础功能封装的，基本的CRUD还需要编写大量Dom，于是利用业余时间搭建了这个基础框架，并免费开源
+一套使用最新技术栈封装的后台管理前端框架，可配置化及可视化开发
 
 ## 环境要求
 - node: 14.19+
@@ -61,7 +61,7 @@ npm run build
 
 ## 其他说明
 ### 1、动态样式
-less 中可使用 ant-design 的全局静态变量 @colorPrimary 等，但此变量不会跟随主题动态切换而变化，需要跟随变化请使用动态获取方式，如下：
+less 中可使用 ant-design 的全局静态变量 @colorPrimary 等，但此变量不会跟随主题动态切换而变化，需要跟随变化请使用动态获取方式，token 内部的变量名参考[官网](https://www.antdv.com/docs/vue/customize-theme-cn)，如下：
 ```js
 import { useThemeToken } from '@/hooks/useThemeToken.js'
 const { token } = useThemeToken()

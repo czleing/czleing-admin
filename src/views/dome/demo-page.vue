@@ -1,4 +1,4 @@
-<!-- 用户管理 -->
+<!-- demo CRUD demo 页面 -->
 <template>
   <CPage
     hasImport

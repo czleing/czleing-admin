@@ -56,11 +56,11 @@
 </template>
 
 <script setup>
-import CFilter from '@/components/template/components/c-filter.vue'
-import CTools from '@/components/template/components/c-tools.vue'
-import CTable from '@/components/template/components/c-table.vue'
-import CForm from '@/components/template/components/c-form.vue'
-import CTree from '@/components/template/components/c-tree.vue'
+import CFilter from '@/components/crud/components/c-filter.vue'
+import CTools from '@/components/crud/components/c-tools.vue'
+import CTable from '@/components/crud/components/c-table.vue'
+import CForm from '@/components/crud/components/c-form.vue'
+import CTree from '@/components/crud/components/c-tree.vue'
 import { ref, provide, computed } from 'vue'
 import { useApiConfig } from './hooks/useApiConfig'
 import { usePermissionConfig } from './hooks/usePermissionConfig'
@@ -92,8 +92,8 @@ const props = defineProps({
   permissionConfig: Object,
   /** 左侧树形控件配置，可选 */
   treeConfig: Object,
-  /** 过滤条件配置，必须 */
-  filterConfig: { type: Object, required: true },
+  /** 过滤条件配置，可选 */
+  filterConfig: Object,
   /** 表格配置，必须 */
   tableConfig: { type: Object, required: true },
   /** 增改查弹窗配置，必须 */

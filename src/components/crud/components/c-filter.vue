@@ -21,9 +21,9 @@
           <a-form-item>
             <a-space>
               <a-button type="primary" :loading="loading" :disabled="loading" :icon="h(SearchOutlined)" html-type="submit">查询</a-button>
-              <a-button v-if="fields.length > 0" :icon="h(UndoOutlined)" @click="onResetHandle">重置</a-button>
+              <a-button v-if="fields?.length > 0" :icon="h(UndoOutlined)" @click="onResetHandle">重置</a-button>
               <!-- 记住查询 及 历史查询 -->
-              <a-dropdown-button v-if="config.useCache && fields.length > 0" placement="bottomLeft" @click="onRememberHandle">
+              <a-dropdown-button v-if="config.useCache && fields?.length > 0" placement="bottomLeft" @click="onRememberHandle">
                 {{ config.cacheBtnText || '记住查询' }}
                 <template #overlay>
                   <a-menu>
@@ -68,7 +68,7 @@ import { message } from 'ant-design-vue'
 const props = defineProps({
   config: {
     type: Object,
-    required: true
+    default: () => ({})
   }
 })
 const colSize = { sm: 8, lg: 6, xxl: 4 }
@@ -88,7 +88,7 @@ provide('FORM_DATA', formData)
 // provide('A_FORM', searchForm)
 
 onMounted(() => {
-  fields.forEach(field => {
+  fields?.forEach(field => {
     formData[field.fieldName] = field.defaultValue
   })
 })

@@ -1,6 +1,6 @@
 <template>
   <a-layout class="layout" style="height:100vh;">
-    <a-layout-sider :collapsed="!menuStore.isSidebarOpen" :trigger="null" :theme="settingStore.mode" :class="{ 'is-radius mt6 ml6 mb6': settingStore.useRadius }" collapsible>
+    <a-layout-sider :collapsed="!menuStore.isSidebarOpen" :trigger="null" :theme="settingStore.mode" :class="{ 'is-radius mt6 ml6 mb6': settingStore.useRadius }" :style="themeStyle" collapsible>
       <!-- 左侧菜单 -->
       <MenuSide />
     </a-layout-sider>
@@ -75,11 +75,12 @@ useWindowSize((width) => {
   }
   .is-radius {
     border-radius: 8px;
+    border: solid 1px;
     overflow: hidden;
   }
 }
 .view-main {
-  border-radius: 0 0 5px 5px;
+  border-radius: 0 0 8px 8px;
   border: solid 1px;
   border-top: none;
   overflow: auto;
