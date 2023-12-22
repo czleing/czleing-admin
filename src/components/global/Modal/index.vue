@@ -3,17 +3,17 @@
   <div class="modal">
     <a-modal v-if="currMode === 'modal'" :title="currTitle" v-model:open="visible" :width="currWidth" v-bind="$attrs" @cancel="close" @ok="onOkHandle">
       <slot :visible="visible" />
-      <!-- a-modal 自带有确定、取消按钮 -->
+      <!-- a-modal 自带有确定、取消按钮，此处使用自定义 -->
       <template v-if="$attrs.footer !== null" #footer>
         <slot name="footer">
           <div class="tr">
             <a-button :loading="closeLoading" @click="close">{{ currCancelText }}</a-button>
-            <a-button v-if="showConfirm" type="primary" :loading="confirmLoading" @click="onOkHandle">{{ currConfirmText }}</a-button>
+            <a-button v-if="showConfirm" type="primary" :loading="confirmLoading" :disabled="confirmLoading || confirmDisabled" @click="onOkHandle">{{ currConfirmText }}</a-button>
           </div>
         </slot>
       </template>
     </a-modal>
-    <a-drawer v-if="currMode === 'drawer'" :title="currTitle" v-model:open="visible" :width="currWidth" v-bind="$attrs">
+    <a-drawer v-if="currMode === 'drawer'" :title="currTitle" v-model:open="visible" :width="currWidth" v-bind="$attrs" @close="close">
       <div class="">
         <slot :visible="visible" />
       </div>
@@ -22,7 +22,7 @@
         <slot name="footer">
           <div class="tr">
             <a-button :loading="closeLoading" @click="close">{{ currCancelText }}</a-button>
-            <a-button v-if="showConfirm" type="primary" :loading="confirmLoading" @click="onOkHandle">{{ currConfirmText }}</a-button>
+            <a-button v-if="showConfirm" type="primary" :loading="confirmLoading" :disabled="confirmLoading || confirmDisabled" @click="onOkHandle">{{ currConfirmText }}</a-button>
           </div>
         </slot>
       </template>
@@ -42,7 +42,8 @@ const props = defineProps({
   confirmText: { type: String, default: '确定' },
   cancelText: { type: String, default: '关闭' },
   beforeCancel: Function,
-  beforeConfirm: Function // async (close) => {}
+  beforeConfirm: Function, // async (close) => {}
+  confirmDisabled: { type: Boolean, default: false } // 确认按钮是否禁用
 })
 
 const visible = ref(false) // 弹窗是否可见
@@ -94,7 +95,7 @@ async function close () {
   })
 }
 
-const emits = defineEmits(['ok', 'close'])
+const emits = defineEmits(['confirm', 'close'])
 
 provide('IN_MODAL', true) // 用于子组件判断是否在弹窗组件下面
 provide('CLOSE_MODAL', close)

@@ -1,12 +1,12 @@
 <!-- 表格操作按钮组件 -->
 <template>
-  <div class="c-table-action">
+  <div class="c-table-action" @click.stop>
     <template v-for="action in showActions">
-      <CTableActionItem :action="action" />
+      <CTableActionItem :action="action" :record="record" />
     </template>
     <template v-if="moreActions && moreActions.length > 0">
       <!-- 更多 -->
-      <a-dropdown :record="record">
+      <a-dropdown>
         <a v-hasPermi="morePermissions" href="javascript:;">
           {{ column.actionMoreName ?? '更多' }}
           <DownOutlined />

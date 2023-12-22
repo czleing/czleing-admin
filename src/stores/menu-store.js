@@ -60,7 +60,7 @@ export const useMenuStore = defineStore('menu', {
           children: [
             {
               path: '/system/user',
-              component: 'modules/system/user/index',
+              component: 'modules/system/user/user-page',
               title: '用户管理',
               icon: 'UserOutlined',
               cache: true
@@ -69,6 +69,13 @@ export const useMenuStore = defineStore('menu', {
               path: '/system/role',
               component: 'modules/system/role/role-page',
               title: '角色管理',
+              icon: 'UserOutlined',
+              cache: true
+            },
+            {
+              path: '/system/dict',
+              component: 'modules/system/dict/dict-page',
+              title: '字典管理',
               icon: 'UserOutlined',
               cache: true
             }
@@ -95,7 +102,14 @@ export const useMenuStore = defineStore('menu', {
           return component
         } else if (component) {
           const path = `/src/views/${component}.vue`
-          return () => views[path]() // 返回按需加载函数
+          return () => { // 返回按需加载函数
+            const componentPromise = views[path]()
+            return componentPromise.then(result => {
+              const def = result.default
+              def.name = def.__name = def.__file.split('src')[1].split('.')[0] // 修改组件名为 路径 + 文件名，保证组件名唯一，便于 keepalive 缓存
+              return result
+            })
+          }
         } else {
           return undefined
         }
@@ -103,7 +117,7 @@ export const useMenuStore = defineStore('menu', {
       const hasNameRoutes = []
       const transform = (list, parentPaths = []) => {
         return list.map(item => {
-          if (item.name) {
+          if (import.meta.env.VITE_APP_DEBUG_MODE && item.name) {
             hasNameRoutes.push(item)
           }
           return {
@@ -130,12 +144,15 @@ export const useMenuStore = defineStore('menu', {
         })
       }
       const routes = transform(menuTree)
-      console.log('动态具名路由：', hasNameRoutes.map(item => `${item.name}: ${item.path}`).join(', '))
+      if (import.meta.env.VITE_APP_DEBUG_MODE) {
+        console.log('动态具名路由：', hasNameRoutes.map(item => `${item.name}: ${item.path}`).join(', '))
+      }
       return routes
     },
     /**
      * 将多级路由打成二级路由（只留首尾两级）
      * 让所有页面直接挂载在 Layout 下面，以解决 keepalive 只能缓存一层子路由的问题
+     * 打平之后，route.mathed 原为匹配到的路由链，改为手动构建的 route.meta.mathedPaths
      * @param {Object} rootRoute nav根路由
      * @returns navRoute object, 导航页路由树(2层)
      */

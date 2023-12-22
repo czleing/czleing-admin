@@ -20,6 +20,7 @@
         :has-go-back="hasGoBack"
         :other-tools-btns="otherToolsBtns"
         :api-config="api"
+        :api-method-config="apiMethod"
         :permission-config="permission"
         :columns="tableConfig?.columns"
         :pagination="pagination"
@@ -140,12 +141,13 @@ const {
 } = useActionHandle({ cModal, cTable, modalConfig: props.modalConfig, api, apiMethod, transformDetail: props.transformDetail, primaryKey: props.primaryKey })
 
 /** 与子组件共享变量 */
-provide('LOADING', loading)
-provide('SELECTED_IDS', selectedIds)
-provide('SELECTED_OBJS', selectedObjs)
-provide('SEARCH_PARAMS', searchParams)
-provide('PAGINATION', pagination)
-provide('CHECKED_FIELD_NAMES', checkedFieldNames)
+provide('c-page.loading', loading)
+provide('c-page.selectedIds', selectedIds)
+provide('c-page.selectedObjs', selectedObjs)
+provide('c-page.searchParams', searchParams)
+provide('c-page.pagination', pagination)
+provide('c-page.checkedFieldNames', checkedFieldNames)
+provide('c-page.onRefreshHandle', onRefreshHandle)
 
 
 function onSearchHandle (params) {

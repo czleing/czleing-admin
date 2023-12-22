@@ -113,7 +113,6 @@ const currFields = computed(() => {
 
 // 共享给子组件的变量
 provide('FORM_DATA', formData)
-// provide('A_FORM', inputForm)
 
 // 监听详情数据，同步回填至表单
 watch(
@@ -263,7 +262,6 @@ function submit () {
       submitData = await props.beforeSubmit(submitData, {
         isAdd: props.isAdd,
         isEdit: props.isEdit,
-        isView: props.isView,
         detail: props.detail
       })
     }

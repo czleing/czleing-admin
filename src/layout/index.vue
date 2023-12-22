@@ -16,6 +16,7 @@
         </div>
         <!-- 右侧工作区 -->
         <div class="view-main flex-auto pa10" :style="themeStyle">
+          <!-- {{ tabsStore.cachedViews }} -->
           <router-view v-slot="{ Component, route }">
             <keep-alive :max="20" :include="tabsStore.cachedViews">
               <component v-if="!tabsStore.refreshing" :is="Component" :key="route.fullPath" />

@@ -13,11 +13,13 @@
         <RightCircleOutlined class="pointer icon em12 text-gray" :class="{ 'is-show': showContainer}" />
       </span>
     </div>
-    <Transition name="expand">
-      <div v-if="$slots.default" v-show="showContainer" class="field-group__container px10 pt15 pb2" :style="{ borderColor: token.colorBorder }">
-        <slot />
+    <div v-if="$slots.default" class="field-group__container" :class="{ 'is-open': showContainer }" :style="{ borderColor: token.colorBorder }">
+      <div class="inner-container">
+        <div class="px10 pt15 pb2">
+          <slot />
+        </div>
       </div>
-    </Transition>
+    </div>
   </div>
 </template>
 
@@ -53,7 +55,7 @@ function toggle () {
       display: inline-block;
       position: absolute;
       top: 6px;
-      left: 2px;
+      left: 5px;
       bottom: 6px;
       width: 5px;
       border-radius: 3px;
@@ -66,11 +68,20 @@ function toggle () {
     }
   }
   &__container {
-    max-height: 800px;
-    overflow: auto;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows .2s;
+    overflow: hidden;
     border-style: solid;
-    border-width: 0 1px 1px 1px;
+    border-width: 0;
     border-radius: 0 0 5px 5px;
+    .inner-container {
+      min-height: 0;
+    }
+    &.is-open {
+      grid-template-rows: 1fr;
+      border-width: 0 1px 1px 1px;
+    }
   }
   &.is-expand {
     .field-group__title {

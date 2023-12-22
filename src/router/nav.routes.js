@@ -1,5 +1,9 @@
 /**
- * 错误页路由，需要在 layout 页面中显示
+ * 需要在 layout 页面中显示的路由
+ */
+/**
+ * 错误页静态路由
+ * 格式参考：./index.js
  */
 const errorRoutes = [
   {
@@ -27,14 +31,29 @@ const errorRoutes = [
 ]
 
 /**
- * 开发页面、工具路由、其他匹配等，需要在 layout 中显示
+ * 开发页面、工具路由、其他匹配等 静态路由
+ * 格式参考：./index.js
  */
 const developerRoutes = [
   {
-    path: '/index',
-    name: 'index',
-    redirect: { name: 'index' },
-    hidden: true
+    path: '/developer',
+    redirect: '/developer/demo',
+    meta: {
+      icon: 'CodeOutlined',
+      title: '开发中心'
+    },
+    children: [
+      {
+        path: '/developer/demo',
+        component: () => import('@/views/demo/demo-page.vue'),
+        meta: {
+          title: 'Demo',
+          isLeaf: true,
+          matchedPaths: ['/developer', '/developer/demo'],
+          cache: true
+        }
+      }
+    ]
   }
 ]
 
@@ -43,6 +62,7 @@ const developerRoutes = [
  * @param {any[]} routes 接口读取到的路由
  */
 export function createNavRoute (routes) {
+  console.log('routes', routes)
   return {
     path: '/',
     // 重定向到首页的第一个页面
@@ -50,8 +70,8 @@ export function createNavRoute (routes) {
     component: () => import('@/layout/index.vue'),
     hidden: true,
     children: [
-      ...developerRoutes,
       ...routes,
+      ...developerRoutes,
       ...errorRoutes
     ]
   }

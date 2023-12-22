@@ -31,7 +31,8 @@ export const useTabsStore = defineStore('tabs', {
               name: match.name,
               redirect: match.redirect,
               meta: match.meta,
-              components: match.components
+              components: match.components,
+              componentName: match.components?.default?.name
             }
           })
         })
@@ -89,21 +90,20 @@ export const useTabsStore = defineStore('tabs', {
       if (this.tabList.length === 0) {
         return []
       }
-      const currComponent = this.tabList[this.currentIndex]?.matched?.at(-1)?.components.default
-      const currCompName = currComponent?.name ?? currComponent?.__name
-      const cachedViews = this.tabList.map(item => {
-        const component = item.matched.at(-1).components.default
-        const compName = component?.name ?? component?.__name
-        const useCache = item.meta?.cache
-        if (useCache && compName) {
-          return compName
+      const currTab = this.tabList[this.currentIndex]
+      const currComName = currTab?.matched?.at(-1)?.componentName
+      const cachedViews = this.tabList.map(tab => {
+        const componentName = tab.matched.at(-1)?.componentName
+        const useCache = tab.meta?.cache
+        if (useCache && componentName) {
+          return componentName
         } else {
           return null
         }
       }).filter(name => {
         // 刷新中的 Tab 暂时移除缓存
         const noRefreshFilter = !this.refreshing && !!name
-        const refreshFilter = this.refreshing && name && name !== currCompName
+        const refreshFilter = this.refreshing && name && name !== currComName
         return noRefreshFilter || refreshFilter
       })
       return cachedViews

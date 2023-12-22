@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import { beforeInterceptor, afterInterceptor, errorInterceptor } from './interceptors'
 
 /**
- * 静态路由
+ * 静态路由，格式如下：
  * 动态的由接口获取，动态添加，见：menuStore
  * {
     path: '/login',         // 路由地址，全局唯一
@@ -14,8 +14,10 @@ import { beforeInterceptor, afterInterceptor, errorInterceptor } from './interce
       needLogin: false,      // 是否需要登录才能访问，默认 true
       cache: true,           // 是否缓存页面，切换 Tabs 时状态不会被清空，默认不缓存
       icon: '',              // 菜单图标，ant-design/icons
-    }
+    },
+    children: []             // 子路由
   }
+  不需要再 layout 中显示
  */
 const staticRoutes = [
   {

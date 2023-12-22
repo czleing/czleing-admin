@@ -74,7 +74,7 @@ const props = defineProps({
 const colSize = { sm: 8, lg: 6, xxl: 4 }
 const { labelCol, wrapperCol, fields } = props.config
 const searchForm = ref()
-const loading = inject('LOADING', false)
+const loading = inject('c-page.loading', false)
 const formData = reactive({})
 const {
   cacheList,
@@ -85,7 +85,6 @@ const {
 const noCondition = computed(() => isAllFieldEmpty(formData))
 
 provide('FORM_DATA', formData)
-// provide('A_FORM', searchForm)
 
 onMounted(() => {
   fields?.forEach(field => {

@@ -5,10 +5,11 @@
       :columns="currColumns"
       :data-source="dataSource"
       :pagination="pagination"
-      v-bind="config?.props"
+      v-bind="{ ...defaultProps, ...config?.props }"
       :rowKey="primaryKey"
-      row-class-name="striped-row"
+      :row-class-name="`striped-row ${config?.props?.rowClick ? 'pointer' : ''}`"
       :row-selection="currentRowSelection"
+      :custom-row="customRow"
       @resizeColumn="(w, col) => col.width = w"
       @change="onPageChangeHandle"
     >
@@ -31,6 +32,13 @@
         <template v-else-if="column.dateFormat && text">
           <span>{{ dayjs(text).format(column.dateFormat) }}</span>
         </template>
+        <template v-else-if="column.isDate && text">
+          <span>{{ dayjs(text).format('YYYY-MM-DD') }}</span>
+        </template>
+        <template v-else-if="column.isDateTime && text">
+          <span>{{ dayjs(text).format('YYYY-MM-DD HH:mm') }}</span>
+        </template>
+        <!-- 字典转换 TODO -->
         <!-- 操作列 -->
         <template v-if="column.action">
           <CTableAction :record="record" :column="column" :permission-config="permissionConfig" @action="onActionHandle" />
@@ -81,14 +89,19 @@ const props = defineProps({
   afterSearch: Function
 })
 
-const checkedFieldNames = inject('CHECKED_FIELD_NAMES', ref([]))
-const searchParams = inject('SEARCH_PARAMS', ref({}))
-const pagination = inject('PAGINATION', ref({}))
-const loading = inject('LOADING', ref(false))
-const selectedIds = inject('SELECTED_IDS', ref([]))
-const selectedObjs = inject('SELECTED_OBJS', ref([]))
+const checkedFieldNames = inject('c-page.checkedFieldNames', ref([]))
+const searchParams = inject('c-page.searchParams', ref({}))
+const pagination = inject('c-page.pagination', ref({}))
+const loading = inject('c-page.loading', ref(false))
+const selectedIds = inject('c-page.selectedIds', ref([]))
+const selectedObjs = inject('c-page.selectedObjs', ref([]))
 const currColumns = ref([])
 const dataSource = ref([])
+// 表格默认属性
+const defaultProps = computed(() => ({
+  size: 'small',
+  bordered: true
+}))
 // 表格行选择器定义
 const currentRowSelection = computed(() => {
   const option = Object.assign({ selectedRowKeys: selectedIds.value, onChange: onSelectChangeHandle, getCheckboxProps: rowSelectDisabled }, props.config?.props?.rowSelection)
@@ -96,6 +109,7 @@ const currentRowSelection = computed(() => {
 })
 // 是否使用合计
 const useTotal = computed(() => currColumns.value.some(col => col.useTotal))
+// 合计数据
 const total = computed(() => {
   if (useTotal.value) {
     return dataSource.value.reduce((t, c) => {
@@ -201,6 +215,27 @@ function search () {
 function onActionHandle (data) {
   emits('action', data)
 }
+
+/** 行事件配置 */
+function customRow (record, index) {
+  return {
+    onClick () {
+      const fn = props.config.props?.rowClick
+      if (typeof fn === 'function') { // 如果配置了行点击函数
+        if (selectedIds.value.length && selectedIds.value[0] === record[props.primaryKey]) {
+          selectedIds.value = []
+          selectedObjs.value = []
+          fn(record, index, false)
+        } else {
+          selectedIds.value = [record[props.primaryKey]]
+          selectedObjs.value = [record]
+          fn(record, index, true)
+        }
+      }
+    }
+  }
+}
+
 const emits = defineEmits(['action'])
 defineExpose({
   refresh: search,

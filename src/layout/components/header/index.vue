@@ -54,17 +54,17 @@ const headerMenus = computed(() => {
   return menuStore.headerNavRoutes.filter(item => !item.hidden).map(item => {
     return {
       path: item.path,
-      icon: item.meta.icon,
-      title: item.meta.title,
-      firstPath: item.meta.matchedPaths[0],
-      isLeaf: item.meta.isLeaf
+      icon: item.meta?.icon,
+      title: item.meta?.title,
+      firstPath: item.meta?.matchedPaths?.[0],
+      isLeaf: item.meta?.isLeaf
     }
   })
 })
 
 watchEffect(() => {
-  selectedKeys.value = route.meta.matchedPaths
-  menuStore.firstRoutePath = route.meta.matchedPaths[0]
+  selectedKeys.value = route.meta?.matchedPaths ?? [route.path]
+  menuStore.firstRoutePath = route.meta?.matchedPaths?.[0] ?? route.path
 })
 
 function onMenuItemClick (item) {
