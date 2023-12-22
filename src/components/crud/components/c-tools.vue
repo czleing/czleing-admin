@@ -21,9 +21,9 @@
         {{ btn.name }}
       </a-button>
       <!-- 导入 -->
-      <a-button v-if="hasImport" v-hasPermi="permissionConfig.import" type="dashed" :icon="h(ImportOutlined)" @click="onImportHandle">导入</a-button>
+      <CImport v-if="hasImport" v-hasPermi="permissionConfig.import" :url="apiConfig.import" :template-url="apiConfig.importTemplate" @success="onImportSuccessHandle" />
       <!-- 导出 -->
-      <a-button v-if="hasExport" v-hasPermi="permissionConfig.export" type="dashed" :icon="h(ExportOutlined)" @click="onExportHandle">导出</a-button>
+      <a-button v-if="hasExport" v-hasPermi="permissionConfig.export" type="dashed" :icon="h(ExportOutlined)" @click="onExportHandle">导出 {{ selectNum > 0 ? `(${ selectNum })` : '' }}</a-button>
       <!-- 返回 -->
       <a-button v-if="hasGoBack" :icon="h(RollbackOutlined)" @click="$router.back()">返回</a-button>
     </a-space>
@@ -56,8 +56,11 @@
 </template>
 
 <script setup>
-import { PlusOutlined, DeleteOutlined, ImportOutlined, ExportOutlined, RollbackOutlined, SyncOutlined, FilterOutlined, FullscreenOutlined, FullscreenExitOutlined } from '@ant-design/icons-vue'
+import { PlusOutlined, DeleteOutlined, ExportOutlined, RollbackOutlined, SyncOutlined, FilterOutlined } from '@ant-design/icons-vue'
+import CImport from './c-import.vue'
+import { Modal } from 'ant-design-vue'
 import { ref, inject, h, computed } from 'vue'
+import axios from '@/api/index.js'
 
 const props = defineProps({
   /** 没有新增按钮 */
@@ -74,6 +77,8 @@ const props = defineProps({
   otherToolsBtns: Array,
   /** 接口配置 */
   apiConfig: Object,
+  /** 接口请求方式配置 */
+  apiMethodConfig: Object,
   /** 权限配置 */
   permissionConfig: Object,
   /** 列字段配置 */
@@ -84,9 +89,11 @@ const props = defineProps({
   checkedFieldNames: Array
 })
 
-const selectedIds = inject('SELECTED_IDS', ref([]))
-const selectedObjs = inject('SELECTED_OBJS', ref([]))
-const loading = inject('LOADING', ref(false))
+const selectedIds = inject('c-page.selectedIds', ref([]))
+const selectedObjs = inject('c-page.selectedObjs', ref([]))
+const searchParams = inject('c-page.searchParams', ref({}))
+const loading = inject('c-page.loading', ref(false))
+const refreshTable = inject('c-page.onRefreshHandle', undefined)
 
 const selectNum = computed(() => selectedIds.value.length)
 const callbackParams = computed(() => ({
@@ -102,11 +109,31 @@ function onAddHandle () {
 function onDeleteHandle () {
   emits('delete', selectedIds.value)
 }
-function onImportHandle () {
-  emits('import')
+function onImportSuccessHandle () {
+  refreshTable()
 }
 function onExportHandle () {
-  emits('export')
+  if (selectNum.value > 0) { // 有勾选，按选中的导出
+    Modal.confirm({
+      title: '温馨提示',
+      content: () => h('div', [
+        '确定导出以下选中的',
+        h('b', { class: 'text-danger mx5' }, [`${selectedIds.value.length}`]),
+        '项数据记录？'
+      ]),
+      async onOk () {
+        await axios[props.apiMethodConfig.export](props.apiConfig.export, { ids: selectedIds.value })
+      }
+    })
+  } else { // 按查询条件导出
+    Modal.confirm({
+      title: '温馨提示',
+      content: '确定根据当前条件导出所有数据？',
+      async onOk () {
+        await axios[props.apiMethodConfig.export](props.apiConfig.export, searchParams.value)
+      }
+    })
+  }
 }
 function onToolClickHandle (btn) {
   if (typeof btn.props?.onClick === 'function') {
@@ -122,7 +149,7 @@ function getDisabled (btn) {
 }
 
 
-const emits = defineEmits(['add', 'delete', 'import', 'export', 'refresh', 'update:checkedFieldNames'])
+const emits = defineEmits(['add', 'delete', 'refresh', 'update:checkedFieldNames'])
 function onRefreshHandle () {
   emits('refresh')
 }

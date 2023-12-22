@@ -18,6 +18,7 @@ export function useApiConfig (apiConfig = {}) {
     delete: apiConfig?.delete ?? (useRestFull ? apiPrex : (apiPrex + '/delete')),
     toggle: apiConfig?.toggle ?? (apiPrex + '/toggle'),
     import: apiConfig?.import ?? (useRestFull ? (apiPrex + '/import') : (apiPrex + '/import')),
+    importTemplate: apiConfig?.importTemplate ?? (apiPrex + '/importTemplate'),
     export: apiConfig?.export ?? (useRestFull ? (apiPrex + '/export') : (apiPrex + '/export'))
   }
   return {

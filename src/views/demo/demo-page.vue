@@ -3,7 +3,9 @@
   <CPage
     hasImport
     hasExport
+    hasGoBack
     primary-key="id"
+    primary-key-说明="primary-key 指定主键的字段名，默认：id"
     :api-config="{
       // 默认根据当前路由生成
       add: '/system/user/add'
@@ -87,7 +89,10 @@ const tableConfig = computed(() => ({
     // 参考 a-table props
     bordered: true,
     size: 'small',
-    pageSize: 22 // 重写分页大小选项
+    pageSize: 22, // 重写分页大小选项
+    // rowClick (record, index, selected) { // 配置数据行点击事件
+    //   console.log(record, index)
+    // }
   },
   initSearch: true, // 默认 true，初始化时查询
   columns: [
@@ -118,9 +123,14 @@ const tableConfig = computed(() => ({
       customRender: value => '历史'
     },
     {
+      title: '字典',
+      dataIndex: 'dict',
+      dictType: 'dict_type' // 自动按指定的字典类型解析出中文
+    },
+    {
       title: '状态',
       dataIndex: 'status',
-      customRender: (text, record, index, column) => {
+      customRender: (value, record, index, column) => { // 自定义渲染函数
         return h('span', {
           class: 'text-danger'
         }, '状态1')
@@ -135,12 +145,14 @@ const tableConfig = computed(() => ({
     {
       title: '插槽',
       dataIndex: 'slotField',
-      slot: 'table_slotField'
+      slot: 'table_slotField' // 使用插槽渲染
     },
     {
       title: '日期自动格式化',
       dataIndex: 'createTime',
-      dateFormat: 'YYYY-MM-DD HH:mm'
+      // isDate: true, // 自动格式化为 YYYY-MM-DD
+      isDateTime: true, // 或 自动格式化为 YYYY-MM-DD HH:mm
+      // dateFormat: 'YYYY-MM-DD HH:mm:ss' // 或 自定义格式
     },
     {
       title: '操作',
@@ -207,7 +219,7 @@ const tableConfig = computed(() => ({
  * 新增、修改、详情配置
  */
 const modalConfig = computed(() => ({
-  title: '用户', // 弹窗标题，会自动根据类型拼上新增、编辑、详情关键字
+  title: 'Demo', // 弹窗标题，会自动根据类型拼上新增、编辑、详情关键字
   // fullTitle: '', // 全称，不会自动拼接其他字符串
   width: 700, // 弹窗宽度，默认 600
   mode: 'modal', // 弹窗模式, modal 或 drawer

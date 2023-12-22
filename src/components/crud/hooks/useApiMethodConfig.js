@@ -14,6 +14,7 @@ export function useApiMethodConfig (apiMethodConfig = {}) {
     delete: apiMethodConfig?.delete ?? (useRestFull ? 'delete' : 'post'),
     toggle: apiMethodConfig?.toggle ?? 'post',
     import: apiMethodConfig?.import ?? 'post',
+    importTemplate: apiMethodConfig?.importTemplate ?? 'post',
     export: apiMethodConfig?.export ?? (useRestFull ? 'get' : 'post')
   }
   return { apiMethod }
