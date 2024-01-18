@@ -51,6 +51,7 @@
     <!-- 弹窗 -->
     <!-- 新增修改详情弹窗，如果不想要默认的弹窗或行为可以通过自定义操作按钮来实现 -->
     <Modal ref="cModal" :before-cancel="onCancelHandle" :footer="null">
+      <!-- :footer="null" -> Modal 和 CForm 都提供了 确认、取消按钮支持，这里为了方便控制按钮状态，使用 CForm 的按钮 -->
       <CForm v-if="isAdd || isEdit || isView" ref="cForm" v-bind="{ detail, isAdd, isEdit, isView, primaryKey, formConfig, ...buttonConfig, beforeSubmit, onSubmitHandle }" />
     </Modal>
   </div>
@@ -134,10 +135,10 @@ const {
   detail,
   formConfig,
   buttonConfig,
-  onAddHandle,
-  onBatchDeleteHandle,
-  onActionHandle,
-  onSubmitHandle
+  onAddHandle, // 新增按钮点击处理
+  onBatchDeleteHandle, // 批量删除处理
+  onActionHandle, // 表格中预设按钮点击处理
+  onSubmitHandle // 提交表单处理
 } = useActionHandle({ cModal, cTable, modalConfig: props.modalConfig, api, apiMethod, transformDetail: props.transformDetail, primaryKey: props.primaryKey })
 
 /** 与子组件共享变量 */

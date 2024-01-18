@@ -8,14 +8,14 @@ import { useRoute } from 'vue-router'
 export function useApiConfig (apiConfig = {}) {
   const useRestFull = import.meta.env.VITE_APP_USE_RESTFULL ?? false
   const route = useRoute()
-  const apiPrex = route.path // /system/user
+  const apiPrex = route.path // 如：/system/user
   const api = {
     ...apiConfig,
-    add: apiConfig?.add ?? (useRestFull ? apiPrex : (apiPrex + '/add')), // /system/user/add
+    add: apiConfig?.add ?? (useRestFull ? apiPrex : (apiPrex + '/add')), // 如：/system/user/add
     update: apiConfig?.update ?? (useRestFull ? apiPrex : (apiPrex + '/update')),
     detail: apiConfig?.detail ?? (useRestFull ? (apiPrex + '/:id') : (apiPrex + '/detail')),
-    list: apiConfig?.list ?? (useRestFull ? apiPrex : (apiPrex + '/list')),
-    delete: apiConfig?.delete ?? (useRestFull ? apiPrex : (apiPrex + '/delete')),
+    list: apiConfig?.list ?? apiPrex + '/list',
+    delete: apiConfig?.delete ?? (useRestFull ? `${apiPrex}/:ids` : `${apiPrex}/delete`),
     toggle: apiConfig?.toggle ?? (apiPrex + '/toggle'),
     import: apiConfig?.import ?? (useRestFull ? (apiPrex + '/import') : (apiPrex + '/import')),
     importTemplate: apiConfig?.importTemplate ?? (apiPrex + '/importTemplate'),

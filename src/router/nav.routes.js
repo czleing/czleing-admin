@@ -62,7 +62,7 @@ const developerRoutes = [
  * @param {any[]} routes 接口读取到的路由
  */
 export function createNavRoute (routes) {
-  console.log('routes', routes)
+  // console.log('routes', routes)
   return {
     path: '/',
     // 重定向到首页的第一个页面

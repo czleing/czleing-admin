@@ -11,10 +11,10 @@ export function setAccount (account, password, isRemember = false) {
   if (isRemember) {
     storage.setItem(key, JSON.stringify({ account, password: encrypt(password) }))
   } else {
-    const accountInfo = getAccount()
-    if (accountInfo && accountInfo.account === account) {
-      clearAccount()
-    }
+    // const accountInfo = getAccount()
+    // if (accountInfo && accountInfo.account === account) {
+    //   clearAccount()
+    // }
   }
 }
 

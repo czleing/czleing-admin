@@ -61,17 +61,15 @@ export default {
 
     /** 获取动态数据源 */
     async function getDataSource (_params) {
-      if (type === EControlType.eSelect) {
-        const result = await axios[remote.method ?? 'get'](remote.url, _params)
-        if (typeof remote.converter === 'function') {
-          dataSource.value = remote.converter(result)
-        } else {
-          dataSource.value = result
-        }
-        // 数据源发生变化，选中值需要做修改
-        if (isEmpty(dataSource.value) || (props.value && !dataSource.value.some(item => item.id === props.value))) {
-          formData[props.field.fieldName] = undefined // 当前列表中没有该值，则清空选中
-        }
+      const result = await axios[remote.method ?? 'get'](remote.url, _params)
+      if (typeof remote.converter === 'function') {
+        dataSource.value = remote.converter(result)
+      } else {
+        dataSource.value = result
+      }
+      // 数据源发生变化，选中值需要做修改
+      if (isEmpty(dataSource.value) || (props.value && !dataSource.value.some(item => item.id === props.value))) {
+        formData[props.field.fieldName] = undefined // 当前列表中没有该值，则清空选中
       }
     }
 

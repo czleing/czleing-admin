@@ -143,19 +143,19 @@ async function getList () {
   const url = props.apiConfig?.list
   const params = {
     ...searchParams.value,
-    page: {
-      pageNum: pagination.value.current,
-      pageSize: pagination.value.pageSize
-    }
+    // page: {
+    pageNum: pagination.value.current,
+    pageSize: pagination.value.pageSize
+    // }
   }
   try {
     loading.value = true
-    // const result = await axios[props.apiMethodConfig['list']](url, params)
-    console.log('模拟获取列表数据', url, props.apiMethodConfig['list'], params)
-    const result = {
-      list: data,
-      total: 3
-    }
+    const result = await axios[props.apiMethodConfig['list']](url, params)
+    // console.log('模拟获取列表数据', url, props.apiMethodConfig['list'], params)
+    // const result = {
+    //   list: data,
+    //   total: 3
+    // }
     let list = result?.list || result?.rows
     if (typeof props.afterSearch === 'function') {
       list = props.afterSearch(list)

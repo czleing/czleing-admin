@@ -1,7 +1,7 @@
 import { createVNode } from 'vue'
 import { defineStore } from 'pinia'
 import router from '@/router'
-// import axios from '@/api/index'
+import axios from '@/api/index'
 import { setAccount } from '@/storage/account'
 import { Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
@@ -18,8 +18,7 @@ export const useAuthStore = defineStore('auth', {
   }),
   actions: {
     getCode () {
-      // return axios.get('/auth/code')
-      return null
+      return axios.get('/captchaImage') // { headers: { isToken: false } }
     },
     /**
      * 登录
@@ -32,17 +31,15 @@ export const useAuthStore = defineStore('auth', {
      * 账号密码登录
      * @param {*} param
      */
-    async loginByAccount ({ account, password, code, remember }) {
+    async loginByAccount ({ account, password, code, uuid, remember }) {
       let menuStore = useMenuStore()
-      // const data = {
-      //   account: window.btoa(window.btoa(account)),
-      //   password: window.btoa(window.btoa(password)),
-      //   code
-      // }
-      // const result = await axios.post('/auth/login', data)
-      const result = {
-        token: 'soiuzodjlkcxdlfjskjoiueodalmxojicmeiznmdlicmiel'
+      const data = {
+        username: account, // : window.btoa(window.btoa(account)),
+        password, // : window.btoa(window.btoa(password)),
+        code,
+        uuid,
       }
+      const result = await axios.post('/login', data)
       // 保存登录令牌，会自动缓存到 localStorage
       this.token = result.token
       // 加密持久化需要记住的账号

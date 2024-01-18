@@ -2,7 +2,6 @@ import { ref, createVNode, computed, nextTick } from 'vue'
 import axios from '@/api/index.js'
 import { message, Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
-import dayjs from 'dayjs'
 
 /**
  * 处理操作相关、表格预设操作等
@@ -14,10 +13,14 @@ export function useActionHandle ({ cModal, cTable, modalConfig, api, apiMethod, 
   const isView = ref(false)
   const detail = ref({})
   const buttonConfig = computed(() => {
-    if (typeof modalConfig.buttonConfig === 'function') {
-      return modalConfig.buttonConfig({ isAdd: isAdd.value, isEdit: isEdit.value, isView: isView.value })
-    } else {
-      return modalConfig.buttonConfig
+    let config = modalConfig.buttonConfig
+    if (typeof config === 'function') {
+      config = config({ isAdd: isAdd.value, isEdit: isEdit.value, isView: isView.value })
+    }
+    return {
+      ...config,
+      showConfirm: config.showConfirm ?? !isView.value, // 详情默认不展示确认按钮，除非强制设置了展示
+      cancelText: config.cancelText ?? (isView.value ? '关闭' : undefined) // 详情修改取消按钮为关闭
     }
   })
   const formConfig = computed(() => {
@@ -76,7 +79,7 @@ export function useActionHandle ({ cModal, cTable, modalConfig, api, apiMethod, 
     detail.value = await getDetail(record[primaryKey])
   }
   async function onDeleteHandle (ids) {
-    await axios[apiMethod['delete']](api.delete.replace(':id', ids.join(',')), { ids })
+    await axios[apiMethod['delete']](api.delete.replace(':ids', ids.join(',')), { ids })
     message.success('删除成功')
     cTable.value.refresh()
   }
@@ -86,24 +89,24 @@ export function useActionHandle ({ cModal, cTable, modalConfig, api, apiMethod, 
     cTable.value.refresh()
   }
   async function getDetail (id) {
-    const detail = {
-      id: 1,
-      name: '张三',
-      userName: '张三',
-      age: 24,
-      unitName: '广东省XXXX',
-      radio: 1,
-      password: 123456,
-      persent: 98,
-      amount: 899,
-      mobile: '13800138000',
-      staticSelect: 1,
-      dmSelect: '1729018011857817601',
-      date: Date.now(),
-      remark: '备注内容'
-    }
-    // const detail = await axios[apiMethod['detail']](api.detail.replace(':id', id), { id })
-    console.log('模拟获取详情数据', detail)
+    // const detail = {
+    //   id: 1,
+    //   name: '张三',
+    //   userName: '张三',
+    //   age: 24,
+    //   unitName: '广东省XXXX',
+    //   radio: 1,
+    //   password: 123456,
+    //   persent: 98,
+    //   amount: 899,
+    //   mobile: '13800138000',
+    //   staticSelect: 1,
+    //   dmSelect: '1729018011857817601',
+    //   date: Date.now(),
+    //   remark: '备注内容'
+    // }
+    const detail = await axios[apiMethod['detail']](api.detail.replace(':id', id), { id })
+    // console.log('模拟获取详情数据', detail)
     if (transformDetail) {
       return transformDetail(detail, { isEdit: isEdit.value, isView: isView.value })
     }

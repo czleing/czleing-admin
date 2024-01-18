@@ -6,17 +6,16 @@ import { isEmpty } from '@/utils/index.js'
  * 字典相关 store
  */
 export const useDictStore = defineStore('dict', () => {
-  const dictMap = reactive({}) // key: dictType，value: 字典项列表
+  const dictMap = reactive({}) // key: 字典类型，value: 字典项列表
   
-  async function getDatasByTypes (types) {
+  async function setDatasByTypes (types) {
     if (isEmpty(types)) return
     if (!Array.isArray(types)) {
       types = [types]
     }
+    types = types.filter(type => !dictMap[type])
     for (const type of types) {
-      if (!dictMap[type]) {
-        dictMap[type] = await getDatasByType(type)
-      }
+      dictMap[type] = await getDatasByType(type)
     }
     return dictMap
   }
@@ -37,6 +36,6 @@ export const useDictStore = defineStore('dict', () => {
 
   return {
     dictMap,
-    getDatasByTypes
+    setDatasByTypes
   }
 })

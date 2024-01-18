@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { createNavRoute } from '@/router/nav.routes'
 import router from '@/router'
+import axios from '@/api'
 
 /**
  * 菜单、路由相关 store
@@ -13,7 +14,8 @@ export const useMenuStore = defineStore('menu', {
     menuList: [],         // 当前登录用户能看的所有菜单(路由树)
     navRoutes: null,      // 导航页路由(所有动态路由)
     loaded: false,        // 是否已加载菜单，用于路由拦截器中判断是否需要加载路由
-    firstRoutePath: null  // 当前选中的第一级路由，顶部菜单选中项
+    firstRoutePath: null, // 当前选中的第一级路由，顶部菜单选中项
+    needTransform: true   // 是否需要转换菜单、路由
   }),
   actions: {
     /**
@@ -22,66 +24,107 @@ export const useMenuStore = defineStore('menu', {
     async loadMenuToRoute () {
       if (!this.loaded) {
         this.loaded = true
-        const menuTree = await this.getMenuTree()
-        const dbRoutes = this.menuToRoute(menuTree)
-        const navRoute = createNavRoute(dbRoutes)
-        this.navRoutes = navRoute?.children
-        const nav2DRoute = this.to2DRoutes(navRoute)
-        router.addRoute(nav2DRoute)
+        if (this.needTransform) {
+          const menuTree = await this.getMenuTree()
+          const dbRoutes = this.menuToRoute(menuTree)
+          const navRoute = createNavRoute(dbRoutes)
+          this.navRoutes = navRoute?.children
+          // const nav2DRoute = this.to2DRoutes(navRoute)
+          router.addRoute(navRoute)
+        } else {
+          const routes = await this.getMenuRouters()
+          router.addRoute(routes)
+        }
       }
+    },
+    async getMenuRouters () {
+      const menuList = await axios.get('/getRouters')
+      const transformer = (menuRoutes) => {
+        return menuRoutes.map(mr => {
+          if (!mr.children) {
+            return {
+              ...mr,
+              meta: {
+                title: mr.meta.title,
+                cache: mr.meta.noCache === false,
+                icon: 'UserOutlined'
+              }
+            }
+          } else {
+            return transformer(mr.children)
+          }
+        })
+      }
+      this.menuList = transformer(menuList)
+      return this.menuList
     },
     /**
      * 请求菜单树数据
      * @returns 菜单树
      */
     async getMenuTree () {
-      // menuList.value = await axios.post('/system/menu/tree')
-      console.log('模拟获取菜单数据')
-      this.menuList = [
-        {
-          path: '/home',
-          title: '首页',
-          icon: 'HomeOutlined',
-          redirect: '/home/index',
-          children: [
-            {
-              path: '/home/index',
-              name: 'index',
-              component: 'home/index',
-              title: '首页',
-              cache: true
-            }
-          ]
-        },
-        {
-          path: '/system',
-          title: '系统管理',
-          icon: 'SettingOutlined',
-          children: [
-            {
-              path: '/system/user',
-              component: 'modules/system/user/user-page',
-              title: '用户管理',
-              icon: 'UserOutlined',
-              cache: true
-            },
-            {
-              path: '/system/role',
-              component: 'modules/system/role/role-page',
-              title: '角色管理',
-              icon: 'UserOutlined',
-              cache: true
-            },
-            {
-              path: '/system/dict',
-              component: 'modules/system/dict/dict-page',
-              title: '字典管理',
-              icon: 'UserOutlined',
-              cache: true
-            }
-          ]
-        }
-      ]
+      const menuList = await axios.get('/getRouters')
+      console.log('获取菜单数据,', menuList)
+      const transformer = (menuRoutes) => {
+        return menuRoutes.map(mr => {
+          return {
+            name: mr.name,
+            path: mr.path,
+            title: mr.meta.title,
+            icon: 'UserOutlined',
+            cache: mr.meta.noCache === false,
+            component: mr.component,
+            children: mr.children ? transformer(mr.children) : undefined
+          }
+        })
+      }
+      this.menuList = transformer(menuList)
+      // console.log('模拟获取菜单数据')
+      // this.menuList = [
+      //   {
+      //     path: '/home',
+      //     title: '首页',
+      //     icon: 'HomeOutlined',
+      //     redirect: '/home/index',
+      //     children: [
+      //       {
+      //         path: '/home/index',
+      //         name: 'index',
+      //         component: 'home/index',
+      //         title: '首页',
+      //         cache: true
+      //       }
+      //     ]
+      //   },
+      //   {
+      //     path: '/system',
+      //     title: '系统管理',
+      //     icon: 'SettingOutlined',
+      //     children: [
+      //       {
+      //         path: '/system/user',
+      //         component: 'modules/system/user/user-page',
+      //         title: '用户管理',
+      //         icon: 'UserOutlined',
+      //         cache: true
+      //       },
+      //       {
+      //         path: '/system/role',
+      //         component: 'modules/system/role/role-page',
+      //         title: '角色管理',
+      //         icon: 'UserOutlined',
+      //         cache: true
+      //       },
+      //       {
+      //         path: '/system/dict/type',
+      //         component: 'modules/system/dict/type/dict-page',
+      //         title: '字典管理',
+      //         icon: 'UserOutlined',
+      //         cache: true
+      //       }
+      //     ]
+      //   }
+      // ]
       return this.menuList
     },
     /**
@@ -98,6 +141,8 @@ export const useMenuStore = defineStore('menu', {
       const getComponent = component => {
         if (component === 'Layout') {
           return () => import('@/layout/index.vue')
+        } else if (component === 'RouterView' || component === 'ParentView') {
+          return () => import('@/layout/components/router-view.vue')
         } else if (typeof component === 'function') {
           return component
         } else if (component) {

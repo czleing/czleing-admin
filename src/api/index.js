@@ -33,14 +33,20 @@ instance.interceptors.response.use((response) => {
     // 注意：Blob类型文件下载需要请求头参数添加 responseType:'blob'  下载 导出等功能需要
     downloadFile(response)
   } else {
-    // 响应数据是有效的 JSON 格式，继续处理
-    let result = data
-    if (data.list || data.rows) {
-      result = data
-    } else if (data.data) {
-      result = data.data
+    if (data.code === 401) {
+      message.error('未登录或会话已过期,请重新登录')
+      router.replace('/login')
+      return Promise.reject(new Error('未登录或会话已过期,请重新登录'))
+    } else {
+      // 响应数据是有效的 JSON 格式，继续处理
+      let result = data
+      if (data.list || data.rows) {
+        result = data
+      } else if (data.data) {
+        result = data.data
+      }
+      return Promise.resolve(result)
     }
-    return Promise.resolve(result)
   }
 }, (error) => {
   // 统一处理错误
@@ -82,16 +88,16 @@ const handleRequestError = (error) => {
         console.error('参数校验失败:', error.response.data.message)
         message.error(error.response.data.message || '参数校验失败')
         return Promise.reject(error.response.data.message ?? '参数json解析失败')
-      case 401:
-        console.error('未授权:', error.response.data.message)
-        if (error.response.data.message === 'Token不存在或已过期') {
-          router.replace('/login')
-          message.error('账号已过期,请重新登录')
-          return Promise.reject({ error: 'Unauthorized', message: '账号已过期,请重新登录' })
-        } else {
-          message.error(error.response.data.message || '账号已过期,请重新登录')
-          return Promise.reject({ error: '401', message: error.response.data.message })
-        }
+      // case 401:
+      //   console.error('未授权:', error.response.data.message)
+      //   if (error.response.data.message === 'Token不存在或已过期') {
+      //     router.replace('/login')
+      //     message.error('账号已过期,请重新登录')
+      //     return Promise.reject({ error: 'Unauthorized', message: '账号已过期,请重新登录' })
+      //   } else {
+      //     message.error(error.response.data.message || '账号已过期,请重新登录')
+      //     return Promise.reject({ error: '401', message: error.response.data.message })
+      //   }
       case 404:
         console.error('404:', error.response.data.message)
         message.error(error.response.data.message || '资源不存在')
@@ -127,21 +133,23 @@ class AxiosService {
   }
 
   // GET 请求
-  get (url, params = null) {
-    return instance.request({
+  get (url, params = null, config) {
+    return instance({
       method: 'get',
       url,
       params,
+      headers: config?.headers
     })
   }
 
   // POST 请求
-  post (url, data = null, responseType) {
+  post (url, data = null, config) {
     return instance.request({
       method: 'post',
       url,
       data,
-      responseType
+      responseType: config?.responseType,
+      headers: config?.headers
     })
   }
 

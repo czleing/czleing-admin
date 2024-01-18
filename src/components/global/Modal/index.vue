@@ -8,7 +8,7 @@
         <slot name="footer">
           <div class="tr">
             <a-button :loading="closeLoading" @click="close">{{ currCancelText }}</a-button>
-            <a-button v-if="showConfirm" type="primary" :loading="confirmLoading" :disabled="confirmLoading || confirmDisabled" @click="onOkHandle">{{ currConfirmText }}</a-button>
+            <a-button v-if="currShowConfirm" type="primary" :loading="confirmLoading" :disabled="confirmLoading || confirmDisabled" @click="onOkHandle">{{ currConfirmText }}</a-button>
           </div>
         </slot>
       </template>
@@ -22,7 +22,7 @@
         <slot name="footer">
           <div class="tr">
             <a-button :loading="closeLoading" @click="close">{{ currCancelText }}</a-button>
-            <a-button v-if="showConfirm" type="primary" :loading="confirmLoading" :disabled="confirmLoading || confirmDisabled" @click="onOkHandle">{{ currConfirmText }}</a-button>
+            <a-button v-if="currShowConfirm" type="primary" :loading="confirmLoading" :disabled="confirmLoading || confirmDisabled" @click="onOkHandle">{{ currConfirmText }}</a-button>
           </div>
         </slot>
       </template>
@@ -54,6 +54,7 @@ const currTitle = ref(props.title)
 const currWidth = ref(props.width)
 const currConfirmText = ref(props.confirmText)
 const currCancelText = ref(props.cancelText)
+const currShowConfirm = ref(props.showConfirm)
 let onConfirm = null
 let onCancel = null
 
@@ -79,6 +80,7 @@ function open (options) {
   currConfirmText.value = options?.confirmText ?? props.confirmText
   currCancelText.value = options?.cancelText ?? props.cancelText
   currWidth.value = ((options?.width ?? props.width) + 'px').replace('pxpx', 'px')
+  currShowConfirm.value = options?.showConfirm ?? props.showConfirm
   onConfirm = options?.onConfirm ?? props.beforeConfirm
   onCancel = options?.onCancel ?? props.beforeCancel
   visible.value = true

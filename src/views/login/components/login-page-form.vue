@@ -55,21 +55,21 @@ import { ref, reactive, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth-store.js'
 import { message } from 'ant-design-vue'
 import { getAccount } from '@/storage/account.js'
-import codePng from '@/assets/images/login/code.png'
 
 const loading = ref(false)
 const form = reactive({
   account: undefined,
   password: undefined,
-  code: undefined
+  code: undefined,
+  uuid: undefined
 })
+const codeSrc = ref()
 const checked = ref(false)
 const rules = {
   account: [{ required: true, message: '请输入用户名' }],
   password: [{ required: true, message: '请输入密码' }],
   code: [{ required: true, message: '请输入校验码' }]
 }
-const codeSrc = ref(codePng)
 const authStore = useAuthStore()
 
 onMounted(() => {
@@ -82,16 +82,18 @@ onMounted(() => {
 })
 
 async function getCode () {
-  form.code = 123
+  form.code = undefined
+  form.uuid = undefined
   const result = await authStore.getCode()
-  codeSrc.value = result ?? codeSrc.value
+  codeSrc.value = 'data:image/gif;base64,' + result?.img
+  form.uuid = result?.uuid
 }
 
 async function onSubmitHandle (values) {
   try {
     loading.value = true
     await authStore.login({
-      ...values,
+      ...form,
       remember: checked.value
     })
     message.success('登录成功')

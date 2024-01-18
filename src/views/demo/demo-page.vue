@@ -7,16 +7,40 @@
     primary-key="id"
     primary-key-说明="primary-key 指定主键的字段名，默认：id"
     :api-config="{
-      // 默认根据当前路由生成
-      add: '/system/user/add'
+      // 预设功能接口地址配置，默认根据当前路由及是否使用 RestFull 风格生成
+      // add: '',
+      // update: '',
+      // detail: '',
+      // delete: '',
+      // list: '',
+      // toggle: '',
+      // import: '',
+      // importTemplate: '',
+      // export: ''
     }"
     :api-method-config="{
-      // 默认根据是否使用 RestFull 风格生成
-      delete: 'delete'
+      // 预设功能接口请求方式设置，默认根据是否使用 RestFull 风格生成
+      // add: '',
+      // update: '',
+      // detail: '',
+      // delete: '',
+      // list: '',
+      // toggle: '',
+      // import: '',
+      // importTemplate: '',
+      // export: ''
     }"
     :permission-config="{
-      // 预设功能权限配置，默认根据当前路由生成
-      add: 'system:user:add'
+      // 预设功能权限配置，默认根据当前路由生成，如：/system/user -> system:user:add
+      // add: '',
+      // update: '',
+      // detail: '',
+      // delete: '',
+      // list: '',
+      // toggle: '',
+      // import: '',
+      // importTemplate: '',
+      // export: ''
     }"
     :tree-config="treeConfig"
     :filter-config="filterConfig"
@@ -50,8 +74,8 @@ const treeConfig = computed(() => ({
 const filterConfig = computed(() => ({
   useCache: true, // 使用暂存
   // cacheBtnText: '记住查询', // 暂存按钮文字，默认 '记住查询'
-  labelCol: { span: 7 },
-  wrapperCol: { span: 18 },
+  // labelCol: { span: 8 },
+  // wrapperCol: { span: 16 },
   fields: [
     {
       label: '关键字',
@@ -130,7 +154,7 @@ const tableConfig = computed(() => ({
     {
       title: '状态',
       dataIndex: 'status',
-      customRender: (value, record, index, column) => { // 自定义渲染函数
+      customRender: ({ value, record, index, column }) => { // 自定义渲染函数
         return h('span', {
           class: 'text-danger'
         }, '状态1')

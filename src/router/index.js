@@ -29,6 +29,33 @@ const staticRoutes = [
       title: '欢迎登录',
       needLogin: false
     }
+  },
+  {
+    path: '/',
+    // 重定向到首页的第一个页面
+    redirect: { name: 'index' },
+    component: () => import('@/layout/index.vue'),
+    hidden: true,
+    children: [
+      {
+        path: '/home',
+        redirect: '/home/index',
+        meta: {
+          icon: 'HomeOutlined'
+        },
+        children: [
+          {
+            path: '/home/index',
+            name: 'index',
+            component: () => import('@/views/home/index.vue'),
+            meta: {
+              title: '首页',
+              cache: true
+            }
+          }
+        ]
+      }
+    ]
   }
 ]
 
