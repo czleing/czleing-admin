@@ -214,3 +214,41 @@ export function getFnValue (value, args) {
     return value
   }
 }
+
+/**
+ * 列表转树
+ * @param {Array} list 列表数据
+ * @param {String} rootParentId 根级节点ID
+ * @param {String} idField id 字段名
+ * @param {String} parentIdField parentId 字段名
+ * @param {String} childrenField children 字段名
+ * @returns 树形数据
+ */
+export function listToTree (list, rootParentId = 0, idField = 'id', parentIdField = 'parentId', childrenField = 'children') {
+  const tree = []
+  const idMap = {} // { key: id, value: {node} }
+  if (isEmpty(list)) return tree
+  list.forEach(item => {
+    const id = item[idField]
+    const parentId = item[parentIdField]
+    item.children = undefined
+    if (!parentId || parentId === rootParentId) {
+      tree.push(item)
+    }
+    idMap[id] = item
+  })
+  list.forEach(item => {
+    const parentId = item[parentIdField]
+    if (parentId) {
+      let parent = idMap[parentId]
+      if (parent && isEmpty(parent[childrenField])) {
+        parent[childrenField] = [item]
+      } else if (parent) {
+        parent[childrenField].push(item)
+      } else {
+        console.error(`id 为 ${parentId} 的菜单不存在`)
+      }
+    }
+  })
+  return tree
+}

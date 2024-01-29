@@ -40,7 +40,7 @@ const openKeys = ref([route.path])
 const selectedKeys = ref([route.path])
 
 watchEffect(() => {
-  openKeys.value = route.meta.matchedPaths
+  openKeys.value = route.matched.map(m => m.path)
   selectedKeys.value = [route.path]
 })
 

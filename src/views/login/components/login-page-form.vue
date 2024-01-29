@@ -97,6 +97,8 @@ async function onSubmitHandle (values) {
       remember: checked.value
     })
     message.success('登录成功')
+  } catch (e) {
+    getCode()
   } finally {
     loading.value = false
   }

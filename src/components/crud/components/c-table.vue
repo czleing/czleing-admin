@@ -4,7 +4,7 @@
     <a-table
       :columns="currColumns"
       :data-source="dataSource"
-      :pagination="pagination"
+      :pagination="config?.props.usePage === false ? false : pagination"
       v-bind="{ ...defaultProps, ...config?.props }"
       :rowKey="primaryKey"
       :row-class-name="`striped-row ${config?.props?.rowClick ? 'pointer' : ''}`"
@@ -40,7 +40,7 @@
         </template>
         <!-- 字典转换 TODO -->
         <!-- 操作列 -->
-        <template v-if="column.action">
+        <template v-else-if="column.action">
           <CTableAction :record="record" :column="column" :permission-config="permissionConfig" @action="onActionHandle" />
         </template>
       </template>
@@ -112,7 +112,7 @@ const useTotal = computed(() => currColumns.value.some(col => col.useTotal))
 // 合计数据
 const total = computed(() => {
   if (useTotal.value) {
-    return dataSource.value.reduce((t, c) => {
+    return dataSource.value?.reduce((t, c) => {
       currColumns.value.forEach(col => {
         if (col.useTotal) {
           t[col.dataIndex] = (t[col.dataIndex] ?? 0) + Number(c[col.dataIndex] ?? 0)
@@ -156,7 +156,7 @@ async function getList () {
     //   list: data,
     //   total: 3
     // }
-    let list = result?.list || result?.rows
+    let list = result?.list ?? result?.rows ?? result
     if (typeof props.afterSearch === 'function') {
       list = props.afterSearch(list)
     }

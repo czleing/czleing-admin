@@ -18,7 +18,7 @@
         :has-import="hasImport"
         :has-export="hasExport"
         :has-go-back="hasGoBack"
-        :other-tools-btns="otherToolsBtns"
+        :config="toolsConfig"
         :api-config="api"
         :api-method-config="apiMethod"
         :permission-config="permission"
@@ -84,8 +84,8 @@ const props = defineProps({
   hasExport: Boolean,
   /** 主键字段名，默认 id */
   primaryKey: { type: String, default: 'id' },
-  /** 操作栏其他操作按钮配置，可选 */
-  otherToolsBtns: Array,
+  /** 操作栏配置，可选 */
+  toolsConfig: Object,
   /** 接口配置，可选，默认根据路由及功能生成（如：新增：/system/user -> /system/user/add） */
   apiConfig: Object,
   /** 接口请求方式配置，可选，默认根据是否使用restfull风格自动生成，不使用restfull则全部post请求 */
@@ -168,6 +168,13 @@ function onTreeSelectHandle (orgId) {
   searchParams.value[props.treeConfig?.searchField ?? 'orgId'] = orgId
   cTable.value.search()
 }
+
+defineExpose({
+  refresh: cTable.value?.refresh,
+  cModal,
+  cForm,
+  detail
+})
 </script>
 
 <style lang="scss" scoped>

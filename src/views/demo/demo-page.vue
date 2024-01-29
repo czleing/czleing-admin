@@ -44,7 +44,7 @@
     }"
     :tree-config="treeConfig"
     :filter-config="filterConfig"
-    :other-tools-btns="otherToolsBtns"
+    :tools-config="toolsConfig"
     :before-search="beforeSearch"
     :after-search="afterSearch"
     :before-submit="beforeSubmit"
@@ -94,26 +94,31 @@ const filterConfig = computed(() => ({
     }
   ]
 }))
-const otherToolsBtns = [
-  {
-    name: '自定义按钮',
-    permission: 'system:user:diy',
-    props: {
-      type: 'link',
-      icon: 'EditOutlined',
-      disabled: ({ selectedIds, selectedObjs, pagination }) => selectedObjs.some(item => item.status === 1),
-      onClick ({ selectedIds, selectedObjs, pagination }) {
-        console.log('我被点击了')
+const toolsConfig = {
+  // addBtnText: '新增',
+  // backBtnText: '返回',
+  otherToolsBtns: [
+    {
+      name: '自定义按钮',
+      permission: 'system:user:diy',
+      props: {
+        type: 'link',
+        icon: 'EditOutlined',
+        disabled: ({ selectedIds, selectedObjs, pagination }) => selectedObjs.some(item => item.status === 1),
+        onClick ({ selectedIds, selectedObjs, pagination }) {
+          console.log('我被点击了')
+        }
       }
     }
-  }
-]
+  ]
+}
 const tableConfig = computed(() => ({
   props: {
     // 参考 a-table props
-    bordered: true,
-    size: 'small',
-    pageSize: 22, // 重写分页大小选项
+    // bordered: true, // 是否使用边框线，默认使用
+    // size: 'small', // 组件尺寸，默认 small
+    // pageSize: 22, // 重写分页大小选项
+    // usePage: false, // 不使用分页，默认使用
     // rowClick (record, index, selected) { // 配置数据行点击事件
     //   console.log(record, index)
     // }
@@ -271,7 +276,7 @@ const modalConfig = computed(() => ({
         }
       },
       {
-        label: '整数',
+        label: formData => '整数', // 字段描述 String || formData => String
         fieldName: 'int',
         type: EControlType.eNumber,
         tooltip: formData => '111', // 字段提示， String || formData => String

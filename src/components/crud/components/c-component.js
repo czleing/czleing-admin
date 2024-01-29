@@ -26,7 +26,6 @@ export default {
      */
     const dataSource = ref()
     const formData = inject('FORM_DATA', {})
-    const type = props.field.type
     const remote = props.field.props?.remote
     const reg = /^\{(.+)\}$/ // 识别动态参数值，参数值为表单中某字段值，格式如：'{formData.type:required}'
     const isValid = ref(true) // 参数是否校验通过，有必填的需要等有值时才获取数据源，且必须所有必填字段都有值时才算校验通过

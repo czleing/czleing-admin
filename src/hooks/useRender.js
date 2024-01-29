@@ -1,6 +1,6 @@
 import { h, inject, resolveComponent, nextTick } from 'vue'
 import { EControlType } from '@/enum/index'
-import { getFnValue } from '@/utils/index'
+import { getFnValue, isNotEmpty } from '@/utils/index'
 import dayjs from 'dayjs'
 
 /**
@@ -8,10 +8,11 @@ import dayjs from 'dayjs'
  * @returns 组件
  */
 export function useRender ({ ctx, isView, value, dataSource }) {
+  console.log('dataSource', dataSource)
   const formData = inject('FORM_DATA', {})
   const emitChange = async val => {
-    await nextTick()
     ctx.$emit('update:value', val)
+    await nextTick()
     ctx.$emit('change', val)
   }
   // 自定义渲染函数
@@ -26,6 +27,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     [EControlType.eSwitch]: renderSwitch,
     [EControlType.eCheckbox]: renderCheckbox,
     [EControlType.eTable]: renderTable,
+    [EControlType.eTreeSelect]: renderTreeSelect,
     [EControlType.eCustom]: renderCustom
   }
   // 通过字段配置生成控件
@@ -69,7 +71,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const props = Object.assign(
       {
         type: 'text',
-        placeholder: `请输入${field.label}`,
+        placeholder: `请输入${getFnValue(field.label, formData)}`,
         maxlength: 50
       },
       controlTypeEnum.data.defaultProps ?? {},
@@ -399,6 +401,47 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     return h(resolveComponent(field.type), controlProps)
   }
 
+  function renderTreeSelect (field) {
+    // 查看模式，直接渲染文本
+    // if (isView) {
+    //   const valueField = field.props?.fieldNames?.value ?? 'id'
+    //   const labelField = field.props?.fieldNames?.label ?? 'name'
+    //   const childrenField = field.props?.fieldNames?.children ?? 'children'
+    //   let text = ''
+    //   if (isNotEmpty(value) && isNotEmpty(dataSource)) {
+    //     text = dataSource.find(item => {
+    //       if (isNotEmpty(item[childrenField])) {
+    //         return item[childrenField].find()
+    //       }
+    //     })
+    //   }
+    //   return h('span', )
+    // }
+    const controlTypeEnum = EControlType._objectOf(field.type)
+    const props = Object.assign(
+      {
+        placeholder: `请选择${field.label}`
+      },
+      controlTypeEnum.data.defaultProps ?? {},
+      field.props
+    )
+    const controlProps = {
+      ...props,
+      value,
+      disabled: props.disabled ?? isView,
+      treeData: dataSource,
+      onChange: val => {
+        emitChange(val)
+        if (typeof props.onChange === 'function') {
+          setTimeout(() => {
+            props.onChange(val, formData)
+          })
+        }
+      }
+    }
+    return h(resolveComponent(field.type), controlProps)
+  }
+
   /**
    * 渲染自定义组件
    * @param {Object} field 字段配置信息
@@ -423,7 +466,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     return h(props.component, controlProps)
   }
 
-  /** 将本系统风格的 options 转成 ant-design 风格的 options，适用于 a-radio, a-select, a-checkbox */
+  /** 将本系统风格的 options 转成 ant-design 风格的 options，适用于 a-radio, a-select, a-checkbox 等 */
   function transformOptions (options, useAll = false) {
     const result = options?.map(item => ({ ...item, value: item.id, label: item.name }))
     if (useAll) {

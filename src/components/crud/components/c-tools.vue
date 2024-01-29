@@ -3,12 +3,14 @@
   <div class="c-tools mb10 flex-x-between">
     <a-space>
       <!-- 新增 -->
-      <a-button v-if="noAdd !== true" v-hasPermi="permissionConfig.add" type="primary" :icon="h(PlusOutlined)" @click="onAddHandle">新增</a-button>
+      <a-button v-if="noAdd !== true" v-hasPermi="permissionConfig.add" type="primary" :icon="h(PlusOutlined)" @click="onAddHandle">
+        {{ config?.addBtnText ?? '新增' }}
+      </a-button>
       <!-- 批量删除 -->
       <a-button v-if="noDelete !== true" v-hasPermi="permissionConfig.delete" type="primary" danger :icon="h(DeleteOutlined)" :disabled="selectNum === 0" @click="onDeleteHandle">批量删除 {{ selectNum > 0 ? `(${ selectNum })` : '' }}</a-button>
       <!-- 自定义按钮 -->
       <a-button
-        v-for="btn in otherToolsBtns"
+        v-for="btn in config?.otherToolsBtns"
         :key="btn.name"
         :disabled="getDisabled(btn)"
         v-hasPermi="btn.permission"
@@ -25,7 +27,7 @@
       <!-- 导出 -->
       <a-button v-if="hasExport" v-hasPermi="permissionConfig.export" type="dashed" :icon="h(ExportOutlined)" @click="onExportHandle">导出 {{ selectNum > 0 ? `(${ selectNum })` : '' }}</a-button>
       <!-- 返回 -->
-      <a-button v-if="hasGoBack" :icon="h(RollbackOutlined)" @click="$router.back()">返回</a-button>
+      <a-button v-if="hasGoBack" :icon="h(RollbackOutlined)" @click="$router.back()">{{ config?.backBtnText ?? '返回' }}</a-button>
     </a-space>
     <a-space>
       <!-- 刷新 -->
@@ -73,8 +75,8 @@ const props = defineProps({
   hasImport: Boolean,
   /** 有导出按钮 */
   hasExport: Boolean,
-  /** 其他操作按钮配置 */
-  otherToolsBtns: Array,
+  /** 工具栏配置 */
+  config: Object,
   /** 接口配置 */
   apiConfig: Object,
   /** 接口请求方式配置 */

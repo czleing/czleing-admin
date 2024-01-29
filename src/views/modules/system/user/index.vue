@@ -18,7 +18,7 @@
     }"
     :tree-config="treeConfig"
     :filter-config="filterConfig"
-    :other-tools-btns="otherToolsBtns"
+    :tools-config="toolsConfig"
     :before-search="beforeSearch"
     :after-search="afterSearch"
     :before-submit="beforeSubmit"
@@ -72,20 +72,22 @@ const filterConfig = computed(() => ({
     }
   ]
 }))
-const otherToolsBtns = [
-  {
-    name: '自定义按钮',
-    permission: 'system:user:diy',
-    props: {
-      type: 'link',
-      icon: 'EditOutlined',
-      disabled: ({ selectedIds, selectedObjs, pagination }) => selectedObjs.some(item => item.status === 1),
-      onClick ({ selectedIds, selectedObjs, pagination }) {
-        console.log('我被点击了')
+const toolsConfig = {
+  otherToolsBtns: [
+    {
+      name: '自定义按钮',
+      permission: 'system:user:diy',
+      props: {
+        type: 'link',
+        icon: 'EditOutlined',
+        disabled: ({ selectedIds, selectedObjs, pagination }) => selectedObjs.some(item => item.status === 1),
+        onClick ({ selectedIds, selectedObjs, pagination }) {
+          console.log('我被点击了')
+        }
       }
     }
-  }
-]
+  ]
+}
 const tableConfig = computed(() => ({
   props: {
     // 参考 a-table props

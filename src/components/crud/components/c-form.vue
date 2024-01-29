@@ -151,7 +151,7 @@ function formItemProps (field) {
     labelCol: field.labelCol ?? labelCol ?? { span: 6 },
     wrapperCol: field.wrapperCol ?? wrapperCol ?? { span: 18 },
     name: field.fieldName,
-    label: field.label,
+    label: getFnValue(field.label, formData),
     disabled: props.isView ? false : getFnValue(field.disabled, formData),
     required: props.isView ? false : getFnValue(field.required, formData),
     tooltip: getFnValue(field.tooltip, formData),

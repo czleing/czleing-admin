@@ -17,6 +17,36 @@ export const EControlType = {
   eImageUpload: Enum('ImageUpload', '图片上传'),
   eCheckbox: Enum('a-checkbox-group', '多选框'),
   eTable: Enum('DynamicTable', '动态表格', { defaultProps: { bordered: true, size: 'small' } }),
+  eTreeSelect: Enum('a-tree-select', '树形选择', { defaultProps: { treeDefaultExpandAll: true } }),
   eCustom: Enum('Custom', '自定义')
 }
 init(EControlType)
+
+/**
+ * 是否启用
+ */
+export const EIsEnabled = {
+  eEnabled: Enum(1, '启用', 'text-success'),
+  eDisabled: Enum(0, '禁用', 'text-danger')
+}
+init(EIsEnabled)
+
+
+/**
+ * 是否
+ */
+export const EYesNo = {
+  eYes: Enum(1, '是', 'text-success'),
+  eNo: Enum(0, '否', 'text-danger')
+}
+init(EYesNo)
+
+/**
+ * 菜单类型
+ */
+export const EMenuType = {
+  eDir: Enum('M', '目录'),
+  eMenu: Enum('C', '菜单'),
+  eBtn: Enum('F', '按钮')
+}
+init(EMenuType)

@@ -12,7 +12,7 @@
     >
       <a-row :gutter="10">
         <!-- 动态字段 -->
-        <a-col v-for="(field, index) in fields" :key="index" v-bind="colSize">
+        <a-col v-for="(field, index) in currFields" :key="index" v-bind="colSize">
           <a-form-item :label="field.label" :name="field.fieldName" :label-col="field.labelCol" :wrapper-col="field.wrapperCol">
             <CComponent v-model:value="formData[field.fieldName]" :field="field" />
           </a-form-item>
@@ -73,6 +73,17 @@ const props = defineProps({
 })
 const colSize = { sm: 8, lg: 6, xxl: 4 }
 const { labelCol, wrapperCol, fields } = props.config
+const currFields = computed(() => {
+  return fields.map(field => {
+    return {
+      ...field,
+      props: {
+        ...field.props,
+        allowClear: field.props?.allowClear ?? true
+      }
+    }
+  })
+})
 const searchForm = ref()
 const loading = inject('c-page.loading', false)
 const formData = reactive({})

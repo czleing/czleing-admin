@@ -14,11 +14,12 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: null,
     userInfo: null,
+    roles: null,
     permissions: []
   }),
   actions: {
     getCode () {
-      return axios.get('/captchaImage') // { headers: { isToken: false } }
+      return axios.get('/captchaImage', null, { headers: { isToken: false } })
     },
     /**
      * 登录
@@ -49,7 +50,7 @@ export const useAuthStore = defineStore('auth', {
       // 获取最新的登录用户信息
       await this.getUserInfo(true)
       // 跳转到首页
-      router.replace({ name: 'index' })
+      router.replace('/')
     },
     /**
      * 退出登录
@@ -63,10 +64,8 @@ export const useAuthStore = defineStore('auth', {
           icon: createVNode(ExclamationCircleOutlined),
           content: '确认退出登录吗？',
           async onOk () {
-            // await axios.post('/auth/logout')
-            that.token = null
-            that.userInfo = null
-            that.permissions = []
+            await axios.post('/logout')
+            that.clearAuthInfo()
             router.replace({ name: 'login' })
             resolve()
           },
@@ -77,6 +76,14 @@ export const useAuthStore = defineStore('auth', {
       })
     },
     /**
+     * 清除登录授权信息
+     */
+    clearAuthInfo () {
+      this.token = null
+      this.userInfo = null
+      this.permissions = []
+    },
+    /**
      * 获取当前登录用户信息
      * @param {boolean} force 是否强制获取而不使用缓存
      * @returns 
@@ -85,16 +92,18 @@ export const useAuthStore = defineStore('auth', {
       if (!force && this.userInfo) {
         return this.userInfo
       } else {
-        // userInfo.value = await axios.get('/auth/userInfo')
-        console.log('模拟获取用户信息、权限列表')
-        this.userInfo = {
-          id: 1,
-          avatar: new URL('@/assets/images/avatar.jpeg', import.meta.url).href,
-          nickname: '张三',
-          age: 18
-        }
+        const authInfo = await axios.get('/authInfo')
+        // console.log('模拟获取用户信息、权限列表')
+        // this.userInfo = {
+        //   id: 1,
+        //   avatar: new URL('@/assets/images/avatar.jpeg', import.meta.url).href,
+        //   nickname: '张三',
+        //   age: 18
+        // }
         // 如果权限列表从用户信息接口返回，此处需要保存权限列表
-        this.permissions = ['system:user:add', 'system:user:list']
+        this.userInfo = authInfo.user
+        this.roles = authInfo.roles
+        this.permissions = authInfo.permissions
         if (import.meta.env.DEV && import.meta.env.VITE_APP_IGNORE_PERMISSION) {
           this.permissions.unshift('*:*:*') // 具有所有权限
         }
