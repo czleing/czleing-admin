@@ -21,8 +21,8 @@ export const useMenuStore = defineStore('menu', {
     /**
      * 加载菜单数据，生成路由
      */
-    async loadMenuToRoute () {
-      if (!this.loaded) {
+    async loadMenuToRoute (force = false) {
+      if (force || !this.loaded) {
         this.loaded = true
         const tree = await this.getMenuTree()
         const routes = this.menuToRoute(tree)

@@ -2,23 +2,13 @@
 <template>
   <div class="dict-page">
     <CPage
-      :permission-config="{
-        list: 'system:dict:list',
-        add: 'system:dict:add',
-        update: 'system:dict:edit',
-        detail: 'system:dict:query',
-        delete: 'system:dict:remove'
-      }"
+      primary-key="dictId"
       :filter-config="filterConfig"
       :table-config="tableConfig"
       :modal-config="modalConfig"
     />
     <Modal ref="cModal">
-      <!-- <CPage
-        :filter-config="filterConfig"
-        :table-config="tableConfig"
-        :modal-config="modalConfig"
-      /> -->
+      <DictData v-if="currDictType" :dict-type="currDictType" />
     </Modal>
   </div>
 </template>
@@ -26,25 +16,28 @@
 <script setup>
 import { computed, h, ref } from 'vue'
 import CPage from '@/components/crud/c-page.vue'
-import { EControlType } from '@/enum/index.js'
+import { EControlType, EIsEnabled } from '@/enum/index.js'
+import DictData from './components/dict-data.vue'
 
 const cModal = ref()
+const currDictType = ref()
+
 const filterConfig = computed(() => ({
   fields: [
     {
-      label: '名称',
-      fieldName: 'name',
-      type: EControlType.eInput,
-      props: {
-        placeholder: '请输入名称'
-      }
-    },
-    {
       label: '类型',
-      fieldName: 'type',
+      fieldName: 'dictType',
       type: EControlType.eInput,
       props: {
         placeholder: '请输入类型'
+      }
+    },
+    {
+      label: '名称',
+      fieldName: 'dictName',
+      type: EControlType.eInput,
+      props: {
+        placeholder: '请输入名称'
       }
     }
   ]
@@ -64,13 +57,14 @@ const tableConfig = computed(() => ({
     },
     {
       title: '类型',
-      dataIndex: 'name',
+      dataIndex: 'dictType',
       customRender: ({ value, record, index, column }) => {
         return h('a', {
           href: 'javascript:;',
           onClick () {
+            currDictType.value = value
             cModal.value.open({
-              title: record.name + ' - 字典数据',
+              title: `字典【${record.dictName}】字典项列表`,
               width: 1000,
               mode: 'drawer',
               showConfirm: false
@@ -79,19 +73,26 @@ const tableConfig = computed(() => ({
         }, value)
       }
     },
-    // {
-    //   title: '名称',
-    //   dataIndex: 'name'
-    // },
-    // {
-    //   title: '状态',
-    //   dataIndex: 'name2',
-    //   dictType: 'is_enabled'
-    // },
+    {
+      title: '名称',
+      dataIndex: 'dictName'
+    },
+    {
+      title: '备注',
+      dataIndex: 'remark'
+    },
+    {
+      title: '是否启用',
+      dataIndex: 'isEnabled',
+      customRender: ({ value, record, index, column }) => {
+        return h('span', {
+          class: EIsEnabled._classOf(value ? 1 : 0)
+        }, EIsEnabled._of(value ? 1 : 0))
+      }
+    },
     {
       title: '创建时间',
-      dataIndex: 'createTime',
-      isDateTime: true
+      dataIndex: 'createTime'
     },
     {
       title: '操作',
@@ -139,24 +140,29 @@ const modalConfig = computed(() => ({
         label: '类型',
         fieldName: 'dictType',
         type: EControlType.eInput,
+        tooltip: !isView ? '字典类型必须以字母开头，且只能为（小写字母，数字，下滑线）' : undefined,
         disabled: isEdit,
         required: true
       },
       {
         label: '名称',
-        fieldName: 'dictType',
+        fieldName: 'dictName',
         type: EControlType.eInput,
         required: true
       },
       {
-        label: '排序',
-        fieldName: 'sort',
-        type: EControlType.eNumber,
-        defaultValue: 1,
+        label: '备注',
+        fieldName: 'remark',
+        type: EControlType.eTextarea,
         props: {
-          precision: 0,
-          min: 1,
-          max: 100
+        }
+      },
+      {
+        label: '是否启用',
+        fieldName: 'isEnabled',
+        type: EControlType.eSwitch,
+        none: !isView,
+        props: {
         }
       },
       {

@@ -38,6 +38,7 @@
         :api-config="api"
         :api-method-config="apiMethod"
         :permission-config="permission"
+        :before-search="beforeSearch"
         :after-search="afterSearch"
         @action="onActionHandle"
       >
@@ -49,7 +50,7 @@
       <slot name="table" />
     </div>
     <!-- 弹窗 -->
-    <!-- 新增修改详情弹窗，如果不想要默认的弹窗或行为可以通过自定义操作按钮来实现 -->
+    <!-- 新增修改详情弹窗页面，如果想自定义不想要默认的弹窗或行为可以通过自定义操作按钮来实现 -->
     <Modal ref="cModal" :before-cancel="onCancelHandle" :footer="null">
       <!-- :footer="null" -> Modal 和 CForm 都提供了 确认、取消按钮支持，这里为了方便控制按钮状态，使用 CForm 的按钮 -->
       <CForm v-if="isAdd || isEdit || isView" ref="cForm" v-bind="{ detail, isAdd, isEdit, isView, primaryKey, formConfig, ...buttonConfig, beforeSubmit, onSubmitHandle }" />
@@ -152,9 +153,6 @@ provide('c-page.onRefreshHandle', onRefreshHandle)
 
 
 function onSearchHandle (params) {
-  if (typeof props.beforeSearch === 'function') {
-    params = props.beforeSearch(params)
-  }
   searchParams.value = params
   cTable.value.search()
 }
@@ -170,7 +168,7 @@ function onTreeSelectHandle (orgId) {
 }
 
 defineExpose({
-  refresh: cTable.value?.refresh,
+  refresh: () => cTable.value?.refresh(),
   cModal,
   cForm,
   detail

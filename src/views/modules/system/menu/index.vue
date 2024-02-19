@@ -3,22 +3,6 @@
   <CPage
     primary-key="menuId"
     no-delete
-    :api-config="{
-      add: '/system/menu',
-      update: '/system/menu',
-      detail: '/system/menu/:id',
-      delete: '/system/menu/:ids',
-      list: '/system/menu/list',
-      toggle: '/system/menu/toggle'
-    }"
-    :permission-config="{
-      add: 'system:menu:add',
-      update: 'system:menu:edit',
-      detail: 'system:menu:query',
-      delete: 'system:menu:remove',
-      list: 'system:menu:list',
-      toggle: 'system:menu:toggle'
-    }"
     :tools-config="{ addBtnText: '新增根级菜单' }"
     :filter-config="filterConfig"
     :before-search="beforeSearch"
@@ -42,7 +26,7 @@
 </template>
 
 <script setup>
-import { h, computed, ref } from 'vue'
+import { h, computed, ref, resolveComponent } from 'vue'
 import CPage from '@/components/crud/c-page.vue'
 import { EControlType, EIsEnabled, EMenuType } from '@/enum/index.js'
 import { listToTree } from '@/utils/index.js'
@@ -52,15 +36,10 @@ const filterConfig = computed(() => ({
     {
       label: '菜单名称',
       fieldName: 'menuName',
-      type: EControlType.eInput,
-      labelCol: { span: 7 },
-      wrapperCol: { span: 18 },
-      props: {
-        placeholder: '请输入菜单名称'
-      }
+      type: EControlType.eInput
     },
     {
-      label: '状态',
+      label: '是否启用',
       fieldName: 'isEnabled',
       type: EControlType.eSelect,
       props: {
@@ -90,20 +69,18 @@ const tableConfig = computed(() => ({
     },
     {
       title: '路由地址',
-      dataIndex: 'path'
+      dataIndex: 'path',
+      customRender: ({ value }) => value || '-'
     },
     {
       title: '组件地址',
-      dataIndex: 'component'
+      dataIndex: 'component',
+      customRender: ({ value }) => value || '-'
     },
     {
       title: '是否启用',
       dataIndex: 'isEnabled',
-      customRender: ({ value, record, index, column }) => { // 自定义渲染函数
-        return h('span', {
-          class: EIsEnabled._classOf(value ? 1 : 0)
-        }, EIsEnabled._of(value ? 1 : 0))
-      }
+      type: 'isEnabled'
     },
     {
       title: '更新时间',
@@ -177,6 +154,16 @@ const modalConfig = computed(() => ({
             url: '/system/menu/treeselect',
             params: {
               menuType: `${EMenuType.eDir},${EMenuType.eMenu}`,
+            },
+            converter (result) {
+              return [
+                {
+                  id: 0,
+                  label: '根目录',
+                  parentId: '',
+                  children: result
+                }
+              ]
             }
           }
         }
@@ -210,7 +197,7 @@ const modalConfig = computed(() => ({
         fieldName: 'icon',
         type: EControlType.eCustom,
         props: {
-          component: 'a-input'
+          component: resolveComponent('IconSelect')
         }
       },
       {
@@ -224,9 +211,19 @@ const modalConfig = computed(() => ({
         }
       },
       {
+        label: '是否外链',
+        fieldName: 'isFrame',
+        type: EControlType.eSwitch,
+        tooltip: '是外链则路由地址需要以`http(s)://`开头',
+        defaultValue: false,
+        none: formData => formData.menuType !== EMenuType.eMenu,
+        props: {
+        }
+      },
+      {
         label: '组件路径',
         fieldName: 'component',
-        none: formData => formData.menuType !== EMenuType.eMenu,
+        none: formData => formData.menuType !== EMenuType.eMenu || formData.isFrame,
         type: EControlType.eInput,
         tooltip: '访问的组件路径，如：`system/user/index`，默认在`views`目录下',
         // required: true,
@@ -236,7 +233,7 @@ const modalConfig = computed(() => ({
       },
       {
         label: '权限字符',
-        fieldName: 'component',
+        fieldName: 'permission',
         none: formData => formData.menuType === EMenuType.eDir,
         type: EControlType.eInput,
         tooltip: '控制器中定义的权限字符，如：@SaCheckPermission(\'system:user:list\')',
@@ -246,8 +243,8 @@ const modalConfig = computed(() => ({
       },
       {
         label: '路由参数',
-        fieldName: 'component',
-        none: formData => formData.menuType !== EMenuType.eMenu,
+        fieldName: 'queryParam',
+        none: formData => formData.menuType !== EMenuType.eMenu || formData.isFrame,
         type: EControlType.eInput,
         tooltip: '访问路由的默认传递参数，如：`{"id": 1, "name": "ry"}`',
         // required: true,
@@ -267,20 +264,12 @@ const modalConfig = computed(() => ({
         }
       },
       {
-        label: '是否外链',
-        fieldName: 'isFrame',
-        type: EControlType.eSwitch,
-        tooltip: '是外链则路由地址需要以`http(s)://`开头',
-        defaultValue: false,
-        props: {
-        }
-      },
-      {
         label: '是否隐藏',
         fieldName: 'isHidden',
         type: EControlType.eSwitch,
         tooltip: '是则不显示在菜单栏',
         defaultValue: false,
+        none: formData => formData.menuType === EMenuType.eBtn,
         props: {
         }
       },
@@ -290,8 +279,24 @@ const modalConfig = computed(() => ({
         type: EControlType.eSwitch,
         tooltip: '是则切换Tabs栏时不会清空数据',
         defaultValue: false,
+        none: formData => formData.menuType !== EMenuType.eMenu,
         props: {
         }
+      },
+      {
+        label: '是否需要登录',
+        fieldName: 'needLogin',
+        type: EControlType.eSwitch,
+        defaultValue: true,
+        none: formData => formData.menuType === EMenuType.eBtn,
+        props: {
+        }
+      },
+      {
+        label: '是否启用',
+        fieldName: 'isEnabled',
+        type: EControlType.eSwitch,
+        none: !isView
       }
     ]
   })

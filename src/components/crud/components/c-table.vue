@@ -38,7 +38,16 @@
         <template v-else-if="column.isDateTime && text">
           <span>{{ dayjs(text).format('YYYY-MM-DD HH:mm') }}</span>
         </template>
-        <!-- 字典转换 TODO -->
+        <!-- 字典转换 -->
+        <template v-else-if="column.dictType && text">
+          <DictView :dict-type="column.dictType" :value="text" />
+        </template>
+        <!-- 类型转换 -->
+        <template v-else-if="column.type">
+          <template v-if="column.type === 'isEnabled'">
+            <span :class="EIsEnabled._classOf(text ? 1 : 0)">{{ EIsEnabled._of(text ? 1 : 0) }}</span>
+          </template>
+        </template>
         <!-- 操作列 -->
         <template v-else-if="column.action">
           <CTableAction :record="record" :column="column" :permission-config="permissionConfig" @action="onActionHandle" />
@@ -71,6 +80,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons-vue'
 import axios from '@/api/index.js'
 import dayjs from 'dayjs'
 import CTableAction from './c-table-action.vue'
+import { EIsEnabled } from '@/enum'
 
 const props = defineProps({
   /** 不要选择框 */
@@ -85,6 +95,8 @@ const props = defineProps({
   apiMethodConfig: Object,
   /** 权限配置 */
   permissionConfig: Object,
+  /** 查询前修改查询参数 */
+  beforeSearch: Function,
   /** 查询后修改查询结果 */
   afterSearch: Function
 })
@@ -141,21 +153,17 @@ onMounted(() => {
 /** 获取数据 */
 async function getList () {
   const url = props.apiConfig?.list
-  const params = {
+  let params = {
     ...searchParams.value,
-    // page: {
     pageNum: pagination.value.current,
     pageSize: pagination.value.pageSize
-    // }
+  }
+  if (typeof props.beforeSearch === 'function') {
+    params = props.beforeSearch(params)
   }
   try {
     loading.value = true
     const result = await axios[props.apiMethodConfig['list']](url, params)
-    // console.log('模拟获取列表数据', url, props.apiMethodConfig['list'], params)
-    // const result = {
-    //   list: data,
-    //   total: 3
-    // }
     let list = result?.list ?? result?.rows ?? result
     if (typeof props.afterSearch === 'function') {
       list = props.afterSearch(list)
@@ -175,38 +183,15 @@ function onSelectChangeHandle (ids, objs) {
   selectedIds.value = ids
   selectedObjs.value = objs
 }
+function clearSelect () {
+  selectedIds.value = []
+  selectedObjs.value = []
+}
 function onPageChangeHandle (page) {
   pagination.value.current = page.current
   pagination.value.pageSize = page.pageSize
   getList()
 }
-
-const data = [
-  {
-    id: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-    createTime: Date.now()
-  },
-  {
-    id: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 2 Lake Park, London No. 2 Lake Park',
-    tags: ['loser'],
-    createTime: Date.now()
-  },
-  {
-    id: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-    createTime: Date.now()
-  }
-]
 
 function search () {
   getList()
@@ -240,6 +225,7 @@ const emits = defineEmits(['action'])
 defineExpose({
   refresh: search,
   reload: search,
+  clearSelect,
   search
 })
 </script>

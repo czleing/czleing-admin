@@ -41,12 +41,12 @@ export const useAuthStore = defineStore('auth', {
         uuid,
       }
       const result = await axios.post('/login', data)
-      // 保存登录令牌，会自动缓存到 localStorage
+      // 保存登录令牌，会自动持久化
       this.token = result.token
       // 加密持久化需要记住的账号
       setAccount(account, password, remember)
       // 获取菜单生成动态路由
-      await menuStore.loadMenuToRoute()
+      await menuStore.loadMenuToRoute(true)
       // 获取最新的登录用户信息
       await this.getUserInfo(true)
       // 跳转到首页

@@ -8,7 +8,6 @@ import dayjs from 'dayjs'
  * @returns 组件
  */
 export function useRender ({ ctx, isView, value, dataSource }) {
-  console.log('dataSource', dataSource)
   const formData = inject('FORM_DATA', {})
   const emitChange = async val => {
     ctx.$emit('update:value', val)
@@ -463,7 +462,11 @@ export function useRender ({ ctx, isView, value, dataSource }) {
         }
       }
     }
-    return h(props.component, controlProps)
+    let component = props.component
+    if (typeof component === 'function') {
+      component = component(formData)
+    }
+    return h(component, controlProps)
   }
 
   /** 将本系统风格的 options 转成 ant-design 风格的 options，适用于 a-radio, a-select, a-checkbox 等 */

@@ -79,7 +79,7 @@ export function useActionHandle ({ cModal, cTable, modalConfig, api, apiMethod, 
     detail.value = await getDetail(record[primaryKey])
   }
   async function onDeleteHandle (ids) {
-    await axios[apiMethod['delete']](api.delete.replace(':ids', ids.join(',')), { ids })
+    await axios[apiMethod['delete']](api.delete.replace(':ids', ids.join(',')))
     message.success('删除成功')
     cTable.value.refresh()
   }
@@ -118,23 +118,28 @@ export function useActionHandle ({ cModal, cTable, modalConfig, api, apiMethod, 
       title: '温馨提示',
       content: `确定要删除选中项(共${ids.length}项)吗？`,
       icon: createVNode(ExclamationCircleOutlined),
-      onOk: async () => await onDeleteHandle(ids)
+      onOk: async () => {
+        await onDeleteHandle(ids)
+        cTable.value.clearSelect()
+      }
     })
   }
-  function onSubmitHandle (submitData) {
+  async function onSubmitHandle (submitData) {
     if (isAdd.value) {
-      // await axios[apiMethod['add']](api.add, submitData)
-      console.log('模拟新增')
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          message.success('新增成功')
-          resolve()
-        }, 1500)
-      })
+      await axios[apiMethod['add']](api.add, submitData)
+      message.success('新增成功')
+      // console.log('模拟新增')
+      // return new Promise((resolve, reject) => {
+      //   setTimeout(() => {
+      //     message.success('新增成功')
+      //     resolve()
+      //   }, 1500)
+      // })
     } else if (isEdit.value) {
-      // await axios[apiMethod['update']](api.edit, submitData)
+      await axios[apiMethod['update']](api.update, submitData)
       message.success('修改成功')
     }
+    cTable.value.refresh()
   }
 
   return {

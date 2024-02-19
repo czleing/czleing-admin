@@ -6,7 +6,7 @@ import { useAuthStore } from '@/stores/auth-store'
 // 创建 Axios 实例
 const instance = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API,
-  timeout: 5000
+  timeout: 10000
 })
 // 请求拦截器
 instance.interceptors.request.use((config) => {

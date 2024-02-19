@@ -478,6 +478,9 @@ const modalConfig = computed(() => ({
         // 动态表格的校验规则，全部配置在 columns 内，只要有一个 column 的 required 为 true，则表示该项为必填项
         // 校验规则 只支持 required, validate: (index, value, record) => {} ()
         props: {
+          // primaryKey: 'id',
+          // maxNum: 10,
+          // disabled: false,
           columns: [
             {
               // 表格列字段参考 DynamicTable 的 props.columns
@@ -512,10 +515,16 @@ const modalConfig = computed(() => ({
         type: EControlType.eCustom,
         // singleLine: true,
         props: {
+          // 对象或返回对象的函数 Object || (formData) => Object
           component: {
             render () { return h('span', {}, '自定义组件8888') }
           }
-          // 或者 component: MyComponent // 外部引入的单文件组件
+          // 或者 使用全局组件, import { resolveComponent } from 'vue'
+          // component: resolveComponent('DictView'),
+          // 或者 外部引入的单文件组件
+          // component: MyComponent,
+          // 其他属性在同级设置
+          // props1: ''
         }
       }
     ]

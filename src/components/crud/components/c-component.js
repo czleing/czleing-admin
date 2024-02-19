@@ -60,7 +60,7 @@ export default {
 
     /** 获取动态数据源 */
     async function getDataSource (_params) {
-      const result = await axios[remote.method ?? 'get'](remote.url, _params)
+      const result = await axios[remote.method ?? 'post'](remote.url, _params)
       if (typeof remote.converter === 'function') {
         dataSource.value = remote.converter(result)
       } else {

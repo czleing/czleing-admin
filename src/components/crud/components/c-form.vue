@@ -56,6 +56,7 @@ const props = defineProps({
   isAdd: Boolean,
   isEdit: Boolean,
   isView: Boolean,
+  primaryKey: String, // 主键字段名
   detail: { type: Object, default: () => ({}) }, // 修改、查看详情时的详情数据
   formConfig: { type: Object, required: true }, // 表单配置信息
   beforeSubmit: Function, // 提交表单前，对数据进行手工处理的函数，submitData => modifiedSubmitData
@@ -269,7 +270,7 @@ function submit () {
       console.log('submitData', submitData)
     }
     if (props.isEdit) {
-      submitData.id = props.detail.id
+      submitData[props.primaryKey] = props.detail[props.primaryKey]
     }
     if (props.onSubmitHandle) {
       await props.onSubmitHandle(submitData)
