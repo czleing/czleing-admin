@@ -172,10 +172,10 @@ export function useRender ({ ctx, isView, value, dataSource }) {
   function renderRadio (field) {
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign({}, controlTypeEnum.data.defaultProps ?? {}, field.props)
-    const options = transformOptions(props.options)
+    const options = transformOptions(props.options ?? dataSource)
     // 查看模式，直接渲染文本
     if (isView) {
-      return h('span', [options.find(item => item.value === value)?.label ?? '-'])
+      return h('span', [options?.find(item => item.value === value)?.label ?? '-'])
     }
     const controlProps = {
       ...props,
@@ -201,10 +201,12 @@ export function useRender ({ ctx, isView, value, dataSource }) {
   function renderCheckbox (field) {
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign({}, controlTypeEnum.data.defaultProps ?? {}, field.props)
-    const options = transformOptions(props.options)
+    const options = transformOptions(props.options ?? dataSource)
     // 查看模式，直接渲染文本
     if (isView) {
-      return h('span', [options.filter(item => item.value === value)?.map(item => item.name)?.join(',') ?? '-'])
+      const newVal = typeof value === 'string' ? value.split(',') : value
+      const selectedValues = Array.isArray(newVal) ? newVal : [newVal]
+      return h('span', [options.filter(item => selectedValues.includes(item.value))?.map(item => item.name)?.join(',') ?? value ?? '-'])
     }
     const controlProps = {
       ...props,
@@ -239,7 +241,9 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const options = transformOptions(props.options ?? dataSource, props.useAll)
     // 查看模式，直接渲染文本
     if (isView) {
-      return h('span', [options?.find(item => item.value === value)?.label ?? value ?? '-'])
+      const newVal = typeof value === 'string' ? value.split(',') : value
+      const selectedValues = Array.isArray(newVal) ? newVal : [newVal]
+      return h('span', [options?.filter(item => selectedValues.includes(item.value))?.map(item => item.label)?.join(',') ?? value ?? '-'])
     }
     const controlProps = {
       ...props,
@@ -401,21 +405,30 @@ export function useRender ({ ctx, isView, value, dataSource }) {
   }
 
   function renderTreeSelect (field) {
+    const treeData = field.props?.treeData ?? dataSource
     // 查看模式，直接渲染文本
-    // if (isView) {
-    //   const valueField = field.props?.fieldNames?.value ?? 'id'
-    //   const labelField = field.props?.fieldNames?.label ?? 'name'
-    //   const childrenField = field.props?.fieldNames?.children ?? 'children'
-    //   let text = ''
-    //   if (isNotEmpty(value) && isNotEmpty(dataSource)) {
-    //     text = dataSource.find(item => {
-    //       if (isNotEmpty(item[childrenField])) {
-    //         return item[childrenField].find()
-    //       }
-    //     })
-    //   }
-    //   return h('span', )
-    // }
+    if (isView) {
+      const valueField = field.props?.fieldNames?.value ?? 'id'
+      const labelField = field.props?.fieldNames?.title ?? 'name'
+      const childrenField = field.props?.fieldNames?.children ?? 'children'
+      const values = typeof value === 'string' ? value.split(',') : value
+      const selectedValueArr = Array.isArray(values) ? values : (values ? [values] : [])
+      let text = []
+      if (isNotEmpty(selectedValueArr) && isNotEmpty(treeData)) {
+        const findText = (list) => {
+          list.forEach(item => {
+            if (selectedValueArr.includes(item[valueField])) {
+              text.push(item[labelField])
+            }
+            if (isNotEmpty(item[childrenField])) {
+              findText(item[childrenField])
+            }
+          })
+        }
+        findText(treeData)
+      }
+      return h('span', text.join(','))
+    }
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
       {
@@ -428,7 +441,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       value,
       disabled: props.disabled ?? isView,
-      treeData: dataSource,
+      treeData,
       onChange: val => {
         emitChange(val)
         if (typeof props.onChange === 'function') {
@@ -472,7 +485,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
   /** 将本系统风格的 options 转成 ant-design 风格的 options，适用于 a-radio, a-select, a-checkbox 等 */
   function transformOptions (options, useAll = false) {
     const result = options?.map(item => ({ ...item, value: item.id, label: item.name }))
-    if (useAll) {
+    if (useAll && result) {
       result.unshift({ value: null, label: '全部' })
     }
     return result

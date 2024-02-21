@@ -4,7 +4,7 @@
     <a-table
       :columns="currColumns"
       :data-source="dataSource"
-      :pagination="config?.props.usePage === false ? false : pagination"
+      :pagination="config?.props?.usePage === false ? false : pagination"
       v-bind="{ ...defaultProps, ...config?.props }"
       :rowKey="primaryKey"
       :row-class-name="`striped-row ${config?.props?.rowClick ? 'pointer' : ''}`"
@@ -48,6 +48,10 @@
             <span :class="EIsEnabled._classOf(text ? 1 : 0)">{{ EIsEnabled._of(text ? 1 : 0) }}</span>
           </template>
         </template>
+        <!-- 字符串脱敏 -->
+        <template v-else-if="column.hideChar && text">
+          {{ stringStar(text, ...column.hideChar) }}
+        </template>
         <!-- 操作列 -->
         <template v-else-if="column.action">
           <CTableAction :record="record" :column="column" :permission-config="permissionConfig" @action="onActionHandle" />
@@ -81,6 +85,7 @@ import axios from '@/api/index.js'
 import dayjs from 'dayjs'
 import CTableAction from './c-table-action.vue'
 import { EIsEnabled } from '@/enum'
+import { stringStar } from '@/utils/index.js'
 
 const props = defineProps({
   /** 不要选择框 */

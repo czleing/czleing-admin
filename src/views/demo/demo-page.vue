@@ -7,19 +7,19 @@
     primary-key="id"
     primary-key-说明="primary-key 指定主键的字段名，默认：id"
     :api-config="{
-      // 预设功能接口地址配置，默认根据当前路由及是否使用 RestFull 风格生成
+      // 预设功能接口地址配置，默认根据当前路由生成
       // add: '',
       // update: '',
       // detail: '',
       // delete: '',
-      // list: '',
+      list: '/system/user/list',
       // toggle: '',
       // import: '',
       // importTemplate: '',
       // export: ''
     }"
     :api-method-config="{
-      // 预设功能接口请求方式设置，默认根据是否使用 RestFull 风格生成
+      // 预设功能接口请求方式设置，默认全部post
       // add: '',
       // update: '',
       // detail: '',
@@ -48,13 +48,14 @@
     :before-search="beforeSearch"
     :after-search="afterSearch"
     :before-submit="beforeSubmit"
+    :after-open-modal="afterOpenModal"
     :transform-detail="transformDetail"
     :table-config="tableConfig"
     :modal-config="modalConfig"
   >
     <!-- 表格单元格内容过于复杂时，使用插槽 -->
     <template #table_slotField="{ record }">
-      插槽内容123123==={{ record.age }}
+      插槽内容==={{ record.age }}
     </template>
   </CPage>
 </template>
@@ -66,10 +67,10 @@ import { EControlType } from '@/enum/index.js'
 
 /** 树形配置，不配置则不使用树 */
 const treeConfig = computed(() => ({
-  url: '/system/org/tree',
-  method: 'get',
-  replaceField: { key: 'key', children: 'children', title: 'title' },
-  searchField: 'orgId', // 将选中节点的id作为列表的查询参数的参数名，默认orgId
+  url: '/system/user/deptTree',
+  // method: 'post',
+  replaceField: { key: 'id', children: 'children', title: 'label' },
+  searchField: 'deptId', // 将选中节点的id作为列表的查询参数的参数名，默认orgId
 }))
 const filterConfig = computed(() => ({
   useCache: true, // 使用暂存
@@ -128,9 +129,9 @@ const tableConfig = computed(() => ({
     {
       title: '姓名',
       tooltip: '用户真实姓名',
-      dataIndex: 'name',
+      dataIndex: 'nickName',
       resizable: true,
-      width: 130
+      width: 100
     },
     {
       title: '年龄',
@@ -166,10 +167,21 @@ const tableConfig = computed(() => ({
       }
     },
     {
+      title: '是否启用',
+      dataIndex: 'isEnabled',
+      type: 'isEnabled' // type 预处理类型，isEnabled，格式化为是否启用
+    },
+    {
+      title: '字符串脱敏',
+      dataIndex: 'phonenumber',
+      hideChar: [3, 4, '*'] // 字符串脱敏，第一个值为左边显示字符数，第二个参数为右边显示字符数，剩下的使用第三个参数代替，默认'*'可不传
+    },
+    {
       title: '地址',
       dataIndex: 'address',
       hidden: true,
-      ellipsis: true
+      width: 180,
+      ellipsis: true // ant-design 自带的超出宽度隐藏
     },
     {
       title: '插槽',
@@ -204,7 +216,7 @@ const tableConfig = computed(() => ({
             callback: 'delete' // 删除操作默认带确认框
           },
           {
-            name: '启/禁用',
+            name: record.isEnabled ? '启用' : '禁用',
             confirm: true,
             callback: 'toggle'
           },
@@ -350,6 +362,19 @@ const modalConfig = computed(() => ({
             }
           },
           {
+            label: '邮箱地址',
+            fieldName: 'email',
+            type: EControlType.eInput,
+            // required: true,
+            rules: {
+              type: 'email',
+              message: '请输入正确的邮箱地址',
+              trigger: 'change'
+            },
+            props: {
+            }
+          },
+          {
             label: '单位名称',
             fieldName: 'unitName',
             type: EControlType.eInput,
@@ -376,6 +401,32 @@ const modalConfig = computed(() => ({
         }
       },
       {
+        label: '字典单选按钮',
+        fieldName: 'radio2',
+        type: EControlType.eRadio,
+        props: {
+          dictType: 'sys_user_sex'
+          // optionType: '', // option 类型， default | button
+          // buttonStyle: '' // optionType 为 button 时，button 的风格样式, outline | solid
+        }
+      },
+      {
+        label: '多选框',
+        fieldName: 'checkbox',
+        type: EControlType.eCheckbox,
+        props: {
+          options: [{ id: 1, name: 'name1' }, { id: 2, name: 'name2' }]
+        }
+      },
+      {
+        label: '字典多选框',
+        fieldName: 'checkbox2',
+        type: EControlType.eCheckbox,
+        props: {
+          dictType: 'sys_user_sex'
+        }
+      },
+      {
         label: '静态下拉',
         fieldName: 'staticSelect',
         type: EControlType.eSelect,
@@ -387,20 +438,62 @@ const modalConfig = computed(() => ({
         }
       },
       {
+        label: '字典下拉',
+        fieldName: 'dictSelect',
+        type: EControlType.eSelect,
+        props: {
+          useAll: true, // 是否在前面添加全部
+          dictType: 'sys_user_sex',
+          // allowClear: true,
+          // mode: '', // 下拉模式 'multiple' | 'tags' | 'combobox'
+        }
+      },
+      {
         label: '动态下拉',
         fieldName: 'dmSelect',
         type: EControlType.eSelect,
         props: {
           remote: {
-            url: 'http://121.196.239.220:443/gfwh-api/content/video/list?pageNum=1&pageSize=10&status=3&enabled=1',
-            // method: 'get', // 默认 get
+            url: '/system/user/selectUser',
+            // method: 'get', // 默认 post
             params: {
               // type: 1,
               type: '{formData.radio:required}' // 动态参数，formData代表表单数据，required代表是否必填，必填时，有值才获取数据源
             },
-            converter (result) { // 对接口返回数据进行修改
-              return result.rows.map(item => ({ id: item.id, name: item.title }))
+            converter (result) { // 对接口返回数据进行修改，转成 [{id, name, xxx}] 格式
+              return result.list?.map(item => ({ id: item.userId, name: item.nickName }))
             }
+          }
+        }
+      },
+      {
+        label: '树形单选',
+        fieldName: 'tree',
+        type: EControlType.eTreeSelect,
+        props: {
+          remote: {
+            url: '/system/user/deptTree'
+          },
+          fieldNames: {
+            value: 'id',
+            title: 'label',
+            children: 'children'
+          }
+        }
+      },
+      {
+        label: '树形多选',
+        fieldName: 'treeMul',
+        type: EControlType.eTreeSelect,
+        props: {
+          remote: {
+            url: '/system/user/deptTree'
+          },
+          treeCheckable: true,
+          fieldNames: {
+            value: 'id',
+            title: 'label',
+            children: 'children'
           }
         }
       },
@@ -430,14 +523,6 @@ const modalConfig = computed(() => ({
         }
       },
       {
-        label: '多选框',
-        fieldName: 'checkbox',
-        type: EControlType.eCheckbox,
-        props: {
-          options: [{ id: 1, name: 'name1' }, { id: 2, name: 'name2' }]
-        }
-      },
-      {
         label: '文件上传',
         fieldName: 'fileUpload',
         type: EControlType.eFileUpload,
@@ -457,14 +542,14 @@ const modalConfig = computed(() => ({
         label: '文本域',
         fieldName: 'remark',
         type: EControlType.eTextarea,
+        required: true,
+        singleLine: true,
         labelCol: { span: 3 },
         wrapperCol: { span: 21 },
         props: {
           // rows: 5,
           // maxlength: 100
-        },
-        required: true,
-        singleLine: true
+        }
       },
       {
         label: '动态表格',
@@ -480,7 +565,6 @@ const modalConfig = computed(() => ({
         props: {
           // primaryKey: 'id',
           // maxNum: 10,
-          // disabled: false,
           columns: [
             {
               // 表格列字段参考 DynamicTable 的 props.columns
@@ -554,6 +638,13 @@ function afterSearch (list) {
  */
 function beforeSubmit (submitData, { isAdd, isEdit, isView, detail }) {
   return submitData
+}
+
+/**
+ * 弹窗后执行
+ * @param {Object} param 其他参数
+ */
+function afterOpenModal ({ isAdd, isEdit, isView }) {
 }
 
 /**

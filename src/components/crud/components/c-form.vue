@@ -255,6 +255,9 @@ function cancel () {
 /** 提交表单 */
 function submit () {
   loadingRequest(loading, async () => {
+    if (import.meta.env.VITE_APP_DEBUG_MODE) {
+      console.log('formData', formData)
+    }
     await inputForm.value.validate()
     let submitData = { ...formData }
     // 日期统一转成时间戳

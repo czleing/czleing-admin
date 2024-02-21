@@ -124,7 +124,9 @@ function onExportHandle () {
         '项数据记录？'
       ]),
       async onOk () {
-        await axios[props.apiMethodConfig.export](props.apiConfig.export, { ids: selectedIds.value })
+        await axios[props.apiMethodConfig.export](props.apiConfig.export, { ids: selectedIds.value }, { responseType: 'blob' })
+        selectedIds.value = []
+        selectedObjs.value = []
       }
     })
   } else { // 按查询条件导出
@@ -132,7 +134,7 @@ function onExportHandle () {
       title: '温馨提示',
       content: '确定根据当前条件导出所有数据？',
       async onOk () {
-        await axios[props.apiMethodConfig.export](props.apiConfig.export, searchParams.value)
+        await axios[props.apiMethodConfig.export](props.apiConfig.export, searchParams.value, { responseType: 'blob' })
       }
     })
   }

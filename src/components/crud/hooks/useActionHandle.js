@@ -7,7 +7,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
  * 处理操作相关、表格预设操作等
  * @returns
  */
-export function useActionHandle ({ cModal, cTable, modalConfig, api, apiMethod, transformDetail, primaryKey }) {
+export function useActionHandle ({ cModal, cTable, modalConfig, api, apiMethod, transformDetail, afterOpenModal, primaryKey }) {
   const isAdd = ref(false)
   const isEdit = ref(false)
   const isView = ref(false)
@@ -43,6 +43,9 @@ export function useActionHandle ({ cModal, cTable, modalConfig, api, apiMethod, 
       width: modalConfig?.width,
       ...options
     })
+    if (typeof afterOpenModal === 'function') {
+      await afterOpenModal({ isAdd: isAdd.value, isEdit: isEdit.value, isView: isView.value })
+    }
   }
   // 表格操作按钮事件处理
   function onActionHandle ({ action, record }) {
@@ -89,24 +92,7 @@ export function useActionHandle ({ cModal, cTable, modalConfig, api, apiMethod, 
     cTable.value.refresh()
   }
   async function getDetail (id) {
-    // const detail = {
-    //   id: 1,
-    //   name: '张三',
-    //   userName: '张三',
-    //   age: 24,
-    //   unitName: '广东省XXXX',
-    //   radio: 1,
-    //   password: 123456,
-    //   persent: 98,
-    //   amount: 899,
-    //   mobile: '13800138000',
-    //   staticSelect: 1,
-    //   dmSelect: '1729018011857817601',
-    //   date: Date.now(),
-    //   remark: '备注内容'
-    // }
     const detail = await axios[apiMethod['detail']](api.detail.replace(':id', id), { id })
-    // console.log('模拟获取详情数据', detail)
     if (transformDetail) {
       return transformDetail(detail, { isEdit: isEdit.value, isView: isView.value })
     }

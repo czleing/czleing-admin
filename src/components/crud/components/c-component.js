@@ -1,6 +1,6 @@
 /** 根据 field 配置渲染组件 */
 import { useRender } from '@/hooks/useRender.js'
-import { EControlType } from '@/enum/index'
+import { useDict } from '@/hooks/useDict.js'
 import { inject, ref, watch, computed } from 'vue'
 import axios from '@/api'
 import { isEmpty } from '@/utils/index'
@@ -27,6 +27,7 @@ export default {
     const dataSource = ref()
     const formData = inject('FORM_DATA', {})
     const remote = props.field.props?.remote
+    const dictType = props.field.props?.dictType
     const reg = /^\{(.+)\}$/ // 识别动态参数值，参数值为表单中某字段值，格式如：'{formData.type:required}'
     const isValid = ref(true) // 参数是否校验通过，有必填的需要等有值时才获取数据源，且必须所有必填字段都有值时才算校验通过
     const needWatch = ref(false) // 是否需要监听表单，有动态字段则需要
@@ -56,6 +57,10 @@ export default {
       } else { // 没有需要监听的动态字段，直接获取
         getDataSource(params)
       }
+    } else if (dictType) { // 如果使用了数据字典
+      useDict([dictType], dict => {
+        dataSource.value = dict[dictType]
+      })
     }
 
     /** 获取动态数据源 */

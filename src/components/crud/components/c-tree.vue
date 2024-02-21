@@ -9,6 +9,7 @@
       @search="onSearchHandle"
     />
     <a-tree
+      v-if="currTreeData.length"
       auto-expand-parent
       block-node
       default-expand-all
@@ -42,41 +43,10 @@ const props = defineProps({
 })
 
 const searchValue = ref()
-const treeData = ref([
-  {
-    title: 'parent 1',
-    key: '0-0',
-    children: [
-      {
-        title: 'parent 1-0',
-        key: '0-0-0',
-        children: [
-          {
-            title: 'leaf',
-            key: '0-0-0-0'
-          },
-          {
-            title: 'leaf',
-            key: '0-0-0-1',
-          },
-        ],
-      },
-      {
-        title: 'parent 1-1',
-        key: '0-0-1',
-        children: [
-          {
-            key: '0-0-1-0',
-            title: 'sss',
-          },
-        ],
-      },
-    ],
-  }
-])
+const treeData = ref([])
 const currTreeData = ref(treeData.value)
-const childrenField = props.config.children ?? 'children'
-const titleField = props.config.title ?? 'title'
+const childrenField = props.config.replaceField?.children ?? 'children'
+const titleField = props.config.replaceField?.title ?? 'title'
 
 onMounted(() => {
   if (props.config.url) {
@@ -86,7 +56,7 @@ onMounted(() => {
   }
 })
 async function getTreeData () {
-  const result = await axios[props.config.method ?? 'get'](props.config.url, props.config.params)
+  const result = await axios[props.config.method ?? 'post'](props.config.url, props.config.params ?? {})
   treeData.value = result ?? []
   currTreeData.value = result ?? []
 }
@@ -107,7 +77,7 @@ function filterTreeData (datas, _searchValue) {
   return datas.reduce((result, node) => {
     const newNode = { ...node } // 创建一个新的节点，避免直接修改原始数据
     // 如果当前节点匹配搜索关键字，则加入到结果中
-    if (newNode[titleField].includes(_searchValue)) {
+    if (newNode[titleField].indexOf(_searchValue) !== -1) {
       result.push(newNode)
     }
     // 如果有子节点，则递归过滤子节点并加入到当前节点的子节点中

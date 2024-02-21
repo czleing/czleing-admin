@@ -28,18 +28,18 @@ instance.interceptors.response.use((response) => {
   // 在接收到响应数据之前可以进行一些处理，例如解析响应数据、错误处理等
   // ...
   const contentType = response.headers['content-type']
-  if (contentType === 'application/octet-stream' ||
-    contentType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+  if (contentType.indexOf('application/octet-stream') > -1 ||
+    contentType.indexOf('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') > -1) {
     // 注意：Blob类型文件下载需要请求头参数添加 responseType:'blob'  下载 导出等功能需要
     downloadFile(response)
   } else {
-    if (data.code === 401) {
+    if (data?.code === 401) {
       message.error('未登录或会话已过期,请重新登录')
       const authStore = useAuthStore()
       authStore.clearAuthInfo()
       router.replace('/login')
       return Promise.reject(new Error('未登录或会话已过期,请重新登录'))
-    } else if (data.code === 200) {
+    } else if (data?.code === 200) {
       // 响应数据是有效的 JSON 格式，继续处理
       let result = data
       if (data.list || data.rows) {
@@ -49,8 +49,8 @@ instance.interceptors.response.use((response) => {
       }
       return Promise.resolve(result)
     } else {
-      message.error(data.msg)
-      return Promise.reject(new Error(data.msg))
+      message.error(data?.msg ?? '服务器繁忙')
+      return Promise.reject(new Error(data?.msg ?? '服务器繁忙'))
     }
   }
 }, (error) => {
@@ -61,9 +61,9 @@ instance.interceptors.response.use((response) => {
 // 下载blob二进制文件
 const downloadFile = (response) => {
   const url = window.URL.createObjectURL(new Blob([response.data]))
-  const filename = response.headers['x-filename']
-  axios.get(url, { responseType: 'blob' }).then((res) => {
-    const blob = new Blob([res.data])
+  const filename = response.headers['download-filename']
+  // axios.get(url, { responseType: 'blob' }).then((res) => {
+    const blob = new Blob([response.data])
     if (window.navigator.msSaveBlob) {
       // 兼容 IE，使用 msSaveBlob 方法进行下载
       window.navigator.msSaveBlob(blob, decodeURIComponent(filename))
@@ -78,7 +78,7 @@ const downloadFile = (response) => {
       link.remove()
       window.URL.revokeObjectURL(url)
     }
-  })
+  // })
 }
 
 // 统一处理错误

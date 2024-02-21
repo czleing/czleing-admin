@@ -34,7 +34,7 @@ export const useDictStore = defineStore('dict', () => {
       let count = 0
       while (true) {
         count++
-        if (count > 100) {
+        if (count > 100) { // 100次循环(10秒钟)获取不到，直接返回空数组
           return []
         }
         if (dictMap[type]) {

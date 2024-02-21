@@ -108,7 +108,9 @@ const props = defineProps({
   /** 提交表单前修改表单数据，可选，data => ({...}) */
   beforeSubmit: Function,
   /** 编辑或查看详情时转换详情数据，可选，detail => ({...}) */
-  transformDetail: Function
+  transformDetail: Function,
+  /** 弹出表单弹窗后执行，可做一些新增、编辑、查看详情前的数据准备工作，可选，({ isAdd, isEdit, isView }) => {} */
+  afterOpenModal: Function,
 })
 const loading = ref(false)
 const cTable = ref()
@@ -140,7 +142,16 @@ const {
   onBatchDeleteHandle, // 批量删除处理
   onActionHandle, // 表格中预设按钮点击处理
   onSubmitHandle // 提交表单处理
-} = useActionHandle({ cModal, cTable, modalConfig: props.modalConfig, api, apiMethod, transformDetail: props.transformDetail, primaryKey: props.primaryKey })
+} = useActionHandle({
+  cModal,
+  cTable,
+  modalConfig: props.modalConfig,
+  api,
+  apiMethod,
+  transformDetail: props.transformDetail,
+  afterOpenModal: props.afterOpenModal,
+  primaryKey: props.primaryKey
+})
 
 /** 与子组件共享变量 */
 provide('c-page.loading', loading)

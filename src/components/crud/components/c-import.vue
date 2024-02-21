@@ -72,7 +72,7 @@ function onImportHandle () {
   })
 }
 function downloadTemplate () {
-  axios.post(props.templateUrl, {}, 'blob')
+  axios.post(props.templateUrl, {}, { responseType: 'blob' })
 }
 function handleRemove () {
   fileList.value = []
