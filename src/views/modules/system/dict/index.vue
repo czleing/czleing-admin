@@ -16,7 +16,7 @@
 <script setup>
 import { computed, h, ref } from 'vue'
 import CPage from '@/components/crud/c-page.vue'
-import { EControlType, EIsEnabled } from '@/enum/index.js'
+import { EControlType } from '@/enum/index.js'
 import DictData from './components/dict-data.vue'
 
 const cModal = ref()
@@ -84,11 +84,7 @@ const tableConfig = computed(() => ({
     {
       title: '是否启用',
       dataIndex: 'isEnabled',
-      customRender: ({ value, record, index, column }) => {
-        return h('span', {
-          class: EIsEnabled._classOf(value ? 1 : 0)
-        }, EIsEnabled._of(value ? 1 : 0))
-      }
+      type: 'isEnabled'
     },
     {
       title: '创建时间',
@@ -97,25 +93,27 @@ const tableConfig = computed(() => ({
     {
       title: '操作',
       actionShowNum: 4,
-      action: [
-        {
-          name: '详情',
-          callback: 'detail'
-        },
-        {
-          name: '编辑',
-          callback: 'edit'
-        },
-        {
-          name: '启/禁用',
-          confirm: true,
-          callback: 'toggle'
-        },
-        {
-          name: '删除',
-          callback: 'delete' // 删除操作默认带确认框
-        }
-      ]
+      action: ({ record }) => {
+        return [
+          {
+            name: '详情',
+            callback: 'detail'
+          },
+          {
+            name: '编辑',
+            callback: 'edit'
+          },
+          {
+            name: record.isEnabled ? '禁用' : '启用',
+            confirm: true,
+            callback: 'toggle'
+          },
+          {
+            name: '删除',
+            callback: 'delete' // 删除操作默认带确认框
+          }
+        ]
+      }
     }
   ]
 }))

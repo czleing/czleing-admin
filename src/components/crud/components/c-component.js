@@ -105,7 +105,12 @@ export default {
     return { dataSource, getDataSource }
   },
   render () { // 组件的数据改变会触发重新渲染
-    const { renderByField } = useRender({ ctx: this, isView: this.isView, value: this.value, dataSource: this.dataSource })
+    const { renderByField } = useRender({
+      ctx: this,
+      isView: this.isView,
+      value: this.value,
+      dataSource: this.dataSource
+    })
     return renderByField(this.field)
   }
 }

@@ -53,7 +53,7 @@
     :table-config="tableConfig"
     :modal-config="modalConfig"
   >
-    <!-- 表格单元格内容过于复杂时，使用插槽 -->
+    <!-- 表格单元格内容过于复杂时，可以使用插槽 -->
     <template #table_slotField="{ record }">
       插槽内容==={{ record.age }}
     </template>
@@ -61,9 +61,9 @@
 </template>
 
 <script setup>
-import { h, computed, ref } from 'vue'
+import { h, computed } from 'vue'
 import CPage from '@/components/crud/c-page.vue'
-import { EControlType } from '@/enum/index.js'
+import { EControlType, EIsEnabled } from '@/enum/index.js'
 
 /** 树形配置，不配置则不使用树 */
 const treeConfig = computed(() => ({
@@ -82,16 +82,19 @@ const filterConfig = computed(() => ({
       label: '关键字',
       fieldName: 'key',
       type: EControlType.eInput,
-      labelCol: { span: 7 },
-      wrapperCol: { span: 18 },
+      // labelCol: { span: 7 },
+      // wrapperCol: { span: 18 },
       props: {
         placeholder: '请输入姓名/手机号/账号'
       }
     },
     {
-      label: '部门',
-      fieldName: 'deptName',
-      type: EControlType.eInput
+      label: '是否启用',
+      fieldName: 'isEnabled',
+      type: EControlType.eSelect,
+      props: {
+        options: EIsEnabled._list
+      }
     }
   ]
 }))
@@ -599,16 +602,20 @@ const modalConfig = computed(() => ({
         type: EControlType.eCustom,
         // singleLine: true,
         props: {
-          // 对象或返回对象的函数 Object || (formData) => Object
+          // component：对象或返回对象的函数 Object || (formData) => Object
           component: {
             render () { return h('span', {}, '自定义组件8888') }
           }
           // 或者 使用全局组件, import { resolveComponent } from 'vue'
           // component: resolveComponent('DictView'),
-          // 或者 外部引入的单文件组件
+          // 或者 外部引入的单文件组件 import MyComponent from 'xxx'
           // component: MyComponent,
           // 其他属性在同级设置
           // props1: ''
+          // modelProps: 'checkedKeys', // 自定义组件的 v-model:value 字段 默认是 value
+          // modelEvent: 'onCheck', // 自定义组件的 v-model 事件字段，默认是 onChange
+          // modelData: 'treeData', // 自定义组件的 dataSource 字段
+          // renderNeedDataSource: true // 需要有数据源才渲染
         }
       }
     ]
@@ -644,7 +651,7 @@ function beforeSubmit (submitData, { isAdd, isEdit, isView, detail }) {
  * 弹窗后执行
  * @param {Object} param 其他参数
  */
-function afterOpenModal ({ isAdd, isEdit, isView }) {
+function afterOpenModal ({ isAdd, isEdit, isView, options }) {
 }
 
 /**

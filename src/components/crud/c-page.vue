@@ -182,7 +182,8 @@ defineExpose({
   refresh: () => cTable.value?.refresh(),
   cModal,
   cForm,
-  detail
+  detail,
+  onAddHandle
 })
 </script>
 

@@ -28,8 +28,8 @@ instance.interceptors.response.use((response) => {
   // 在接收到响应数据之前可以进行一些处理，例如解析响应数据、错误处理等
   // ...
   const contentType = response.headers['content-type']
-  if (contentType.indexOf('application/octet-stream') > -1 ||
-    contentType.indexOf('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') > -1) {
+  if (contentType?.indexOf('application/octet-stream') > -1 ||
+    contentType?.indexOf('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') > -1) {
     // 注意：Blob类型文件下载需要请求头参数添加 responseType:'blob'  下载 导出等功能需要
     downloadFile(response)
   } else {
@@ -49,8 +49,10 @@ instance.interceptors.response.use((response) => {
       }
       return Promise.resolve(result)
     } else {
-      message.error(data?.msg ?? '服务器繁忙')
-      return Promise.reject(new Error(data?.msg ?? '服务器繁忙'))
+      let msg = data?.msg ?? '服务器繁忙'
+      msg = msg.length > 100 ? '系统错误' : msg
+      message.error(msg)
+      return Promise.reject(new Error(msg))
     }
   }
 }, (error) => {
@@ -62,23 +64,21 @@ instance.interceptors.response.use((response) => {
 const downloadFile = (response) => {
   const url = window.URL.createObjectURL(new Blob([response.data]))
   const filename = response.headers['download-filename']
-  // axios.get(url, { responseType: 'blob' }).then((res) => {
-    const blob = new Blob([response.data])
-    if (window.navigator.msSaveBlob) {
-      // 兼容 IE，使用 msSaveBlob 方法进行下载
-      window.navigator.msSaveBlob(blob, decodeURIComponent(filename))
-    } else {
-      // 创建一个 <a> 元素
-      const link = document.createElement('a')
-      link.href = window.URL.createObjectURL(blob)
-      link.setAttribute('download', decodeURIComponent(filename))
-      // 模拟点击下载
-      link.click()
-      // 清理 URL 和 <a> 元素
-      link.remove()
-      window.URL.revokeObjectURL(url)
-    }
-  // })
+  const blob = new Blob([response.data])
+  if (window.navigator.msSaveBlob) {
+    // 兼容 IE，使用 msSaveBlob 方法进行下载
+    window.navigator.msSaveBlob(blob, decodeURIComponent(filename))
+  } else {
+    // 创建一个 <a> 元素
+    const link = document.createElement('a')
+    link.href = window.URL.createObjectURL(blob)
+    link.setAttribute('download', decodeURIComponent(filename))
+    // 模拟点击下载
+    link.click()
+    // 清理 URL 和 <a> 元素
+    link.remove()
+    window.URL.revokeObjectURL(url)
+  }
 }
 
 // 统一处理错误
@@ -128,7 +128,7 @@ class AxiosService {
   }
 
   // GET 请求
-  get (url, params = null, config) {
+  get (url, params = {}, config) {
     return instance({
       method: 'get',
       url,
@@ -138,7 +138,7 @@ class AxiosService {
   }
 
   // POST 请求
-  post (url, data = null, config) {
+  post (url, data = {}, config) {
     return instance.request({
       method: 'post',
       url,
@@ -149,7 +149,7 @@ class AxiosService {
   }
 
   // PUT 请求
-  put (url, params = null) {
+  put (url, params = {}) {
     return instance.request({
       method: 'put',
       url,
@@ -158,7 +158,7 @@ class AxiosService {
   }
 
   // DELETE 请求
-  delete (url, params = null) {
+  delete (url, params = {}) {
     return instance.request({
       method: 'delete',
       url,

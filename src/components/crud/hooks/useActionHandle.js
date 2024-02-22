@@ -44,7 +44,7 @@ export function useActionHandle ({ cModal, cTable, modalConfig, api, apiMethod, 
       ...options
     })
     if (typeof afterOpenModal === 'function') {
-      await afterOpenModal({ isAdd: isAdd.value, isEdit: isEdit.value, isView: isView.value })
+      await afterOpenModal({ isAdd: isAdd.value, isEdit: isEdit.value, isView: isView.value, record: options.record, detail })
     }
   }
   // 表格操作按钮事件处理
@@ -61,25 +61,28 @@ export function useActionHandle ({ cModal, cTable, modalConfig, api, apiMethod, 
       console.error(`action[${action}]不正确，只支持[edit, detail, delete, toggle]`)
     }
   }
-  function onAddHandle () {
+  function onAddHandle (initData = {}) {
     setViewType('add')
+    detail.value = initData
     openModal({
       title: modalConfig?.fullTitle ?? (modalConfig?.title + '-新增')
     })
   }
   async function onEditHandle (record) {
     setViewType('edit')
+    detail.value = await getDetail(record[primaryKey])
     openModal({
+      record,
       title: modalConfig?.fullTitle ?? (modalConfig?.title + '-编辑')
     })
-    detail.value = await getDetail(record[primaryKey])
   }
   async function onDetailHandle (record) {
     setViewType('detail')
+    detail.value = await getDetail(record[primaryKey])
     openModal({
+      record,
       title: modalConfig?.fullTitle ?? (modalConfig?.title + '-详情')
     })
-    detail.value = await getDetail(record[primaryKey])
   }
   async function onDeleteHandle (ids) {
     await axios[apiMethod['delete']](api.delete.replace(':ids', ids.join(',')))
@@ -114,13 +117,6 @@ export function useActionHandle ({ cModal, cTable, modalConfig, api, apiMethod, 
     if (isAdd.value) {
       await axios[apiMethod['add']](api.add, submitData)
       message.success('新增成功')
-      // console.log('模拟新增')
-      // return new Promise((resolve, reject) => {
-      //   setTimeout(() => {
-      //     message.success('新增成功')
-      //     resolve()
-      //   }, 1500)
-      // })
     } else if (isEdit.value) {
       await axios[apiMethod['update']](api.update, submitData)
       message.success('修改成功')

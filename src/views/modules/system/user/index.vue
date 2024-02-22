@@ -19,7 +19,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import CPage from '@/components/crud/c-page.vue'
-import { EControlType } from '@/enum/index.js'
+import { EControlType, EIsEnabled } from '@/enum/index.js'
 import axios from '@/api'
 
 const treeConfig = computed(() => ({
@@ -37,6 +37,14 @@ const filterConfig = computed(() => ({
       type: EControlType.eInput,
       props: {
         placeholder: '请输入姓名/账号'
+      }
+    },
+    {
+      label: '是否启用',
+      fieldName: 'isEnabled',
+      type: EControlType.eSelect,
+      props: {
+        options: EIsEnabled._list
       }
     }
   ]
@@ -151,7 +159,7 @@ const modalConfig = computed(() => ({
       {
         label: '登录账号',
         fieldName: 'userName',
-        tooltip: '可输入数字、字母、下划线，长度为 2 至 20 个字符',
+        tooltip: isView ? undefined : '可输入数字、字母、下划线，长度为 2 至 20 个字符',
         type: EControlType.eInput,
         none: formData => formData.userId !== undefined,
         required: true,
@@ -218,6 +226,9 @@ const modalConfig = computed(() => ({
         label: '岗位',
         fieldName: 'postIds',
         type: EControlType.eSelect,
+        singleLine: true,
+        labelCol: { span: 4 },
+        wrapperCol: { span: 20 },
         props: {
           options: posts.value,
           allowClear: true,
@@ -228,6 +239,9 @@ const modalConfig = computed(() => ({
         label: '角色',
         fieldName: 'roleIds',
         type: EControlType.eSelect,
+        singleLine: true,
+        labelCol: { span: 4 },
+        wrapperCol: { span: 20 },
         props: {
           options: roles.value,
           allowClear: true,

@@ -1,6 +1,7 @@
 <!-- 菜单管理页面 -->
 <template>
   <CPage
+    ref="cPage"
     primary-key="menuId"
     no-delete
     :tools-config="{ addBtnText: '新增根级菜单' }"
@@ -31,6 +32,7 @@ import CPage from '@/components/crud/c-page.vue'
 import { EControlType, EIsEnabled, EMenuType } from '@/enum/index.js'
 import { listToTree } from '@/utils/index.js'
 
+const cPage = ref()
 const filterConfig = computed(() => ({
   fields: [
     {
@@ -104,15 +106,22 @@ const tableConfig = computed(() => ({
             callback: 'edit'
           },
           {
-            name: '启/禁用',
+            name: record.isEnabled ? '启用' : '禁用',
             confirm: true,
             callback: 'toggle'
           },
+          record.menuType !== EMenuType.eBtn ? {
+            name: '新增',
+            permission: 'system:menu:add',
+            callback () {
+              addChildren(record)
+            }
+          } : null,
           {
             name: '删除',
             callback: 'delete' // 删除操作默认带确认框
           }
-        ]
+        ].filter(t => !!t)
         return btns
       }
     }
@@ -308,6 +317,13 @@ function getButtonType (type) {
     case 'C': return 'link';
     case 'F': return 'primary';
   }
+}
+
+/** 新增子菜单 */
+function addChildren (record) {
+  cPage.value.onAddHandle({
+    parentId: record.menuId
+  })
 }
 
 /**

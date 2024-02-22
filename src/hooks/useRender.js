@@ -1,6 +1,6 @@
 import { h, inject, resolveComponent, nextTick } from 'vue'
 import { EControlType } from '@/enum/index'
-import { getFnValue, isNotEmpty } from '@/utils/index'
+import { getFnValue, isNotEmpty, isEmpty } from '@/utils/index'
 import dayjs from 'dayjs'
 
 /**
@@ -461,18 +461,37 @@ export function useRender ({ ctx, isView, value, dataSource }) {
    */
   function renderCustom (field) {
     const props = field.props
+    const onChange = val => {
+      emitChange(val)
+      if (typeof props.onChange === 'function') {
+        setTimeout(() => {
+          props.onChange(val, formData)
+        })
+      }
+    }
     const controlProps = {
       ...props,
       value,
+      onChange,
       disabled: props.disabled ?? isView,
-      component: undefined,
-      onChange: val => {
-        emitChange(val)
-        if (typeof props.onChange === 'function') {
-          setTimeout(() => {
-            props.onChange(val, formData)
-          })
-        }
+      component: undefined
+    }
+    // 自定义 model props，实现数据双向绑定(默认通过 value 驱动，但个别特殊组件没有 value，需要自定义)
+    if (props.modelProps) {
+      controlProps[props.modelProps] = value
+    }
+    // 自定义 model 事件，实现数据双向绑定(默认通过 onChange 驱动，但个别特殊组件没有 onChange，需要自定义)
+    if (props.modelEvent) {
+      controlProps[props.modelEvent] = onChange
+    }
+    // 自定义数据源字段
+    if (props.modelData) {
+      controlProps[props.modelData] = dataSource
+    }
+    // 需要有数据源才渲染，解决 ant-design-vue 4 异步数据源导致部分属性失效问题
+    if (props.renderNeedDataSource) {
+      if (isEmpty(dataSource)) {
+        return
       }
     }
     let component = props.component
