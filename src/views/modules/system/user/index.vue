@@ -22,13 +22,13 @@ import CPage from '@/components/crud/c-page.vue'
 import { EControlType, EIsEnabled } from '@/enum/index.js'
 import axios from '@/api'
 
-const treeConfig = computed(() => ({
+const treeConfig = {
   url: '/system/user/deptTree',
   replaceField: { key: 'id', children: 'children', title: 'label' },
   searchField: 'deptId'
-}))
+}
 
-const filterConfig = computed(() => ({
+const filterConfig = {
   useCache: true,
   fields: [
     {
@@ -48,7 +48,7 @@ const filterConfig = computed(() => ({
       }
     }
   ]
-}))
+}
 const tableConfig = computed(() => ({
   columns: [
     {

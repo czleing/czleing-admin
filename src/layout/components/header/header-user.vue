@@ -2,7 +2,7 @@
   <div class="header-user">
     <a-dropdown v-if="authStore.hasLogin" class="">
       <a-space class="pointer">
-        <a-avatar size="25" :src="authStore.userInfo.avatar" class="shadow1" />
+        <a-avatar size="25" :src="authStore.userInfo.avatar || DefaultAvatar" class="shadow1" />
         <span class="header-user-name">
           {{ authStore.userInfo.nickname }}
         </span>
@@ -33,6 +33,7 @@
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth-store'
 import { CaretDownOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons-vue'
+import DefaultAvatar from '@/assets/images/avatar.jpeg'
 
 const authStore = useAuthStore()
 const router = useRouter()

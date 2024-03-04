@@ -13,11 +13,11 @@ import { beforeInterceptor, afterInterceptor, errorInterceptor } from './interce
       title: '欢迎登录',      // 网页标题，动态更新到浏览器选项卡中
       needLogin: false,      // 是否需要登录才能访问，默认 true
       cache: true,           // 是否缓存页面，切换 Tabs 时状态不会被清空，默认不缓存
-      icon: '',              // 菜单图标，ant-design/icons
+      icon: 'HomeOutlined',  // 菜单图标，ant-design/icons
     },
     children: []             // 子路由
   }
-  不需要再 layout 中显示
+  不需要在 layout 中显示的路由
  */
 const staticRoutes = [
   {
