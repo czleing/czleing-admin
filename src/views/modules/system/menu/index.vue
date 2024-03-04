@@ -160,7 +160,7 @@ const modalConfig = computed(() => ({
         props: {
           fieldNames: { value: 'id', label: 'label' },
           remote: {
-            url: '/system/menu/treeselect',
+            url: '/system/menu/tree',
             params: {
               menuType: `${EMenuType.eDir},${EMenuType.eMenu}`,
             },
