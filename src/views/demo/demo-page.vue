@@ -66,13 +66,13 @@ import CPage from '@/components/crud/c-page.vue'
 import { EControlType, EIsEnabled } from '@/enum/index.js'
 
 /** 树形配置，不配置则不使用树 */
-const treeConfig = computed(() => ({
+const treeConfig = {
   url: '/system/user/deptTree',
   // method: 'post',
   replaceField: { key: 'id', children: 'children', title: 'label' },
   searchField: 'deptId', // 将选中节点的id作为列表的查询参数的参数名，默认orgId
-}))
-const filterConfig = computed(() => ({
+}
+const filterConfig = {
   useCache: true, // 使用暂存
   // cacheBtnText: '记住查询', // 暂存按钮文字，默认 '记住查询'
   // labelCol: { span: 8 },
@@ -97,7 +97,7 @@ const filterConfig = computed(() => ({
       }
     }
   ]
-}))
+}
 const toolsConfig = {
   // addBtnText: '新增',
   // backBtnText: '返回',
@@ -648,14 +648,14 @@ function beforeSubmit (submitData, { isAdd, isEdit, isView, detail }) {
 }
 
 /**
- * 弹窗后执行
+ * 弹窗(新增、修改、详情弹窗)后执行
  * @param {Object} param 其他参数
  */
 function afterOpenModal ({ isAdd, isEdit, isView, options }) {
 }
 
 /**
- * 编辑回填、详情展示时，对详情数据修改
+ * 编辑、详情时，对详情数据修改
  * @param {Object} detail 详情数据
  * @param {Object} param 其他参数
  */
