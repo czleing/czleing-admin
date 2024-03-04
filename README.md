@@ -151,6 +151,7 @@ const treeConfig = {
   replaceField: { key: 'id', children: 'children', title: 'label' },
   searchField: 'deptId', // 将选中节点的id作为列表的查询参数的参数名，默认orgId
 }
+/** 查询条件配置 */
 const filterConfig = {
   useCache: true, // 使用暂存
   // cacheBtnText: '记住查询', // 暂存按钮文字，默认 '记住查询'
@@ -177,6 +178,7 @@ const filterConfig = {
     }
   ]
 }
+/** 自定义工具栏按钮配置 */
 const toolsConfig = {
   // addBtnText: '新增',
   // backBtnText: '返回',
@@ -195,6 +197,7 @@ const toolsConfig = {
     }
   ]
 }
+/** 数据列表配置 */
 const tableConfig = computed(() => ({
   props: {
     // 参考 a-table props
@@ -339,7 +342,7 @@ const tableConfig = computed(() => ({
   ]
 }))
 /**
- * 新增、修改、详情配置
+ * 新增、修改、详情弹窗配置
  */
 const modalConfig = computed(() => ({
   title: 'Demo', // 弹窗标题，会自动根据类型拼上新增、编辑、详情关键字
