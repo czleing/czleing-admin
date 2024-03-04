@@ -8,15 +8,15 @@
 
 ## 相关技术及依赖
 - Vue 3.3+ 开发框架
-- Vite 4.4+ 打包构建
-- [pinia 2.1+](https://pinia.web3doc.top/) 全局状态管理
-- ant-design-vue 4+ UI库
+- Vite 4.4+ 打包构建，目前最快的构建工具
+- [pinia 2.1+](https://pinia.web3doc.top/) 全局状态管理，比 vuex 简单好用
+- ant-design-vue 4+ UI库，ant-design-vue 最新版，体验与颜值并存，完胜 ElementPlus
 - vue-router 4.2+ 路由管理
 - [VueUse](https://vueuse.org/) 集成了很多组合式API的库
 - axios 1.5+ 服务请求
-- dayjs 日期处理(moment的简化版, ant-design4 默认的日期处理工具)
-- pinia-plugin-persist [pinia]持久化插件
-- pnpm 包管理工具
+- dayjs 日期处理(moment的简化版, ant-design-vue 4 默认的日期处理工具)
+- pinia-plugin-persist pinia持久化插件，
+- pnpm 包管理工具，目前最优的包管理工具，更快速且体积更小
 
 ## 框架功能及特点
 - 主题色动态切换
