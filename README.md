@@ -17,6 +17,7 @@
 - dayjs 日期处理(moment的简化版, ant-design-vue 4 默认的日期处理工具)
 - pinia-plugin-persist pinia持久化插件，
 - pnpm 包管理工具，目前最优的包管理工具，更快速且体积更小
+- [后端源码](https://gitee.com/czleing/base-backend-api)
 
 ## 框架功能及特点
 - 主题色动态切换
