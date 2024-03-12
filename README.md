@@ -38,14 +38,6 @@
 - 系统管理基础功能
 - 代码生成(开发中...)
 
-## 预览
-<img src='./src/doc/light.png' alt="light">
-<img src='./src/doc/light2.png' alt="light">
-<img src='./src/doc/light3.png' alt="light">
-<img src='./src/doc/light4.png' alt="light">
-<img src='./src/doc/light5.png' alt="light">
-<img src='./src/doc/dark.png' alt="dark">
-
 ## 初始化
 ### 1. 安装依赖
 ```
@@ -64,6 +56,14 @@ q
 ```
 npm run build
 ```
+
+## 预览
+<img src='./src/doc/light.png' alt="light">
+<img src='./src/doc/light2.png' alt="light">
+<img src='./src/doc/light3.png' alt="light">
+<img src='./src/doc/light4.png' alt="light">
+<img src='./src/doc/light5.png' alt="light">
+<img src='./src/doc/dark.png' alt="dark">
 
 ## 其他说明
 ### 1、动态样式
