@@ -4,20 +4,19 @@
     <template v-for="(item, index) in currDicts">
       <template v-if="item.label">
         <span
-          v-if="item.tagType == 'default' || item.tagType == ''"
+          class="a-tag"
+          v-if="item.tagType === 'default' || !item.tagType"
           :key="'s_' + index"
-          :index="index"
           :class="item.cssClass"
-        >{{ item.label + " " }}</span>
+        >{{ item.label }}</span>
         <a-tag
           v-else
+          :bordered="false"
           :key="'t_' + index"
-          :disable-transitions="true"
-          :index="index"
-          :type="item.tagType == 'primary' ? '' : item.tagType"
+          :type="item.tagType"
           :class="item.cssClass"
         >
-          {{ item.label + " " }}
+          {{ item.label }}
         </a-tag>
       </template>
       <template v-else>

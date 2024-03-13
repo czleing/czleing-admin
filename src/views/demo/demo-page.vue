@@ -61,7 +61,7 @@
 </template>
 
 <script setup>
-import { h, computed } from 'vue'
+import { h, computed, resolveComponent } from 'vue'
 import CPage from '@/components/crud/c-page.vue'
 import { EControlType, EIsEnabled } from '@/enum/index.js'
 
@@ -170,6 +170,16 @@ const tableConfig = computed(() => ({
         return h('span', {
           class: 'text-danger'
         }, '状态1')
+      }
+    },
+    {
+      title: '自定义组件',
+      dataIndex: 'diy',
+      customRender: ({ value, record, index, column }) => {
+        return h(resolveComponent('a-tag'), {
+          bordered: false,
+          color: record.color
+        }, value)
       }
     },
     {

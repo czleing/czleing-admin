@@ -12,18 +12,18 @@
       toggle: '/system/dict/data/toggle'
     }"
     :filter-config="filterConfig"
-    :before-search="beforeSearch"
-    :before-submit="beforeSubmit"
     :table-config="tableConfig"
     :modal-config="modalConfig"
+    :before-search="beforeSearch"
+    :before-submit="beforeSubmit"
   >
   </CPage>
 </template>
 
 <script setup>
-import { computed, watch, ref, h, nextTick } from 'vue'
+import { computed, watch, ref, h, nextTick, resolveComponent } from 'vue'
 import CPage from '@/components/crud/c-page.vue'
-import { EControlType, EIsEnabled } from '@/enum/index.js'
+import { EControlType } from '@/enum/index.js'
 
 const props = defineProps({
   dictType: String
@@ -52,12 +52,7 @@ const filterConfig = computed(() => ({
   ]
 }))
 const tableConfig = computed(() => ({
-  props: {
-    // rowClick (record, index, selected) { // 配置数据行点击事件
-    //   selectedObj.value = selected ? record : undefined
-    // }
-  },
-  initSearch: true, // 默认 true，初始化时查询
+  initSearch: true,
   columns: [
     {
       title: '编码',
@@ -78,21 +73,19 @@ const tableConfig = computed(() => ({
     },
     {
       title: '字典名称',
-      dataIndex: 'dictLabel'
+      dataIndex: 'dictLabel',
+      customRender: ({ value, record, index, column }) => {
+        return h(resolveComponent('a-tag'), {
+          bordered: false,
+          color: record.tagType
+        }, value)
+      }
     },
     {
       title: '是否启用',
       dataIndex: 'isEnabled',
-      customRender: ({ value, record, index, column }) => { // 自定义渲染函数
-        return h('span', {
-          class: EIsEnabled._classOf(value ? 1 : 0)
-        }, EIsEnabled._of(value ? 1 : 0))
-      }
+      type: 'isEnabled'
     },
-    // {
-    //   title: '创建时间',
-    //   dataIndex: 'createTime'
-    // },
     {
       title: '操作',
       actionShowNum: 4,
@@ -112,7 +105,7 @@ const tableConfig = computed(() => ({
         },
         {
           name: '删除',
-          callback: 'delete' // 删除操作默认带确认框
+          callback: 'delete'
         }
       ]
     }
@@ -122,19 +115,17 @@ const tableConfig = computed(() => ({
  * 新增、修改、详情配置
  */
 const modalConfig = computed(() => ({
-  title: '字典数据', // 弹窗标题，会自动根据类型拼上新增、编辑、详情关键字
-  width: 400, // 弹窗宽度，默认 600
-  mode: 'modal', // 弹窗模式, modal 或 drawer
+  title: '字典数据',
+  width: 400,
+  mode: 'modal',
   buttonConfig: ({ isAdd, isEdit, isView }) => ({
-    confirmText: isEdit ? '确认修改' : '确认提交' // 默认是确定
+    confirmText: isEdit ? '确认修改' : '确认提交'
   }),
-  // 表单配置 Object || ({ isAdd, isEdit, isView, detail }) => Object
   formConfig: ({ isAdd, isEdit, isView, detail }) => ({
     labelCol: { span: 6 },
     wrapperCol: { span: 18 },
-    colSize: 1, // 一行显示几列
-    // 表单字段
-    fields: [ // 表单字段数组，可分组
+    colSize: 1,
+    fields: [
       {
         label: '类型',
         fieldName: 'dictType',
@@ -156,14 +147,34 @@ const modalConfig = computed(() => ({
         required: true
       },
       {
-        label: '列表样式',
+        label: '标签类型',
         fieldName: 'tagType',
-        type: EControlType.eInput
+        type: EControlType.eSelect,
+        props: {
+          options: [
+            { id: 'default', name: '默认', class: '' },
+            { id: 'processing', name: '进行中', class: 'text-primary' },
+            { id: 'success', name: '成功', class: 'text-success' },
+            { id: 'warning', name: '警告', class: 'text-warning' },
+            { id: 'error', name: '错误', class: 'text-danger' }
+          ]
+        }
       },
       {
         label: '额外样式',
         fieldName: 'cssClass',
         type: EControlType.eInput
+      },
+      {
+        label: '排序',
+        fieldName: 'dictSort',
+        type: EControlType.eNumber,
+        defaultValue: 1,
+        props: {
+          precision: 0,
+          min: 1,
+          max: 999
+        }
       },
       {
         label: '备注',
@@ -186,7 +197,7 @@ const modalConfig = computed(() => ({
         type: EControlType.eDate,
         none: !isView,
         props: {
-          showTime: true // 是否需要时分秒
+          showTime: true
         }
       }
     ]
