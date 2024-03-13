@@ -17,6 +17,7 @@
 - dayjs 日期处理(moment的简化版, ant-design-vue 4 默认的日期处理工具)
 - pinia-plugin-persist pinia持久化插件，
 - pnpm 包管理工具，目前最优的包管理工具，更快速且体积更小
+- [后端源码](https://gitee.com/czleing/base-backend-api)
 
 ## 框架功能及特点
 - 主题色动态切换
@@ -37,14 +38,6 @@
 - 系统管理基础功能
 - 代码生成(开发中...)
 
-## 预览
-<img src='./src/doc/light.png' alt="light">
-<img src='./src/doc/light2.png' alt="light">
-<img src='./src/doc/light3.png' alt="light">
-<img src='./src/doc/light4.png' alt="light">
-<img src='./src/doc/light5.png' alt="light">
-<img src='./src/doc/dark.png' alt="dark">
-
 ## 初始化
 ### 1. 安装依赖
 ```
@@ -63,6 +56,14 @@ q
 ```
 npm run build
 ```
+
+## 预览
+<img src='./src/doc/light.png' alt="light">
+<img src='./src/doc/light2.png' alt="light">
+<img src='./src/doc/light3.png' alt="light">
+<img src='./src/doc/light4.png' alt="light">
+<img src='./src/doc/light5.png' alt="light">
+<img src='./src/doc/dark.png' alt="dark">
 
 ## 其他说明
 ### 1、动态样式
