@@ -37,6 +37,7 @@
         :config="tableConfig"
         :api-config="api"
         :api-method-config="apiMethod"
+        :api-option-config="apiOptionConfig"
         :permission-config="permission"
         :before-search="beforeSearch"
         :after-search="afterSearch"
@@ -51,7 +52,7 @@
     </div>
     <!-- 弹窗 -->
     <!-- 新增修改详情弹窗页面，如果想自定义不想要默认的弹窗或行为可以通过自定义操作按钮来实现 -->
-    <Modal ref="cModal" :before-cancel="onCancelHandle" :footer="null">
+    <Modal ref="cModal" v-if="formConfig" :before-cancel="onCancelHandle" :footer="null">
       <!-- :footer="null" -> Modal 和 CForm 都提供了 确认、取消按钮支持，这里为了方便控制按钮状态，使用 CForm 的按钮 -->
       <CForm v-if="isAdd || isEdit || isView" ref="cForm" v-bind="{ detail, isAdd, isEdit, isView, primaryKey, formConfig, ...buttonConfig, beforeSubmit, onSubmitHandle }" />
     </Modal>
@@ -91,6 +92,8 @@ const props = defineProps({
   apiConfig: Object,
   /** 接口请求方式配置，可选，默认根据是否使用restfull风格自动生成，不使用restfull则全部post请求 */
   apiMethodConfig: Object,
+  /** 接口请求其他配置，如：headers, content-type 等，可选 */
+  apiOptionConfig: Object,
   /** 权限配置，可选，默认根据路由及功能生成（如：新增：/system/user -> system:user:add） */
   permissionConfig: Object,
   /** 左侧树形控件配置，可选 */
@@ -99,8 +102,8 @@ const props = defineProps({
   filterConfig: Object,
   /** 表格配置，必须 */
   tableConfig: { type: Object, required: true },
-  /** 增改查弹窗配置，必须 */
-  modalConfig: { type: Object, required: true },
+  /** 增改查弹窗配置，可选 */
+  modalConfig: { type: Object, default: () => ({}) },
   /** 查询前修改查询参数，可选，params => ({ ...params, type: 1 }) */
   beforeSearch: Function,
   /** 查询后修改查询结果，可选，list => list.map(...) */
@@ -150,7 +153,8 @@ const {
   apiMethod,
   transformDetail: props.transformDetail,
   afterOpenModal: props.afterOpenModal,
-  primaryKey: props.primaryKey
+  primaryKey: props.primaryKey,
+  apiOptionConfig: props.apiOptionConfig
 })
 
 /** 与子组件共享变量 */
@@ -183,6 +187,8 @@ defineExpose({
   cModal,
   cForm,
   detail,
+  selectedIds,
+  selectedObjs,
   onAddHandle
 })
 </script>

@@ -7,7 +7,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
  * 处理操作相关、表格预设操作等
  * @returns
  */
-export function useActionHandle ({ cModal, cTable, modalConfig, api, apiMethod, transformDetail, afterOpenModal, primaryKey }) {
+export function useActionHandle ({ cModal, cTable, modalConfig, api, apiMethod, transformDetail, afterOpenModal, primaryKey, apiOptionConfig }) {
   const isAdd = ref(false)
   const isEdit = ref(false)
   const isView = ref(false)
@@ -85,17 +85,17 @@ export function useActionHandle ({ cModal, cTable, modalConfig, api, apiMethod, 
     })
   }
   async function onDeleteHandle (ids) {
-    await axios[apiMethod['delete']](api.delete.replace(':ids', ids.join(',')))
+    await axios[apiMethod['delete']](api.delete.replace(':ids', ids.join(',')), null, apiOptionConfig?.delete)
     message.success('删除成功')
     cTable.value.refresh()
   }
   async function onToggleHandle (record) {
-    await axios[apiMethod['toggle']](api.toggle, { [primaryKey]: record[primaryKey] })
+    await axios[apiMethod['toggle']](api.toggle, { [primaryKey]: record[primaryKey] }, apiOptionConfig?.toggle)
     message.success('启/禁用成功')
     cTable.value.refresh()
   }
   async function getDetail (id) {
-    const detail = await axios[apiMethod['detail']](api.detail.replace(':id', id), { id })
+    const detail = await axios[apiMethod['detail']](api.detail.replace(':id', id), { id }, apiOptionConfig?.detail)
     if (transformDetail) {
       return transformDetail(detail, { isEdit: isEdit.value, isView: isView.value })
     }
@@ -115,10 +115,10 @@ export function useActionHandle ({ cModal, cTable, modalConfig, api, apiMethod, 
   }
   async function onSubmitHandle (submitData) {
     if (isAdd.value) {
-      await axios[apiMethod['add']](api.add, submitData)
+      await axios[apiMethod['add']](api.add, submitData, apiOptionConfig?.add)
       message.success('新增成功')
     } else if (isEdit.value) {
-      await axios[apiMethod['update']](api.update, submitData)
+      await axios[apiMethod['update']](api.update, submitData, apiOptionConfig?.update)
       message.success('修改成功')
     }
     cTable.value.refresh()

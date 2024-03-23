@@ -7,12 +7,12 @@
     primary-key="id"
     primary-key-说明="primary-key 指定主键的字段名，默认：id"
     :api-config="{
-      // 预设功能接口地址配置，默认根据当前路由生成
+      // 预设功能接口地址配置，默认根据当前路由生成，如新增：/system/user => /system/user/add
       // add: '',
       // update: '',
       // detail: '',
       // delete: '',
-      list: '/system/user/list',
+      // list: '',
       // toggle: '',
       // import: '',
       // importTemplate: '',
@@ -21,26 +21,17 @@
     :api-method-config="{
       // 预设功能接口请求方式设置，默认全部post
       // add: '',
-      // update: '',
-      // detail: '',
-      // delete: '',
-      // list: '',
-      // toggle: '',
-      // import: '',
-      // importTemplate: '',
-      // export: ''
+      // ...
+    }"
+    :api-option-config="{
+      // 预设功能接口请求额外其他设置，如：headers，设置 headers.Authorization 会覆盖系统默认的 token 设置
+      // list: { headers: { Authorization: 'Bearer xxx', datasource: 'xxx' } }
+      // ...
     }"
     :permission-config="{
       // 预设功能权限配置，默认根据当前路由生成，如：/system/user -> system:user:add
       // add: '',
-      // update: '',
-      // detail: '',
-      // delete: '',
-      // list: '',
-      // toggle: '',
-      // import: '',
-      // importTemplate: '',
-      // export: ''
+      // ...
     }"
     :tree-config="treeConfig"
     :filter-config="filterConfig"
@@ -54,7 +45,7 @@
     :modal-config="modalConfig"
   >
     <!-- 表格单元格内容过于复杂时，可以使用插槽 -->
-    <template #table_slotField="{ record }">
+    <template #table_slotField="{ text, record, index, column }">
       插槽内容==={{ record.age }}
     </template>
   </CPage>
@@ -74,7 +65,7 @@ const treeConfig = {
 }
 /** 查询条件配置 */
 const filterConfig = {
-  useCache: true, // 使用暂存
+  // useCache: true, // 使用查询条件暂存
   // cacheBtnText: '记住查询', // 暂存按钮文字，默认 '记住查询'
   // labelCol: { span: 8 },
   // wrapperCol: { span: 16 },
@@ -83,8 +74,9 @@ const filterConfig = {
       label: '关键字',
       fieldName: 'key',
       type: EControlType.eInput,
-      // labelCol: { span: 7 },
-      // wrapperCol: { span: 18 },
+      // colSize: { span: 8 }, // 整个字段占整行24栅格的比例，默认响应式分配：colSize: { sm: 8, lg: 6, xxl: 4 }
+      // labelCol: { span: 7 }, // 字段文本部分占整个字段的比例
+      // wrapperCol: { span: 18 }, // 字段控件部分占整个字段的比例
       props: {
         placeholder: '请输入姓名/手机号/账号'
       }
@@ -246,7 +238,7 @@ const tableConfig = computed(() => ({
           // },
           // 更自由的自定义
           // {
-          //   name: '自定义2', // 操作名称，使用了 confirm: true 后，提示中显示，不使用 confirm 可不设置
+          //   name: '自定义2', // 操作名称，当使用了 confirm: true 后，用于弹窗提示中显示，不使用 confirm 可不设置
           //   permission: 'system:user:diy2',
           //   confirm: true,
           //   customRender: data => {
@@ -297,9 +289,14 @@ const modalConfig = computed(() => ({
       {
         label: '短文本',
         fieldName: 'shortText',
-        type: EControlType.eInput,
-        // required: true,
+        type: EControlType.eInput, // 控件类型
+        // required: true, // 是否必填 Boolean || formData => Boolean
+        // disabled: isEdit, // 是否禁用 Boolean || formData => Boolean
+        // none: isView, // 是否不需要改字段，Boolean || formData => Boolean
+        // extra: formData => '222', // 字段额外说明， String || formData => String
+        // rules: [], // 校验规则，与 <a-form-item> 一致， object || array
         props: {
+          // 根据 type 继承自对应 ant-design-vue 控件的属性和事件
           allowClear: true
         }
       },

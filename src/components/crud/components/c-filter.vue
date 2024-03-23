@@ -10,9 +10,9 @@
       autocomplete="off"
       @finish="onSubmitHandle"
     >
-      <a-row :gutter="10">
+      <a-row :gutter="10" wrap>
         <!-- 动态字段 -->
-        <a-col v-for="(field, index) in currFields" :key="index" v-bind="colSize">
+        <a-col v-for="(field, index) in currFields" :key="index" v-bind="field.colSize || colSize">
           <a-form-item :label="field.label" :name="field.fieldName" :label-col="field.labelCol" :wrapper-col="field.wrapperCol">
             <CComponent v-model:value="formData[field.fieldName]" :field="field" />
           </a-form-item>

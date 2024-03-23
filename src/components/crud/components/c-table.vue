@@ -98,6 +98,8 @@ const props = defineProps({
   apiConfig: Object,
   /** 接口请求方式配置 */
   apiMethodConfig: Object,
+  /** 接口请求其他配置，如 headers */
+  apiOptionConfig: Object,
   /** 权限配置 */
   permissionConfig: Object,
   /** 查询前修改查询参数 */
@@ -168,7 +170,7 @@ async function getList () {
   }
   try {
     loading.value = true
-    const result = await axios[props.apiMethodConfig['list']](url, params)
+    const result = await axios[props.apiMethodConfig['list']](url, params, props.apiOptionConfig?.list)
     let list = result?.list ?? result?.rows ?? result
     if (typeof props.afterSearch === 'function') {
       list = props.afterSearch(list)
