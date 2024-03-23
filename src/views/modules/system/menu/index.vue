@@ -106,7 +106,7 @@ const tableConfig = computed(() => ({
             callback: 'edit'
           },
           {
-            name: record.isEnabled ? '启用' : '禁用',
+            name: record.isEnabled ? '禁用' : '启用',
             confirm: true,
             callback: 'toggle'
           },

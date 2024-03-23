@@ -1,0 +1,119 @@
+<!-- 代码生成-导入表弹窗 -->
+<template>
+  <Modal ref="cModal" title="导入表" width="800" :before-confirm="beforeConfirm">
+    <CPage
+      ref="cPage"
+      noAdd
+      noDelete
+      :api-config="{
+        list: '/tool/gen/db/list'
+      }"
+      :api-option-config="{
+        list: {
+          headers: {
+            datasource
+          }
+        }
+      }"
+      primary-key="tableName"
+      :filter-config="filterConfig"
+      :table-config="tableConfig"
+    />
+  </Modal>
+</template>
+
+<script setup>
+import { computed, ref, getCurrentInstance } from 'vue'
+import { EControlType } from '@/enum/index.js'
+import { isEmpty } from '@/utils/index.js'
+import axios from '@/api/index.js'
+
+const _this = getCurrentInstance().proxy
+const cPage = ref()
+const cModal = ref()
+
+const props = defineProps({
+  datasource: String
+})
+
+const filterConfig = {
+  fields: [
+    {
+      label: '表名称',
+      fieldName: 'tableName',
+      type: EControlType.eInput,
+      colSize: { span: 8 },
+      props: {
+      }
+    },
+    {
+      label: '表描述',
+      fieldName: 'tableComment',
+      type: EControlType.eInput,
+      colSize: { span: 8 },
+      props: {
+      }
+    }
+  ]
+}
+
+const tableConfig = computed(() => ({
+  props: {
+    // rowClick (record, index, selected) { // 配置数据行点击事件
+    //   selectedObj.value = selected ? record : undefined
+    // }
+  },
+  initSearch: true, // 默认 true，初始化时查询
+  columns: [
+    {
+      title: '表名称',
+      dataIndex: 'tableName'
+    },
+    {
+      title: '表描述',
+      dataIndex: 'tableComment'
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createTime'
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updateTime'
+    }
+  ]
+}))
+
+async function beforeConfirm (close) {
+  const selectedTableNames = cPage.value.selectedIds
+  if (isEmpty(selectedTableNames)) {
+    _this.$message.error('请先选择表')
+    throw new Error('请先选择表')
+  }
+  await axios.post('/tool/gen/importTable', { tables: selectedTableNames.join(',') }, {
+    headers: {
+      datasource: props.datasource
+    }
+  })
+  close()
+  emits('completed')
+}
+
+const emits = defineEmits(['completed'])
+
+function open (options) {
+  cModal.value.open(options)
+}
+
+function close () {
+  cModal.value.close()
+}
+
+defineExpose({
+  open,
+  close
+})
+</script>
+
+<style lang="scss" scoped>
+</style>

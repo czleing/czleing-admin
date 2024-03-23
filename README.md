@@ -1,6 +1,6 @@
 # Vue3 + Vite + Pinia + Ant-design-vue4 + JavaScript + axios + vue-router + pnpm
 
-利用业余时间，使用最新技术栈封装的一套后台管理前端开发框架，勇往追求用最精简的代码，以最优雅的方式，实现即美观又实用的开发框架，同时易懂易用好用，细节处见真章，让开发尽量简单
+使用最新技术栈封装的一套后台管理前端开发框架，追求用最精简的代码，以最优雅的方式，实现功能齐全的开发框架，没有个人的包名、前缀、广告，拿来免改，干净整洁的同时，易懂易用好用易扩展，让开发尽量简单
 
 ## 环境要求
 - node: 14.19+
@@ -67,15 +67,18 @@ npm run build
 
 ## 其他说明
 ### 1、动态样式
-less 中可使用 ant-design 的全局静态变量 @colorPrimary 等，但此变量不会跟随主题动态切换而变化，需要跟随变化请使用动态获取方式，token 内部的变量名参考[官网](https://www.antdv.com/docs/vue/customize-theme-cn)，如下：
+less 中可使用 ant-design 的全局静态变量 @colorPrimary 等，但此变量不会跟随主题动态切换而变化，需要跟随变化请使用动态方式获取，token 内部的变量名参考[官网](https://www.antdv.com/docs/vue/customize-theme-cn)，如下：
 ```js
 import { useThemeToken } from '@/hooks/useThemeToken.js'
 const { token } = useThemeToken()
-// 获取动态主题色
+// 获取动态颜色
 token.value.colorPrimary
+token.value.colorWarning
+token.value.colorSuccess
+...
 ```
 
-### 2、快速开发案例
+### 2、CRUD快速开发案例(后续将可直接代码生成)
 参考 /src/views/demo/demo-page.vue
 ```vue
 <!-- demo CRUD demo 页面 -->
@@ -87,12 +90,12 @@ token.value.colorPrimary
     primary-key="id"
     primary-key-说明="primary-key 指定主键的字段名，默认：id"
     :api-config="{
-      // 预设功能接口地址配置，默认根据当前路由生成
+      // 预设功能接口地址配置，默认根据当前路由生成，如新增：/system/user => /system/user/add
       // add: '',
       // update: '',
       // detail: '',
       // delete: '',
-      list: '/system/user/list',
+      // list: '',
       // toggle: '',
       // import: '',
       // importTemplate: '',
@@ -134,7 +137,7 @@ token.value.colorPrimary
     :modal-config="modalConfig"
   >
     <!-- 表格单元格内容过于复杂时，可以使用插槽 -->
-    <template #table_slotField="{ record }">
+    <template #table_slotField="{ text, record, index, column }">
       插槽内容==={{ record.age }}
     </template>
   </CPage>
@@ -154,7 +157,7 @@ const treeConfig = {
 }
 /** 查询条件配置 */
 const filterConfig = {
-  useCache: true, // 使用暂存
+  // useCache: true, // 使用查询条件暂存
   // cacheBtnText: '记住查询', // 暂存按钮文字，默认 '记住查询'
   // labelCol: { span: 8 },
   // wrapperCol: { span: 16 },
@@ -316,7 +319,7 @@ const tableConfig = computed(() => ({
           // },
           // 更自由的自定义
           // {
-          //   name: '自定义2', // 操作名称，使用了 confirm: true 后，提示中显示，不使用 confirm 可不设置
+          //   name: '自定义2', // 操作名称，当使用了 confirm: true 后，用于提示中显示，不使用 confirm 可不设置
           //   permission: 'system:user:diy2',
           //   confirm: true,
           //   customRender: data => {
