@@ -17,11 +17,14 @@
     :before-search="beforeSearch"
     :before-submit="beforeSubmit"
   >
+    <template #table_dictLabel="{ text, record }">
+      <a-tag :bordered="false" :color="record.tagType">{{ text }}</a-tag>
+    </template>
   </CPage>
 </template>
 
 <script setup>
-import { computed, watch, ref, h, nextTick, resolveComponent } from 'vue'
+import { computed, watch, ref, nextTick } from 'vue'
 import CPage from '@/components/crud/c-page.vue'
 import { EControlType } from '@/enum/index.js'
 
@@ -74,12 +77,7 @@ const tableConfig = computed(() => ({
     {
       title: '字典名称',
       dataIndex: 'dictLabel',
-      customRender: ({ value, record, index, column }) => {
-        return h(resolveComponent('a-tag'), {
-          bordered: false,
-          color: record.tagType
-        }, value)
-      }
+      slot: 'table_dictLabel'
     },
     {
       title: '是否启用',
@@ -89,25 +87,27 @@ const tableConfig = computed(() => ({
     {
       title: '操作',
       actionShowNum: 4,
-      action: [
-        {
-          name: '详情',
-          callback: 'detail'
-        },
-        {
-          name: '编辑',
-          callback: 'edit'
-        },
-        {
-          name: '启/禁用',
-          confirm: true,
-          callback: 'toggle'
-        },
-        {
-          name: '删除',
-          callback: 'delete'
-        }
-      ]
+      action: ({ record }) => {
+        return [
+          {
+            name: '详情',
+            callback: 'detail'
+          },
+          {
+            name: '编辑',
+            callback: 'edit'
+          },
+          {
+            name: record.isEnabled ? '禁用' : '启用',
+            confirm: true,
+            callback: 'toggle'
+          },
+          {
+            name: '删除',
+            callback: 'delete'
+          }
+        ]
+      }
     }
   ]
 }))
@@ -119,7 +119,10 @@ const modalConfig = computed(() => ({
   width: 400,
   mode: 'modal',
   buttonConfig: ({ isAdd, isEdit, isView }) => ({
-    confirmText: isEdit ? '确认修改' : '确认提交'
+    confirmText: isEdit ? '确认修改' : '确认提交并继续',
+    confirmContinue: (formData, submitData) => {
+      formData.dictSort = submitData.dictSort + 1
+    }
   }),
   formConfig: ({ isAdd, isEdit, isView, detail }) => ({
     labelCol: { span: 6 },

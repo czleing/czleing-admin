@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { computed, ref, provide, inject, reactive, watch } from 'vue'
+import { computed, ref, provide, inject, reactive, watch, nextTick } from 'vue'
 import CComponent from './c-component.js'
 import { isDayjs, getFnValue, loadingRequest, isEmpty } from '@/utils/index'
 import { EControlType } from '@/enum'
@@ -64,6 +64,7 @@ const props = defineProps({
   // 以下为自定义提交、取消按钮属性
   showConfirm: { type: Boolean, default: true },
   confirmText: { type: String, default: '提交' },
+  confirmContinue: { type: [Boolean, Function], default: false },
   showCancel: { type: Boolean, default: true },
   cancelText: { type: String, default: '取消' }
 })
@@ -279,8 +280,11 @@ function submit () {
       await props.onSubmitHandle(submitData)
     }
     reset()
-    if (closeModal) {
-      closeModal()
+    if (typeof props.confirmContinue === 'function') {
+      await nextTick()
+      props.confirmContinue(formData, submitData)
+    } else if (closeModal) {
+      !props.confirmContinue && closeModal()
     }
   })
 }

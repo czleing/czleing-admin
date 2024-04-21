@@ -8,9 +8,9 @@ const themes = [
     theme: {
       token: {
         colorPrimary: '#d2b48c',
-        colorError: '#c98a7d',
+        colorError: '#c84e4e',
         colorWarning: '#e2b14c',
-        colorSuccess: '#80b178',
+        colorSuccess: '#3dbd3e',
         colorInfo: '#d2b48c'
       }
     }

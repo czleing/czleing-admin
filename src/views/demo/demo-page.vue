@@ -118,7 +118,7 @@ const tableConfig = computed(() => ({
     // size: 'small', // 组件尺寸，默认 small
     // pageSize: 22, // 重写分页大小选项
     // usePage: false, // 不使用分页，默认使用
-    // rowClick (record, index, selected) { // 配置数据行点击事件
+    // rowClick ({ key, record, index, selected, selectedIds, selectedObjs }) { // 配置数据行点击事件
     //   console.log(record, index)
     // }
   },
@@ -274,10 +274,11 @@ const modalConfig = computed(() => ({
   mode: 'modal', // 弹窗模式, modal 或 drawer
   // 弹窗按钮属性修改 Object || ({ isAdd, isEdit, isView }) => Object
   buttonConfig: ({ isAdd, isEdit, isView }) => ({
+    // showConfirm: !isEdit, // 确认按钮是否可见，默认可见
     confirmText: isEdit ? '确认修改' : '确认提交', // 默认是确定
-    cancelText: '关闭', // 默认是关闭
-    // showConfirm: !isEdit // 确认按钮是否可见，默认可见
+    // confirmContinue: true, // true || (formData, submitData) => {}，提交之后是否继续，继续则不关闭弹窗，只清空数据，可传一个函数对继续后的表单数据初始化
     // showCancel: !isEdit // 取消按钮是否可见，默认可见
+    cancelText: '关闭', // 默认是关闭
   }),
   // 表单配置 Object || ({ isAdd, isEdit, isView, detail }) => Object
   formConfig: ({ isAdd, isEdit, isView, detail }) => ({

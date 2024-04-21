@@ -214,15 +214,14 @@ function customRow (record, index) {
     onClick () {
       const fn = props.config.props?.rowClick
       if (typeof fn === 'function') { // 如果配置了行点击函数
-        if (selectedIds.value.length && selectedIds.value[0] === record[props.primaryKey]) {
-          selectedIds.value = []
-          selectedObjs.value = []
-          fn(record, index, false)
-        } else {
-          selectedIds.value = [record[props.primaryKey]]
-          selectedObjs.value = [record]
-          fn(record, index, true)
-        }
+        fn({
+          key: record[props.primaryKey],
+          index,
+          record,
+          selected: selectedIds.value.includes(record[props.primaryKey]),
+          selectedIds,
+          selectedObjs
+        })
       }
     }
   }

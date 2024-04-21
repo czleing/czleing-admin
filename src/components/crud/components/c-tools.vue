@@ -1,34 +1,36 @@
 <!-- c-page 工具栏组件 -->
 <template>
   <div class="c-tools mb10 flex-x-between">
-    <a-space>
-      <!-- 新增 -->
-      <a-button v-if="noAdd !== true" v-hasPermi="permissionConfig.add" type="primary" :icon="h(PlusOutlined)" @click="onAddHandle">
-        {{ config?.addBtnText ?? '新增' }}
-      </a-button>
-      <!-- 批量删除 -->
-      <a-button v-if="noDelete !== true" v-hasPermi="permissionConfig.delete" type="primary" danger :icon="h(DeleteOutlined)" :disabled="selectNum === 0" @click="onDeleteHandle">批量删除 {{ selectNum > 0 ? `(${ selectNum })` : '' }}</a-button>
-      <!-- 自定义按钮 -->
-      <a-button
-        v-for="btn in config?.otherToolsBtns"
-        :key="btn.name"
-        :disabled="getDisabled(btn)"
-        v-hasPermi="btn.permission"
-        v-bind="{ ...btn.props, disabled: undefined, icon: undefined, onClick: undefined }"
-        @click="onToolClickHandle(btn)"
-      >
-        <template #icon v-if="btn.props.icon">
-          <a-icon :type="btn.props.icon" />
-        </template>
-        {{ btn.name }}
-      </a-button>
-      <!-- 导入 -->
-      <CImport v-if="hasImport" v-hasPermi="permissionConfig.import" :url="apiConfig.import" :template-url="apiConfig.importTemplate" @success="onImportSuccessHandle" />
-      <!-- 导出 -->
-      <a-button v-if="hasExport" v-hasPermi="permissionConfig.export" type="dashed" :icon="h(ExportOutlined)" @click="onExportHandle">导出 {{ selectNum > 0 ? `(${ selectNum })` : '' }}</a-button>
-      <!-- 返回 -->
-      <a-button v-if="hasGoBack" :icon="h(RollbackOutlined)" @click="$router.back()">{{ config?.backBtnText ?? '返回' }}</a-button>
-    </a-space>
+    <div>
+      <a-space>
+        <!-- 新增 -->
+        <a-button v-if="noAdd !== true" v-hasPermi="permissionConfig.add" type="primary" :icon="h(PlusOutlined)" @click="onAddHandle">
+          {{ config?.addBtnText ?? '新增' }}
+        </a-button>
+        <!-- 批量删除 -->
+        <a-button v-if="noDelete !== true" v-hasPermi="permissionConfig.delete" type="primary" danger :icon="h(DeleteOutlined)" :disabled="selectNum === 0" @click="onDeleteHandle">批量删除 {{ selectNum > 0 ? `(${ selectNum })` : '' }}</a-button>
+        <!-- 自定义按钮 -->
+        <a-button
+          v-for="btn in config?.otherToolsBtns"
+          :key="btn.name"
+          :disabled="getDisabled(btn)"
+          v-hasPermi="btn.permission"
+          v-bind="{ ...btn.props, disabled: undefined, icon: undefined, onClick: undefined }"
+          @click="onToolClickHandle(btn)"
+        >
+          <template #icon v-if="btn.props.icon">
+            <a-icon :type="btn.props.icon" />
+          </template>
+          {{ btn.name }}
+        </a-button>
+        <!-- 导入 -->
+        <CImport v-if="hasImport" v-hasPermi="permissionConfig.import" :url="apiConfig.import" :template-url="apiConfig.importTemplate" @success="onImportSuccessHandle" />
+        <!-- 导出 -->
+        <a-button v-if="hasExport" v-hasPermi="permissionConfig.export" type="dashed" :icon="h(ExportOutlined)" @click="onExportHandle">导出 {{ selectNum > 0 ? `(${ selectNum })` : '' }}</a-button>
+        <!-- 返回 -->
+        <a-button v-if="hasGoBack" :icon="h(RollbackOutlined)" @click="$router.back()">{{ config?.backBtnText ?? '返回' }}</a-button>
+      </a-space>
+    </div>
     <a-space>
       <!-- 刷新 -->
       <a-button :loading="loading" @click="onRefreshHandle">
