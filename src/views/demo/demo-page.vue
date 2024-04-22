@@ -321,8 +321,8 @@ const modalConfig = computed(() => ({
       },
       {
         // 字段分组
-        title: '分组标题',
-        subTitle: '分组副标题',
+        title: '分组标题', // String || formData => String
+        subTitle: '分组副标题', // String || formData => String
         // none: formData => !formData.userName, // true表示该项不可见(不使用该字段)，Boolean || formData => Boolean
         fields: [
           {

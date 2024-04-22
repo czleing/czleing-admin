@@ -22,11 +22,11 @@
       <template #bodyCell="{ text, record, index, column }">
         <template v-if="column.field">
           <a-form-item-rest>
-            <CComponent v-model:value="record[column.dataIndex]" :field="column.field" :is-view="disabled" @update:value="emitChange" />
+            <CComponent v-model:value="record[column.dataIndex]" :field="column.field" :is-view="column.isView || disabled" @update:value="emitChange" />
           </a-form-item-rest>
         </template>
         <!-- 操作列 -->
-        <template v-else-if="column.type === 'action' && !disabled">
+        <template v-else-if="useDelete && column.type === 'action' && !disabled">
           <a v-if="modelValue.length > 1" href="javascript:;" @click="deleteHandle(index)">删除</a>
         </template>
       </template>
@@ -79,6 +79,11 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false
+  },
+  // 是否需要删除按钮
+  useDelete: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -97,13 +102,7 @@ const currColumns = ref([
         props: item.props
       }
     }
-  }),
-  {
-    title: '操作',
-    key: 'action',
-    align: 'center',
-    type: 'action'
-  }
+  })
 ])
 onMounted(() => {
   if (!props.disabled && (!props.value || props.value.length === 0)) {
@@ -119,6 +118,22 @@ watch(
     setData(val)
   },
   { immediate: true, deep: true }
+)
+watch(
+  () => props.useDelete,
+  (val) => {
+    if (val) {
+      this.currColumns.push(
+        {
+          title: '操作',
+          key: 'action',
+          align: 'center',
+          type: 'action'
+        }
+      )
+    }
+  },
+  { immediate: true }
 )
 
 function setData(val) {

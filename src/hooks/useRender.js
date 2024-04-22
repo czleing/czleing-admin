@@ -250,6 +250,10 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       value,
       options,
       onChange: (val, option) => {
+        option = {
+          ...option,
+          props: undefined // 去掉 ant-design 添加的死循环自引用
+        }
         if (import.meta.env.VITE_APP_DEBUG_MODE) {
           console.log('selected', val, option)
         }

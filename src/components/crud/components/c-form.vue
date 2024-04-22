@@ -14,7 +14,7 @@
           <template v-if="isFieldGroup(field)">
             <!-- 控件组 -->
             <a-col span="24">
-              <FieldGroup :title="field.title" :subTitle="getFnValue(field.subTitle, formData)">
+              <FieldGroup :title="getFnValue(field.title, formData)" :subTitle="getFnValue(field.subTitle, formData)">
                 <a-row :gutter="15">
                   <template v-for="child in field.fields" :key="child.fieldName">
                     <a-col :span="child.colSpan">
@@ -214,8 +214,17 @@ function pushDateRangeFields (fieldName, fieldNames) {
 function setTableRules (field) {
   const columns = field.props?.columns ?? []
   if (columns.length === 0) return
-  const isRequired = columns.some(item => item.required)
-  const hasValidator = columns.some(item => !!item.validate)
+  let isRequired = false
+  let hasValidator = false
+  columns.forEach(item => {
+    if (item.required && !isRequired) {
+      isRequired = true
+    }
+    if (!!item.validate && !hasValidator) {
+      hasValidator = true
+    }
+  })
+
   field.rules = []
   if (isRequired) {
     field.rules.push({ type: 'array', required: true, message: field.label + '不能为空' })
