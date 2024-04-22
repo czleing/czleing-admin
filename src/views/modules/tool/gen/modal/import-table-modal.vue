@@ -1,6 +1,6 @@
 <!-- 代码生成-导入表弹窗 -->
 <template>
-  <Modal ref="cModal" title="导入表" width="800" :before-confirm="beforeConfirm">
+  <Modal ref="cModal" title="导入表" width="800" :confirm-disabled="selectedNum < 1" :before-confirm="beforeConfirm">
     <CPage
       ref="cPage"
       noAdd
@@ -35,6 +35,7 @@ const cModal = ref()
 const props = defineProps({
   datasource: String
 })
+const selectedNum = computed(() => cPage.value?.selectedIds?.length ?? 0)
 
 const filterConfig = {
   fields: [
@@ -59,9 +60,15 @@ const filterConfig = {
 
 const tableConfig = computed(() => ({
   props: {
-    // rowClick (record, index, selected) { // 配置数据行点击事件
-    //   selectedObj.value = selected ? record : undefined
-    // }
+    rowClick ({ key, record, selected, selectedIds, selectedObjs }) { // 配置数据行点击事件
+      if (!selected) {
+        selectedIds.value.push(key)
+        selectedObjs.value.push(record)
+      } else {
+        selectedIds.value = selectedIds.value.filter(id => id !== key)
+        selectedObjs.value = selectedObjs.value.filter(item => item.id !== key)
+      }
+    }
   },
   initSearch: true, // 默认 true，初始化时查询
   columns: [

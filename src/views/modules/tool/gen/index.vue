@@ -6,17 +6,19 @@
       noAdd
       primary-key="tableId"
       :api-option-config="{
-        list: {
-          headers: {
-            datasource
-          }
-        }
+        list: { headers: { datasource } },
+        update: { headers: { datasource } },
+        detail: { headers: { datasource } }
       }"
       :tools-config="toolsConfig"
       :filter-config="filterConfig"
       :table-config="tableConfig"
     />
-    <ImportTable ref="importTable" :datasource="datasource" @completed="refresh" />
+    <!-- 导入表格 -->
+    <ImportTableModal ref="importTableModal" :datasource="datasource" @completed="refresh" />
+    <!-- 编辑表格 -->
+    <EditModal ref="editModal" :datasource="datasource" />
+    <!-- 预览 -->
   </div>
 </template>
 
@@ -24,10 +26,12 @@
 import { computed, h, ref } from 'vue'
 import CPage from '@/components/crud/c-page.vue'
 import { EControlType } from '@/enum/index.js'
-import ImportTable from './components/import-table.vue'
+import ImportTableModal from './modal/import-table-modal.vue'
+import EditModal from './modal/edit-modal.vue'
 
 const cPage = ref()
-const importTable = ref()
+const importTableModal = ref()
+const editModal = ref()
 const datasource = 'master'
 
 const filterConfig = computed(() => ({
@@ -57,7 +61,7 @@ const toolsConfig = computed(() => ({
         type: 'primary',
         icon: 'ImportOutlined',
         onClick ({ selectedIds, selectedObjs, pagination }) {
-          importTable.value.open()
+          importTableModal.value.open()
         }
       }
     }
@@ -114,11 +118,14 @@ const tableConfig = computed(() => ({
             }
           }
         ]
-        if (record.status === '0') {
+        if (record.status === '0') { // 未生成
           btns.push(...[
             {
               name: '编辑',
-              callback: 'edit'
+              permission: 'edit',
+              callback () {
+                editModal.value.open(record)
+              }
             },
             {
               name: '删除',
