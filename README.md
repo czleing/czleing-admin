@@ -313,6 +313,7 @@ const tableConfig = computed(() => ({
           //   name: '自定义',
           //   permission: 'system:user:diy',
           //   confirm: true, // 该操作是否需要确认操作
+          //   confirmContent: '', // 确认框提示内容，不填则使用默认模板
           //   callback ({}) {
           //     console.log('我被点击了', record)
           //   }
@@ -335,6 +336,7 @@ const tableConfig = computed(() => ({
             name: '辞退',
             permission: 'system:user:getout',
             confirm: true,
+            confirmContent: `确认要辞退${record.name}吗？`,
             callback ({}) {
               console.log(record.name + '被辞退了')
             }

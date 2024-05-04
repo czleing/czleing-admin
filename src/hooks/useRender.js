@@ -20,13 +20,14 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     [EControlType.eTextarea]: renderTextarea,
     [EControlType.eNumber]: renderInputNumber,
     [EControlType.eRadio]: renderRadio,
+    [EControlType.eCheckbox]: renderCheckbox,
     [EControlType.eSelect]: renderSelect,
     [EControlType.eDate]: renderDate,
     [EControlType.eDateRange]: renderDateRange,
     [EControlType.eSwitch]: renderSwitch,
-    [EControlType.eCheckbox]: renderCheckbox,
-    [EControlType.eTable]: renderTable,
+    [EControlType.eEditor]: renderEditor,
     [EControlType.eTreeSelect]: renderTreeSelect,
+    [EControlType.eTable]: renderTable,
     [EControlType.eCustom]: renderCustom
   }
   // 通过字段配置生成控件
@@ -378,6 +379,34 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       }
     }
     return h(resolveComponent(field.type), controlProps)
+  }
+
+  function renderEditor (field) {
+    // 查看模式，直接渲染文本
+    if (isView) {
+      return h('div', [value])
+    }
+    const controlTypeEnum = EControlType._objectOf(field.type)
+    const props = Object.assign(
+      {},
+      controlTypeEnum.data.defaultProps ?? {},
+      field.props
+    )
+    const controlProps = {
+      ...props,
+      value,
+      disabled: props.disabled ?? isView,
+      onChange: val => {
+        emitChange(val)
+        if (typeof props.onChange === 'function') {
+          setTimeout(() => {
+            props.onChange(val, formData)
+          })
+        }
+      }
+    }
+    const component = import.meta.glob('@/components/common/WangEditor/index.vue', { eager: true })
+    return h(component, controlProps)
   }
 
   /**

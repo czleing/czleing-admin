@@ -1,6 +1,6 @@
 <!-- WangEditor 富文本编辑器 -->
 <!-- https://www.wangeditor.com/v5/getting-started.html -->
-<!-- 需要安装依赖： @wangeditor/editor, @wangeditor/editor-for-vue -->
+<!-- 需要安装依赖： @wangeditor/editor, @wangeditor/editor-for-vue@next -->
 <template>
   <div style="border: 1px solid #ccc;">
     <Toolbar
@@ -8,12 +8,14 @@
       :editor="editor"
       :defaultConfig="toolbarConfig"
       :mode="mode"
+      :disabled="disabled"
     />
     <Editor
       style="height: 500px; overflow-y: hidden;"
       v-model="editorContent"
       :defaultConfig="editorConfig"
       :mode="mode"
+      :disabled="disabled"
       @onCreated="onCreated"
       @onChange="onChange"
     />
@@ -24,14 +26,17 @@
 import '@wangeditor/editor/dist/css/style.css'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { shallowRef, watch, onUnmounted, ref, nextTick } from 'vue'
-import { getToken } from '@/utils/auth'
+import { useAuthStore } from '@/stores/auth-store'
 
 const props = defineProps({
-  value: String
+  value: String,
+  disabled: Boolean
 })
 const mode = 'default'
 const editor = shallowRef()
 const editorContent = ref('')
+const authStore = useAuthStore()
+const token = authStore.token
 // 工具栏配置，会覆盖默认配置，只控制顺序和是否显示
 const toolbarConfig = {
   excludeKeys: ['group-video', 'codeBlock', 'todo', 'emotion', '|']
@@ -44,7 +49,7 @@ const editorConfig = {
     uploadImage: {
       server: process.env.VUE_APP_BASE_API + '/oss/upload',
       headers: {
-        Authorization: "Bearer " + getToken(),
+        Authorization: "Bearer " + token,
       },
       fieldName: 'file',
       // 由于后端返回的结构与默认的不一致，需要自定义插入图片
@@ -77,9 +82,10 @@ function onCreated (_editor) {
 }
 async function onChange (_editor) {
   await nextTick()
-  emits('input', editorContent.value)
+  emits('update:value', editorContent.value)
+  emits('change', editorContent.value)
 }
-const emits = defineEmits(['input'])
+const emits = defineEmits(['update:value', 'change'])
 
 </script>
 

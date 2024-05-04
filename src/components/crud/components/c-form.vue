@@ -298,8 +298,13 @@ function submit () {
   })
 }
 
+function validate () {
+  return inputForm.value.validate() // 校验成功返回表单数据
+}
+
 defineExpose({
   submit,
+  validate,
   reset
 })
 </script>

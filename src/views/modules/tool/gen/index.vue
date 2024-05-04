@@ -23,12 +23,14 @@
 </template>
 
 <script setup>
-import { computed, h, ref } from 'vue'
+import { computed, getCurrentInstance, ref } from 'vue'
 import CPage from '@/components/crud/c-page.vue'
 import { EControlType } from '@/enum/index.js'
 import ImportTableModal from './modal/import-table-modal.vue'
 import EditModal from './modal/edit-modal.vue'
+import axios from '@/api/index.js'
 
+const _this = getCurrentInstance().proxy
 const cPage = ref()
 const importTableModal = ref()
 const editModal = ref()
@@ -134,6 +136,7 @@ const tableConfig = computed(() => ({
             {
               name: '同步',
               permission: 'tool:gen:edit',
+              confirm: true,
               callback () {
                 handleSyncDb(record)
               }
@@ -141,6 +144,7 @@ const tableConfig = computed(() => ({
             {
               name: '生成代码',
               permission: 'tool:gen:code',
+              confirm: true,
               callback () {
                 handleGenTable(record)
               }
@@ -165,8 +169,9 @@ function handlePreview (record) {
  * 同步
  * @param {Object} record 
  */
-function handleSyncDb (record) {
-
+async function handleSyncDb (record) {
+  await axios.post('/tool/gen/synchDb/' + record.tableName, {}, { headers: { datasource } })
+  _this.$message.success('同步成功')
 }
 
 /**
