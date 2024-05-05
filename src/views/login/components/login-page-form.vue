@@ -28,7 +28,9 @@
                 <a-icon type="SafetyCertificateOutlined" class="text-gray" />
               </template>
             </a-input>
-            <img :src="codeSrc" class="login-form__code radius5 ml5" @click="getCode">
+            <a-spin :spinning="spinning">
+              <img :src="codeSrc" class="login-form__code radius5 ml5" @click="getCode">
+            </a-spin>
           </div>
         </a-form-item>
         <div class="flex-x-between">
@@ -57,6 +59,7 @@ import { message } from 'ant-design-vue'
 import { getAccount } from '@/storage/account.js'
 
 const loading = ref(false)
+const spinning = ref(false)
 const form = reactive({
   account: undefined,
   password: undefined,
@@ -82,11 +85,16 @@ onMounted(() => {
 })
 
 async function getCode () {
-  form.code = undefined
-  form.uuid = undefined
-  const result = await authStore.getCode()
-  codeSrc.value = 'data:image/gif;base64,' + result?.img
-  form.uuid = result?.uuid
+  try {
+    spinning.value = true
+    form.code = undefined
+    form.uuid = undefined
+    const result = await authStore.getCode()
+    codeSrc.value = 'data:image/gif;base64,' + result?.img
+    form.uuid = result?.uuid
+  } finally {
+    spinning.value = false
+  }
 }
 
 async function onSubmitHandle (values) {
@@ -115,6 +123,7 @@ async function onSubmitHandle (values) {
   }
   &__code {
     height: 32px;
+    min-width: 85px;
   }
   &__submit {
     margin-top: 20px;

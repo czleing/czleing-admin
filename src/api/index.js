@@ -148,6 +148,17 @@ class AxiosService {
     })
   }
 
+  // 下载 请求
+  download (url, data = {}, config) {
+    return instance.request({
+      method: 'post',
+      url,
+      data,
+      responseType: 'blob',
+      headers: config?.headers
+    })
+  }
+
   // PUT 请求
   put (url, params = {}) {
     return instance.request({

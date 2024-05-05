@@ -19,6 +19,7 @@
     <!-- 编辑表格 -->
     <EditModal ref="editModal" :datasource="datasource" />
     <!-- 预览 -->
+    <PreviewModal ref="previewModal" :datasource="datasource" />
   </div>
 </template>
 
@@ -28,12 +29,14 @@ import CPage from '@/components/crud/c-page.vue'
 import { EControlType } from '@/enum/index.js'
 import ImportTableModal from './modal/import-table-modal.vue'
 import EditModal from './modal/edit-modal.vue'
+import PreviewModal from './modal/preview-modal.vue'
 import axios from '@/api/index.js'
 
 const _this = getCurrentInstance().proxy
 const cPage = ref()
 const importTableModal = ref()
 const editModal = ref()
+const previewModal = ref()
 const datasource = 'master'
 
 const filterConfig = computed(() => ({
@@ -162,7 +165,7 @@ const tableConfig = computed(() => ({
  * @param {Object} record 
  */
 function handlePreview (record) {
-
+  previewModal.value.open(record)
 }
 
 /**
@@ -175,11 +178,17 @@ async function handleSyncDb (record) {
 }
 
 /**
- * 同步
+ * 生成代码
  * @param {Object} record 
  */
-function handleGenTable (record) {
-
+async function handleGenTable (record) {
+  if (record.genType === '1') {
+    await axios.post('/tool/gen/genCode/' + record.tableName, {}, { headers: { datasource } })
+    _this.$message.success('成功生成到自定义路径')
+    refresh()
+  } else {
+    await axios.download('/tool/gen/download/' + record.tableName, {}, { headers: { datasource } })
+  }
 }
 
 function refresh () {

@@ -241,6 +241,7 @@ const genFormConfig = computed(() => ({
     },
     {
       label: '生成Service',
+      tooltip: '包括 Service, Mapper, 实体类',
       fieldName: 'genService',
       type: EControlType.eSwitch,
       props: { checkedValue: 1, unCheckedValue: 0 }
@@ -423,7 +424,7 @@ const columnFormConfig = computed(() => ({
             }
           },
           {
-            title: '详情',
+            title: '查询',
             dataIndex: 'isQuery',
             type: EControlType.eSwitch,
             props: {
