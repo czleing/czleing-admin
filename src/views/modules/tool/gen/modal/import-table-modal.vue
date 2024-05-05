@@ -1,10 +1,19 @@
 <!-- 代码生成-导入表弹窗 -->
 <template>
-  <Modal ref="cModal" title="导入表" width="800" :confirm-disabled="selectedNum < 1" :before-confirm="beforeConfirm">
+  <Modal
+    ref="cModal"
+    title="导入表"
+    width="800"
+    :confirm-disabled="selectedNum < 1"
+    :before-confirm="beforeConfirm"
+    :confirm-text="`确定(${selectedNum})`"
+    :before-cancel="beforeCancel"
+  >
     <CPage
       ref="cPage"
       noAdd
       noDelete
+      noTools
       :api-config="{
         list: '/tool/gen/db/list'
       }"
@@ -110,6 +119,10 @@ const emits = defineEmits(['completed'])
 
 function open (options) {
   cModal.value.open(options)
+}
+
+function beforeCancel () {
+  cPage.value.clearSelect()
 }
 
 function close () {

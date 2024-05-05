@@ -12,6 +12,7 @@
       <slot name="filter" />
       <!-- 工具栏 -->
       <CTools
+        v-if="noTools !== true"
         v-model:checkedFieldNames="checkedFieldNames"
         :no-add="noAdd"
         :no-delete="noDelete"
@@ -78,6 +79,8 @@ const props = defineProps({
   noDelete: Boolean,
   /** 没有表格多选框，可选 */
   noSelect: Boolean,
+  /** 没有操作栏，可选 */
+  noTools: Boolean,
   /** 有返回按钮，可选 */
   hasGoBack: Boolean,
   /** 有导入按钮，可选 */
@@ -183,13 +186,17 @@ function onTreeSelectHandle (orgId) {
 }
 
 defineExpose({
-  refresh: () => cTable.value?.refresh(),
   cModal,
   cForm,
   detail,
   selectedIds,
   selectedObjs,
-  onAddHandle
+  refresh: () => cTable.value?.refresh(),
+  onAddHandle,
+  clearSelect: () => {
+    selectedIds.value = []
+    selectedObjs.value = []
+  }
 })
 </script>
 
