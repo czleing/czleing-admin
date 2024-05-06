@@ -1,6 +1,6 @@
 # Vue3 + Vite + Pinia + Ant-design-vue4 + JavaScript + axios + vue-router + pnpm
 
-使用最新技术栈封装的一套后台管理前端开发框架，追求用最精简的代码，以最优雅的方式，实现功能齐全的开发框架，没有个人的包名、前缀、广告，拿来免改，干净整洁的同时，易懂易用好用易扩展，让开发尽量简单
+使用最新技术栈封装的一套后台管理前端开发框架，追求精简、优雅，没有多余的代码和依赖，没有个人的包名、前缀、广告，拿来免改，干净整洁，易懂易用易扩展，将常用的功能进行了非常灵活的封装，通过配置来使用，个别地方约定大于配置，让开发尽量简单
 
 ## 环境要求
 - node: 14.19+
@@ -31,12 +31,12 @@
 - 支持多级路由缓存及刷新
 - 最新技术、前后端分离
 - 代码简洁、清爽、优雅
-- 使用 Javascript
+- 使用 JavaScript
 - 可支持国际化(引入vue-i18n)
-- 自动检测版本更新
+- 线上自动检测版本更新
 - CRUD 配置化开发
 - 系统管理基础功能
-- 代码生成(开发中...)
+- CRUD 可视化代码生成
 
 ## 初始化
 ### 1. 安装依赖
@@ -78,10 +78,10 @@ token.value.colorSuccess
 ...
 ```
 
-### 2、CRUD快速开发案例(后续将可直接代码生成)
+### 2、CRUD快速开发案例(可直接代码生成，系统工具->代码生成)
 参考 /src/views/demo/demo-page.vue
 ```vue
-<!-- demo CRUD demo 页面 -->
+<!-- CRUD 开发案例 -->
 <template>
   <CPage
     hasImport
@@ -90,7 +90,7 @@ token.value.colorSuccess
     primary-key="id"
     primary-key-说明="primary-key 指定主键的字段名，默认：id"
     :api-config="{
-      // 预设功能接口地址配置，默认根据当前路由生成，如新增：/system/user => /system/user/add
+      // 预设功能接口地址配置，默认根据当前路由生成，如新增接口：路由：/system/user => 接口：/system/user/add
       // add: '',
       // update: '',
       // detail: '',
@@ -148,7 +148,7 @@ import { h, computed } from 'vue'
 import CPage from '@/components/crud/c-page.vue'
 import { EControlType, EIsEnabled } from '@/enum/index.js'
 
-/** 树形配置，不配置则不使用树 */
+/** 左侧树形配置，不配置则不使用树 */
 const treeConfig = {
   url: '/system/user/deptTree',
   // method: 'post',
