@@ -64,6 +64,10 @@ npm run build
 <img src='./src/doc/light4.png' alt="light">
 <img src='./src/doc/light5.png' alt="light">
 <img src='./src/doc/dark.png' alt="dark">
+<img src='./src/doc/light6-1.png' alt="light">
+<img src='./src/doc/light6-2.png' alt="light">
+<img src='./src/doc/light7.png' alt="light">
+<img src='./src/doc/light8.png' alt="light">
 
 ## 其他说明
 ### 1、动态样式
