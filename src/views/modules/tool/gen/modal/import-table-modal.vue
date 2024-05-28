@@ -118,7 +118,7 @@ async function beforeConfirm (close) {
 const emits = defineEmits(['completed'])
 
 function open (options) {
-  cModal.value.open(options)
+  cModal.value.open()
 }
 
 function beforeCancel () {
