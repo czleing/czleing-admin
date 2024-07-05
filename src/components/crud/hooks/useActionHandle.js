@@ -7,7 +7,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
  * 处理操作相关、表格预设操作等
  * @returns
  */
-export function useActionHandle ({ cModal, cTable, modalConfig, api, apiMethod, transformDetail, afterOpenModal, primaryKey, apiOptionConfig }) {
+export function useActionHandle ({ cModal, cForm, cTable, modalConfig, api, apiMethod, transformDetail, afterOpenModal, primaryKey, apiOptionConfig }) {
   const isAdd = ref(false)
   const isEdit = ref(false)
   const isView = ref(false)
@@ -43,8 +43,9 @@ export function useActionHandle ({ cModal, cTable, modalConfig, api, apiMethod, 
       width: modalConfig?.width,
       ...options
     })
+    await nextTick()
     if (typeof afterOpenModal === 'function') {
-      await afterOpenModal({ isAdd: isAdd.value, isEdit: isEdit.value, isView: isView.value, record: options.record, detail })
+      await afterOpenModal({ isAdd: isAdd.value, isEdit: isEdit.value, isView: isView.value, record: options.record, detail, cForm })
     }
   }
   // 表格操作按钮事件处理

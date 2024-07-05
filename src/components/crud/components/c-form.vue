@@ -73,6 +73,7 @@ const inputForm = ref()
 // const inModal = inject('IN_MODAL', false)
 const closeModal = inject('CLOSE_MODAL', null)
 const formData = reactive({})
+const formRemotes = reactive({}) // 收集组件的 remote 方法，用于需要重新刷新 remote 数据时使用
 const loading = ref(false)
 const { labelCol, wrapperCol, colSize } = props.formConfig // 已经解构失去响应式
 const colSpan = parseInt(24 / colSize)
@@ -115,6 +116,7 @@ const currFields = computed(() => {
 
 // 共享给子组件的变量
 provide('FORM_DATA', formData)
+provide('FORM_REMOTES', formRemotes)
 
 // 监听详情数据，同步回填至表单
 watch(
@@ -302,10 +304,15 @@ function validate () {
   return inputForm.value.validate() // 校验成功返回表单数据
 }
 
+function remotes () {
+  return formRemotes
+}
+
 defineExpose({
   submit,
   validate,
-  reset
+  reset,
+  remotes
 })
 </script>
 

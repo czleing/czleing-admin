@@ -9,6 +9,7 @@
     :before-search="beforeSearch"
     :after-search="afterSearch"
     :before-submit="beforeSubmit"
+    :after-open-modal="afterOpenModal"
     :transform-detail="transformDetail"
     :table-config="tableConfig"
     :modal-config="modalConfig"
@@ -342,6 +343,15 @@ function beforeSearch (searchParams) {
 function afterSearch (list) {
   const tree = listToTree(list, 0, 'menuId')
   return tree
+}
+
+/**
+ * 弹窗(新增、修改、详情弹窗)后执行
+ * @param {Object} param 其他参数
+ */
+function afterOpenModal ({ isAdd, isEdit, isView, record, detail, cForm }) {
+  const formRemotes = cForm.remotes
+  formRemotes['parentId']?.()
 }
 
 /**

@@ -652,9 +652,10 @@ function afterSearch (list) {
 }
 
 /**
- * 提交表单数据前处理
+ * 提交表单数据前对提交的数据修改
  * @param {Object} submitData 提交的数据
  * @param {Object} param 其他参数
+ * @returns 修改后的数据
  */
 function beforeSubmit (submitData, { isAdd, isEdit, isView, detail }) {
   return submitData
@@ -664,7 +665,9 @@ function beforeSubmit (submitData, { isAdd, isEdit, isView, detail }) {
  * 弹窗(新增、修改、详情弹窗)后执行
  * @param {Object} param 其他参数
  */
-function afterOpenModal ({ isAdd, isEdit, isView, options }) {
+function afterOpenModal ({ isAdd, isEdit, isView, record, detail, cForm }) {
+  // const formRemotes = cForm.remotes
+  // formRemotes['有远程数据源的字段的字段名']?.() // 手动触发获取某个字段的远程数据源
 }
 
 /**

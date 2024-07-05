@@ -150,6 +150,7 @@ const {
   onSubmitHandle // 提交表单处理
 } = useActionHandle({
   cModal,
+  cForm,
   cTable,
   modalConfig: props.modalConfig,
   api,
