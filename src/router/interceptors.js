@@ -18,7 +18,7 @@ export async function beforeInterceptor (to, from, next) {
   if (!needLogin) {
     return next()
   }
-  if (!authStore.hasLogin) {
+  if (!authStore.hasLogin && import.meta.env.VITE_APP_IGNORE_PERMISSION !== true) {
     return next({ name: 'login' })
   }
   if (!routeIniting) {
