@@ -437,7 +437,7 @@ const columnFormConfig = computed(() => ({
             title: '查询方式',
             dataIndex: 'queryType',
             type: EControlType.eSelect,
-            width: 125,
+            width: 120,
             props: {
               size: 'small',
               options: [
@@ -456,9 +456,10 @@ const columnFormConfig = computed(() => ({
             title: '显示类型',
             dataIndex: 'htmlType',
             type: EControlType.eSelect,
-            width: 100,
+            width: 110,
             props: {
               size: 'small',
+              dropdownMatchSelectWidth: false,
               options: EControlType._list.map(type => ({ id: type.data.htmlType, name: type.name }))
             }
           },

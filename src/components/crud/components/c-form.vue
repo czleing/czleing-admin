@@ -38,7 +38,7 @@
         </template>
       </a-row>
     </a-form>
-    <!-- 提交按钮，单独使用表单组件时使用 -->
+    <!-- 提交按钮 -->
     <div v-if="showConfirm || showCancel" class="mt20 tr">
       <a-button v-if="showCancel" type="default" :disabled="loading" @click="cancel">{{ cancelText }}</a-button>
       <a-button v-if="showConfirm" type="primary" :loading="loading" @click="submit">{{ confirmText }}</a-button>

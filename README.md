@@ -367,6 +367,7 @@ const modalConfig = computed(() => ({
   buttonConfig: ({ isAdd, isEdit, isView }) => ({
     confirmText: isEdit ? '确认修改' : '确认提交', // 默认是确定
     cancelText: '关闭', // 默认是关闭
+    // confirmContinue: true, // true || (formData, submitData) => {}，提交之后是否继续，继续则不关闭弹窗，只清空数据，可传一个函数对继续后的表单数据初始化(如给排序序号+1)
     // showConfirm: !isEdit // 确认按钮是否可见，默认可见
     // showCancel: !isEdit // 取消按钮是否可见，默认可见
   }),
