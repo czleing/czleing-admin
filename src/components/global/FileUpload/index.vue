@@ -1,6 +1,6 @@
 <!--
   文件上传组件
-  用法：<file-upload v-model="form.files" accept=".zip" :file-size="20" :max-count="1" />
+  用法：<file-upload v-model:value="form.files" accept=".zip" :file-size="20" :max-count="1" />
   v-model 数据类型取决于 form.files 类型
   form.files 为数组，组件则使用数组
   form.files 为字符串或 undefined，则组件使用逗号分隔字符串

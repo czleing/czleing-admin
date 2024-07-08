@@ -1,6 +1,6 @@
 <!--
   图片上传组件
-  用法：<image-upload v-model="form.images" :file-size="1024" :max-count="2" />
+  用法：<image-upload v-model:value="form.images" :file-size="1024" :max-count="2" />
 -->
 <template>
   <div class="image-upload">
