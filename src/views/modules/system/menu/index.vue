@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { h, computed, ref, resolveComponent } from 'vue'
+import { computed, ref } from 'vue'
 import CPage from '@/components/crud/c-page.vue'
 import { EControlType, EIsEnabled, EMenuType } from '@/enum/index.js'
 import { listToTree } from '@/utils/index.js'
@@ -84,16 +84,19 @@ const tableConfig = computed(() => ({
     {
       title: '是否启用',
       dataIndex: 'isEnabled',
+      width: 90,
       type: 'isEnabled'
     },
     {
       title: '更新时间',
+      width: 140,
       dataIndex: 'updateTime',
       isDateTime: true
     },
     {
       title: '操作',
-      actionShowNum: 4, // 展示操作按钮数量，剩余的将收进更多里
+      width: 180,
+      actionShowNum: 3, // 展示操作按钮数量，剩余的将收进更多里
       actionMoreText: '更多', // 更多按钮名称，默认"更多"
       // action: 操作列配置，T[] || ({ record }) => T[]
       action: ({ record }) => {
@@ -107,11 +110,6 @@ const tableConfig = computed(() => ({
             name: '编辑',
             callback: 'edit'
           },
-          {
-            name: record.isEnabled ? '禁用' : '启用',
-            confirm: true,
-            callback: 'toggle'
-          },
           record.menuType !== EMenuType.eBtn ? {
             name: '新增',
             permission: 'system:menu:add',
@@ -122,8 +120,13 @@ const tableConfig = computed(() => ({
           {
             name: '删除',
             callback: 'delete' // 删除操作默认带确认框
+          },
+          {
+            name: record.isEnabled ? '禁用' : '启用',
+            confirm: true,
+            callback: 'toggle'
           }
-        ].filter(t => !!t)
+        ].filter(Boolean)
         return btns
       }
     }
@@ -342,6 +345,9 @@ function beforeSearch (searchParams) {
  */
 function afterSearch (list) {
   const tree = listToTree(list, 0, 'menuId')
+  if (parentIdRemote) {
+    parentIdRemote()
+  }
   return tree
 }
 
@@ -349,9 +355,10 @@ function afterSearch (list) {
  * 弹窗(新增、修改、详情弹窗)后执行
  * @param {Object} param 其他参数
  */
+let parentIdRemote = null
 function afterOpenModal ({ isAdd, isEdit, isView, record, detail, cForm }) {
-  const formRemotes = cForm.remotes
-  formRemotes['parentId']?.()
+  const formRemotes = cForm.value.remotes()
+  parentIdRemote = formRemotes['parentId']
 }
 
 /**
@@ -360,6 +367,21 @@ function afterOpenModal ({ isAdd, isEdit, isView, record, detail, cForm }) {
  * @param {Object} param 其他参数
  */
 function beforeSubmit (submitData, { isAdd, isEdit, isView, detail }) {
+  // 数据初始化
+  if (submitData.menuType === EMenuType.eDir) {
+    submitData.isFrame = false
+    submitData.isCache = false
+    submitData.component = ''
+    submitData.queryParam = ''
+    submitData.permission = ''
+  } else if (submitData.menuType === EMenuType.eBtn) {
+    submitData.isFrame = false
+    submitData.isCache = false
+    submitData.component = ''
+    submitData.icon = ''
+    submitData.path = ''
+    submitData.queryParam = ''
+  }
   return submitData
 }
 

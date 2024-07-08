@@ -4,6 +4,7 @@ import { useDict } from '@/hooks/useDict.js'
 import { inject, ref, watch, computed } from 'vue'
 import axios from '@/api'
 import { isEmpty } from '@/utils/index'
+import { EControlType } from '@/enum'
 
 export default {
   functional: true,
@@ -78,8 +79,13 @@ export default {
         dataSource.value = result
       }
       // 数据源发生变化，选中值需要做修改
-      if (isEmpty(dataSource.value) || (props.value && !dataSource.value.some(item => item.id === props.value))) {
-        formData[props.field.fieldName] = undefined // 当前列表中没有该值，则清空选中
+      if (props.field.type !== EControlType.eTreeSelect) {
+        if (isEmpty(dataSource.value) || (props.value && !dataSource.value.some(item => item.id === props.value))) {
+          if (import.meta.env.VITE_APP_DEBUG_MODE) {
+            console.log('数据源为空或不存在所选的值，清空选中，字段：', props.field.fieldName, '值', props.value)
+          }
+          formData[props.field.fieldName] = undefined // 当前列表中没有该值，则清空选中
+        }
       }
       return dataSource.value
     }

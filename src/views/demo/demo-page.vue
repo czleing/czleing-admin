@@ -666,7 +666,7 @@ function beforeSubmit (submitData, { isAdd, isEdit, isView, detail }) {
  * @param {Object} param 其他参数
  */
 function afterOpenModal ({ isAdd, isEdit, isView, record, detail, cForm }) {
-  // const formRemotes = cForm.remotes
+  // const formRemotes = cForm.value.remotes()
   // formRemotes['有远程数据源的字段的字段名']?.() // 手动触发获取某个字段的远程数据源
 }
 
