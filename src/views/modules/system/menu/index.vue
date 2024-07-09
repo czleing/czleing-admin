@@ -4,6 +4,7 @@
     ref="cPage"
     primary-key="menuId"
     no-delete
+    no-select
     :tools-config="{ addBtnText: '新增根级菜单' }"
     :filter-config="filterConfig"
     :before-search="beforeSearch"
@@ -95,17 +96,16 @@ const tableConfig = computed(() => ({
     },
     {
       title: '操作',
-      width: 180,
-      actionShowNum: 3, // 展示操作按钮数量，剩余的将收进更多里
-      actionMoreText: '更多', // 更多按钮名称，默认"更多"
+      width: 160,
+      actionShowNum: 2, // 展示操作按钮数量，剩余的将收进更多里
       // action: 操作列配置，T[] || ({ record }) => T[]
       action: ({ record }) => {
         const btns = [
           // 预设：edit, detail, delete, toggle
-          {
-            name: '详情',
-            callback: 'detail'
-          },
+          // {
+          //   name: '详情',
+          //   callback: 'detail'
+          // },
           {
             name: '编辑',
             callback: 'edit'
@@ -239,10 +239,14 @@ const modalConfig = computed(() => ({
         fieldName: 'component',
         none: formData => formData.menuType !== EMenuType.eMenu || formData.isFrame,
         type: EControlType.eInput,
-        tooltip: '访问的组件路径，如：`system/user/index`，默认在`views`目录下',
+        singleLine: true,
+        labelCol: { span: 4 },
+        wrapperCol: { span: 20 },
+        tooltip: '访问的组件路径，如：`modules/system/user/index`，默认在`views`目录下',
         // required: true,
         props: {
-          addonBefore: '@/views/'
+          addonBefore: '@/views/',
+          placeholder: '输入组件的路径，无需后缀.vue，如：`modules/system/user/index`'
         }
       },
       {

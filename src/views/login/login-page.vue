@@ -51,6 +51,7 @@ const setting = settings.websiteInfo
       padding: 20px 40px;
       // height: 400px;
       flex: 1;
+      min-width: 380px;
       .img {
         width: 80px;
         height: 80px;
@@ -65,6 +66,7 @@ const setting = settings.websiteInfo
     }
     &__form {
       flex: 1;
+      min-width: 380px;
       background-color: rgba(255, 255, 255, .7);
       padding: 20px;
     }
