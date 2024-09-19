@@ -402,7 +402,7 @@ const modalConfig = computed(() => ({
           min: 1,
           max: 100
           // placeholder: '请输入年龄', // 默认"请输入+label"， String || formData => String
-          // onChange (val) {}
+          // onChange (val, formData) {}
         } // 控件其他属性，所有控件都支持 onChange 事件
       },
       {
@@ -603,7 +603,7 @@ const modalConfig = computed(() => ({
         type: EControlType.eDate,
         props: {
           // showTime: true // 是否需要时分秒
-          // onChange (val) { } // 改变事件
+          // onChange (val, formData) { } // 改变事件
         }
       },
       {

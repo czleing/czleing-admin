@@ -350,7 +350,7 @@ function beforeSearch (searchParams) {
 function afterSearch (list) {
   const tree = listToTree(list, 0, 'menuId')
   if (parentIdRemote) {
-    parentIdRemote()
+    parentIdRemote() // 菜单数据变了，重新获取数据源(选择父级菜单的数据源)
   }
   return tree
 }
