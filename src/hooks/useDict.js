@@ -18,12 +18,14 @@ import { reactive } from 'vue'
  * @param {Function} callback: 字典加载好了的回调函数
  */
 export function useDict (types, callback) {
-  const dictDataMap = reactive({})
+  const dictDataMap = reactive({}) // key: type, value: 字典项数组
   if (!Array.isArray(types)) {
     types = [types]
   }
-  const { setDatasByTypes } = useDictStore()
-  setDatasByTypes(types).then(dictMap => {
+  const { initDictByTypes } = useDictStore()
+  // 根据指定的 types 初始化字典库(字典库包含所有字典)
+  initDictByTypes(types).then(dictMap => {
+    // 只取出指定 types 的字典
     for (const type of types) {
       dictDataMap[type] = dictMap[type]
     }
