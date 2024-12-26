@@ -4,7 +4,6 @@
     hasExport
     primary-key="postId"
     :filter-config="filterConfig"
-    :tools-config="toolsConfig"
     :before-search="beforeSearch"
     :after-search="afterSearch"
     :before-submit="beforeSubmit"

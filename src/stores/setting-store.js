@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 const themes = [
   {
     name: '金色沙滩',
-    inUse: false,
+    inUse: true,
     theme: {
       token: {
         colorPrimary: '#d2b48c',
@@ -48,9 +48,9 @@ export const useSettingStore = defineStore('setting', {
   state: () => ({
     theme: themes.find(item => item.inUse)?.theme, // 当前主题色系
     themeName: themes.find(item => item.inUse)?.name, // 当前主题名称
-    mode: 'dark', // 昼夜模式 light or dark
+    mode: 'light', // 昼夜模式 light or dark
     locale: 'zh', // 当前语言 zh or en
-    componentSize: 'small', // 当前组件尺寸
+    componentSize: 'normal', // 当前组件尺寸
     useRadius: true, // 是否使用圆角布局
     useWeather: false // 是否使用天气组件
   }),

@@ -92,6 +92,8 @@ export const useMenuStore = defineStore('menu', {
               title: item.title || item.menuName,
               icon: item.icon,
               cache: item.isCache || false,
+              // 菜单类型，M 目录, C 菜单, F 功能
+              menuType: item.menuType,
               // 保存父级路由链地址，从一级路由开始，用于根据当前路由，获取一级路由，设置顶部菜单选中
               matchedPaths: parentPaths.length > 0 ? parentPaths : [currPath],
               // 是否是一级路由
@@ -126,7 +128,7 @@ export const useMenuStore = defineStore('menu', {
               children.push(route)
             }
             appendLeaf(route.children)
-          } else {
+          } else if (route.path) {
             children.push({ ...route })
           }
         })

@@ -278,7 +278,7 @@ const modalConfig = computed(() => ({
   buttonConfig: ({ isAdd, isEdit, isView }) => ({
     // showConfirm: !isEdit, // 确认按钮是否可见，默认可见
     confirmText: isEdit ? '确认修改' : '确认提交', // 默认是确定
-    // confirmContinue: true, // true || (formData, submitData) => {}，提交之后是否继续，继续则不关闭弹窗，只清空数据，可传一个函数对继续后的表单数据初始化
+    // confirmContinue: true, // true || (formData, submitData) => {}，提交之后是否继续，继续则不关闭弹窗，只清空数据，可传一个函数对继续后的表单数据初始化(如给排序序号+1)
     // showCancel: !isEdit // 取消按钮是否可见，默认可见
     cancelText: '关闭', // 默认是关闭
   }),
@@ -318,7 +318,7 @@ const modalConfig = computed(() => ({
           min: 1,
           max: 100
           // placeholder: '请输入年龄', // 默认"请输入+label"， String || formData => String
-          // onChange (val) {}
+          // onChange (val, formData) {}
         } // 控件其他属性，所有控件都支持 onChange 事件
       },
       {
@@ -541,7 +541,7 @@ const modalConfig = computed(() => ({
         type: EControlType.eDate,
         props: {
           // showTime: true // 是否需要时分秒
-          // onChange (val) { } // 改变事件
+          // onChange (val, formData) { } // 改变事件
         }
       },
       {
@@ -674,9 +674,10 @@ function afterSearch (list) {
 }
 
 /**
- * 提交表单数据前处理
+ * 提交表单数据前对提交的数据修改
  * @param {Object} submitData 提交的数据
  * @param {Object} param 其他参数
+ * @returns 修改后的数据
  */
 function beforeSubmit (submitData, { isAdd, isEdit, isView, detail }) {
   return submitData
@@ -686,7 +687,9 @@ function beforeSubmit (submitData, { isAdd, isEdit, isView, detail }) {
  * 弹窗(新增、修改、详情弹窗)后执行
  * @param {Object} param 其他参数
  */
-function afterOpenModal ({ isAdd, isEdit, isView, options }) {
+function afterOpenModal ({ isAdd, isEdit, isView, record, detail, cForm }) {
+  // const formRemotes = cForm.value.remotes()
+  // formRemotes['有远程数据源的字段的字段名']?.() // 手动触发获取某个字段的远程数据源
 }
 
 /**

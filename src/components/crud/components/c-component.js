@@ -4,6 +4,7 @@ import { useDict } from '@/hooks/useDict.js'
 import { inject, ref, watch, computed } from 'vue'
 import axios from '@/api'
 import { isEmpty } from '@/utils/index'
+import { EControlType } from '@/enum'
 
 export default {
   functional: true,
@@ -26,7 +27,9 @@ export default {
      */
     const dataSource = ref()
     const formData = inject('FORM_DATA', {})
+    const formRemotes = inject('FORM_REMOTES', {})
     const remote = props.field.props?.remote
+    let remoteParams = {}
     const dictType = props.field.props?.dictType
     const reg = /^\{(.+)\}$/ // 识别动态参数值，参数值为表单中某字段值，格式如：'{formData.type:required}'
     const isValid = ref(true) // 参数是否校验通过，有必填的需要等有值时才获取数据源，且必须所有必填字段都有值时才算校验通过
@@ -35,27 +38,31 @@ export default {
     // 如果使用了远程数据源
     if (remote) {
       // 填充动态参数，并收集动态字段
-      let params = getParamsFromFormData(remote.params)
+      remoteParams = getParamsFromFormData(remote.params)
       // 需要监听表单中的字段范围对象，此对象有变化才需要重新获取数据源
       const listenObj = computed(() => {
         return dyFields.map(field => formData[field])
       })
+      // 收集获取远程数据源的方法，以在需要时再次调用
+      formRemotes[props.field.fieldName] = () => {
+        return getDataSource(remoteParams)
+      }
       // 需要监听动态字段
       if (needWatch.value) {
         // 监听必要字段，重新设置查询参数并判断是否需要重新获取数据源，避免监听整个表单
         watch(
           () => listenObj.value,
           () => {
-            params = getParamsFromFormData(remote.params)
+            remoteParams = getParamsFromFormData(remote.params)
             // 是否满足重新获取数据源条件，只要有一个必填字段为空，则不满足
             if (isValid.value) {
-              getDataSource(params)
+              getDataSource(remoteParams)
             }
           },
           { deep: true, immediate: true }
         )
       } else { // 没有需要监听的动态字段，直接获取
-        getDataSource(params)
+        getDataSource(remoteParams)
       }
     } else if (dictType) { // 如果使用了数据字典
       useDict([dictType], dict => {
@@ -72,9 +79,15 @@ export default {
         dataSource.value = result
       }
       // 数据源发生变化，选中值需要做修改
-      if (isEmpty(dataSource.value) || (props.value && !dataSource.value.some(item => item.id === props.value))) {
-        formData[props.field.fieldName] = undefined // 当前列表中没有该值，则清空选中
+      if (props.field.type !== EControlType.eTreeSelect) {
+        if (isEmpty(dataSource.value) || (props.value && !dataSource.value.some(item => item.id === props.value))) {
+          if (import.meta.env.VITE_APP_DEBUG_MODE) {
+            console.log('数据源为空或不存在所选的值，清空选中，字段：', props.field.fieldName, '值', props.value)
+          }
+          formData[props.field.fieldName] = undefined // 当前列表中没有该值，则清空选中
+        }
       }
+      return dataSource.value
     }
 
     // 根据表单数据，动态填充查询参数，顺便收集动态字段及校验

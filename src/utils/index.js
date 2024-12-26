@@ -64,20 +64,6 @@ export function isDayjs (val) {
 }
 
 /**
- * 字符串脱敏
- * stringStar('13800138000', 3, 4) -> 138****8000
- */
-export function stringStar (value, startLen, endLen, mark = '*') {
-  if (typeof value === 'number') value = value.toString()
-  if (typeof value !== 'string') return value
-  const markLen = Math.max(value.length - startLen - endLen, 0)
-  var star = new Array(markLen).fill(mark).join('')
-  var startStr = value.slice(0, startLen)
-  var endStr = value.slice(-Math.abs(endLen))
-  return startStr + star + endStr
-}
-
-/**
  * 字节格式化，字节数转为常用单位
  * @param byte
  * @returns
@@ -206,6 +192,26 @@ export function calcPercent (numerator, denominator, digit = 2) {
   return Number((divide(numerator, denominator, digit + 2) * 100).toFixed(digit))
 }
 
+/**
+ * 字符串替换处理
+ * 
+ * stringStar('13412341234', 3, 4) => 134****1234
+ * @param {String} value 需要处理的字符串
+ * @param {Number} startLen 字符串左边保留字符长度
+ * @param {Number} endLen 字符串右边保留字符串长度
+ * @param {String} mark 非保留字符串替换字符
+ * @param {*} markLen 被替换成的字符长度
+ * @returns 处理后的字符串
+ */
+export function stringStar (value, startLen, endLen, mark = '*', markLen = 6) {
+  if (typeof value === 'number') value = value.toString()
+  if (typeof value !== 'string') return value
+  var star = new Array(markLen).fill(mark).join('')
+  var startStr = value.slice(0, startLen)
+  var endStr = value.slice(-Math.abs(endLen))
+  return startStr + star + endStr
+}
+
 /** 获得一个值，可能来源于一个函数的结果 */
 export function getFnValue (value, args) {
   if (typeof value === 'function') {
@@ -247,15 +253,15 @@ export function listToTree (list, rootParentId = 0, idField = 'id', parentIdFiel
     idMap[id] = item
   })
   list.forEach(item => {
-    const parentId = item[parentIdField]
-    if (parentId) {
-      let parent = idMap[parentId]
+    const parentId2 = item[parentIdField]
+    if (parentId2) {
+      let parent = idMap[parentId2]
       if (parent && isEmpty(parent[childrenField])) {
         parent[childrenField] = [item]
       } else if (parent) {
         parent[childrenField].push(item)
       } else {
-        console.error(`id 为 ${parentId} 的菜单不存在`)
+        console.error(`id 为 ${parentId2} 的菜单不存在`)
       }
     }
   })

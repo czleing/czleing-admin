@@ -4,11 +4,13 @@
     ref="cPage"
     primary-key="menuId"
     no-delete
+    no-select
     :tools-config="{ addBtnText: '新增根级菜单' }"
     :filter-config="filterConfig"
     :before-search="beforeSearch"
     :after-search="afterSearch"
     :before-submit="beforeSubmit"
+    :after-open-modal="afterOpenModal"
     :transform-detail="transformDetail"
     :table-config="tableConfig"
     :modal-config="modalConfig"
@@ -27,10 +29,11 @@
 </template>
 
 <script setup>
-import { h, computed, ref, resolveComponent } from 'vue'
+import { computed, ref } from 'vue'
 import CPage from '@/components/crud/c-page.vue'
 import { EControlType, EIsEnabled, EMenuType } from '@/enum/index.js'
 import { listToTree } from '@/utils/index.js'
+import IconSelect from '@/components/global/IconSelect/index.vue'
 
 const cPage = ref()
 const filterConfig = computed(() => ({
@@ -82,33 +85,30 @@ const tableConfig = computed(() => ({
     {
       title: '是否启用',
       dataIndex: 'isEnabled',
+      width: 90,
       type: 'isEnabled'
     },
     {
       title: '更新时间',
+      width: 140,
       dataIndex: 'updateTime',
       isDateTime: true
     },
     {
       title: '操作',
-      actionShowNum: 4, // 展示操作按钮数量，剩余的将收进更多里
-      actionMoreText: '更多', // 更多按钮名称，默认"更多"
+      width: 160,
+      actionShowNum: 2, // 展示操作按钮数量，剩余的将收进更多里
       // action: 操作列配置，T[] || ({ record }) => T[]
       action: ({ record }) => {
         const btns = [
           // 预设：edit, detail, delete, toggle
-          {
-            name: '详情',
-            callback: 'detail'
-          },
+          // {
+          //   name: '详情',
+          //   callback: 'detail'
+          // },
           {
             name: '编辑',
             callback: 'edit'
-          },
-          {
-            name: record.isEnabled ? '禁用' : '启用',
-            confirm: true,
-            callback: 'toggle'
           },
           record.menuType !== EMenuType.eBtn ? {
             name: '新增',
@@ -120,8 +120,13 @@ const tableConfig = computed(() => ({
           {
             name: '删除',
             callback: 'delete' // 删除操作默认带确认框
+          },
+          {
+            name: record.isEnabled ? '禁用' : '启用',
+            confirm: true,
+            callback: 'toggle'
           }
-        ].filter(t => !!t)
+        ].filter(Boolean)
         return btns
       }
     }
@@ -206,7 +211,7 @@ const modalConfig = computed(() => ({
         fieldName: 'icon',
         type: EControlType.eCustom,
         props: {
-          component: resolveComponent('IconSelect')
+          component: IconSelect
         }
       },
       {
@@ -234,10 +239,14 @@ const modalConfig = computed(() => ({
         fieldName: 'component',
         none: formData => formData.menuType !== EMenuType.eMenu || formData.isFrame,
         type: EControlType.eInput,
-        tooltip: '访问的组件路径，如：`system/user/index`，默认在`views`目录下',
+        singleLine: true,
+        labelCol: { span: 4 },
+        wrapperCol: { span: 20 },
+        tooltip: '访问的组件路径，如：`modules/system/user/index`，默认在`views`目录下',
         // required: true,
         props: {
-          addonBefore: '@/views/'
+          addonBefore: '@/views/',
+          placeholder: '输入组件的路径，无需后缀.vue，如：`modules/system/user/index`'
         }
       },
       {
@@ -340,7 +349,20 @@ function beforeSearch (searchParams) {
  */
 function afterSearch (list) {
   const tree = listToTree(list, 0, 'menuId')
+  if (parentIdRemote) {
+    parentIdRemote() // 菜单数据变了，重新获取数据源(选择父级菜单的数据源)
+  }
   return tree
+}
+
+/**
+ * 弹窗(新增、修改、详情弹窗)后执行
+ * @param {Object} param 其他参数
+ */
+let parentIdRemote = null
+function afterOpenModal ({ isAdd, isEdit, isView, record, detail, cForm }) {
+  const formRemotes = cForm.value.remotes()
+  parentIdRemote = formRemotes['parentId']
 }
 
 /**
@@ -349,6 +371,21 @@ function afterSearch (list) {
  * @param {Object} param 其他参数
  */
 function beforeSubmit (submitData, { isAdd, isEdit, isView, detail }) {
+  // 数据初始化
+  if (submitData.menuType === EMenuType.eDir) {
+    submitData.isFrame = false
+    submitData.isCache = false
+    submitData.component = ''
+    submitData.queryParam = ''
+    submitData.permission = ''
+  } else if (submitData.menuType === EMenuType.eBtn) {
+    submitData.isFrame = false
+    submitData.isCache = false
+    submitData.component = ''
+    submitData.icon = ''
+    submitData.path = ''
+    submitData.queryParam = ''
+  }
   return submitData
 }
 

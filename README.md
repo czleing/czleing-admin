@@ -3,17 +3,17 @@
 使用最新技术栈封装的一套后台管理前端开发框架，追求精简、优雅，没有多余的代码和依赖，没有个人的包名、前缀、广告，拿来免改，干净整洁，易懂易用易扩展，将常用的功能进行了非常灵活的封装，通过配置来使用，个别地方约定大于配置，让开发尽量简单
 
 ## 环境要求
-- node: 14.19+
-- npm: 6+
+- node: 18+
+- pnpm: 9+
 
 ## 相关技术及依赖
-- Vue 3.3+ 开发框架
+- Vue 3.4+ 开发框架
 - Vite 4.4+ 打包构建，目前最快的构建工具
 - [pinia 2.1+](https://pinia.web3doc.top/) 全局状态管理，比 vuex 简单好用
 - ant-design-vue 4+ UI库，ant-design-vue 最新版，体验与颜值并存，完胜 ElementPlus
-- vue-router 4.2+ 路由管理
+- vue-router 4.4+ 路由管理
 - [VueUse](https://vueuse.org/) 集成了很多组合式API的库
-- axios 1.5+ 服务请求
+- axios 服务请求
 - dayjs 日期处理(moment的简化版, ant-design-vue 4 默认的日期处理工具)
 - pinia-plugin-persist pinia持久化插件，
 - pnpm 包管理工具，目前最优的包管理工具，更快速且体积更小
@@ -51,6 +51,10 @@ npm run dev
 ```
 q
 ```
+### 4. 访问 http://127.0.0.1:3000/
+
+### 5. 默认登录账号密码：
+admin/GfAdmin321@
 
 ## 打包
 ```
@@ -363,6 +367,7 @@ const modalConfig = computed(() => ({
   buttonConfig: ({ isAdd, isEdit, isView }) => ({
     confirmText: isEdit ? '确认修改' : '确认提交', // 默认是确定
     cancelText: '关闭', // 默认是关闭
+    // confirmContinue: true, // true || (formData, submitData) => {}，提交之后是否继续，继续则不关闭弹窗，只清空数据，可传一个函数对继续后的表单数据初始化(如给排序序号+1)
     // showConfirm: !isEdit // 确认按钮是否可见，默认可见
     // showCancel: !isEdit // 取消按钮是否可见，默认可见
   }),
@@ -397,7 +402,7 @@ const modalConfig = computed(() => ({
           min: 1,
           max: 100
           // placeholder: '请输入年龄', // 默认"请输入+label"， String || formData => String
-          // onChange (val) {}
+          // onChange (val, formData) {}
         } // 控件其他属性，所有控件都支持 onChange 事件
       },
       {
@@ -598,7 +603,7 @@ const modalConfig = computed(() => ({
         type: EControlType.eDate,
         props: {
           // showTime: true // 是否需要时分秒
-          // onChange (val) { } // 改变事件
+          // onChange (val, formData) { } // 改变事件
         }
       },
       {
@@ -743,7 +748,9 @@ function beforeSubmit (submitData, { isAdd, isEdit, isView, detail }) {
  * 弹窗(新增、修改、详情弹窗)后执行
  * @param {Object} param 其他参数
  */
-function afterOpenModal ({ isAdd, isEdit, isView, options }) {
+function afterOpenModal ({ isAdd, isEdit, isView, record, detail, cForm }) {
+  // const formRemotes = cForm.value.remotes()
+  // formRemotes['有远程数据源的字段的字段名']?.() // 手动触发获取某个字段的远程数据源
 }
 
 /**

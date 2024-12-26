@@ -1,7 +1,7 @@
 <!-- 代码生成-预览 -->
 <template>
-  <Modal ref="cModal" title="代码生成-预览" mode="drawer" width="1200" :body-style="{padding: '0 15px 10px 15px'}" :mask-closable="false">
-    <a-tabs v-model:activeKey="activeKey">
+  <Modal ref="cModal" title="代码生成-预览" mode="drawer" width="1200" :body-style="{padding: '0 15px 10px 15px'}" :mask-closable="false" :show-confirm="false">
+    <a-tabs v-if="!isEmpty" v-model:activeKey="activeKey">
       <a-tab-pane
         v-for="(value, key) in detail"
         :tab="key.match(/.*\/(.*)\.vm$/)[1]"
@@ -13,6 +13,7 @@
         </div>
       </a-tab-pane>
     </a-tabs>
+    <a-empty v-else class="mt30" description="暂无预览，请先编辑，填写相关设置项" />
   </Modal>
 </template>
 
@@ -38,9 +39,8 @@ export default {
 </script>
 
 <script setup>
-import { ref, getCurrentInstance } from 'vue'
+import { ref, onMounted, computed, getCurrentInstance } from 'vue'
 import axios from '@/api/index.js'
-import { onMounted } from 'vue'
 
 const props = defineProps({
   datasource: String
@@ -51,6 +51,7 @@ const cModal = ref()
 const activeKey = ref()
 const record = ref({}) // 从列表中带过来的列表项 item
 const detail = ref({}) // 详情-导入表格的详细信息
+const isEmpty = computed(() => Object.keys(detail.value).length === 0)
 
 onMounted(() => {
 })
@@ -92,9 +93,7 @@ defineExpose({
     right: 30px;
   }
 }
-::v-deep {
-  .ant-tabs-nav {
-    margin-bottom: 0 !important;
-  }
+:deep(.ant-tabs-nav) {
+  margin-bottom: 0 !important;
 }
 </style>

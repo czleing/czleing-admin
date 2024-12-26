@@ -37,6 +37,9 @@ export default defineConfig(({ command, mode }) => {
         }
       }
     },
+    build: {
+      outDir: `dist/${mode}`,
+    },
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url))
