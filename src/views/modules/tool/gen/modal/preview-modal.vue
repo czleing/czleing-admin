@@ -5,7 +5,7 @@
       <a-tab-pane
         v-for="(value, key) in detail"
         :tab="key.match(/.*\/(.*)\.vm$/)[1]"
-        :key="key.match(/.*\/(.*)\.vm$/)[1]"
+        :key="key"
       >
         <div class="scroll-container">
           <a-button class="copy" v-copy="value">复制</a-button>
@@ -48,7 +48,7 @@ const props = defineProps({
 
 const _this = getCurrentInstance().proxy
 const cModal = ref()
-const activeKey = ref('domain.java')
+const activeKey = ref()
 const record = ref({}) // 从列表中带过来的列表项 item
 const detail = ref({}) // 详情-导入表格的详细信息
 
@@ -60,7 +60,7 @@ async function getDetail () {
     headers: { datasource: props.datasource }
   })
   detail.value = result
-  activeKey.value = 'domain.java'
+  activeKey.value = Object.keys(result)[0]
 }
 
 const emits = defineEmits(['completed'])

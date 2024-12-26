@@ -1,6 +1,6 @@
 <!--
   文件上传组件
-  用法：<file-upload v-model="form.files" accept=".zip" :file-size="20" :max-count="1" />
+  用法：<file-upload v-model:value="form.files" accept=".zip" :file-size="20" :max-count="1" />
   v-model 数据类型取决于 form.files 类型
   form.files 为数组，组件则使用数组
   form.files 为字符串或 undefined，则组件使用逗号分隔字符串
@@ -29,13 +29,13 @@
 import { UploadOutlined } from '@ant-design/icons-vue'
 import { ref, getCurrentInstance, computed, watchEffect } from 'vue'
 import { useAuthStore } from '@/stores/auth-store.js'
-import { byteFormat } from '@/utils/index.js'
+import { byteFormat, getFullUrl } from '@/utils/index.js'
 import { Upload } from 'ant-design-vue'
 
 /**
  * 其他属性：
  * accept:  'image/*,video/*,audio/*,.pdf,.doc,.docx' --- 限制文件类型
- * data, { path: '/xxx' } --- 额外参数
+ * data, { prefix: 'xxx' } --- 额外参数，prefix：文件服务根目录下的子文件夹名，默认 temp
  * disabled
  * multiple: {boolean} 是否可一次选择多个文件，默认 false
  * name: {string} 定义文件上传字段名，默认 file
@@ -68,7 +68,7 @@ const props = defineProps({
 const _this = getCurrentInstance().proxy
 const authStore = useAuthStore()
 // 文件上传地址
-const uploadUrl = import.meta.env.VITE_APP_BASE_API + '/xxx/upload'
+const uploadUrl = import.meta.env.VITE_APP_BASE_API + '/oss/upload'
 const headers = { Authorization: 'Bearer ' + authStore.token }
 
 // 文件列表
@@ -82,13 +82,14 @@ watchEffect(() => {
       fileList.value = props.value
     } else {
       let i = 0
-      fileList.value = props.value.split(',').map(url => {
+      fileList.value = props.value.split(',').map(path => {
         i++
         return {
           uid: Date.now() + i,
-          name: url.match(/.*\/([^/]+)\.\w+/)?.[1] || url,
+          name: path.match(/.*\/([^/]+)\.\w+/)?.[1] || path,
           status: 'done',
-          url
+          url: getFullUrl(path),
+          path
         }
       })
     }
@@ -119,7 +120,8 @@ function onChangeHandle ({ file, fileList: files, event }) {
     const path = file.response?.data?.path // TODO 视接口返回而定
     const currFile = files.find(item => item.uid === file.uid)
     if (currFile) {
-      currFile.url = path
+      currFile.path = path
+      currFile.url = getFullUrl(path)
     }
     emitChange()
   }

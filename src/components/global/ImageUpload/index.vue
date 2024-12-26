@@ -1,6 +1,6 @@
 <!--
   图片上传组件
-  用法：<image-upload v-model="form.images" :file-size="1024" :max-count="2" />
+  用法：<image-upload v-model:value="form.images" :file-size="1024" :max-count="2" />
 -->
 <template>
   <div class="image-upload">
@@ -34,15 +34,15 @@
 
 <script setup>
 import { PlusOutlined } from '@ant-design/icons-vue'
-import { ref, getCurrentInstance, computed, watchEffect } from 'vue'
+import { ref, getCurrentInstance, computed, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth-store.js'
-import { byteFormat } from '@/utils/index.js'
+import { byteFormat, getFullUrl } from '@/utils/index.js'
 import { Upload } from 'ant-design-vue'
 
 /**
  * 其他属性：
- * accept:  'image/png,.jpg,image/gif,.gif,.GIF' --- 限制文件类型
- * data, { path: '/xxx' } --- 额外参数
+ * accept:  'image/png,.jpg,image/*,.gif,.GIF' --- 限制文件类型
+ * data, { prefix: 'xxx' } --- 额外参数，prefix：文件服务根目录下的子文件夹名，不带 '/'，默认 temp
  * disabled
  * multiple: {boolean} 是否可一次选择多个文件，默认 false
  * name: {string} 定义文件上传字段名，默认 file
@@ -75,7 +75,7 @@ const props = defineProps({
 const _this = getCurrentInstance().proxy
 const authStore = useAuthStore()
 // 文件上传地址
-const uploadUrl = import.meta.env.VITE_APP_BASE_API + '/xxx/upload'
+const uploadUrl = import.meta.env.VITE_APP_BASE_API + '/oss/upload'
 const headers = { Authorization: 'Bearer ' + authStore.token }
 
 // 文件列表
@@ -83,26 +83,38 @@ const fileList = ref([])
 // 文件大小限制格式化字符串
 const maxFileSize = computed(() => byteFormat(props.fileSize << 10))
 
-watchEffect(() => {
-  if (props.value) {
-    if (Array.isArray(props.value)) {
-      fileList.value = props.value
+watch(
+  () => props.value,  
+  () => {
+    if (props.value) {
+      if (Array.isArray(props.value)) {
+        fileList.value = props.value
+      } else {
+        let i = 0
+        const newFileList = []
+        props.value.split(',').forEach(path => {
+          i++
+          const matchedFile = fileList.value?.find(file => file.path === path)
+          if (matchedFile) {
+            newFileList.push(matchedFile)
+          } else {
+            newFileList.push({
+              uid: Date.now() + i,
+              name: path.match(/.*\/([^/]+)\.\w+/)?.[1] || path,
+              status: 'done',
+              url: getFullUrl(path),
+              path
+            })
+          }
+        })
+        fileList.value = newFileList
+      }
     } else {
-      let i = 0
-      fileList.value = props.value.split(',').map(url => {
-        i++
-        return {
-          uid: Date.now() + i,
-          name: url.match(/.*\/([^/]+)\.\w+/)?.[1] || url,
-          status: 'done',
-          url
-        }
-      })
+      fileList.value = []
     }
-  } else {
-    fileList.value = []
-  }
-})
+  },
+  { deep: true, immediate: true }
+)
 /**
  * 上传文件前的钩子，返回 false 可阻止上传
  * @param {Object} file 要上传的文件
@@ -128,9 +140,12 @@ function onChangeHandle ({ file, fileList: files, event }) {
     const path = file.response?.data?.path // TODO 视接口返回而定
     const currFile = files.find(item => item.uid === file.uid)
     if (currFile) {
-      currFile.url = path
+      currFile.path = path
+      currFile.url = getFullUrl(path)
     }
     emitChange()
+  } else if (file.status === 'removed') {
+    fileList.value = fileList.value.filter(item => item.uid !== file.uid)
   }
 }
 
@@ -140,9 +155,9 @@ const previewModal = ref()
 const previewUrl = ref()
 // 预览
 function previewHandle (file) {
-  previewUrl.value = file.thumbUrl
+  previewUrl.value = file.url
   previewModal.value.open({
-    title: `${file.name} ( ${byteFormat(file.size)} )`,
+    title: `${file.name} ${ file.size > 0 ? ('( ' + byteFormat(file.size) + ' )') : ''}`,
     width: 600
   })
 }
@@ -153,7 +168,7 @@ function emitChange () {
   if (Array.isArray(props.value)) {
     emit('update:value', fileList.value)
   } else {
-    emit('update:value', fileList.value.map(file => file.url).join(','))
+    emit('update:value', fileList.value.map(file => file.path).join(','))
   }
   emit('update:fileList', fileList.value)
 }
@@ -162,8 +177,8 @@ function emitChange () {
 <style lang="less" scoped>
 .image-upload {
   display: inline-block;
-  :deep(.ant-upload-list-item) {
-    padding: 0 !important;
-  }
+  // :deep(.ant-upload-list-item) { // 注释原因：上传图片后，鼠标移入的层显示错位
+  //   padding: 0 !important;
+  // }
 }
 </style>

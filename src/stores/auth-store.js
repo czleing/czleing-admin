@@ -93,17 +93,9 @@ export const useAuthStore = defineStore('auth', {
         return this.userInfo
       } else {
         const authInfo = await axios.get('/authInfo')
-        // console.log('模拟获取用户信息、权限列表')
-        // this.userInfo = {
-        //   id: 1,
-        //   avatar: new URL('@/assets/images/avatar.jpeg', import.meta.url).href,
-        //   nickname: '张三',
-        //   age: 18
-        // }
-        // 如果权限列表从用户信息接口返回，此处需要保存权限列表
         this.userInfo = authInfo.user
         this.roles = authInfo.roles
-        this.permissions = authInfo.permissions
+        this.permissions = authInfo.permissions ?? []
         if (import.meta.env.DEV && import.meta.env.VITE_APP_IGNORE_PERMISSION) {
           this.permissions.unshift('*:*:*') // 具有所有权限
         }
@@ -125,7 +117,9 @@ export const useAuthStore = defineStore('auth', {
     strategies: [{ // 可以多种方案组合
       key: 'AUTH_INFO',
       // storage: window.localStorage, // 使用的持久化方案，默认 sessionStorage
-      paths: ['token'] // 需要持久化的属性，默认所有属性
+      paths: ['token', 'userInfo'] // 需要持久化的属性，不设置则默认所有属性
     }]
   }
 })
+
+export default useAuthStore

@@ -13,7 +13,7 @@
           v-else
           :bordered="false"
           :key="'t_' + index"
-          :type="item.tagType"
+          :color="item.tagType"
           :class="item.cssClass"
         >
           {{ item.label }}

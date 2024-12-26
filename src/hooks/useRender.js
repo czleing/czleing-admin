@@ -9,10 +9,12 @@ import dayjs from 'dayjs'
  */
 export function useRender ({ ctx, isView, value, dataSource }) {
   const formData = inject('FORM_DATA', {})
-  const emitChange = async val => {
-    ctx.$emit('update:value', val)
-    await nextTick()
-    ctx.$emit('change', val)
+  // const emitChange = async val => {
+  //   await nextTick()
+  //   ctx.$emit('change', val)
+  // }
+  const emitUpdate = async val => {
+    ctx.$emit('update:value', val) // 统一使用 value 作为双向绑定的 props (为了与 ant-design 一致)
   }
   // 自定义渲染函数
   const getRenderFn = {
@@ -43,9 +45,11 @@ export function useRender ({ ctx, isView, value, dataSource }) {
         ...controlTypeEnum?.data?.defaultProps ?? {},
         ...field.props,
         value,
+        modelValue: value,
         disabled: field.props.disabled ?? isView,
-        onChange (val) {
-          emitChange(val)
+        'onUpdate:value': (val) => {
+          emitUpdate(val)
+          ctx.$emit('update:modelValue', val) // 兼容 Vue3 modelValue 模式
           if (typeof field.props.onChange === 'function') {
             setTimeout(() => {
               field.props.onChange(val, formData)
@@ -81,17 +85,17 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       value,
       placeholder: getFnValue(props.placeholder, formData),
-      onChange: event => {
-        emitChange(event.target.value)
+      'onUpdate:value': val => {
+        emitUpdate(val)
         if (typeof props.onChange === 'function') {
           setTimeout(() => {
-            props.onChange(event.target.value, formData)
+            props.onChange(val, formData)
           })
         }
       }
     }
     let type = field.type
-    if (type === 'password') {
+    if (field.props?.type === 'password') {
       type = 'a-input-password'
     }
     return h(resolveComponent(type), controlProps)
@@ -119,8 +123,8 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       value,
       placeholder: getFnValue(props.placeholder, formData),
-      onChange: val => {
-        emitChange(val)
+      'onUpdate:value': val => {
+        emitUpdate(val)
         if (typeof props.onChange === 'function') {
           setTimeout(() => {
             props.onChange(val, formData)
@@ -153,11 +157,11 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       value,
       placeholder: getFnValue(props.placeholder, formData),
-      onChange: event => {
-        emitChange(event.target.value)
+      'onUpdate:value': val => {
+        emitUpdate(val)
         if (typeof props.onChange === 'function') {
           setTimeout(() => {
-            props.onChange(event.target.value, formData)
+            props.onChange(val, formData)
           })
         }
       }
@@ -182,11 +186,11 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       options,
       value,
-      onChange: event => {
-        emitChange(event.target.value)
+      'onUpdate:value': val => {
+        emitUpdate(val)
         if (typeof props.onChange === 'function') {
           setTimeout(() => {
-            props.onChange(event.target.value, formData)
+            props.onChange(val, formData)
           })
         }
       }
@@ -213,8 +217,8 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       options,
       value,
-      onChange: val => {
-        emitChange(val)
+      'onUpdate:value': val => {
+        emitUpdate(val)
         if (typeof props.onChange === 'function') {
           setTimeout(() => {
             props.onChange(val, formData)
@@ -250,7 +254,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       value,
       options,
-      onChange: (val, option) => {
+      'onUpdate:value': (val, option) => {
         option = {
           ...option,
           props: undefined // 去掉 ant-design 添加的死循环自引用
@@ -258,7 +262,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
         if (import.meta.env.VITE_APP_DEBUG_MODE) {
           console.log('selected', val, option)
         }
-        emitChange(val)
+        emitUpdate(val)
         if (typeof props.onChange === 'function') {
           setTimeout(() => {
             props.onChange(val, option, formData)
@@ -292,8 +296,8 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       value: value ? dayjs(value) : value,
       placeholder: getFnValue(props.placeholder, formData),
-      onChange: val => {
-        emitChange(val)
+      'onUpdate:value': val => {
+        emitUpdate(val)
         if (typeof props.onChange === 'function') {
           setTimeout(() => {
             props.onChange(val, formData)
@@ -338,8 +342,8 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       value,
       placeholder: getFnValue(props.placeholder, formData),
-      onChange: val => {
-        emitChange(val)
+      'onUpdate:value': val => {
+        emitUpdate(val)
         if (typeof props.onChange === 'function') {
           setTimeout(() => {
             props.onChange(val, formData)
@@ -369,8 +373,8 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlProps = {
       ...props,
       checked: value,
-      onChange: val => {
-        emitChange(val)
+      'onUpdate:value': val => {
+        emitUpdate(val)
         if (typeof props.onChange === 'function') {
           setTimeout(() => {
             props.onChange(val, formData)
@@ -396,8 +400,8 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       value,
       disabled: props.disabled ?? isView,
-      onChange: val => {
-        emitChange(val)
+      'onUpdate:value': val => {
+        emitUpdate(val)
         if (typeof props.onChange === 'function') {
           setTimeout(() => {
             props.onChange(val, formData)
@@ -425,8 +429,8 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       value,
       disabled: props.disabled ?? isView,
-      onChange: val => {
-        emitChange(val)
+      'onUpdate:value': val => {
+        emitUpdate(val)
         if (typeof props.onChange === 'function') {
           setTimeout(() => {
             props.onChange(val, formData)
@@ -475,8 +479,8 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       value,
       disabled: props.disabled ?? isView,
       treeData,
-      onChange: val => {
-        emitChange(val)
+      'onUpdate:value': val => {
+        emitUpdate(val)
         if (typeof props.onChange === 'function') {
           setTimeout(() => {
             props.onChange(val, formData)
