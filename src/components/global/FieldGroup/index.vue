@@ -1,19 +1,20 @@
 <!-- 字段分组-组件 -->
 <template>
   <div class="field-group" :class="{ 'is-expand': showContainer }">
-    <div v-if="title" class="field-group__title flex-x-between"
-      :style="{ backgroundColor: token.colorFillTertiary, border: `solid 1px ${token.colorBorder}` }"
+    <div v-if="title" class="field-group__title pointer flex-x-between"
+      :style="{ backgroundColor: token.colorFillQuaternary, border: `solid 1px ${token.colorBorderSecondary}` }"
+      @click="toggle"
     >
       <div>
         <span class="flag" :style="{ backgroundColor: token.colorPrimary }"></span>
         <span class="bold em11">{{ title }}</span>
         <span class="ml10">{{ subTitle }}</span>
       </div>
-      <span v-if="$slots.default" @click="toggle">
-        <RightCircleOutlined class="pointer icon em12 text-gray" :class="{ 'is-show': showContainer}" />
+      <span v-if="$slots.default">
+        <RightCircleOutlined class="icon em12 text-gray" :class="{ 'is-show': showContainer}" />
       </span>
     </div>
-    <div v-if="$slots.default" class="field-group__container" :class="{ 'is-open': showContainer }" :style="{ borderColor: token.colorBorder }">
+    <div v-if="$slots.default" class="field-group__container" :class="{ 'is-open': showContainer }" :style="{ borderColor: token.colorBorderSecondary }">
       <div class="inner-container">
         <div class="px10 pt15 pb2">
           <slot />

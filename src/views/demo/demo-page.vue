@@ -272,7 +272,7 @@ const tableConfig = computed(() => ({
 const modalConfig = computed(() => ({
   title: 'Demo', // 弹窗标题，会自动根据类型拼上新增、编辑、详情关键字
   // fullTitle: '', // 全称，不会自动拼接其他字符串
-  width: 700, // 弹窗宽度，默认 600
+  width: 800, // 弹窗宽度，默认 600
   mode: 'modal', // 弹窗模式, modal 或 drawer
   // 弹窗按钮属性修改 Object || ({ isAdd, isEdit, isView }) => Object
   buttonConfig: ({ isAdd, isEdit, isView }) => ({
@@ -312,7 +312,7 @@ const modalConfig = computed(() => ({
         // required: true, // 是否必填，Boolean || formData => Boolean
         defaultValue: 23,
         // disabled: formData => !formData.userName, // 组件是否禁用，Boolean || formData => Boolean
-        // rules: [], // object || array
+        // rules: [], // object || array || formData => { return {} || [] }
         props: {
           precision: 0,
           min: 1,
@@ -336,6 +336,28 @@ const modalConfig = computed(() => ({
             props: {
               type: 'password',
               maxlength: 16
+            }
+          },
+          {
+            label: '确认密码',
+            fieldName: 'confirmPassword',
+            type: EControlType.eInput,
+            required: true,
+            rules: (formData) => [ // 为函数时，可以获取到 formData 数据
+              { required: true, message: '请输入确认密码' },
+              { min: 8, message: '密码至少8位' },
+              {
+                validator (field, value) {
+                  if (value !== formData.password) {
+                    return Promise.reject('密码和确认密码不一致')
+                  }
+                  return Promise.resolve()
+                }
+              }
+            ],
+            props: {
+              type: 'password',
+              maxlength: 20
             }
           },
           {
@@ -458,7 +480,7 @@ const modalConfig = computed(() => ({
         fieldName: 'dictSelect',
         type: EControlType.eSelect,
         props: {
-          useAll: true, // 是否在前面添加全部
+          useAll: false, // 是否在前面添加全部，默认 false
           dictType: 'sys_user_sex',
           // allowClear: true,
           // mode: '', // 下拉模式 'multiple' | 'tags' | 'combobox'

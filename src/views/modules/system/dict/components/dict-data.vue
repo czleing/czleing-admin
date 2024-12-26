@@ -164,7 +164,7 @@ const modalConfig = computed(() => ({
         }
       },
       {
-        label: '额外样式',
+        label: '额外样式名',
         fieldName: 'cssClass',
         type: EControlType.eInput
       },

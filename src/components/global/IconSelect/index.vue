@@ -1,4 +1,5 @@
 <!-- ant-design-vue 4 icons 选择器 -->
+<!-- 用法：<icon-select v-model:value="formData.icon" /> -->
 <template>
   <div class="icons-select">
     <div class="flex-x x-middle">

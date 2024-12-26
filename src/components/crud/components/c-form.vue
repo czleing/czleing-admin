@@ -39,7 +39,7 @@
       </a-row>
     </a-form>
     <!-- 提交按钮，单独使用表单组件时使用 -->
-    <div v-if="showConfirm || showCancel" class="mt20 tr">
+    <div v-if="showConfirm || showCancel" class="mt20" :class="alignClass">
       <a-button v-if="showCancel" type="default" :disabled="loading" @click="cancel">{{ cancelText }}</a-button>
       <a-button v-if="showConfirm" type="primary" :loading="loading" @click="submit">{{ confirmText }}</a-button>
     </div>
@@ -56,7 +56,7 @@ const props = defineProps({
   isAdd: Boolean,
   isEdit: Boolean,
   isView: Boolean,
-  primaryKey: String, // 主键字段名
+  primaryKey: { type: String, default: 'id' }, // 主键字段名
   detail: { type: Object, default: () => ({}) }, // 修改、查看详情时的详情数据
   formConfig: { type: Object, required: true }, // 表单配置信息
   beforeSubmit: Function, // 提交表单前，对数据进行手工处理的函数，submitData => modifiedSubmitData
@@ -66,7 +66,9 @@ const props = defineProps({
   confirmText: { type: String, default: '提交' },
   confirmContinue: { type: [Boolean, Function], default: false },
   showCancel: { type: Boolean, default: true },
-  cancelText: { type: String, default: '取消' }
+  cancelText: { type: String, default: '取消' },
+  confirmAlign: { type: String, default: 'right' }, // 提交、取消按钮对齐方式，left，center，right
+  autoReset: { type: Boolean, default: true }, // 提交之后自动清空表单
 })
 
 const inputForm = ref()
@@ -111,6 +113,13 @@ const currFields = computed(() => {
     })
   }
   return initFields(props.formConfig.fields)
+})
+const alignClass = computed(() => {
+  return {
+    'left': 'tl',
+    'center': 'tc',
+    'right': 'tr'
+  }[props.confirmAlign]
 })
 
 // 共享给子组件的变量
@@ -158,7 +167,7 @@ function formItemProps (field) {
     required: props.isView ? false : getFnValue(field.required, formData),
     tooltip: getFnValue(field.tooltip, formData),
     extra: props.isView ? undefined : getFnValue(field.extra, formData),
-    rules: props.isView ? undefined : field.rules
+    rules: props.isView ? undefined : getFnValue(field.rules, formData)
   }
 }
 
@@ -279,16 +288,18 @@ function submit () {
         detail: props.detail
       })
     }
+    if (props.isEdit && props.primaryKey) {
+      submitData[props.primaryKey] = props.detail[props.primaryKey]
+    }
     if (import.meta.env.VITE_APP_DEBUG_MODE) {
       console.log('submitData', submitData)
-    }
-    if (props.isEdit) {
-      submitData[props.primaryKey] = props.detail[props.primaryKey]
     }
     if (props.onSubmitHandle) {
       await props.onSubmitHandle(submitData)
     }
-    reset()
+    if (props.autoReset) {
+      reset()
+    }
     if (typeof props.confirmContinue === 'function') {
       await nextTick()
       props.confirmContinue(formData, submitData)
