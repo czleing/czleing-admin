@@ -54,6 +54,16 @@ const staticRoutes = [
             }
           }
         ]
+      },
+      {
+        path: '/personal-center',
+        name: 'personal-center',
+        component: () => import('@/views/modules/personal-center/index.vue'),
+        meta: {
+          title: '个人中心',
+          hidden: true,
+          cache: true
+        }
       }
     ]
   }

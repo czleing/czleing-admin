@@ -1,6 +1,15 @@
 import { Enum, init } from '@/utils/enum.util'
 
 /**
+ * 用户类型
+ */
+export const EUserType = {
+  eSys: Enum('sys_user', '系统用户'),
+  eOther: Enum('other', '其他用户')
+}
+init(EUserType)
+
+/**
  * 控件类型
  * 
  */

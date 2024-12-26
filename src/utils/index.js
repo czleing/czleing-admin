@@ -215,6 +215,15 @@ export function getFnValue (value, args) {
   }
 }
 
+/** 获取资源全地址 */
+export function getFullUrl (path) {
+  if (!path) return ''
+  if (/http.*/.test(path) || path.indexOf(import.meta.env.VITE_APP_RESOURCE_API) === 0) {
+    return path
+  }
+  return import.meta.env.VITE_APP_RESOURCE_API + path
+}
+
 /**
  * 列表转树
  * @param {Array} list 列表数据

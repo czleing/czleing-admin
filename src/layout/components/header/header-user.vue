@@ -2,15 +2,15 @@
   <div class="header-user">
     <a-dropdown v-if="authStore.hasLogin" class="">
       <a-space class="pointer">
-        <a-avatar size="25" :src="authStore.userInfo.avatar || DefaultAvatar" class="shadow1" />
+        <a-avatar :src="getFullUrl(authStore.userInfo.avatar) || DefaultAvatar" class="shadow1" />
         <span class="header-user-name">
-          {{ authStore.userInfo.nickname }}
+          {{ authStore.userInfo.nickName }}
         </span>
         <CaretDownOutlined />
       </a-space>
       <template #overlay>
         <a-menu>
-          <a-menu-item>
+          <a-menu-item @click="toPersonalCenter">
             <span>
               <UserOutlined />
               个人中心
@@ -34,12 +34,16 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth-store'
 import { CaretDownOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons-vue'
 import DefaultAvatar from '@/assets/images/avatar.jpeg'
+import { getFullUrl } from '@/utils/index.js'
 
 const authStore = useAuthStore()
 const router = useRouter()
 
 function toLogin () {
   router.push({ name: 'login' })
+}
+function toPersonalCenter () {
+  router.push('/personal-center')
 }
 </script>
 
