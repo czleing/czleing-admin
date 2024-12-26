@@ -47,7 +47,6 @@
 </template>
 
 <script setup>
-import { computed, ref, provide, inject, reactive, watch, nextTick } from 'vue'
 import CComponent from './c-component.js'
 import { isDayjs, getFnValue, loadingRequest, isEmpty } from '@/utils/index'
 import { EControlType } from '@/enum'

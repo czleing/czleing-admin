@@ -12,7 +12,6 @@
 </template>
 
 <script setup>
-import { computed, h, ref, resolveComponent } from 'vue'
 import CPage from '@/components/crud/c-page.vue'
 import { EControlType } from '@/enum/index.js'
 import axios from '@/api/index.js'

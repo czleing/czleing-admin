@@ -22,7 +22,7 @@ export default {
         return authStore.permissions.includes(permission)
       })
       if (!hasPermission && !authStore.permissions.includes('*:*:*')) {
-        el.parentNode.removeChild(el)
+        el.parentNode?.removeChild(el)
       }
     }
   }

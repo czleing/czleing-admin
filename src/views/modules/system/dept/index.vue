@@ -14,7 +14,6 @@
 </template>
 
 <script setup>
-import { h, computed, ref, resolveComponent } from 'vue'
 import CPage from '@/components/crud/c-page.vue'
 import { EControlType, EIsEnabled, EMenuType } from '@/enum/index.js'
 import { listToTree } from '@/utils/index.js'

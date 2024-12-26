@@ -29,7 +29,6 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
 import CPage from '@/components/crud/c-page.vue'
 import { EControlType, EIsEnabled, EMenuType } from '@/enum/index.js'
 import { listToTree } from '@/utils/index.js'
@@ -96,8 +95,8 @@ const tableConfig = computed(() => ({
     },
     {
       title: '操作',
-      width: 160,
-      actionShowNum: 2, // 展示操作按钮数量，剩余的将收进更多里
+      width: 180,
+      actionShowNum: 4, // 展示操作按钮数量，剩余的将收进更多里
       // action: 操作列配置，T[] || ({ record }) => T[]
       action: ({ record }) => {
         const btns = [
@@ -118,13 +117,13 @@ const tableConfig = computed(() => ({
             }
           } : null,
           {
-            name: '删除',
-            callback: 'delete' // 删除操作默认带确认框
-          },
-          {
             name: record.isEnabled ? '禁用' : '启用',
             confirm: true,
             callback: 'toggle'
+          },
+          {
+            name: '删除',
+            callback: 'delete' // 删除操作默认带确认框
           }
         ].filter(Boolean)
         return btns

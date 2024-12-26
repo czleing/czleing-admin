@@ -2,7 +2,6 @@
 /**
  * 动态注册全局组件
  */
-import { defineAsyncComponent } from 'vue'
 import { AIcon } from './global/a-icon'
 
 const components = import.meta.glob('./global/**/**.vue')

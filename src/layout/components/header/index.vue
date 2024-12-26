@@ -42,8 +42,6 @@ import HeaderUser from './header-user.vue'
 import HeaderFullscreen from './header-fullscreen.vue'
 import HeaderSetting from './header-setting.vue'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'
-import { ref, computed, watchEffect } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 
 const menuStore = useMenuStore()
 const settingStore = useSettingStore()

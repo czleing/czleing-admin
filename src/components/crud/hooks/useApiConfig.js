@@ -1,5 +1,3 @@
-import { useRoute } from 'vue-router'
-
 /**
  * 根据当前接口配置及默认配置 生成 接口配置
  * @param {Object} apiConfig 

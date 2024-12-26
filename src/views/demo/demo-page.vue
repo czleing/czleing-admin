@@ -52,7 +52,6 @@
 </template>
 
 <script setup>
-import { h, computed, resolveComponent } from 'vue'
 import CPage from '@/components/crud/c-page.vue'
 import { EControlType, EIsEnabled } from '@/enum/index.js'
 

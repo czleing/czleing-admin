@@ -31,7 +31,6 @@
 </template>
 
 <script setup>
-import { ref, provide, nextTick, watch } from 'vue'
 import { loadingRequest } from '@/utils/index.js'
 
 const props = defineProps({
@@ -41,7 +40,7 @@ const props = defineProps({
   showConfirm: { type: Boolean, default: true },
   confirmText: { type: String, default: '确定' },
   cancelText: { type: String, default: '关闭' },
-  beforeCancel: Function, // 取消前执行，谨慎使用，如果 beforeCancel 绑定的函数又调用了此组件的 close 方法，会造成死循环
+  beforeCancel: Function, // async () => {} 取消前执行，返回 Promise.reject() 或抛出异常可阻止关闭，注!!!：如果 beforeCancel 绑定的函数又调用了此组件的 close 方法，会造成死循环
   beforeConfirm: Function, // async (close) => {}
   confirmDisabled: { type: Boolean, default: false } // 确认按钮是否禁用
 })

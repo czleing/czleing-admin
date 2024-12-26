@@ -27,7 +27,6 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
 import { DownOutlined } from '@ant-design/icons-vue'
 import { getFnValue } from '@/utils/index'
 import CTableActionItem from './c-table-action-item.vue'

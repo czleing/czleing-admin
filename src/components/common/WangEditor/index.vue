@@ -25,7 +25,6 @@
 <script setup>
 import '@wangeditor/editor/dist/css/style.css'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
-import { shallowRef, watch, onUnmounted, ref, nextTick } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
 
 const props = defineProps({

@@ -25,7 +25,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import { RightCircleOutlined } from '@ant-design/icons-vue'
 import { useThemeToken } from '@/hooks/useThemeToken.js'
 

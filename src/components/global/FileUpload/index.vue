@@ -27,7 +27,6 @@
 
 <script setup>
 import { UploadOutlined } from '@ant-design/icons-vue'
-import { ref, getCurrentInstance, computed, watchEffect } from 'vue'
 import { useAuthStore } from '@/stores/auth-store.js'
 import { byteFormat, getFullUrl } from '@/utils/index.js'
 import { Upload } from 'ant-design-vue'

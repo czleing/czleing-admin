@@ -30,7 +30,6 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth-store'
 import { CaretDownOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons-vue'
 import DefaultAvatar from '@/assets/images/avatar.jpeg'

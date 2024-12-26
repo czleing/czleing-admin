@@ -1,5 +1,3 @@
-import { useRoute } from 'vue-router'
-import { ref } from 'vue'
 /**
  * 页面查询条件缓存相关
  * 数据格式：[{id, name, data}, ...]

@@ -22,7 +22,6 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
 import { isNotEmpty } from '@/utils/index.js'
 import axios from '@/api/index.js'
 

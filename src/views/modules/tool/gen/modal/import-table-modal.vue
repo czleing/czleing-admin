@@ -32,7 +32,6 @@
 </template>
 
 <script setup>
-import { computed, ref, getCurrentInstance } from 'vue'
 import { EControlType } from '@/enum/index.js'
 import { isEmpty } from '@/utils/index.js'
 import axios from '@/api/index.js'

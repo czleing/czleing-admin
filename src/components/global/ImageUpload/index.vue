@@ -34,7 +34,6 @@
 
 <script setup>
 import { PlusOutlined } from '@ant-design/icons-vue'
-import { ref, getCurrentInstance, computed, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth-store.js'
 import { byteFormat, getFullUrl } from '@/utils/index.js'
 import { Upload } from 'ant-design-vue'

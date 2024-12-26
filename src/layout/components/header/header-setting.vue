@@ -71,7 +71,6 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
 import { useSettingStore } from '@/stores/setting-store.js'
 import { SkinOutlined } from '@ant-design/icons-vue'
 

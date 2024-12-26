@@ -16,7 +16,6 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
 const props = defineProps({
   type: String
 })

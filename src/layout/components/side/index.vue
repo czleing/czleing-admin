@@ -27,11 +27,9 @@
 </template>
 
 <script setup>
-import { useRouter, useRoute } from 'vue-router'
 import Logo from './logo.vue'
 import { useMenuStore } from '@/stores/menu-store.js'
 import SideItem from './SideItem.vue'
-import { ref, watchEffect } from 'vue'
 
 const menuStore = useMenuStore()
 const router = useRouter()

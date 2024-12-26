@@ -50,7 +50,6 @@
 
 <script setup>
 import { useAuthStore } from '@/stores/auth-store.js'
-import { computed } from 'vue'
 import { message } from 'ant-design-vue'
 import DefaultAvatar from '@/assets/images/avatar.jpeg'
 import { EUserType, EControlType } from '@/enum/index.js'

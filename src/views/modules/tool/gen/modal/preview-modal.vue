@@ -39,7 +39,6 @@ export default {
 </script>
 
 <script setup>
-import { ref, onMounted, computed, getCurrentInstance } from 'vue'
 import axios from '@/api/index.js'
 
 const props = defineProps({

@@ -46,9 +46,7 @@
   </section>
 </template>
 <script setup>
-import { watchEffect, ref } from 'vue'
 import { useTabsStore } from '@/stores/tabs-store.js'
-import { useRouter, useRoute } from 'vue-router'
 import { SyncOutlined, LoadingOutlined, LeftCircleTwoTone, RightCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons-vue'
 import { theme } from 'ant-design-vue'
 

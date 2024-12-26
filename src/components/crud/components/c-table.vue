@@ -79,7 +79,6 @@
 </template>
 
 <script setup>
-import { ref, computed, inject, watchEffect, onMounted } from 'vue'
 import { QuestionCircleOutlined } from '@ant-design/icons-vue'
 import axios from '@/api/index.js'
 import dayjs from 'dayjs'

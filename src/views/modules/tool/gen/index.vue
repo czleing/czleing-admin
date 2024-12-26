@@ -24,7 +24,6 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, ref } from 'vue'
 import CPage from '@/components/crud/c-page.vue'
 import { EControlType } from '@/enum/index.js'
 import ImportTableModal from './modal/import-table-modal.vue'

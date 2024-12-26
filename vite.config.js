@@ -1,9 +1,10 @@
 import { defineConfig, loadEnv } from 'vite'
-import viteVue from '@vitejs/plugin-vue'
+import vue from '@vitejs/plugin-vue'
 import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import { fileURLToPath, URL } from 'node:url'
 import { theme } from 'ant-design-vue'
+import AutoImport from 'unplugin-auto-import/vite'
 
 const { defaultAlgorithm, defaultSeed } = theme
 const mapToken = defaultAlgorithm(defaultSeed)
@@ -14,10 +15,20 @@ export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), '') // 第三个参数为 '' 表示加载环境文件所有参数
   return {
     plugins: [
-      viteVue(),
-      // ant-design-vue 4.x 的自动按需引入
+      vue(),
+      AutoImport({
+        imports: ['vue', 'vue-router'],
+        // dirs: ['src/utils/index.js', 'src/enum'], // 将自定义的API也加入到自动导入
+        dts: 'src/utils/auto-import.d.ts', // 生成类型声明文件
+        // eslintrc: { // 如果使用了 eslint，可以开启这个配置
+        //   enabled: true,
+        //   filepath: 'src/utils/.eslintrc-auto-import.json',
+        //   globalsPropValue: true
+        // }
+      }),
       Components({
         resolvers: [
+          // ant-design-vue 4.x 的自动按需引入
           AntDesignVueResolver({
             importStyle: false // css in js
           })

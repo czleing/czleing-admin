@@ -58,7 +58,7 @@
 </template>
 
 <script setup>
-import { ref, provide, inject, reactive, h, onMounted, computed, toRaw } from 'vue'
+import { h } from 'vue'
 import CComponent from './c-component.js'
 import { SearchOutlined, UndoOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useSearchCache } from '@/hooks/useSearchCache.js'
@@ -94,6 +94,7 @@ const {
   delCondition
 } = useSearchCache()
 const noCondition = computed(() => isAllFieldEmpty(formData))
+const emits = defineEmits(['search'])
 
 provide('FORM_DATA', formData)
 
@@ -138,8 +139,6 @@ function onDeleteCache (id) {
   delCondition(id)
 }
 // ------- 记住查询 end ----------
-
-const emits = defineEmits(['search'])
 
 </script>
 

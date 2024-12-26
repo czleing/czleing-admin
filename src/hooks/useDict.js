@@ -1,5 +1,4 @@
 import { useDictStore } from '@/stores/dict-store.js'
-import { reactive } from 'vue'
 
 /**
  * 使用字典功能

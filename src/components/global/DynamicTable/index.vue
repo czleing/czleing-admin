@@ -41,7 +41,6 @@
 </template>
 
 <script setup>
-import { ref, watch, nextTick, provide, onMounted } from 'vue'
 import { QuestionCircleOutlined, PlusCircleOutlined } from '@ant-design/icons-vue'
 import CComponent from '@/components/crud/components/c-component'
 

@@ -1,4 +1,3 @@
-import { onMounted, onUnmounted, ref } from 'vue'
 
 /**
  * 监听浏览器窗体大小改变，使用了组件生命周期，需要在组件的 setup 环境下使用

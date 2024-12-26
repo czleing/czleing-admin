@@ -29,7 +29,6 @@
 </template>
 
 <script setup>
-import { watchEffect, ref } from 'vue'
 import MenuSide from './components/side/index.vue'
 import Header from './components/header/index.vue'
 import Tabs from './components/tabs/index.vue'

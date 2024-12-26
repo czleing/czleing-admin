@@ -16,6 +16,7 @@
 - axios 服务请求
 - dayjs 日期处理(moment的简化版, ant-design-vue 4 默认的日期处理工具)
 - pinia-plugin-persist pinia持久化插件，
+- unplugin-auto-import 常用API免导入插件，如使用 ref, reactice 不在需要写 import { ref, reactice } from 'vue'
 - pnpm 包管理工具，目前最优的包管理工具，更快速且体积更小
 - [后端源码](https://gitee.com/czleing/base-backend-api)
 
@@ -86,7 +87,54 @@ token.value.colorSuccess
 ...
 ```
 
-### 2、CRUD快速开发案例(可直接代码生成，系统工具->代码生成)
+### 2、获取当前登录用户
+```javascript
+import { useAuthStore } from '@/stores/auth-store.js'
+
+const authStore = useAuthStore()
+// 用户信息
+const userInfo = computed(() => authStore.userInfo)
+```
+
+### 3、消息提示
+```javascript
+import { message } from 'ant-design-vue'
+
+message.success('保存成功')
+```
+
+### 4、弹出模态框
+全局组件 Modal 对 a-modal、a-drawer 进行了合并封装，简化了使用，属性设置支持标签上设置和调用时设置
+```vue
+<template>
+  <div>
+    xxx
+    <Modal ref="cModal" title="xxx" width="800" ...>
+      弹出框内部内容
+    </Modal>
+  </div>
+</template>
+
+<script setup>
+const cModal = ref()
+function openModal () {
+  cModal.value.open({
+    title: '弹窗标题',
+    mode: 'modal', // 弹窗类型，modal | drawer
+    width: 600, // 弹窗宽度
+    showConfirm: true, // 是否需要确认按钮，默认需要
+    // ... 其他属性，参考 src/components/global/Modal/index.vue
+    async onConfirm (close) {}, // 点击确认按钮时执行，调用 close() 关闭弹窗
+    async onCancel () {} // 点击取消时执行
+  })
+  // 关闭弹窗
+  // cModal.value.close()
+}
+</script>
+```
+
+
+### 4、CRUD快速开发案例(可直接代码生成，系统工具->代码生成)
 参考 /src/views/demo/demo-page.vue
 ```vue
 <!-- CRUD 开发案例 -->
@@ -152,7 +200,6 @@ token.value.colorSuccess
 </template>
 
 <script setup>
-import { h, computed } from 'vue'
 import CPage from '@/components/crud/c-page.vue'
 import { EControlType, EIsEnabled } from '@/enum/index.js'
 

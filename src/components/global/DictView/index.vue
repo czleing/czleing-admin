@@ -27,7 +27,6 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
 import { useDict } from '@/hooks/useDict.js'
 
 const props = defineProps({

@@ -39,12 +39,9 @@
 </template>
 
 <script setup>
-import { computed, ref, getCurrentInstance } from 'vue'
 import { EControlType } from '@/enum/index.js'
-import { isEmpty } from '@/utils/index.js'
 import axios from '@/api/index.js'
 import CForm from '@/components/crud/components/c-form.vue'
-import { onMounted } from 'vue'
 
 const props = defineProps({
   datasource: String
