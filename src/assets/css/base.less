@@ -37,6 +37,12 @@
 .shadow1 { box-shadow: 0 0 5px rgba(0, 0, 0, .1); }
 .shadow2 { box-shadow: 0 0 10px rgba(0, 0, 0, .1); }
 .shadow3 { box-shadow: 0 0 15px rgba(0, 0, 0, .2); }
+// 边框
+.border { border: 0.5px solid @colorBorder; }
+.border-top { border-top: 0.5px solid @colorBorder; }
+.border-right { border-right: 0.5px solid @colorBorder; }
+.border-bottom { border-bottom: 0.5px solid @colorBorder; }
+.border-left { border-left: 0.5px solid @colorBorder; }
 
 // 文字大小
 .em06 { font-size: 0.6em; }
@@ -185,6 +191,14 @@ each(@spaces, .(@sv, @sk, @si) {
 .flex-y-center { display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .flex-y-around { display: flex; flex-direction: column; align-items: center; justify-content: space-around; }
 .flex-y-between { display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
+.gap2 { gap: 2px; }
+.gap4 { gap: 4px; }
+.gap5 { gap: 5px; }
+.gap8 { gap: 8px; }
+.gap10 { gap: 10px; }
+.gap15 { gap: 15px; }
+.gap20 { gap: 20px; }
+.gap30 { gap: 30px; }
 
 // 背景高斯模糊
 @supports (-webkit-backdrop-filter: saturate(180%) blur(20px)) or (backdrop-filter: saturate(180%) blur(20px)) {
