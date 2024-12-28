@@ -40,17 +40,16 @@ const props = defineProps({
   }
 })
 
-const dictMap = useDict([props.dictType])
-
-const currDicts = computed(() => {
+const currDicts = ref()
+useDict([props.dictType], dicts => {
   let values = props.value
   if (typeof props.value === 'string') {
     values = props.value.split(',')
   } else if (typeof props.value === 'number') {
     values = [values]
   }
-  return values?.map(val => {
-    const dict = dictMap[props.dictType]?.find(item => item.value === val)
+  currDicts.value = values?.map(val => {
+    const dict = dicts[props.dictType]?.find(item => item.value === val)
     return dict ?? (props.showValue ? { value: val } : {})
   })
 })

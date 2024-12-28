@@ -4,8 +4,9 @@
       <SkinOutlined style="font-size: 18px;" @click="openSetting" />
     </a-tooltip>
   </div>
-  <Modal ref="settingModal" title="设置" width="500" mode="drawer" :footer="null">
-    <a-divider>主题</a-divider>
+  <Modal ref="settingModal" title="设置" width="450" mode="drawer" :footer="null">
+    <!-- <a-divider>主题</a-divider> -->
+    <h4 class="pb10 text-gray2">主题</h4>
     <a-space class="flex-x">
       <span>选择主题：</span>
       <a-select v-model:value="settingStore.themeName" style="width: 150px;" @change="handleChange">
@@ -44,7 +45,8 @@
       <span>圆润布局：</span>
       <a-switch v-model:checked="settingStore.useRadius" />
     </a-space>
-    <a-divider>语言</a-divider>
+    <!-- <a-divider>语言</a-divider> -->
+    <h4 class="mt20 text-gray2">语言</h4>
     <a-space class="flex-x mt20">
       <span>选择语言：</span>
       <a-select v-model:value="settingStore.locale" style="width: 150px;" @change="handleLocalChange">
@@ -62,7 +64,8 @@
         </a-select-option>
       </a-select>
     </a-space>
-    <a-divider>其他</a-divider>
+    <!-- <a-divider>其他</a-divider> -->
+    <h4 class="mt20 text-gray2">其他</h4>
     <a-space class="flex-x mt20">
       <span>展示天气：</span>
       <a-switch v-model:checked="settingStore.useWeather" />

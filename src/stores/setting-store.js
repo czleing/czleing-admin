@@ -12,6 +12,7 @@ const themes = [
         colorWarning: '#e2b14c',
         colorSuccess: '#3dbd3e',
         colorInfo: '#d2b48c'
+        // 可以自定义更多变量值
       }
     }
   },
@@ -38,6 +39,18 @@ const themes = [
         colorInfo: '#8db6d2'
       }
     }
+  },
+  {
+    name: '热情红火',
+    theme: {
+      token: {
+        colorPrimary: '#f64040',
+        colorError: '#aa2705',
+        colorWarning: '#ff9209',
+        colorSuccess: '#a1d267',
+        colorInfo: '#f64040'
+      }
+    }
   }
 ]
 
@@ -46,7 +59,7 @@ const themes = [
  */
 export const useSettingStore = defineStore('setting', {
   state: () => ({
-    theme: themes.find(item => item.inUse)?.theme, // 当前主题色系
+    theme: { token: { ...themes.find(item => item.inUse)?.theme?.token } }, // 当前主题色系
     themeName: themes.find(item => item.inUse)?.name, // 当前主题名称
     mode: 'light', // 昼夜模式 light or dark
     locale: 'zh', // 当前语言 zh or en
@@ -60,7 +73,7 @@ export const useSettingStore = defineStore('setting', {
       if (!name) return
       const theme = themes.find(item => item.name === name)?.theme
       if (theme) {
-        this.theme = theme
+        this.theme = { token: { ...theme.token } }
         this.themeName = name
       }
     },

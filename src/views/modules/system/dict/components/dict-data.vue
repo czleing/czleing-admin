@@ -119,7 +119,7 @@ const modalConfig = computed(() => ({
   mode: 'modal',
   buttonConfig: ({ isAdd, isEdit, isView }) => ({
     confirmText: isEdit ? '确认修改' : '确认提交并继续',
-    confirmContinue: (formData, submitData) => {
+    confirmContinue: isEdit ? undefined : (formData, submitData) => {
       formData.dictSort = submitData.dictSort + 1
     }
   }),

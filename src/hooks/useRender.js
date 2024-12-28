@@ -372,7 +372,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlProps = {
       ...props,
       checked: value,
-      'onUpdate:value': val => {
+      'onUpdate:checked': val => {
         emitUpdate(val)
         if (typeof props.onChange === 'function') {
           setTimeout(() => {

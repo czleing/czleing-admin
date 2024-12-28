@@ -143,7 +143,7 @@ const genFormConfig = computed(() => ({
     },
     {
       label: '生成包路径',
-      tooltip: '生成在哪个java包下，例如 “com.base.system”',
+      tooltip: '生成在哪个java包下，例如 “com.admin.system” 中的 “admin”',
       fieldName: 'packageName',
       type: EControlType.eInput,
       disabled: formData => !!formData.packageName,
@@ -151,17 +151,17 @@ const genFormConfig = computed(() => ({
     },
     {
       label: '生成模块名',
-      tooltip: '可理解为子系统名，如系统管理 com.admin.system 中的 system',
+      tooltip: '可理解为子系统名，如系统管理 “com.admin.system” 中的 “system”',
       fieldName: 'moduleName',
       type: EControlType.eInput,
       required: true,
       props: {
-        placeholder: '如：系统管理 modules.system.user 中的 system'
+        placeholder: '如：系统管理 “modules.system.user” 中的 “system”'
       }
     },
     {
       label: '生成业务名',
-      tooltip: '可理解为功能英文名，例如 “user”',
+      tooltip: '可理解为功能英文名，例如用户管理的 “user”',
       fieldName: 'businessName',
       type: EControlType.eInput,
       required: true
