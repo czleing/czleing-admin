@@ -24,6 +24,7 @@
 </template>
 
 <script setup>
+import { createVNode } from 'vue'
 import * as Icons from '@ant-design/icons-vue'
 
 const props = defineProps({
@@ -119,9 +120,7 @@ function onSelectHandle (name) {
 const emits = defineEmits(['update:value'])
 
 async function emitChange () {
-  await nextTick()
   emits('update:value', iconName.value)
-  emits('change', iconName.value)
 }
 </script>
 

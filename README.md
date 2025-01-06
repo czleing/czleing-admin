@@ -16,7 +16,7 @@
 - axios 服务请求
 - dayjs 日期处理(moment的简化版, ant-design-vue 4 默认的日期处理工具)
 - pinia-plugin-persist pinia持久化插件，
-- unplugin-auto-import 常用API免导入插件，如使用 ref, reactice 不在需要写 import { ref, reactice } from 'vue'
+- unplugin-auto-import 常用API免导入插件，如使用 ref, reactive 不在需要写 import { ref, reactive } from 'vue'
 - pnpm 包管理工具，目前最优的包管理工具，更快速且体积更小
 - [后端源码](https://gitee.com/czleing/base-backend-api)
 

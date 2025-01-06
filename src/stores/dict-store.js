@@ -14,7 +14,7 @@ export const useDictStore = defineStore('dict', () => {
     }
     types = types.filter(type => !dictMap[type])
     for (const type of types) {
-        dictMap[type] = await getDatasByType(type) // 首次遇到某个类型时，赋值为请求接口的 Promise
+      dictMap[type] = await getDatasByType(type)
     }
     return dictMap
   }
