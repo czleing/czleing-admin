@@ -6,7 +6,7 @@ import { createVNode } from 'vue'
 import * as Icons from '@ant-design/icons-vue'
 
 const AIcon = function ({ type }) {
-  return createVNode(Icons[type])
+  return type && createVNode(Icons[type])
 }
 
 export { AIcon }

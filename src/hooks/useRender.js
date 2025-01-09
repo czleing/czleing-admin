@@ -7,11 +7,7 @@ import dayjs from 'dayjs'
  * @returns 组件
  */
 export function useRender ({ ctx, isView, value, dataSource }) {
-  const formData = inject('FORM_DATA', {})
-  // const emitChange = async val => {
-  //   await nextTick()
-  //   ctx.$emit('change', val)
-  // }
+  const formData = inject('FORM_DATA', {}) // 获取 c-form 组件的 formData 表单数据对象
   const emitUpdate = async val => {
     ctx.$emit('update:value', val) // 统一使用 value 作为双向绑定的 props (为了与 ant-design 一致)
   }
@@ -326,7 +322,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       start = start ? dayjs(start) : undefined
       end = end ? dayjs(end) : undefined
       if (start) {
-        setTimeout(() => emitChange([start, end]))
+        setTimeout(() => emitUpdate([start, end]))
       }
     }
     const controlTypeEnum = EControlType._objectOf(field.type)
@@ -498,7 +494,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
   function renderCustom (field) {
     const props = field.props
     const onChange = val => {
-      emitChange(val)
+      emitUpdate(val)
       if (typeof props.onChange === 'function') {
         setTimeout(() => {
           props.onChange(val, formData)
@@ -509,6 +505,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       value,
       onChange,
+      'onUpdate:value': onChange,
       disabled: props.disabled ?? isView,
       component: undefined
     }

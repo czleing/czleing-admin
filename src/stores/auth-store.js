@@ -5,6 +5,7 @@ import { setAccount } from '@/storage/account'
 import { Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 import { useMenuStore } from '@/stores/menu-store'
+import { createVNode } from 'vue'
 
 /**
  * 登录、授权、用户信息相关 store

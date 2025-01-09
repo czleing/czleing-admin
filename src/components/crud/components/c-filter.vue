@@ -17,7 +17,7 @@
             <CComponent v-model:value="formData[field.fieldName]" :field="field" />
           </a-form-item>
         </a-col>
-        <a-col :span="6">
+        <a-col :span="config.useCache && fields?.length > 0 ? 6 : 4">
           <a-form-item>
             <a-space>
               <a-button type="primary" :loading="loading" :disabled="loading" :icon="h(SearchOutlined)" html-type="submit">查询</a-button>
@@ -63,6 +63,7 @@ import CComponent from './c-component.js'
 import { SearchOutlined, UndoOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useSearchCache } from '@/hooks/useSearchCache.js'
 import { isAllFieldEmpty } from '@/utils/index.js'
+import { EControlType } from '@/enum'
 import { message } from 'ant-design-vue'
 
 const props = defineProps({
@@ -84,6 +85,7 @@ const currFields = computed(() => {
     }
   })
 })
+
 const searchForm = ref()
 const loading = inject('c-page.loading', false)
 const formData = reactive({})
@@ -103,7 +105,26 @@ onMounted(() => {
     formData[field.fieldName] = field.defaultValue
   })
 })
+
+/** 日期范围字段收集 */
+const dateRangeFields = computed(() => {
+  return fields.filter(field => field.type === EControlType.eDateRange)
+})
+/** 日期范围字段自动转换 */
+function transformDateRange (data) {
+  dateRangeFields.value?.forEach(field => {
+    const value = data[field.fieldName]
+    // 日期范围字段处理
+    const fieldNames = field.props?.fieldNames
+    data[fieldNames[0]] = value[0].startOf('day').hour(0).valueOf()
+    data[fieldNames[1]] = value[1].endOf('day').valueOf()
+    delete data[field.fieldName]
+  })
+}
+
 function onSubmitHandle (values) {
+  // 处理日期范围自动转换
+  transformDateRange(formData)
   emits('search', formData)
 }
 function onResetHandle () {

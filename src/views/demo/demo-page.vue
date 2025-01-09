@@ -1,6 +1,7 @@
 <!-- demo CRUD demo 页面 -->
 <template>
   <CPage
+    ref="cPage"
     hasImport
     hasExport
     hasGoBack
@@ -55,6 +56,7 @@
 import CPage from '@/components/crud/c-page.vue'
 import { EControlType, EIsEnabled } from '@/enum/index.js'
 
+const cPage = ref()
 /** 树形配置，不配置则不使用树 */
 const treeConfig = {
   url: '/system/user/deptTree',
@@ -68,13 +70,15 @@ const filterConfig = {
   // cacheBtnText: '记住查询', // 暂存按钮文字，默认 '记住查询'
   // labelCol: { span: 8 },
   // wrapperCol: { span: 16 },
+  // 一行显示几列由每个字段的 colSize 决定，一行 24 格，每个字段可以设置占用格数，一行不够时自动换行，注：查询重置按钮固定占 4-6 格(使用记住查询时占用6格，否则4格)
+  // 字段配置
   fields: [
     {
       label: '关键字',
       fieldName: 'key',
       type: EControlType.eInput,
       // colSize: { span: 8 }, // 整个字段占整行24栅格的比例，默认响应式分配：colSize: { sm: 8, lg: 6, xxl: 4 }
-      // labelCol: { span: 7 }, // 字段文本部分占整个字段的比例
+      // labelCol: { span: 7 }, // 字段文本部分占整个字段的比例，遵循 24 栅格规则
       // wrapperCol: { span: 18 }, // 字段控件部分占整个字段的比例
       props: {
         placeholder: '请输入姓名/手机号/账号'
@@ -103,7 +107,17 @@ const toolsConfig = {
         icon: 'EditOutlined',
         disabled: ({ selectedIds, selectedObjs, pagination }) => selectedObjs.some(item => item.status === 1),
         onClick ({ selectedIds, selectedObjs, pagination }) {
-          console.log('我被点击了')
+          // console.log('我被点击了')
+          // Modal.confirm({
+          //   title: '温馨提示',
+          //   content: '确认要xxx？',
+          //   async onOk () {
+          //     await axios.post(`/xx/xx`, {...})
+          //     message.success('xx成功！')
+          //     cPage.value.refresh()
+          //     cPage.value.clearSelect()
+          //   }
+          // })
         }
       }
     }
@@ -545,11 +559,14 @@ const modalConfig = computed(() => ({
       },
       {
         label: '日期范围',
+        // 这个字段名随便取，提交时会自动删掉，转换成你在 props.fieldNames 设置的两个字段
         fieldName: 'dateRange',
         type: EControlType.eDateRange,
         props: {
-          // showTime: true // 是否需要时分秒
-          fieldNames: ['dateRangeStart', 'dataRangeEnd'] // 必须设置起止字段名，日期范围都是两个值，对应表单中两个字段
+          // 是否需要时分秒
+          // showTime: true
+          // 必须设置起止字段名，日期范围都是两个值，对应表单中两个字段
+          fieldNames: ['dateRangeStart', 'dataRangeEnd']
         }
       },
       {

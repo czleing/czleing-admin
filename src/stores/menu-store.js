@@ -57,6 +57,7 @@ export const useMenuStore = defineStore('menu', {
           return component
         } else if (component) {
           const path = `/src/views/${component}.vue`
+          if (!views[path]) return undefined // 这个页面组件不存在
           return () => { // 返回按需加载函数
             const componentPromise = views[path]()
             return componentPromise.then(result => {

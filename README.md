@@ -96,12 +96,29 @@ const authStore = useAuthStore()
 const userInfo = computed(() => authStore.userInfo)
 ```
 
-### 3、消息提示
+### 3、消息弹窗
 ```javascript
-import { message } from 'ant-design-vue'
+import { Modal, message } from 'ant-design-vue'
 
+// 弹出确认框
+Modal.confirm({
+  title: '温馨提示',
+  content: '确认要删除该用户吗？',
+  // icon: createVNode(ExclamationCircleOutlined),
+  // okText: '确认',
+  // okType: 'danger', // 确认按钮类型，a-button 的 type
+  // okButtonProps: {},
+  // cancelText: '取消',
+  // onCancel () {},
+  onOk () {
+    // 相关操作
+  }
+})
+// 弹出成功提示
 message.success('保存成功')
+
 ```
+
 
 ### 4、弹出模态框
 全局组件 Modal 对 a-modal、a-drawer 进行了合并封装，简化了使用，属性设置支持标签上设置和调用时设置

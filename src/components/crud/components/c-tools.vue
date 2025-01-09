@@ -13,9 +13,8 @@
         <a-button
           v-for="btn in config?.otherToolsBtns"
           :key="btn.name"
-          :disabled="getDisabled(btn)"
           v-hasPermi="btn.permission"
-          v-bind="{ ...btn.props, disabled: undefined, icon: undefined, onClick: undefined }"
+          v-bind="{ ...btn.props, disabled: getFnValue(btn.props.disabled, callbackParams), icon: undefined, onClick: undefined }"
           @click="onToolClickHandle(btn)"
         >
           <template #icon v-if="btn.props.icon">
@@ -64,6 +63,7 @@ import { PlusOutlined, DeleteOutlined, ExportOutlined, RollbackOutlined, SyncOut
 import CImport from './c-import.vue'
 import { Modal } from 'ant-design-vue'
 import { h } from 'vue'
+import { getFnValue } from '@/utils'
 import axios from '@/api/index.js'
 
 const props = defineProps({
@@ -146,14 +146,6 @@ function onToolClickHandle (btn) {
     btn.props?.onClick(callbackParams.value)
   }
 }
-function getDisabled (btn) {
-  if (typeof btn.props?.disabled === 'function') {
-    return btn.props?.disabled(callbackParams.value)
-  } else {
-    return btn.props?.disabled
-  }
-}
-
 
 const emits = defineEmits(['add', 'delete', 'refresh', 'update:checkedFieldNames'])
 function onRefreshHandle () {
