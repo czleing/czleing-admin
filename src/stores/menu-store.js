@@ -57,7 +57,7 @@ export const useMenuStore = defineStore('menu', {
           return component
         } else if (component) {
           const path = `/src/views/${component}.vue`
-          if (!views[path]) return undefined // 这个页面组件不存在
+          if (!views[path]) return undefined // 这个页面组件不存在，避免已经配了菜单，但是组件地址为空，或者组件还没编写而报错的情况
           return () => { // 返回按需加载函数
             const componentPromise = views[path]()
             return componentPromise.then(result => {
@@ -114,8 +114,8 @@ export const useMenuStore = defineStore('menu', {
     },
     /**
      * 将多级路由打成二级路由（只留首尾两级）
-     * 让所有页面直接挂载在 Layout 下面，以解决 keepalive 只能缓存一层子路由的问题
-     * 打平之后，route.mathed 原为匹配到的路由链，改为手动构建的 route.meta.mathedPaths
+     * 让所有页面直接挂载在 Layout 下面，以解决 keepalive 无法缓存多级嵌套路由的问题
+     * 打平之后，route.matched 原为匹配到的路由链，改为手动构建的 route.meta.mathedPaths
      * @param {Object} rootRoute nav根路由
      * @returns navRoute object, 导航页路由树(2层)
      */
