@@ -71,6 +71,7 @@
         permission: 'system:loginlog:unlock',
         props: {
           type: 'primary',
+          icon: 'UnlockOutlined',
           disabled: ({ selectedIds }) => selectedIds.length !== 1,
           onClick ({ selectedObjs }) {
             Modal.confirm({
