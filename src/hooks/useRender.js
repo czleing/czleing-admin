@@ -333,18 +333,20 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       controlTypeEnum.data.defaultProps ?? {},
       field.props
     )
+    const onValueChange = (val) => {
+      emitUpdate(val)
+      if (typeof props.onChange === 'function') {
+        setTimeout(() => {
+          props.onChange(val, formData)
+        })
+      }
+    }
     const controlProps = {
       ...props,
       value,
       placeholder: getFnValue(props.placeholder, formData),
-      'onUpdate:value': val => {
-        emitUpdate(val)
-        if (typeof props.onChange === 'function') {
-          setTimeout(() => {
-            props.onChange(val, formData)
-          })
-        }
-      }
+      'onUpdate:value': onValueChange,
+      change: onValueChange
     }
     return h(resolveComponent(field.type), controlProps)
   }

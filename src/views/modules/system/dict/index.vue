@@ -51,7 +51,7 @@ const tableConfig = computed(() => ({
   columns: [
     {
       title: 'ID',
-      dataIndex: 'id',
+      dataIndex: 'dictId',
       hidden: true
     },
     {

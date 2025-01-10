@@ -122,7 +122,7 @@ watch(
   () => props.useDelete,
   (val) => {
     if (val) {
-      this.currColumns.push(
+      currColumns.value.push(
         {
           title: '操作',
           key: 'action',

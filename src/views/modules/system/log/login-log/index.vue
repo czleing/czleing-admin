@@ -22,6 +22,7 @@
   import { EControlType } from '@/enum/index.js'
   import axios from '@/api'
   import { Modal, message } from 'ant-design-vue'
+  import dayjs from 'dayjs'
 
   const cPage = ref()
   /** 查询条件配置 */
@@ -227,8 +228,8 @@
       endTime: undefined,
       // 后端对起止时间的接收是通过 params 接收的，此处需要特殊处理
       params: {
-        beginTime: searchParams.beginTime,
-        endTime: searchParams.endTime
+        beginTime: searchParams.beginTime ? dayjs(searchParams.beginTime).format('YYYY-MM-DD HH:mm:ss') : undefined,
+        endTime: searchParams.endTime ? dayjs(searchParams.endTime).format('YYYY-MM-DD HH:mm:ss') : undefined
       }
     }
   }

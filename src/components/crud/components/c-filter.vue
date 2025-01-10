@@ -62,7 +62,7 @@ import { h } from 'vue'
 import CComponent from './c-component.js'
 import { SearchOutlined, UndoOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { useSearchCache } from '@/hooks/useSearchCache.js'
-import { isAllFieldEmpty } from '@/utils/index.js'
+import { isNotEmpty, isAllFieldEmpty } from '@/utils/index.js'
 import { EControlType } from '@/enum'
 import { message } from 'ant-design-vue'
 
@@ -114,18 +114,20 @@ const dateRangeFields = computed(() => {
 function transformDateRange (data) {
   dateRangeFields.value?.forEach(field => {
     const value = data[field.fieldName]
-    // 日期范围字段处理
-    const fieldNames = field.props?.fieldNames
-    data[fieldNames[0]] = value[0].startOf('day').hour(0).valueOf()
-    data[fieldNames[1]] = value[1].endOf('day').valueOf()
+    if (isNotEmpty(value)) {
+      // 日期范围字段处理
+      const fieldNames = field.props?.fieldNames
+      data[fieldNames[0]] = value[0].startOf('day').hour(0).valueOf()
+      data[fieldNames[1]] = value[1].endOf('day').valueOf()
+    }
     delete data[field.fieldName]
   })
 }
 
 function onSubmitHandle (values) {
   // 处理日期范围自动转换
-  transformDateRange(formData)
-  emits('search', formData)
+  transformDateRange(values)
+  emits('search', values)
 }
 function onResetHandle () {
   searchForm.value.resetFields()
