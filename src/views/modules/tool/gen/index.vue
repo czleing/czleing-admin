@@ -8,6 +8,7 @@
       :api-option-config="{
         list: { headers: { datasource } },
         update: { headers: { datasource } },
+        delete: { headers: { datasource } },
         detail: { headers: { datasource } }
       }"
       :tools-config="toolsConfig"
