@@ -71,8 +71,8 @@ const props = defineProps({
 })
 
 const inputForm = ref()
-// const inModal = inject('IN_MODAL', false)
-const closeModal = inject('CLOSE_MODAL', null)
+// const inModal = inject('modal.in', false)
+const closeModal = inject('modal.close', null)
 const formData = reactive({})
 const formRemotes = reactive({}) // 收集组件的 remote 方法，用于需要重新刷新 remote 数据时使用
 const loading = ref(false)
@@ -104,7 +104,7 @@ const currFields = computed(() => {
         // 表格类型，根据 columns 自动生成 rules
         setTableRules(item)
       }
-      item.colSpan = item.singleLine ? 24 : colSpan
+      item.colSpan = item.colSpan ?? (item.singleLine ? 24 : colSpan)
       if (!props.isView) {
         item.props = item.props ?? {}
         item.props.disabled = getFnValue(item.disabled, formData)
@@ -123,8 +123,8 @@ const alignClass = computed(() => {
 })
 
 // 共享给子组件的变量
-provide('FORM_DATA', formData)
-provide('FORM_REMOTES', formRemotes)
+provide('c-form.formData', formData)
+provide('c-form.formRemotes', formRemotes)
 
 // 监听详情数据，同步回填至表单
 watch(

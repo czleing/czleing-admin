@@ -105,8 +105,9 @@ async function close () {
 
 const emits = defineEmits(['confirm', 'close'])
 
-provide('IN_MODAL', true) // 用于子组件判断是否在弹窗组件下面
-provide('CLOSE_MODAL', close)
+provide('modal.in', true) // 用于子组件判断是否在弹窗组件下面
+provide('modal.close', close)
+provide('modal.visible', visible)
 
 defineExpose({
   open,

@@ -7,7 +7,7 @@ import dayjs from 'dayjs'
  * @returns 组件
  */
 export function useRender ({ ctx, isView, value, dataSource }) {
-  const formData = inject('FORM_DATA', {}) // 获取 c-form 组件的 formData 表单数据对象
+  const formData = inject('c-form.formData', {}) // 获取 c-form 组件的 formData 表单数据对象
   const emitUpdate = async val => {
     ctx.$emit('update:value', val) // 统一使用 value 作为双向绑定的 props (为了与 ant-design 一致)
   }
@@ -24,6 +24,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     [EControlType.eSwitch]: renderSwitch,
     [EControlType.eEditor]: renderEditor,
     [EControlType.eTreeSelect]: renderTreeSelect,
+    [EControlType.eProvinceCityAreaSelector]: renderProvinceCityAreaSelector,
     [EControlType.eTable]: renderTable,
     [EControlType.eCustom]: renderCustom
   }
@@ -446,7 +447,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       const labelField = field.props?.fieldNames?.title ?? 'name'
       const childrenField = field.props?.fieldNames?.children ?? 'children'
       const values = typeof value === 'string' ? value.split(',') : value
-      const selectedValueArr = Array.isArray(values) ? values : (values ? [values] : [])
+      const selectedValueArr = Array.isArray(values) ? values : (isNotEmpty(values) ? [values] : [])
       let text = []
       if (isNotEmpty(selectedValueArr) && isNotEmpty(treeData)) {
         const findText = (list) => {
@@ -476,6 +477,35 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       value,
       disabled: props.disabled ?? isView,
       treeData,
+      'onUpdate:value': val => {
+        emitUpdate(val)
+        if (typeof props.onChange === 'function') {
+          setTimeout(() => {
+            props.onChange(val, formData)
+          })
+        }
+      }
+    }
+    return h(resolveComponent(field.type), controlProps)
+  }
+
+  /**
+   * 渲染省市区选择组件
+   * @param {Object} field 字段配置信息
+   * @returns 组件VNode
+   */
+  function renderProvinceCityAreaSelector (field) {
+    const controlTypeEnum = EControlType._objectOf(field.type)
+    const props = Object.assign(
+      {},
+      controlTypeEnum.data.defaultProps ?? {},
+      field.props
+    )
+    const controlProps = {
+      ...props,
+      value,
+      isView,
+      disabled: props.disabled ?? isView,
       'onUpdate:value': val => {
         emitUpdate(val)
         if (typeof props.onChange === 'function') {

@@ -97,6 +97,7 @@ const filterConfig = {
 /** 自定义工具栏按钮配置 */
 const toolsConfig = {
   // addBtnText: '新增',
+  // addInitData: { parentId: 0 }, // 新增时初始化表单的数据
   // backBtnText: '返回',
   otherToolsBtns: [
     {
@@ -161,7 +162,7 @@ const tableConfig = computed(() => ({
     {
       title: '类型',
       dataIndex: 'type2',
-      customRender: value => '历史'
+      customRender: ({ value }) => '历史'
     },
     {
       title: '字典',
@@ -430,6 +431,7 @@ const modalConfig = computed(() => ({
             fieldName: 'unitName',
             type: EControlType.eInput,
             singleLine: true, // 单独占一行
+            // colSpan: 12, // 该字段占一行的多少比例，24栅格
             labelCol: { span: 3 },
             wrapperCol: { span: 21 },
             props: {},
@@ -443,7 +445,7 @@ const modalConfig = computed(() => ({
       },
       {
         label: '单选按钮',
-        fieldName: 'radio',
+        fieldName: 'radio1',
         type: EControlType.eRadio,
         props: {
           options: [{ id: 1, name: 'name1' }, { id: 2, name: 'name2' }],
@@ -509,8 +511,9 @@ const modalConfig = computed(() => ({
             // method: 'get', // 默认 post
             params: {
               // type: 1,
-              type: '{formData.radio:required}' // 动态参数，formData代表表单数据，required代表是否必填，必填时，有值才获取数据源
+              type: '{formData.radio1:required}' // 动态参数，formData代表表单数据，required代表是否必填，必填时，有值才获取数据源
             },
+            // refresh: true, // 每次弹窗后自动刷新远程数据
             converter (result) { // 对接口返回数据进行修改，转成 [{id, name, xxx}] 格式
               return result.list?.map(item => ({ id: item.userId, name: item.nickName }))
             }
@@ -525,10 +528,10 @@ const modalConfig = computed(() => ({
           remote: {
             url: '/system/user/deptTree'
           },
-          fieldNames: {
-            value: 'id',
-            title: 'label',
-            children: 'children'
+          fieldNames: { // 与默认值一致时可以不用配
+            value: 'id', // value 对应的字段名，默认 id
+            title: 'label', // 名称 对应的字段名，默认 name
+            children: 'children' // 子集列表对应的字段名，默认 children
           }
         }
       },

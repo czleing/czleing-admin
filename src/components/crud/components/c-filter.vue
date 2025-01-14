@@ -98,7 +98,7 @@ const {
 const noCondition = computed(() => isAllFieldEmpty(formData))
 const emits = defineEmits(['search'])
 
-provide('FORM_DATA', formData)
+provide('c-form.formData', formData)
 
 onMounted(() => {
   fields?.forEach(field => {

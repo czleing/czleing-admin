@@ -25,8 +25,9 @@ export default {
      * converter: (res) => res // 数据源数据转换器，在查询到数据后可对数据进行修改
      */
     const dataSource = ref()
-    const formData = inject('FORM_DATA', {})
-    const formRemotes = inject('FORM_REMOTES', {})
+    const formData = inject('c-form.formData', {})
+    const formRemotes = inject('c-form.formRemotes', {})
+    const modalVisible = inject('modal.visible', false)
     const remote = props.field.props?.remote
     let remoteParams = {}
     const dictType = props.field.props?.dictType
@@ -45,6 +46,18 @@ export default {
       // 收集获取远程数据源的方法，以在需要时再次调用
       formRemotes[props.field.fieldName] = () => {
         return getDataSource(remoteParams)
+      }
+      // 需要每次弹窗时刷新一次
+      if (remote.refresh) {
+        watch(
+          () => modalVisible.value,
+          (visible) => {
+            if (visible) {
+              remoteParams = getParamsFromFormData(remote.params)
+              getDataSource(remoteParams)
+            }
+          }
+        )
       }
       // 需要监听动态字段
       if (needWatch.value) {

@@ -26,7 +26,7 @@
         :columns="tableConfig?.columns"
         :pagination="pagination"
         @refresh="onRefreshHandle"
-        @add="onAddHandle"
+        @add="onAddHandle(toolsConfig?.addInitData)"
         @delete="onBatchDeleteHandle"
       />
       <slot name="tools" />

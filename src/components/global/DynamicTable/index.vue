@@ -109,7 +109,7 @@ onMounted(() => {
   }
 })
 
-provide('FORM_DATA', {})
+provide('c-form.formData', {})
 
 watch(
   () => props.value,
