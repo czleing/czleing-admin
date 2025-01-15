@@ -528,10 +528,10 @@ const modalConfig = computed(() => ({
           remote: {
             url: '/system/user/deptTree'
           },
-          fieldNames: { // 与默认值一致时可以不用配
-            value: 'id', // value 对应的字段名，默认 id
-            title: 'label', // 名称 对应的字段名，默认 name
-            children: 'children' // 子集列表对应的字段名，默认 children
+          fieldNames: { // 与默认值一致时可以不配
+            // value: 'id', // 默认 id，与默认值一致时可以不配
+            label: 'label', // 默认 name，与默认值一致时可以不配
+            // children: 'children' // 默认 children，与默认值一致时可以不配
           }
         }
       },
@@ -546,7 +546,7 @@ const modalConfig = computed(() => ({
           treeCheckable: true,
           fieldNames: {
             value: 'id',
-            title: 'label',
+            label: 'label',
             children: 'children'
           }
         }
@@ -653,7 +653,7 @@ const modalConfig = computed(() => ({
       {
         label: '自定义组件',
         fieldName: 'custom',
-        type: EControlType.eCustom,
+        type: EControlType.eCustom, // 没有特殊要求时(如兼容新增、修改、查看模式)，type 也可以指定为全局组件名，如：'a-input', 'DictView'
         // singleLine: true,
         props: {
           // component：对象或返回对象的函数 Object || (formData) => Object

@@ -150,7 +150,7 @@ const modalConfig = computed(() => ({
           },
           fieldNames: {
             value: 'id',
-            title: 'label',
+            label: 'label',
             children: 'children'
           }
         }

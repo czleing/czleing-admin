@@ -638,10 +638,10 @@ const modalConfig = computed(() => ({
           remote: {
             url: '/system/user/deptTree'
           },
-          fieldNames: {
-            value: 'id',
-            title: 'label',
-            children: 'children'
+          fieldNames: { // 与默认值一致时可以不配
+            // value: 'id', // 默认 id，与默认值一致时可以不配
+            label: 'label', // 默认 name，与默认值一致时可以不配
+            // children: 'children' // 默认 children，与默认值一致时可以不配
           }
         }
       },
@@ -656,7 +656,7 @@ const modalConfig = computed(() => ({
           treeCheckable: true,
           fieldNames: {
             value: 'id',
-            title: 'label',
+            label: 'label',
             children: 'children'
           }
         }

@@ -24,7 +24,6 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     [EControlType.eSwitch]: renderSwitch,
     [EControlType.eEditor]: renderEditor,
     [EControlType.eTreeSelect]: renderTreeSelect,
-    [EControlType.eProvinceCityAreaSelector]: renderProvinceCityAreaSelector,
     [EControlType.eTable]: renderTable,
     [EControlType.eCustom]: renderCustom
   }
@@ -441,11 +440,11 @@ export function useRender ({ ctx, isView, value, dataSource }) {
 
   function renderTreeSelect (field) {
     const treeData = field.props?.treeData ?? dataSource
+    const valueField = field.props?.fieldNames?.value ?? 'id'
+    const labelField = field.props?.fieldNames?.label ?? 'name'
+    const childrenField = field.props?.fieldNames?.children ?? 'children'
     // 查看模式，直接渲染文本
     if (isView) {
-      const valueField = field.props?.fieldNames?.value ?? 'id'
-      const labelField = field.props?.fieldNames?.title ?? 'name'
-      const childrenField = field.props?.fieldNames?.children ?? 'children'
       const values = typeof value === 'string' ? value.split(',') : value
       const selectedValueArr = Array.isArray(values) ? values : (isNotEmpty(values) ? [values] : [])
       let text = []
@@ -477,35 +476,11 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       value,
       disabled: props.disabled ?? isView,
       treeData,
-      'onUpdate:value': val => {
-        emitUpdate(val)
-        if (typeof props.onChange === 'function') {
-          setTimeout(() => {
-            props.onChange(val, formData)
-          })
-        }
-      }
-    }
-    return h(resolveComponent(field.type), controlProps)
-  }
-
-  /**
-   * 渲染省市区选择组件
-   * @param {Object} field 字段配置信息
-   * @returns 组件VNode
-   */
-  function renderProvinceCityAreaSelector (field) {
-    const controlTypeEnum = EControlType._objectOf(field.type)
-    const props = Object.assign(
-      {},
-      controlTypeEnum.data.defaultProps ?? {},
-      field.props
-    )
-    const controlProps = {
-      ...props,
-      value,
-      isView,
-      disabled: props.disabled ?? isView,
+      fieldNames: {
+        value: valueField,
+        label: labelField,
+        children: childrenField
+      },
       'onUpdate:value': val => {
         emitUpdate(val)
         if (typeof props.onChange === 'function') {
