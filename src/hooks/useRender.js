@@ -562,6 +562,8 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     let component = props.component
     if (typeof component === 'function') {
       component = component(formData)
+    } else if (typeof component === 'string') {
+      component = resolveComponent(component)
     }
     return h(component, controlProps)
   }

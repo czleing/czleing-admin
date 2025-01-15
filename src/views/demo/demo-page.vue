@@ -660,8 +660,8 @@ const modalConfig = computed(() => ({
           component: {
             render () { return h('span', {}, '自定义组件8888') }
           }
-          // 或者 使用全局组件, import { resolveComponent } from 'vue'
-          // component: resolveComponent('DictView'),
+          // 或者 使用全局组件
+          // component: 'DictView', // 全局组件可以只传一个组件名，类似 'a-button'、'XxxGlobalComponent' 都可以
           // 或者 外部引入的单文件组件 import MyComponent from 'xxx'
           // component: MyComponent,
           // 其他属性在同级设置
