@@ -14,7 +14,6 @@
           <a-tab-pane
             v-for="tab in tabsStore.tabList"
             :key="tab.path"
-            :closable="tab.name !== 'index'"
           >
             <template #tab>
               <template v-if="currentTab === tab.path">

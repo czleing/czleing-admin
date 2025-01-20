@@ -1,6 +1,7 @@
 <template>
   <div class="header flex-x-between px20">
-    <span class="pointer" @click="menuStore.toggleSidebar">
+    <Logo />
+    <span class="pointer ml20" @click="menuStore.toggleSidebar">
       <MenuFoldOutlined v-if="menuStore.isSidebarOpen" />
       <MenuUnfoldOutlined v-else />
     </span>
@@ -36,6 +37,7 @@
 </template>
 
 <script setup>
+import Logo from './logo.vue'
 import { useMenuStore } from '@/stores/menu-store.js'
 import { useSettingStore } from '@/stores/setting-store.js'
 import HeaderUser from './header-user.vue'
@@ -70,8 +72,8 @@ function onMenuItemClick (item) {
     router.push(item.path)
   } else {
     selectedKeys.value = [item.path]
-    menuStore.firstRoutePath = item.path
   }
+  menuStore.firstRoutePath = item.path
 }
 
 </script>

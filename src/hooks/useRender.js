@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 
 /**
  * 渲染组件
+ * 可以通过自定义渲染函数来改变全局组件的渲染
  * @returns 组件
  */
 export function useRender ({ ctx, isView, value, dataSource }) {
@@ -24,11 +25,11 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     [EControlType.eSwitch]: renderSwitch,
     [EControlType.eEditor]: renderEditor,
     [EControlType.eTreeSelect]: renderTreeSelect,
-    [EControlType.eTable]: renderTable,
     [EControlType.eCustom]: renderCustom
   }
   // 通过字段配置生成控件
   function renderByField (field) {
+    field.type = field.type ?? EControlType.eInput
     const fn = getRenderFn[field.type]
     if (fn) {
       // 1.有自定义渲染函数的，用自定义渲染函数渲染
@@ -40,14 +41,20 @@ export function useRender ({ ctx, isView, value, dataSource }) {
         ...controlTypeEnum?.data?.defaultProps ?? {},
         ...field.props,
         value,
-        modelValue: value,
+        isView,
         disabled: field.props.disabled ?? isView,
         'onUpdate:value': (val) => {
           emitUpdate(val)
-          ctx.$emit('update:modelValue', val) // 兼容 Vue3 modelValue 模式
           if (typeof field.props.onChange === 'function') {
             setTimeout(() => {
               field.props.onChange(val, formData)
+            })
+          }
+        },
+        onChange (...args) {
+          if (typeof field.props.onChange === 'function') {
+            setTimeout(() => {
+              field.props.onChange(...args, formData)
             })
           }
         }
@@ -104,7 +111,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
   function renderInputNumber (field) {
     // 查看模式，直接渲染文本
     if (isView) {
-      return h('span', [value ?? '-'])
+      return h('span', [value ?? '-', field.props?.addonAfter])
     }
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
@@ -410,34 +417,6 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     return h(component, controlProps)
   }
 
-  /**
-   * 渲染动态表格组件
-   * @param {Object} field 字段配置信息
-   * @returns 组件VNode
-   */
-  function renderTable (field) {
-    const controlTypeEnum = EControlType._objectOf(field.type)
-    const props = Object.assign(
-      {},
-      controlTypeEnum.data.defaultProps ?? {},
-      field.props
-    )
-    const controlProps = {
-      ...props,
-      value,
-      disabled: props.disabled ?? isView,
-      'onUpdate:value': val => {
-        emitUpdate(val)
-        if (typeof props.onChange === 'function') {
-          setTimeout(() => {
-            props.onChange(val, formData)
-          })
-        }
-      }
-    }
-    return h(resolveComponent(field.type), controlProps)
-  }
-
   function renderTreeSelect (field) {
     const treeData = field.props?.treeData ?? dataSource
     const valueField = field.props?.fieldNames?.value ?? 'id'
@@ -560,6 +539,8 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       result = dayjs(Number(val)).format(format)
     } else if (val && typeof val === 'object' && val.$isDayjsObject) { // dayjs 转 年月日
       result = val.format(format)
+    } else if (typeof val === 'string' && !showTime) { // 年月日时分秒 转 年月日
+      return dayjs(val).format(format)
     }
     return result ?? '-'
   }

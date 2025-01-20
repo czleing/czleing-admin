@@ -11,7 +11,7 @@
           @click="handleMenuItem(item)"
         >
           <template #icon>
-            <a-icon :type="item.meta.icon" />
+            <a-icon v-if="item.meta.icon && item.meta.icon !== '#'" :type="item.meta.icon" />
           </template>
           {{ item.meta.title }}
         </a-menu-item>

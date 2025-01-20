@@ -60,6 +60,7 @@ const cPage = ref()
 /** 树形配置，不配置则不使用树 */
 const treeConfig = {
   url: '/system/user/deptTree',
+  params: {}, // 查询参数
   // method: 'post',
   replaceField: { key: 'id', children: 'children', title: 'label' },
   searchField: 'deptId', // 将选中节点的id作为列表的查询参数的参数名，默认orgId
@@ -101,7 +102,7 @@ const toolsConfig = {
   // backBtnText: '返回',
   otherToolsBtns: [
     {
-      name: '自定义按钮',
+      name: '自定义按钮', // String | ({ selectedIds, selectedObjs, pagination }) => String
       permission: 'system:user:diy',
       props: {
         type: 'link',
@@ -133,7 +134,13 @@ const tableConfig = computed(() => ({
     // pageSize: 22, // 重写分页大小选项
     // usePage: false, // 不使用分页，默认使用
     // rowClick ({ key, record, index, selected, selectedIds, selectedObjs }) { // 配置数据行点击事件
-    //   console.log(record, index)
+      // if (!selected) {
+      //   selectedIds.value.push(key)
+      //   selectedObjs.value.push(record)
+      // } else {
+      //   selectedIds.value = selectedIds.value.filter(id => id !== key)
+      //   selectedObjs.value = selectedObjs.value.filter(item => item.id !== key)
+      // }
     // }
   },
   initSearch: true, // 默认 true，初始化时查询
@@ -153,6 +160,11 @@ const tableConfig = computed(() => ({
       minWidth: 40,
       maxWidth: 200,
       useTotal: true // 使用合计
+    },
+    {
+      title: '带单位',
+      dataIndex: 'withUnit',
+      unit: '元' // 在后面拼上单位
     },
     {
       title: '名称2',
@@ -528,10 +540,10 @@ const modalConfig = computed(() => ({
           remote: {
             url: '/system/user/deptTree'
           },
-          fieldNames: { // 与默认值一致时可以不配
-            // value: 'id', // 默认 id，与默认值一致时可以不配
-            label: 'label', // 默认 name，与默认值一致时可以不配
-            // children: 'children' // 默认 children，与默认值一致时可以不配
+          fieldNames: { // 与默认值一致时可以不用配
+            // value: 'id', // value 对应的字段名，默认 id
+            label: 'label', // 名称 对应的字段名，默认 name
+            // children: 'children' // 子集列表对应的字段名，默认 children
           }
         }
       },
@@ -585,7 +597,9 @@ const modalConfig = computed(() => ({
         type: EControlType.eFileUpload,
         tooltip: '仅支持 zip/rar 文件',
         props: {
-          accept: '.zip,.rar'
+          accept: '.zip,.rar',
+          maxCount: 5, // 最大上传文件数量
+          fileSize: 2 * 1024 // kb
         }
       },
       {
@@ -653,15 +667,15 @@ const modalConfig = computed(() => ({
       {
         label: '自定义组件',
         fieldName: 'custom',
-        type: EControlType.eCustom, // 没有特殊要求时(如兼容新增、修改、查看模式)，type 也可以指定为全局组件名，如：'a-input', 'DictView'
+        type: EControlType.eCustom,
         // singleLine: true,
         props: {
           // component：对象或返回对象的函数 Object || (formData) => Object
           component: {
             render () { return h('span', {}, '自定义组件8888') }
           }
-          // 或者 使用全局组件
-          // component: 'DictView', // 全局组件可以只传一个组件名，类似 'a-button'、'XxxGlobalComponent' 都可以
+          // 或者 使用全局组件, import { resolveComponent } from 'vue'
+          // component: resolveComponent('DictView'),
           // 或者 外部引入的单文件组件 import MyComponent from 'xxx'
           // component: MyComponent,
           // 其他属性在同级设置

@@ -39,21 +39,12 @@ const staticRoutes = [
     children: [
       {
         path: '/home',
-        redirect: '/home/index',
+        name: 'index',
+        component: () => import('@/views/home/index.vue'),
         meta: {
-          icon: 'HomeOutlined'
-        },
-        children: [
-          {
-            path: '/home/index',
-            name: 'index',
-            component: () => import('@/views/home/index.vue'),
-            meta: {
-              title: '首页',
-              cache: true
-            }
-          }
-        ]
+          title: '首页',
+          cache: true
+        }
       },
       {
         path: '/personal-center',

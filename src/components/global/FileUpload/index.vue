@@ -13,6 +13,7 @@
       :headers="headers"
       :max-count="maxCount"
       :accept="accept"
+      :disabled="disabled"
       :before-upload="beforeUploadHandle"
       v-bind="{ ...$attrs, onChange: undefined }"
       @change="onChangeHandle"
@@ -61,8 +62,11 @@ const props = defineProps({
     type: String,
     default: '上传文件'
   },
-  // 是否禁用
-  disabled: Boolean
+  // 是否禁用，禁用时只能查看
+  disabled: {
+    type: Boolean,
+    default: false
+  }
 })
 const _this = getCurrentInstance().proxy
 const authStore = useAuthStore()
@@ -85,7 +89,7 @@ watchEffect(() => {
         i++
         return {
           uid: Date.now() + i,
-          name: path.match(/.*\/([^/]+)\.\w+/)?.[1] || path,
+          name: path.match(/.*\/([^/]+\.\w+)/)?.[1] || path,
           status: 'done',
           url: getFullUrl(path),
           path

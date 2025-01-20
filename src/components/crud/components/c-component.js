@@ -5,8 +5,7 @@ import axios from '@/api'
 import { isEmpty } from '@/utils/index'
 import { EControlType } from '@/enum'
 
-export default {
-  functional: true,
+export default defineComponent({
   props: {
     value: {}, // [Object, String, Number, Boolean, Array],
     field: {
@@ -138,5 +137,5 @@ export default {
     })
     return renderByField(this.field)
   }
-}
+})
 

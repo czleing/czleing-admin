@@ -39,7 +39,7 @@
       </a-row>
     </a-form>
     <!-- 提交按钮，单独使用表单组件时使用 -->
-    <div v-if="showConfirm || showCancel" class="mt20" :class="alignClass">
+    <div v-if="$attrs.footer !== null && (showConfirm || showCancel)" class="mt20" :class="alignClass">
       <a-button v-if="showCancel" type="default" :disabled="loading" @click="cancel">{{ cancelText }}</a-button>
       <a-button v-if="showConfirm" type="primary" :loading="loading" @click="submit">{{ confirmText }}</a-button>
     </div>
@@ -48,7 +48,7 @@
 
 <script setup>
 import CComponent from './c-component.js'
-import { isDayjs, getFnValue, loadingRequest, isEmpty } from '@/utils/index'
+import { isDayjs, getFnValue, loadingRequest, isEmpty, isNotEmpty } from '@/utils/index'
 import { EControlType } from '@/enum'
 
 const props = defineProps({
@@ -68,6 +68,7 @@ const props = defineProps({
   cancelText: { type: String, default: '取消' },
   confirmAlign: { type: String, default: 'right' }, // 提交、取消按钮对齐方式，left，center，right
   autoReset: { type: Boolean, default: true }, // 提交之后自动清空表单
+  autoClose: { type: Boolean, default: true } // 提交之后自动关闭弹窗(如果有)
 })
 
 const inputForm = ref()
@@ -114,6 +115,35 @@ const currFields = computed(() => {
   }
   return initFields(props.formConfig.fields)
 })
+const fieldNamesArr = computed(() => {
+  function getNamesArrByFields (fields) {
+    const arr = []
+    fields.forEach(f => {
+      if (isFieldGroup(f)) {
+        arr.push(...getNamesArrByFields(f.fields))
+      } else {
+        arr.push(f.fieldName)
+      }
+    })
+    return arr
+  }
+  return getNamesArrByFields(currFields.value)
+})
+/** 收集默认值 */
+const defaultObject = computed(() => {
+  const obj = {}
+  function getDefaultValueByFields (fields) {
+    fields.forEach(f => {
+      if (isFieldGroup(f)) {
+        getDefaultValueByFields(f.fields)
+      } else if (isNotEmpty(f.defaultValue)) {
+        obj[f.fieldName] = f.defaultValue
+      }
+    })
+  }
+  getDefaultValueByFields(currFields.value)
+  return obj
+})
 const alignClass = computed(() => {
   return {
     'left': 'tl',
@@ -129,20 +159,24 @@ provide('c-form.formRemotes', formRemotes)
 // 监听详情数据，同步回填至表单
 watch(
   () => props.detail,
-  () => {
-    setFormData(currFields.value)
+  (val) => {
+    setFormData(val)
   },
   { deep: true, immediate: true }
 )
 
 // 设置表单值或默认值
-setFormData(currFields.value)
-function setFormData (fieldTree) {
-  fieldTree.forEach(field => {
-    if (isFieldGroup(field)) {
-      setFormData(field.fields)
-    } else {
-      formData[field.fieldName] = props.detail[field.fieldName] ?? field.defaultValue
+setFormData()
+/**
+ * 给表单设置数据
+ * @param {Object} data 要设置的数据对象，默认绑定的 detail 对象
+ * @param {Array} includeFieldNames 要设置的字段数组，默认全部字段
+ * @param {Array} excludeFieldNames 不要设置的字段数组，默认空数组
+ */
+function setFormData (data = props.detail, includeFieldNames = fieldNamesArr.value, excludeFieldNames = []) {
+  includeFieldNames.forEach(fieldName => {
+    if (!excludeFieldNames || !excludeFieldNames.includes(fieldName)) {
+      formData[fieldName] = data[fieldName] ?? defaultObject.value[fieldName]
     }
   })
 }
@@ -304,7 +338,7 @@ function submit () {
     if (typeof props.confirmContinue === 'function') {
       await nextTick()
       props.confirmContinue(formData, submitData)
-    } else if (closeModal) {
+    } else if (props.autoClose && closeModal) {
       !props.confirmContinue && closeModal()
     }
   })
@@ -321,6 +355,7 @@ function remotes () {
 defineExpose({
   submit,
   validate,
+  setFormData,
   reset,
   remotes
 })

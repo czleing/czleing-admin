@@ -1,6 +1,5 @@
 <template>
   <section class="menu-side">
-    <Logo />
     <a-menu
       class="menu-side__list"
       v-model:selectedKeys="selectedKeys"
@@ -27,7 +26,6 @@
 </template>
 
 <script setup>
-import Logo from './logo.vue'
 import { useMenuStore } from '@/stores/menu-store.js'
 import SideItem from './SideItem.vue'
 

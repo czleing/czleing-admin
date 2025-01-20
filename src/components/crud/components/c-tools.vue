@@ -11,8 +11,8 @@
         <a-button v-if="noDelete !== true" v-hasPermi="permissionConfig.delete" type="primary" danger :icon="h(DeleteOutlined)" :disabled="selectNum === 0" @click="onDeleteHandle">批量删除 {{ selectNum > 0 ? `(${ selectNum })` : '' }}</a-button>
         <!-- 自定义按钮 -->
         <a-button
-          v-for="btn in config?.otherToolsBtns"
-          :key="btn.name"
+          v-for="(btn, index) in config?.otherToolsBtns"
+          :key="index"
           v-hasPermi="btn.permission"
           v-bind="{ ...btn.props, disabled: getFnValue(btn.props.disabled, callbackParams), icon: undefined, onClick: undefined }"
           @click="onToolClickHandle(btn)"
@@ -20,7 +20,7 @@
           <template #icon v-if="btn.props.icon">
             <a-icon :type="btn.props.icon" />
           </template>
-          {{ btn.name }}
+          {{ getFnValue(btn.name, callbackParams) }}
         </a-button>
         <!-- 导入 -->
         <CImport v-if="hasImport" v-hasPermi="permissionConfig.import" :url="apiConfig.import" :template-url="apiConfig.importTemplate" @success="onImportSuccessHandle" />

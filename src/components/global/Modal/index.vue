@@ -7,7 +7,7 @@
       <template v-if="$attrs.footer !== null" #footer>
         <slot name="footer">
           <div class="tr">
-            <a-button :loading="closeLoading" @click="close">{{ currCancelText }}</a-button>
+            <a-button v-if="currShowCancel" :loading="closeLoading" @click="close">{{ currCancelText }}</a-button>
             <a-button v-if="currShowConfirm" type="primary" :loading="confirmLoading" :disabled="confirmLoading || confirmDisabled" @click="onOkHandle">{{ currConfirmText }}</a-button>
           </div>
         </slot>
@@ -21,7 +21,7 @@
       <template v-if="$attrs.footer !== null" #footer>
         <slot name="footer">
           <div class="tr">
-            <a-button :loading="closeLoading" @click="close">{{ currCancelText }}</a-button>
+            <a-button v-if="currShowCancel" :loading="closeLoading" @click="close">{{ currCancelText }}</a-button>
             <a-button v-if="currShowConfirm" type="primary" :loading="confirmLoading" :disabled="confirmLoading || confirmDisabled" @click="onOkHandle">{{ currConfirmText }}</a-button>
           </div>
         </slot>
@@ -38,6 +38,7 @@ const props = defineProps({
   mode: { type: String, default: 'modal' }, // modal || drawer
   width: { type: [String, Number], default: 600 },
   showConfirm: { type: Boolean, default: true },
+  showCancel: { type: Boolean, default: true },
   confirmText: { type: String, default: '确定' },
   cancelText: { type: String, default: '关闭' },
   beforeCancel: Function, // async () => {} 取消前执行，返回 Promise.reject() 或抛出异常可阻止关闭，注!!!：如果 beforeCancel 绑定的函数又调用了此组件的 close 方法，会造成死循环
@@ -54,8 +55,10 @@ const currWidth = ref(props.width)
 const currConfirmText = ref(props.confirmText)
 const currCancelText = ref(props.cancelText)
 const currShowConfirm = ref(props.showConfirm)
+const currShowCancel = ref(props.showCancel)
 let onConfirm = null
 let onCancel = null
+let extraData = null
 
 watch(
   () => props.confirmText,
@@ -67,7 +70,7 @@ watch(
 function onOkHandle () {
   loadingRequest(confirmLoading, async () => {
     if (onConfirm && typeof onConfirm === 'function') {
-      await onConfirm(close)
+      await onConfirm(close, extraData)
     }
     emits('confirm', close)
   })
@@ -87,8 +90,10 @@ function open (options) {
   currCancelText.value = options?.cancelText ?? props.cancelText
   currWidth.value = ((options?.width ?? props.width) + 'px').replace('pxpx', 'px')
   currShowConfirm.value = options?.showConfirm ?? props.showConfirm
+  currShowCancel.value = options?.showCancel ?? props.showCancel
   onConfirm = options?.onConfirm ?? props.beforeConfirm
   onCancel = options?.onCancel ?? props.beforeCancel
+  extraData = options?.extraData
   visible.value = true
 }
 /** 关闭 */
@@ -111,7 +116,8 @@ provide('modal.visible', visible)
 
 defineExpose({
   open,
-  close
+  close,
+  visible
 })
 </script>
 

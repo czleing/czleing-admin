@@ -19,8 +19,8 @@ export function useActionHandle ({ cModal, cForm, cTable, modalConfig, api, apiM
     }
     return {
       ...config,
-      showConfirm: config.showConfirm ?? !isView.value, // 详情默认不展示确认按钮，除非强制设置了展示
-      cancelText: config.cancelText ?? (isView.value ? '关闭' : undefined) // 详情修改取消按钮为关闭
+      showConfirm: config?.showConfirm ?? !isView.value, // 详情默认不展示确认按钮，除非强制设置了展示
+      cancelText: config?.cancelText ?? (isView.value ? '关闭' : undefined) // 详情修改取消按钮为关闭
     }
   })
   const formConfig = computed(() => {

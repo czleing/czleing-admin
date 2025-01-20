@@ -37,6 +37,7 @@ import { getFullUrl } from '@/utils/index.js'
 
 const authStore = useAuthStore()
 const router = useRouter()
+authStore.getUserInfo(true)
 
 function toLogin () {
   router.push({ name: 'login' })

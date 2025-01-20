@@ -8,7 +8,7 @@
     <div class="c-page__page">
       <slot name="header" />
       <!-- 过滤器 -->
-      <CFilter :config="filterConfig" @search="onSearchHandle" />
+      <CFilter v-if="filterConfig" :config="filterConfig" @search="onSearchHandle" />
       <slot name="filter" />
       <!-- 工具栏 -->
       <CTools
@@ -196,7 +196,8 @@ defineExpose({
   clearSelect: () => {
     selectedIds.value = []
     selectedObjs.value = []
-  }
+  },
+  dataSource: computed(() => cTable.value?.dataSource)
 })
 </script>
 
@@ -210,6 +211,7 @@ defineExpose({
   }
   &__page {
     flex: auto;
+    max-width: 100%;
   }
 }
 </style>

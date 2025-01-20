@@ -11,7 +11,7 @@ init(EUserType)
 
 /**
  * 控件类型
- * 
+ * htmlType 用于代码生成时获取枚举key
  */
 export const EControlType = {
   eInput: Enum('a-input', '文本框', { htmlType: 'eInput', defaultProps: { maxlength: 50 } }),
@@ -27,6 +27,8 @@ export const EControlType = {
   eImageUpload: Enum('ImageUpload', '图片上传', { htmlType: 'eImageUpload' }),
   eEditor: Enum('Editor', '富文本', { htmlType: 'eEditor' }),
   eTreeSelect: Enum('a-tree-select', '树形选择', { htmlType: 'eTreeSelect', defaultProps: { treeDefaultExpandAll: true } }),
+  eProvinceCityAreaSelector: Enum('ProvinceCityAreaSelector', '省市区选择', { htmlType: 'eProvinceCityAreaSelector' }),
+  eUserSelect: Enum('UserSelect', '用户选择', { htmlType: 'eUserSelect' }),
   eTable: Enum('DynamicTable', '动态表格', { htmlType: 'eTable', defaultProps: { bordered: true, size: 'small' } }),
   eCustom: Enum('Custom', '自定义', { htmlType: 'eCustom' })
 }

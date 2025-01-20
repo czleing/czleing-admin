@@ -38,6 +38,7 @@ const developerRoutes = [
   {
     path: '/developer',
     redirect: '/developer/demo',
+    hidden: true,
     meta: {
       icon: 'CodeOutlined',
       title: '开发中心'

@@ -46,6 +46,7 @@ function toggle () {
   &__title {
     position: relative;
     padding: 8px 15px;
+    padding-left: 20px;
     border-radius: 5px;
     line-height: 1;
     &:hover {
@@ -55,7 +56,7 @@ function toggle () {
       display: inline-block;
       position: absolute;
       top: 6px;
-      left: 5px;
+      left: 8px;
       bottom: 6px;
       width: 5px;
       border-radius: 3px;

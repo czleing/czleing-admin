@@ -11,6 +11,7 @@
       :headers="headers"
       :max-count="maxCount"
       :accept="accept"
+      :disabled="disabled"
       :before-upload="beforeUploadHandle"
       v-bind="{ ...$attrs, onChange: undefined }"
       @change="onChangeHandle"
@@ -68,8 +69,11 @@ const props = defineProps({
     type: String,
     default: '上传图片'
   },
-  // 是否禁用，禁用情况只能查看
-  disabled: Boolean
+  // 是否禁用，禁用时只能查看
+  disabled: {
+    type: Boolean,
+    default: false
+  }
 })
 const _this = getCurrentInstance().proxy
 const authStore = useAuthStore()

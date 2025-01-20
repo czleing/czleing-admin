@@ -52,6 +52,10 @@
         <template v-else-if="column.hideChar && text">
           {{ stringStar(text, ...column.hideChar) }}
         </template>
+        <!-- 带单位 -->
+        <template v-else-if="column.unit && text">
+          {{ text }}{{ column.unit }}
+        </template>
         <!-- 操作列 -->
         <template v-else-if="column.action">
           <CTableAction :record="record" :column="column" :permission-config="permissionConfig" @action="onActionHandle" />
@@ -231,7 +235,8 @@ defineExpose({
   refresh: search,
   reload: search,
   clearSelect,
-  search
+  search,
+  dataSource
 })
 </script>
 

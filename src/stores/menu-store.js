@@ -70,12 +70,12 @@ export const useMenuStore = defineStore('menu', {
           return undefined
         }
       }
-      const hasNameRoutes = []
+      // const hasNameRoutes = []
       const transform = (list, parentPaths = []) => {
         return list.map(item => {
-          if (import.meta.env.VITE_APP_DEBUG_MODE && item.name) {
-            hasNameRoutes.push(item)
-          }
+          // if (import.meta.env.VITE_APP_DEBUG_MODE && item.name) {
+          //   hasNameRoutes.push(item)
+          // }
           let currPath = item.path
           if (currPath && currPath.indexOf(0) !== '/') {
             currPath = '/' + currPath
@@ -87,7 +87,7 @@ export const useMenuStore = defineStore('menu', {
             component: getComponent(item.component),
             hidden: item.isHidden,
             redirect: item.redirect,
-            name: item.name,
+            // name: item.name,
             meta: {
               needLogin: item.needLogin || true,
               title: item.title || item.menuName,
@@ -107,9 +107,9 @@ export const useMenuStore = defineStore('menu', {
         })
       }
       const routes = transform(menuTree)
-      if (import.meta.env.VITE_APP_DEBUG_MODE) {
-        console.log('动态具名路由：', hasNameRoutes.map(item => `${item.name}: ${item.path}`).join(', '))
-      }
+      // if (import.meta.env.VITE_APP_DEBUG_MODE) {
+      //   console.log('动态具名路由：', hasNameRoutes.map(item => `${item.name}: ${item.path}`).join(', '))
+      // }
       return routes
     },
     /**
@@ -150,7 +150,7 @@ export const useMenuStore = defineStore('menu', {
     // 左侧子路由（顶部一级路由的子路由，用于渲染左侧菜单）
     leftNavRoutes () {
       if (this.firstRoutePath) {
-        return this.navRoutes?.find(route => route.path === this.firstRoutePath)?.children
+        return this.navRoutes?.find(route => route.path === this.firstRoutePath)?.children ?? []
       }
       return []
     }

@@ -7,6 +7,12 @@ import 'ant-design-vue/dist/reset.css'
 import '@/assets/css/index.less'
 import components from '@/components/index'
 import piniaPersist from 'pinia-plugin-persist'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import 'dayjs/locale/zh-cn'
+
+dayjs.extend(relativeTime)
+dayjs.locale('zh-cn')
 
 const app = createApp(App)
 const pinia = createPinia()

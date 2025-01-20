@@ -1,27 +1,29 @@
 <template>
   <a-layout class="layout" style="height:100vh;">
-    <a-layout-sider :collapsed="!menuStore.isSidebarOpen" :trigger="null" :theme="settingStore.mode" :class="{ 'is-radius mt6 ml6 mb6': settingStore.useRadius }" :style="themeStyle" collapsible>
-      <!-- 左侧菜单 -->
-      <MenuSide />
-    </a-layout-sider>
+    <a-layout-header :style="themeStyle" :class="{ 'is-radius mt6 ml6 mr6': settingStore.useRadius }" style="padding:0;">
+      <!-- 右侧头部 -->
+      <Header />
+    </a-layout-header>
     <a-layout>
-      <a-layout-header :style="themeStyle" :class="{ 'is-radius mt6 ml6 mr6': settingStore.useRadius }" style="padding:0;">
-        <!-- 右侧头部 -->
-        <Header />
-      </a-layout-header>
-      <a-layout-content class="pa5 flex-y y-stretch">
-        <!-- 右侧 Tabs 栏 -->
-        <div class="">
-          <Tabs />
-        </div>
-        <!-- 右侧工作区 -->
-        <div class="view-main flex-auto pa10" :style="themeStyle">
-          <!-- {{ tabsStore.cachedViews }} -->
-          <router-view v-slot="{ Component, route }">
-            <keep-alive :max="20" :include="tabsStore.cachedViews">
-              <component v-if="!tabsStore.refreshing" :is="Component" :key="route.fullPath" />
-            </keep-alive>
-          </router-view>
+      <a-layout-sider v-show="menuStore.leftNavRoutes && menuStore.leftNavRoutes.length > 0" :collapsed="!menuStore.isSidebarOpen" :trigger="null" :theme="settingStore.mode" :class="{ 'is-radius mt6 ml6 mb6': settingStore.useRadius }" :style="themeStyle" collapsible>
+        <!-- 左侧菜单 -->
+        <MenuSide />
+      </a-layout-sider>
+      <a-layout-content>
+        <div class="pa5 flex-y y-stretch" style="height:100%;">
+          <!-- 右侧 Tabs 栏 -->
+          <div class="">
+            <Tabs />
+          </div>
+          <!-- 右侧工作区 -->
+          <div class="view-main flex-auto pa10" :style="themeStyle">
+            <!-- {{ tabsStore.cachedViews }} -->
+            <router-view v-slot="{ Component, route }">
+              <keep-alive :max="20" :include="tabsStore.cachedViews">
+                <component v-if="!tabsStore.refreshing" :is="Component" :key="route.fullPath" />
+              </keep-alive>
+            </router-view>
+          </div>
         </div>
       </a-layout-content>
     </a-layout>
