@@ -9,8 +9,8 @@ import dayjs from 'dayjs'
  */
 export function useRender ({ ctx, isView, value, dataSource }) {
   const formData = inject('c-form.formData', {}) // 获取 c-form 组件的 formData 表单数据对象
-  const emitUpdate = async val => {
-    ctx.$emit('update:value', val) // 统一使用 value 作为双向绑定的 props (为了与 ant-design 一致)
+  const emitUpdate = async (...args) => {
+    ctx.$emit('update:value', ...args) // 统一使用 value 作为双向绑定的 props (为了与 ant-design 一致)
   }
   // 自定义渲染函数
   const getRenderFn = {
@@ -43,15 +43,8 @@ export function useRender ({ ctx, isView, value, dataSource }) {
         value,
         isView,
         disabled: field.props.disabled ?? isView,
-        'onUpdate:value': (val) => {
-          emitUpdate(val)
-          if (typeof field.props.onChange === 'function') {
-            setTimeout(() => {
-              field.props.onChange(val, formData)
-            })
-          }
-        },
-        onChange (...args) {
+        'onUpdate:value': (...args) => {
+          emitUpdate(...args)
           if (typeof field.props.onChange === 'function') {
             setTimeout(() => {
               field.props.onChange(...args, formData)

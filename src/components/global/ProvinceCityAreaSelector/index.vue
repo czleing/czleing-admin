@@ -1,4 +1,4 @@
-<!-- 省、省市、省市区选择器，单选、多选，绑定值为所选最后一级编码逗号分隔字符串，如：'110101' 或 '110101,110102' -->
+<!-- 省、省市、省市区选择器，绑定值为所选最后一级编码逗号分隔字符串，如：'110101' 或 '110101,110102' -->
 <!-- 单选 -->
 <!-- 省市区用法：<ProvinceCityArea v-model:value="area" /> -->
 <!-- 省市用法：<ProvinceCityArea v-model:value="area" :levelNum="2" /> -->
@@ -29,7 +29,9 @@ const props = defineProps({
   levelNum: { type: Number, default: 3 },
   placeholder: { type: String },
   // 查看模式，不会显示控件，直接显示值
-  isView: { type: Boolean, default: false }
+  isView: { type: Boolean, default: false },
+  // 不可删除！为了从 $attrs 中剔除 onChange，避免 field.props 的 onChange 监听到 a-cascader 的 change 事件而冲突
+  onChange: { type: Function }
 })
 const selectedValue = ref([])
 const options = ref([])
@@ -130,7 +132,7 @@ async function initData () {
   }
 }
 
-const emits = defineEmits(['update:value', 'change'])
+const emits = defineEmits(['update:value'])
 
 async function handleChange (val) {
   selectedValue.value = val
@@ -139,9 +141,9 @@ async function handleChange (val) {
   // 单选时：[100000,101000,101010] => '101010'
   // 多选时：[[100000,101000,101010], [100000,101000,101011]] => '101010,101011'
   const returnValue = isArrArr(val) ? val.map(arr => arr.at(-1)).join(',') : val?.at(-1)
-  emits('update:value', returnValue)
-  await nextTick()
-  emits('change', returnValue, selectedNames.value)
+  emits('update:value', returnValue, selectedNames.value)
+  // await nextTick()
+  // emits('update:name', selectedNames.value)
 }
 
 function isArrArr (value) {
