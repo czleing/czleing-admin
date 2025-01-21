@@ -62,8 +62,11 @@ export const useMenuStore = defineStore('menu', {
             const componentPromise = views[path]()
             return componentPromise.then(result => {
               const def = result.default
-              def.name = def.__name = def.__file.split('src')[1].split('.')[0] // 修改组件名为 路径 + 文件名，保证组件名唯一，便于 keepalive 缓存
-              return result
+              if (def.__file) {
+                def.name = def.__name = def.__file.split('src')[1].split('.')[0] // 修改组件名为 路径 + 文件名，保证组件名唯一，便于 keepalive 缓存
+              } else {
+                def.name = def.__name = `/views/${component}`
+              }return result
             })
           }
         } else {

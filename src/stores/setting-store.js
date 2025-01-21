@@ -63,7 +63,7 @@ export const useSettingStore = defineStore('setting', {
     themeName: themes.find(item => item.inUse)?.name, // 当前主题名称
     mode: 'light', // 昼夜模式 light or dark
     locale: 'zh', // 当前语言 zh or en
-    componentSize: 'normal', // 当前组件尺寸
+    componentSize: 'middle', // 当前组件尺寸
     useRadius: true, // 是否使用圆角布局
     useWeather: false // 是否使用天气组件
   }),
