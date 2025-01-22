@@ -97,7 +97,9 @@ const props = defineProps({
   // 默认展开所有树节点
   expandAll: { type: Boolean, default: true },
   // 展示文本时，用于拼接多个名称的拼接符
-  joinChar: { type: String, default: ',' }
+  joinChar: { type: String, default: ',' },
+  // 不可删除！为了从 $attrs 中剔除 onChange，避免 field.props 的 onChange 监听到 a-select 的 change 事件而冲突
+  onChange: { type: Function }
 })
 
 const cModal = ref()

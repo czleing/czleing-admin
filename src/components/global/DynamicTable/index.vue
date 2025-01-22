@@ -27,7 +27,14 @@
         </template>
         <!-- 操作列 -->
         <template v-else-if="useDelete && column.type === 'action' && !disabled">
-          <a v-if="modelValue.length > 1" href="javascript:;" @click="deleteHandle(index)">删除</a>
+          <a-popconfirm
+            v-if="modelValue.length > 1"
+            placement="left"
+            title="确认要删除改行吗？"
+            @confirm="deleteHandle(index)"
+          >
+            <a href="javascript:;">删除</a>
+          </a-popconfirm>
         </template>
       </template>
     </a-table>
@@ -67,6 +74,7 @@ const props = defineProps({
    * maxWidth: 200,
    * type: 控件类型，枚举：EControlType
    * defaultValue: 默认值
+   * hidden: true, // 该列隐藏（类似 <input type="hidden" /> 适合需要给每行附加固定字段，又不需要显示出来的场景）
    * required: true, // 该列是否必填
    * props: 组件属性配置
    */
@@ -88,7 +96,7 @@ const props = defineProps({
 
 const modelValue = ref([])
 const currColumns = ref([
-  ...props.columns.map(item => {
+  ...props.columns.filter(item => !item.hidden).map(item => {
     return {
       ...item,
       type: undefined,

@@ -174,7 +174,7 @@ async function getList () {
   try {
     loading.value = true
     const result = await axios[props.apiMethodConfig['list']](url, params, props.apiOptionConfig?.list)
-    let list = result?.list ?? result?.rows ?? result
+    let list = result?.list ?? result
     if (typeof props.afterSearch === 'function') {
       list = props.afterSearch(list)
     }

@@ -7,7 +7,7 @@
     >
       <div>
         <span class="flag" :style="{ backgroundColor: token.colorPrimary }"></span>
-        <span class="bold em11">{{ title }}</span>
+        <span class="bold">{{ title }}</span>
         <span class="ml10">{{ subTitle }}</span>
       </div>
       <span v-if="$slots.default">

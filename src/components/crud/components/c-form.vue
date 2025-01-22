@@ -11,13 +11,13 @@
     >
       <a-row :gutter="15">
         <template v-for="field in currFields" :key="field.fieldName || field.title">
-          <template v-if="isFieldGroup(field)">
+          <template v-if="isFieldGroup(field) && field.inUse">
             <!-- 控件组 -->
             <a-col span="24">
               <FieldGroup :title="getFnValue(field.title, formData)" :subTitle="getFnValue(field.subTitle, formData)">
                 <a-row :gutter="15">
                   <template v-for="child in field.fields" :key="child.fieldName">
-                    <a-col :span="child.colSpan">
+                    <a-col v-if="child.inUse" :span="child.colSpan">
                       <a-form-item v-bind="formItemProps(child)">
                         <CComponent v-model:value="formData[child.fieldName]" :field="child" :is-view="isView" />
                       </a-form-item>
@@ -27,7 +27,7 @@
               </FieldGroup>
             </a-col>
           </template>
-          <template v-else>
+          <template v-else-if="field.inUse">
             <!-- 控件 -->
             <a-col :span="field.colSpan">
               <a-form-item v-bind="formItemProps(field)">
@@ -87,7 +87,8 @@ const currFields = computed(() => {
   pushDateFields()
   pushDateRangeFields()
   const initFields = (_fields) => {
-    return _fields.filter(field => inUse(field)).map(item => {
+    return _fields.map(item => {
+      item.inUse = !getFnValue(item.none, formData)
       // 字段组，递归处理
       if (isFieldGroup(item)) {
         item.fields = initFields(item.fields)
@@ -188,7 +189,9 @@ function isFieldGroup (field) {
 
 /** 该字段是否可用 */
 function inUse (field) {
-  return !getFnValue(field.none, formData)
+  const bol = !getFnValue(field.none, formData)
+  console.log('inUse:', field.fieldName, bol)
+  return bol
 }
 
 /** 通过字段配置，生成表单项的属性 */
@@ -199,6 +202,7 @@ function formItemProps (field) {
     name: field.fieldName,
     label: getFnValue(field.label, formData),
     disabled: props.isView ? false : getFnValue(field.disabled, formData),
+    inUse: !getFnValue(field.none, formData),
     required: props.isView ? false : getFnValue(field.required, formData),
     tooltip: getFnValue(field.tooltip, formData),
     extra: props.isView ? undefined : getFnValue(field.extra, formData),
