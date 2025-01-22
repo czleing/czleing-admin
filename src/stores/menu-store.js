@@ -57,21 +57,18 @@ export const useMenuStore = defineStore('menu', {
           return component
         } else if (component) {
           const path = `/src/views/${component}.vue`
-          if (!views[path]) return undefined // 这个页面组件不存在，避免已经配了菜单，但是组件地址为空，或者组件还没编写而报错的情况
-          return () => { // 返回按需加载函数
+          if (!views[path]) return ''
+          // 返回按需加载函数
+          return () => {
             const componentPromise = views[path]()
             return componentPromise.then(result => {
-              const def = result.default
-              if (def.__file) {
-                def.name = def.__name = def.__file.split('src')[1].split('.')[0] // 修改组件名为 路径 + 文件名，保证组件名唯一，便于 keepalive 缓存
-              } else {
-                def.name = def.__name = `/views/${component}`
-              }
+              // 修改组件名为 路径 + 文件名，保证组件名唯一，便于 keepalive 缓存
+              result.default.name = result.default.__name = `/views/${component}`
               return result
             })
           }
         } else {
-          return undefined
+          return ''
         }
       }
       // const hasNameRoutes = []
