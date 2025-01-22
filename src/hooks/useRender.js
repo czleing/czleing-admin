@@ -42,6 +42,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
         ...field.props,
         value,
         isView,
+        onChange: undefined,
         disabled: field.props.disabled ?? isView,
         'onUpdate:value': (...args) => {
           emitUpdate(...args)
@@ -80,6 +81,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       value,
       placeholder: getFnValue(props.placeholder, formData),
+      onChange: undefined,
       'onUpdate:value': val => {
         emitUpdate(val)
         if (typeof props.onChange === 'function') {
@@ -118,6 +120,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       value,
       placeholder: getFnValue(props.placeholder, formData),
+      onChange: undefined,
       'onUpdate:value': val => {
         emitUpdate(val)
         if (typeof props.onChange === 'function') {
@@ -152,6 +155,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       value,
       placeholder: getFnValue(props.placeholder, formData),
+      onChange: undefined,
       'onUpdate:value': val => {
         emitUpdate(val)
         if (typeof props.onChange === 'function') {
@@ -181,6 +185,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       options,
       value,
+      onChange: undefined,
       'onUpdate:value': val => {
         emitUpdate(val)
         if (typeof props.onChange === 'function') {
@@ -212,6 +217,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       options,
       value,
+      onChange: undefined,
       'onUpdate:value': val => {
         emitUpdate(val)
         if (typeof props.onChange === 'function') {
@@ -249,6 +255,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       value,
       options,
+      onChange: undefined,
       'onUpdate:value': (val, option) => {
         option = {
           ...option,
@@ -291,6 +298,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       value: value ? dayjs(value) : value,
       placeholder: getFnValue(props.placeholder, formData),
+      onChange: undefined,
       'onUpdate:value': val => {
         emitUpdate(val)
         if (typeof props.onChange === 'function') {
@@ -345,8 +353,8 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       value,
       placeholder: getFnValue(props.placeholder, formData),
-      'onUpdate:value': onValueChange,
-      change: onValueChange
+      onChange: undefined,
+      'onUpdate:value': onValueChange
     }
     return h(resolveComponent(field.type), controlProps)
   }
@@ -370,6 +378,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlProps = {
       ...props,
       checked: value,
+      onChange: undefined,
       'onUpdate:checked': val => {
         emitUpdate(val)
         if (typeof props.onChange === 'function') {
@@ -397,6 +406,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       value,
       disabled: props.disabled ?? isView,
+      onChange: undefined,
       'onUpdate:value': val => {
         emitUpdate(val)
         if (typeof props.onChange === 'function') {
@@ -453,6 +463,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
         label: labelField,
         children: childrenField
       },
+      onChange: undefined,
       'onUpdate:value': val => {
         emitUpdate(val)
         if (typeof props.onChange === 'function') {
@@ -483,8 +494,8 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlProps = {
       ...props,
       value,
-      onChange,
-      'onUpdate:value': onChange,
+      onChange: props.onChange ? onChange : undefined, // 如果有设置
+      'onUpdate:value': props.onChange ? emitUpdate : onChange,
       disabled: props.disabled ?? isView,
       component: undefined
     }
