@@ -10,6 +10,7 @@ export const Enum = (id, name, extra, data = {}) => {
   const disabled = typeof extra === 'boolean' ? extra : (data.disabled || false)
   const _class = typeof extra === 'string' ? extra : data.class
   const _data = typeof extra === 'object' ? extra : data
+  name = name ?? id
   return {
     id,
     name,
