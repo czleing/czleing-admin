@@ -167,7 +167,9 @@ watch(
 )
 
 // 设置表单值或默认值
-setFormData()
+onMounted(() => {
+  setFormData()
+})
 /**
  * 给表单设置数据
  * @param {Object} data 要设置的数据对象，默认绑定的 detail 对象
@@ -185,13 +187,6 @@ function setFormData (data = props.detail, includeFieldNames = fieldNamesArr.val
 /** 是否是字段分组 */
 function isFieldGroup (field) {
   return !!field?.fields
-}
-
-/** 该字段是否可用 */
-function inUse (field) {
-  const bol = !getFnValue(field.none, formData)
-  console.log('inUse:', field.fieldName, bol)
-  return bol
 }
 
 /** 通过字段配置，生成表单项的属性 */

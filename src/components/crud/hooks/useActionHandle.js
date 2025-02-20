@@ -7,7 +7,7 @@ import { createVNode } from 'vue'
  * 处理操作相关、表格预设操作等
  * @returns
  */
-export function useActionHandle ({ cModal, cForm, cTable, modalConfig, api, apiMethod, transformDetail, afterOpenModal, primaryKey, apiOptionConfig }) {
+export function useActionHandle ({ cModal, cForm, cTable, modalConfig, api, apiMethod, transformDetail, afterOpenModal, primaryKey, apiOptionConfig, afterSubmit }) {
   const isAdd = ref(false)
   const isEdit = ref(false)
   const isView = ref(false)
@@ -121,6 +121,14 @@ export function useActionHandle ({ cModal, cForm, cTable, modalConfig, api, apiM
     } else if (isEdit.value) {
       await axios[apiMethod['update']](api.update, submitData, apiOptionConfig?.update)
       message.success('修改成功')
+    }
+    if (typeof afterSubmit === 'function') {
+      await afterSubmit({
+        isAdd: isAdd.value,
+        isEdit: isEdit.value,
+        formData: submitData,
+        detail: detail.value
+      })
     }
     cTable.value.refresh()
   }

@@ -53,7 +53,7 @@
     </div>
     <!-- 弹窗 -->
     <!-- 新增修改详情弹窗页面，如果想自定义不想要默认的弹窗或行为可以通过自定义操作按钮来实现 -->
-    <Modal ref="cModal" v-if="formConfig" :before-cancel="onCancelHandle" :footer="null">
+    <Modal ref="cModal" v-if="formConfig" v-bind="modalConfig?.props" :before-cancel="onCancelHandle" :footer="null">
       <!-- :footer="null" -> Modal 和 CForm 都提供了 确认、取消按钮支持，这里为了方便控制按钮状态，使用 CForm 的按钮 -->
       <CForm v-if="isAdd || isEdit || isView" ref="cForm" v-bind="{ detail, isAdd, isEdit, isView, primaryKey, formConfig, ...buttonConfig, beforeSubmit, onSubmitHandle }" />
     </Modal>
@@ -112,6 +112,8 @@ const props = defineProps({
   afterSearch: Function,
   /** 提交表单前修改表单数据，可选，data => ({...}) */
   beforeSubmit: Function,
+  /** 提交表单成功后执行，可选，formData => ({...}) */
+  afterSubmit: Function,
   /** 编辑或查看详情时转换详情数据，可选，detail => ({...}) */
   transformDetail: Function,
   /** 弹出表单弹窗后执行，可做一些新增、编辑、查看详情前的数据准备工作，可选，({ isAdd, isEdit, isView }) => {} */
@@ -157,7 +159,8 @@ const {
   transformDetail: props.transformDetail,
   afterOpenModal: props.afterOpenModal,
   primaryKey: props.primaryKey,
-  apiOptionConfig: props.apiOptionConfig
+  apiOptionConfig: props.apiOptionConfig,
+  afterSubmit: props.afterSubmit
 })
 
 /** 与子组件共享变量 */
@@ -193,6 +196,7 @@ defineExpose({
   selectedObjs,
   refresh: () => cTable.value?.refresh(),
   onAddHandle,
+  onActionHandle,
   clearSelect: () => {
     selectedIds.value = []
     selectedObjs.value = []
