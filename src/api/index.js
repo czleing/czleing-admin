@@ -42,9 +42,9 @@ instance.interceptors.response.use((response) => {
     } else if (data?.code === 200) {
       // 响应数据是有效的 JSON 格式，继续处理
       let result = data
-      if (data.list || data.rows) {
+      if (data.list || data.rows) { // 分页列表的情况，返回分页对象
         result = data
-      } else if (data.data) {
+      } else if (data.data) { // 单个对象的情况，返回对象
         result = data.data
       }
       return Promise.resolve(result)
@@ -160,20 +160,20 @@ class AxiosService {
   }
 
   // PUT 请求
-  put (url, params = {}) {
+  put (url, data = {}) {
     return instance.request({
       method: 'put',
       url,
-      params
+      data
     })
   }
 
   // DELETE 请求
-  delete (url, params = {}) {
+  delete (url, data = {}) {
     return instance.request({
       method: 'delete',
       url,
-      params
+      data
     })
   }
 }

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { createNavRoute } from '@/router/nav.routes'
-import router from '@/router'
+import routers from '@/router'
 import axios from '@/api'
 import { isEmpty, isNotEmpty } from '@/utils/index'
 
@@ -30,7 +30,7 @@ export const useMenuStore = defineStore('menu', {
         const navRoute = createNavRoute(routes)
         this.navRoutes = navRoute.children
         const navRoute2d = this.to2DRoutes(navRoute)
-        router.addRoute(navRoute2d)
+        routers.addRoute(navRoute2d)
       }
     },
     async getMenuTree () {
@@ -103,7 +103,7 @@ export const useMenuStore = defineStore('menu', {
               // 是否是叶子节点
               isLeaf: isEmpty(item.children)
             },
-            children: isNotEmpty(item.children) && transform(item.children, [...parentPaths, currPath])
+            children: isNotEmpty(item.children) && transform(item.children, [...parentPaths, currPath]) || undefined
           }
         })
       }
