@@ -37,13 +37,14 @@
     :tree-config="treeConfig"
     :filter-config="filterConfig"
     :tools-config="toolsConfig"
+    :table-config="tableConfig"
+    :modal-config="modalConfig"
     :before-search="beforeSearch"
     :after-search="afterSearch"
     :before-submit="beforeSubmit"
+    :after-submit="afterSubmit"
     :after-open-modal="afterOpenModal"
     :transform-detail="transformDetail"
-    :table-config="tableConfig"
-    :modal-config="modalConfig"
   >
     <!-- 表格单元格内容过于复杂时，可以使用插槽 -->
     <template #table_slotField="{ text, record, index, column }">
@@ -300,6 +301,7 @@ const modalConfig = computed(() => ({
   // fullTitle: '', // 全称，不会自动拼接其他字符串
   width: 800, // 弹窗宽度，默认 600
   mode: 'modal', // 弹窗模式, modal 或 drawer
+  // props: { maskClosable: false }, // 其他参数, 会直接绑定到 a-modal 或 a-drawer
   // 弹窗按钮属性修改 Object || ({ isAdd, isEdit, isView }) => Object
   buttonConfig: ({ isAdd, isEdit, isView }) => ({
     // showConfirm: !isEdit, // 确认按钮是否可见，默认可见
@@ -714,6 +716,15 @@ function afterSearch (list) {
  */
 function beforeSubmit (submitData, { isAdd, isEdit, isView, detail }) {
   return submitData
+}
+
+/**
+ * 提交表单数据成功后执行
+ * @param {Object} formData 提交的数据
+ * @param {Object} param 其他参数
+ * @returns 修改后的数据
+ */
+function afterSubmit ({ isAdd, isEdit, formData, detail }) {
 }
 
 /**
