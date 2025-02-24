@@ -85,7 +85,7 @@ npm run build
 - 给组件添加属性时，遵守一定的优先顺序，指令 > 静态属性 > 动态属性 > 事件，
   如：`<input v-if="xxx" class="xxx" :maxlength="30" @input="onInputHandle" />`
 - 组件中 style 标签尽可能添加 `scoped`，避免全局样式污染，如：`<style scoped>`
-- 相对独立的小模块，尽可能单独抽离成一个组件，避免一个文件代码过长，同时还要避免过多的组件嵌套
+- 相对独立的小模块，尽可能单独抽离成一个组件，避免一个文件代码过长过杂，同时也要避免过多的组件嵌套
 
 ### 2、动态样式
 less 中可使用 ant-design 的全局静态变量 @colorPrimary 等，但此变量不会跟随主题动态切换而变化，
@@ -134,8 +134,8 @@ message.success('保存成功')
 
 
 ### 5、弹出模态框
-全局组件 /global/Modal 对 a-modal、a-drawer 进行了合并封装，简化了使用，属性设置支持标签上设置和调用时设置
-```vue
+全局组件 `/global/Modal` 对 a-modal、a-drawer 进行了合并封装，简化了使用，属性设置支持标签上设置和调用时设置
+```html
 <template>
   <div>
     xxx
@@ -170,14 +170,15 @@ function beforeConfirm (close, extraData) {
 ### 6、CRUD快速开发案例(可直接代码生成，系统工具->代码生成)
 #### 步骤一：先在数据库中设计表结构
 #### 步骤二：然后本地启动进入‘系统工具->代码生成’导入表并编辑相关信息
-#### 步骤三：生成CRUD前后端代码
+#### 步骤三：预览并一键生成CRUD前后端代码
+#### 步骤四：查看生成结果或对特殊字段、控件的属性进行自定义修改
 
-生成结果参考 /src/views/demo/demo-page.vue
+参考案例：`/src/views/demo/demo-page.vue`
 
-```vue
+```html
 <!-- 传统的写法，需要编写大量 Dom 和 js -->
 ...
-<el-form-item label="选择xxx" prop="xxxId">
+<el-form-item label="选择xxx" prop="xxxId" required :rules="[xxx]">
   <el-select
     v-model="formData.xxxId"
     placeholder="请选择xxx"
@@ -192,6 +193,7 @@ function beforeConfirm (close, extraData) {
   </el-select>
 </el-form-item>
 ...
+<script>
 const xxxList = ref()
 async function getXxxList (type = 1) {
   xxxList.value = await this.$axios.get('/api/xxx/select', { type })
@@ -202,12 +204,16 @@ function onTypeChange (type) {
 }
 
 
-<!-- 本框架写法，只需编写 js，并自动匹配新增、修改、详情三种模式 -->
+/**
+ * 本框架写法，只需编写 js，并自动匹配新增、修改、详情三种模式
+ */
 ...
 {
   label: '选择xxx',
   fieldName: 'xxxId',
   type: EControlType.eSelect,
+  rules: [xxx],
+  required: true,
   props: {
     remote: {
       url: '/api/xxx/select',
@@ -216,8 +222,9 @@ function onTypeChange (type) {
       },
       ...
     },
-    onChange (id, formData) {}
+    onChange (id, option, formData) {}
   }
 }
 ...
+</script>
 ```
