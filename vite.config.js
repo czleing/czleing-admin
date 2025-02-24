@@ -49,7 +49,7 @@ export default defineConfig(({ command, mode }) => {
       }
     },
     build: {
-      outDir: `dist/${mode}`,
+      outDir: `dist/${mode}`
     },
     resolve: {
       alias: {

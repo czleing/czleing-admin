@@ -1,4 +1,5 @@
 <!-- demo CRUD demo 页面 -->
+<!-- CPage 封装了查询、列表、新增、修改、详情、删除、导入、导出、启用、禁用等功能，通过配置选择使用 -->
 <template>
   <CPage
     ref="cPage"
@@ -6,9 +7,8 @@
     hasExport
     hasGoBack
     primary-key="id"
-    primary-key-说明="primary-key 指定主键的字段名，默认：id"
     :api-config="{
-      // 预设功能接口地址配置，默认根据当前路由生成，如新增：/system/user => /system/user/add
+      // 预设功能接口地址配置，默认根据当前路由生成，如：/system/user 页面下新增接口 => /system/user/add，配置了可进行覆盖
       // add: '',
       // update: '',
       // detail: '',
@@ -30,7 +30,7 @@
       // ...
     }"
     :permission-config="{
-      // 预设功能权限配置，默认根据当前路由生成，如：/system/user -> system:user:add
+      // 预设功能权限配置，默认根据当前路由生成，如新增权限：/system/user -> system:user:add
       // add: '',
       // ...
     }"
@@ -683,7 +683,7 @@ const modalConfig = computed(() => ({
           // 其他属性在同级设置
           // props1: ''
           // modelProps: 'checkedKeys', // 自定义组件的 v-model:value 字段 默认是 value
-          // modelEvent: 'onCheck', // 自定义组件的 v-model 事件字段，默认是 onChange
+          // modelEvent: 'onCheck', // 自定义组件的 v-model 事件字段，默认是 update:value
           // modelData: 'treeData', // 自定义组件的 dataSource 字段
           // renderNeedDataSource: true // 需要有数据源才渲染
         }
