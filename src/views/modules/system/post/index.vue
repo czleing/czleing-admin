@@ -92,7 +92,7 @@
               callback: 'delete' // 删除操作默认带确认框
             },
             {
-              name: record.isEnabled ? '启用' : '禁用',
+              name: record.isEnabled ? '禁用' : '启用',
               confirm: true,
               callback: 'toggle'
             }
@@ -183,7 +183,7 @@
    * @param {Object} param 其他参数
    */
   function beforeSubmit (submitData, { isAdd, isEdit, isView, detail }) {
-    return submitData
+    return { ...submitData, isEnabled: isAdd ? 1 : detail.isEnabled }
   }
 
   /**
