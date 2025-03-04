@@ -37,7 +37,7 @@ const setting = settings.websiteInfo
 <style lang="less" scoped>
 .login_page {
   min-height: 100vh;
-  background: #0787c6 url('../../assets/images/login/login-bg.jpeg') center no-repeat;
+  background: #0787c6 url('./login-bg.jpeg') center no-repeat;
   background-size: cover;
   &__modal {
     background-color: rgba(255, 255, 255, .1) !important;

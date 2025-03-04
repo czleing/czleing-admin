@@ -101,9 +101,16 @@ const emits = defineEmits(['search'])
 provide('c-form.formData', formData)
 
 onMounted(() => {
+  let hasDefaultValue = false
   fields?.forEach(field => {
-    formData[field.fieldName] = field.defaultValue
+    if (isNotEmpty(field.defaultValue)) {
+      formData[field.fieldName] = field.defaultValue
+      hasDefaultValue = true
+    }
   })
+  if (hasDefaultValue) {
+    onSubmitHandle(formData)
+  }
 })
 
 /** 日期范围字段收集 */

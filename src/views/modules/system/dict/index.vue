@@ -91,21 +91,33 @@ const tableConfig = computed(() => ({
     },
     {
       title: '操作',
-      actionShowNum: 4,
+      actionShowNum: 3,
       action: ({ record }) => {
         return [
           {
-            name: '详情',
-            callback: 'detail'
+            name: '字典项管理',
+            callback: () => {
+              currDictType.value = record.dictType
+              cModal.value.open({
+                title: `字典【${record.dictName}】字典项列表`,
+                width: 1000,
+                mode: 'drawer',
+                showConfirm: false
+              })
+            }
+          },
+          {
+            name: record.isEnabled ? '禁用' : '启用',
+            confirm: true,
+            callback: 'toggle'
           },
           {
             name: '编辑',
             callback: 'edit'
           },
           {
-            name: record.isEnabled ? '禁用' : '启用',
-            confirm: true,
-            callback: 'toggle'
+            name: '详情',
+            callback: 'detail'
           },
           {
             name: '删除',

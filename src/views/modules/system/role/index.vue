@@ -88,7 +88,7 @@ const tableConfig = computed(() => ({
  */
 const modalConfig = computed(() => ({
   title: '角色管理',
-  width: 400,
+  width: 800,
   mode: 'modal',
   buttonConfig: ({ isAdd, isEdit, isView }) => ({
     confirmText: isEdit ? '确认修改' : '确认提交'
@@ -96,7 +96,7 @@ const modalConfig = computed(() => ({
   formConfig: ({ isAdd, isEdit, isView, detail }) => ({
     labelCol: { span: 6 },
     wrapperCol: { span: 18 },
-    colSize: 1,
+    colSize: 2,
     fields: [
       {
         label: '角色名称',
@@ -124,13 +124,24 @@ const modalConfig = computed(() => ({
         }
       },
       {
+        label: '备注',
+        fieldName: 'remark',
+        type: EControlType.eTextarea,
+        props: {
+          rows: 2
+        }
+      },
+      {
         label: '菜单权限',
         fieldName: 'menuIds',
         type: EControlType.eCustom,
         required: true,
+        singleLine: true,
+        labelCol: { span: 3 },
+        wrapperCol: { span: 21 },
         props: {
           style: { maxHeight: '400px', overflow: 'auto', border: 'solid 1px rgba(128, 128, 128, .2)', padding: '6px', borderRadius: '6px' },
-          component: resolveComponent('a-tree'),
+          component: 'a-tree',
           checkable: true,
           remote: {
             url: '/system/menu/tree',
@@ -147,11 +158,6 @@ const modalConfig = computed(() => ({
           modelData: 'treeData', // 自定义组件的 dataSource 字段
           renderNeedDataSource: true // 需要有数据源才渲染
         }
-      },
-      {
-        label: '备注',
-        fieldName: 'remark',
-        type: EControlType.eTextarea
       },
       {
         label: '是否启用',

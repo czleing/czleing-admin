@@ -95,6 +95,8 @@ const props = defineProps({
   noSelect: Boolean,
   /** 表格配置 */
   config: Object,
+  /** 查询器那边是否自动提交查询(有默认值时会自动提交) */
+  filterAutoSearch: Boolean,
   /** 表格配置 */
   primaryKey: { type: String, default: 'id' },
   /** 接口配置 */
@@ -155,7 +157,9 @@ watchEffect(() => {
 })
 // 初始化后是否查询
 onMounted(() => {
-  if (props.config.initSearch !== false) {
+  // 查询器会查我就不查，查询器不查，我就根据配置决定查不查
+  const initSearch = props.config.initSearch ?? !props.filterAutoSearch
+  if (initSearch !== false) {
     getList()
   }
 })

@@ -1,10 +1,10 @@
 <!-- 操作日志 -->
 <template>
   <CPage
+    ref="cPage"
     hasExport
     noAdd
     primary-key="operId"
-    ref="cPage"
     :filter-config="filterConfig"
     :tools-config="toolsConfig"
     :before-search="beforeSearch"
@@ -299,6 +299,7 @@
           type: EControlType.eDate,
           required: true,
           props: {
+            showTime: true
           }
         },
       ]

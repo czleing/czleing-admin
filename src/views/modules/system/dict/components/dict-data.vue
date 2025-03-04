@@ -11,6 +11,14 @@
       list: '/system/dict/data/list',
       toggle: '/system/dict/data/toggle'
     }"
+    :permission-config="{
+      list: 'system:dict:list',
+      add: 'system:dict:add',
+      detail: 'system:dict:detail',
+      update: 'system:dict:update',
+      delete: 'system:dict:delete',
+      toggle: 'system:dict:toggle'
+    }"
     :filter-config="filterConfig"
     :table-config="tableConfig"
     :modal-config="modalConfig"
@@ -45,6 +53,7 @@ const filterConfig = computed(() => ({
   fields: [
     {
       label: '名称',
+      colSize: { span: 8 },
       fieldName: 'dictLabel',
       type: EControlType.eInput,
       props: {
@@ -103,6 +112,7 @@ const tableConfig = computed(() => ({
           },
           {
             name: '删除',
+            confirmContent: '删除字典可能影响业务数据正常显示，确定删除吗？',
             callback: 'delete'
           }
         ]

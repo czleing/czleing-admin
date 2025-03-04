@@ -46,6 +46,7 @@ const filterConfig = computed(() => ({
       label: '是否启用',
       fieldName: 'isEnabled',
       type: EControlType.eSelect,
+      defaultValue: 1,
       props: {
         options: EIsEnabled._list
       }
@@ -54,8 +55,10 @@ const filterConfig = computed(() => ({
 }))
 const tableConfig = computed(() => ({
   props: {
-    usePage: false
+    usePage: false,
+    scroll: { x: 1300 }
   },
+  initSearch: false,
   columns: [
     {
       title: '菜单名称',
@@ -68,11 +71,11 @@ const tableConfig = computed(() => ({
     {
       title: '权限标识',
       dataIndex: 'permission',
-      width: 100,
       customRender: ({ value }) => value || '-'
     },
     {
       title: '路由地址',
+      width: 140,
       dataIndex: 'path',
       customRender: ({ value }) => value || '-'
     },
@@ -96,6 +99,7 @@ const tableConfig = computed(() => ({
     {
       title: '操作',
       width: 180,
+      fixed: 'right',
       actionShowNum: 4, // 展示操作按钮数量，剩余的将收进更多里
       // action: 操作列配置，T[] || ({ record }) => T[]
       action: ({ record }) => {

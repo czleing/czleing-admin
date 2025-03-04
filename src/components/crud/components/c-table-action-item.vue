@@ -4,7 +4,7 @@
     <!-- 带确认框 -->
     <a-popconfirm
       placement="left"
-      :title="action.confirmText ?? `确定对该条数据执行${ action.name ? `[${ action.name }]` : '此' }操作吗？`"
+      :title="action.confirmContent ?? `确定对该条数据执行${ action.name ? `[${ action.name }]` : '此' }操作吗？`"
       @confirm="action.callback({ record })"
     >
       <component v-if="action.customRender" :is="action.customRender({ record })" v-hasPermi="action.permission" />

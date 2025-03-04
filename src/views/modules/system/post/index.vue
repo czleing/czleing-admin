@@ -183,7 +183,7 @@
    * @param {Object} param 其他参数
    */
   function beforeSubmit (submitData, { isAdd, isEdit, isView, detail }) {
-    return { ...submitData, isEnabled: isAdd ? 1 : detail.isEnabled }
+    return submitData
   }
 
   /**

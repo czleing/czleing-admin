@@ -90,6 +90,7 @@ const filterConfig = {
       label: '是否启用',
       fieldName: 'isEnabled',
       type: EControlType.eSelect,
+      defaultValue: 1, // 给一个默认值，注：设置了默认值后，页面初始化时 c-filter 组件会自动提交一次查询，tableConfig.initSearch 将会默认关闭
       props: {
         options: EIsEnabled._list
       }

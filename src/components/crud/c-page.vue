@@ -36,6 +36,7 @@
         :primaryKey="primaryKey"
         :no-select="noSelect"
         :config="tableConfig"
+        :filter-auto-search="filterAutoSearch"
         :api-config="api"
         :api-method-config="apiMethod"
         :api-option-config="apiOptionConfig"
@@ -70,6 +71,7 @@ import { useApiConfig } from './hooks/useApiConfig'
 import { usePermissionConfig } from './hooks/usePermissionConfig'
 import { useApiMethodConfig } from './hooks/useApiMethodConfig'
 import { useActionHandle } from './hooks/useActionHandle'
+import { isNotEmpty } from '@/utils/index.js'
 
 const props = defineProps({
   /** 没有新增按钮，可选 */
@@ -133,6 +135,9 @@ const pagination = ref({
   pageSize: props.tableConfig?.props?.pageSize ?? 10,
   current: 1,
   total: 0
+})
+const filterAutoSearch = computed(() => {
+  return props.filterConfig?.fields?.some(field => isNotEmpty(field.defaultValue))
 })
 const tableSlots = computed(() => props.tableConfig?.columns?.filter(column => column.slot))
 const { api } = useApiConfig(props.apiConfig) // 接口

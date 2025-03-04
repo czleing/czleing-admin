@@ -10,7 +10,8 @@ import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
  * @returns {Boolean}
  */
 export function isEmpty (value) {
-  if (!value && value !== 0) return true
+  if (value === true || value === false || value === 0) return false
+  if (!value) return true
   if (typeof value === 'string') {
     return value.trim().length === 0
   } else if (Array.isArray(value)) {
@@ -259,8 +260,8 @@ export function listToTree (list, rootParentId = 0, idField = 'id', parentIdFiel
         parent[childrenField] = [item]
       } else if (parent) {
         parent[childrenField].push(item)
-      } else {
-        console.error(`id 为 ${parentId2} 的菜单不存在`)
+      } else if (import.meta.env.VITE_APP_DEBUG_MODE) {
+        console.error(`id 为 ${parentId2} 的节点不存在`)
       }
     }
   })
