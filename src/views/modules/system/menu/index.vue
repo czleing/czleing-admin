@@ -258,7 +258,7 @@ const modalConfig = computed(() => ({
         none: formData => formData.menuType === EMenuType.eDir,
         type: EControlType.eInput,
         tooltip: '控制器中定义的权限字符，如：@SaCheckPermission(\'system:user:list\')',
-        // required: true,
+        required: true,
         props: {
         }
       },
