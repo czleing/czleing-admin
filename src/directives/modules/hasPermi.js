@@ -9,7 +9,7 @@ import { useAuthStore } from '@/stores/auth-store'
 export default {
   name: 'hasPermi',
   directive: {
-    created (el, binding) {
+    mounted (el, binding) {
       let permissions = binding.value
       if (!permissions) {
         return
