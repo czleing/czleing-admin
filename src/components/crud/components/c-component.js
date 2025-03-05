@@ -92,7 +92,7 @@ export default defineComponent({
       // 数据源发生变化，选中值需要做修改（部分组件如 eCustom 组件且数据源是树形数据时存在问题）
       // if (props.field.type !== EControlType.eTreeSelect) {
       //   if (isEmpty(dataSource.value) || (props.value && !dataSource.value.some(item => item.id === props.value))) {
-      //     if (import.meta.env.VITE_APP_DEBUG_MODE) {
+      //     if (import.meta.env.VITE_APP_DEBUG_MODE === 'true') {
       //       console.log('数据源为空或不存在所选的值，清空选中，字段：', props.field.fieldName, '值', props.value)
       //     }
       //     formData[props.field.fieldName] = undefined // 当前列表中没有该值，则清空选中

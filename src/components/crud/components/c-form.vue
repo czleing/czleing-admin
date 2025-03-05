@@ -308,7 +308,7 @@ function cancel () {
 /** 提交表单 */
 function submit () {
   loadingRequest(loading, async () => {
-    if (import.meta.env.VITE_APP_DEBUG_MODE) {
+    if (import.meta.env.VITE_APP_DEBUG_MODE === 'true') {
       console.log('formData', formData)
     }
     await inputForm.value.validate()
@@ -325,7 +325,7 @@ function submit () {
     if (props.isEdit && props.primaryKey) {
       submitData[props.primaryKey] = props.detail[props.primaryKey]
     }
-    if (import.meta.env.VITE_APP_DEBUG_MODE) {
+    if (import.meta.env.VITE_APP_DEBUG_MODE === 'true') {
       console.log('submitData', submitData)
     }
     if (props.onSubmitHandle) {

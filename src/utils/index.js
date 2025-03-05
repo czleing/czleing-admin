@@ -260,7 +260,7 @@ export function listToTree (list, rootParentId = 0, idField = 'id', parentIdFiel
         parent[childrenField] = [item]
       } else if (parent) {
         parent[childrenField].push(item)
-      } else if (import.meta.env.VITE_APP_DEBUG_MODE) {
+      } else if (import.meta.env.VITE_APP_DEBUG_MODE === 'true') {
         console.error(`id 为 ${parentId2} 的节点不存在`)
       }
     }

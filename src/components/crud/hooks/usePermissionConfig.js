@@ -10,6 +10,7 @@ export function usePermissionConfig (permissionConfig = {}) {
   const permission = {
     ...permissionConfig,
     add: permissionConfig?.add ?? (permissionPrex + ':add'), // system:user:add
+    edit: permissionConfig?.update ?? (permissionPrex + ':update'),
     update: permissionConfig?.update ?? (permissionPrex + ':update'),
     detail: permissionConfig?.detail ?? (permissionPrex + ':detail'),
     list: permissionConfig?.list ?? (permissionPrex + ':list'),

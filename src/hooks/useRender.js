@@ -261,7 +261,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
           ...option,
           props: undefined // 去掉 ant-design 添加的死循环自引用
         }
-        if (import.meta.env.VITE_APP_DEBUG_MODE) {
+        if (import.meta.env.VITE_APP_DEBUG_MODE === 'true') {
           console.log('selected', val, option)
         }
         emitUpdate(val)

@@ -96,7 +96,7 @@ export const useAuthStore = defineStore('auth', {
         this.userInfo = authInfo.user
         this.roles = authInfo.roles
         this.permissions = authInfo.permissions ?? []
-        if (import.meta.env.DEV && import.meta.env.VITE_APP_IGNORE_PERMISSION) {
+        if (import.meta.env.DEV && import.meta.env.VITE_APP_IGNORE_PERMISSION === 'true') {
           this.permissions.unshift('*:*:*') // 具有所有权限
         }
       }

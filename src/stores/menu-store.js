@@ -74,7 +74,7 @@ export const useMenuStore = defineStore('menu', {
       // const hasNameRoutes = []
       const transform = (list, parentPaths = []) => {
         return list.map(item => {
-          // if (import.meta.env.VITE_APP_DEBUG_MODE && item.name) {
+          // if (import.meta.env.VITE_APP_DEBUG_MODE === 'true' && item.name) {
           //   hasNameRoutes.push(item)
           // }
           let currPath = item.path
@@ -108,7 +108,7 @@ export const useMenuStore = defineStore('menu', {
         })
       }
       const routes = transform(menuTree)
-      // if (import.meta.env.VITE_APP_DEBUG_MODE) {
+      // if (import.meta.env.VITE_APP_DEBUG_MODE === 'true') {
       //   console.log('动态具名路由：', hasNameRoutes.map(item => `${item.name}: ${item.path}`).join(', '))
       // }
       return routes
