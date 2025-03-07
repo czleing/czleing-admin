@@ -143,6 +143,7 @@ const tableSlots = computed(() => props.tableConfig?.columns?.filter(column => c
 const { api } = useApiConfig(props.apiConfig) // 接口
 const { permission } = usePermissionConfig(props.permissionConfig) // 权限
 const { apiMethod } = useApiMethodConfig(props.apiMethodConfig) // 接口请求方式
+const emit = defineEmits(['added', 'updated', 'deleted'])
 const {
   isAdd,
   isEdit,
@@ -165,7 +166,8 @@ const {
   afterOpenModal: props.afterOpenModal,
   primaryKey: props.primaryKey,
   apiOptionConfig: props.apiOptionConfig,
-  afterSubmit: props.afterSubmit
+  afterSubmit: props.afterSubmit,
+  emit
 })
 
 /** 与子组件共享变量 */

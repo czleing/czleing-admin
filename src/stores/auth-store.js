@@ -6,6 +6,7 @@ import { Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 import { useMenuStore } from '@/stores/menu-store'
 import { createVNode } from 'vue'
+import { useTabsStore } from '@/stores/tabs-store.js'
 
 /**
  * 登录、授权、用户信息相关 store
@@ -58,6 +59,7 @@ export const useAuthStore = defineStore('auth', {
      */
     logout () {
       const that = this
+      const tabStore = useTabsStore()
       return new Promise((resolve, reject) => {
         Modal.confirm({
           title: '退出提示',
@@ -66,6 +68,7 @@ export const useAuthStore = defineStore('auth', {
           async onOk () {
             await axios.post('/logout')
             that.clearAuthInfo()
+            tabStore.clearAllTabs()
             router.replace({ name: 'login' })
             resolve()
           },
@@ -117,7 +120,9 @@ export const useAuthStore = defineStore('auth', {
     strategies: [{ // 可以多种方案组合
       key: 'AUTH_INFO',
       // storage: window.localStorage, // 使用的持久化方案，默认 sessionStorage
-      paths: ['token', 'userInfo'] // 需要持久化的属性，不设置则默认所有属性
+      // 此处将 userInfo 加入缓存要注意，浏览器刷新时不会等待优先获取用户信息，导致 permissions 为空，从而页面权限校验错误，应与 permissions 一起加入缓存
+      // permissions 为敏感信息，有手动修改的可能，最好不要加入缓存，每次刷新时重新获取为好
+      paths: ['token'] // 需要持久化的属性，不设置则默认所有属性
     }]
   }
 })

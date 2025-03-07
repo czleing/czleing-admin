@@ -7,7 +7,7 @@ import { createVNode } from 'vue'
  * 处理操作相关、表格预设操作等
  * @returns
  */
-export function useActionHandle ({ cModal, cForm, cTable, modalConfig, api, apiMethod, transformDetail, afterOpenModal, primaryKey, apiOptionConfig, afterSubmit }) {
+export function useActionHandle ({ cModal, cForm, cTable, modalConfig, api, apiMethod, transformDetail, afterOpenModal, primaryKey, apiOptionConfig, afterSubmit, emit }) {
   const isAdd = ref(false)
   const isEdit = ref(false)
   const isView = ref(false)
@@ -88,6 +88,7 @@ export function useActionHandle ({ cModal, cForm, cTable, modalConfig, api, apiM
   async function onDeleteHandle (ids) {
     await axios[apiMethod['delete']](api.delete.replace(':ids', ids.join(',')), null, apiOptionConfig?.delete)
     message.success('删除成功')
+    emit('deleted')
     cTable.value.refresh()
   }
   async function onToggleHandle (record) {
@@ -118,9 +119,11 @@ export function useActionHandle ({ cModal, cForm, cTable, modalConfig, api, apiM
     if (isAdd.value) {
       await axios[apiMethod['add']](api.add, submitData, apiOptionConfig?.add)
       message.success('新增成功')
+      emit('added', submitData)
     } else if (isEdit.value) {
       await axios[apiMethod['update']](api.update, submitData, apiOptionConfig?.update)
       message.success('修改成功')
+      emit('updated', submitData)
     }
     if (typeof afterSubmit === 'function') {
       await afterSubmit({
