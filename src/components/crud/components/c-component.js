@@ -1,10 +1,13 @@
-/** 根据 field 配置渲染组件 */
 import { useRender } from '@/hooks/useRender.js'
 import { useDict } from '@/hooks/useDict.js'
 import axios from '@/api'
 import { isEmpty } from '@/utils/index'
-import { EControlType } from '@/enum'
+import { useDictStore } from '@/stores/dict-store.js'
 
+/**
+ * 根据 field 配置渲染组件
+ * 该组件的的目的是给所有通过 field 配置生成的组件添加统一的功能，如远程数据源、监听表单数据进行组件数据联动
+ */
 export default defineComponent({
   props: {
     value: {}, // [Object, String, Number, Boolean, Array],
@@ -24,6 +27,7 @@ export default defineComponent({
      * converter: (res) => res // 数据源数据转换器，在查询到数据后可对数据进行修改
      */
     const dataSource = ref()
+    const dictStore = useDictStore()
     const formData = inject('c-form.formData', {})
     const formRemotes = inject('c-form.formRemotes', {})
     const modalVisible = inject('modal.visible', false)
@@ -77,7 +81,14 @@ export default defineComponent({
       }
     } else if (dictType) { // 如果使用了数据字典
       useDict([dictType], dict => {
-        dataSource.value = dict[dictType]
+        dataSource.value = dictStore.dictMap[dictType]
+        watch(
+          () => dictStore.dictMap[dictType],
+          (val) => {
+            dataSource.value = val
+          },
+          { deep: true }
+        )
       })
     }
 
@@ -138,4 +149,3 @@ export default defineComponent({
     return renderByField(this.field)
   }
 })
-
