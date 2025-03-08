@@ -15,6 +15,7 @@ init(EUserType)
  */
 export const EControlType = {
   eInput: Enum('a-input', '文本框', { htmlType: 'eInput', defaultProps: { maxlength: 50 } }),
+  eAutoComplete: Enum('a-auto-complete', '自动补全文本框', { htmlType: 'eAutoComplete', defaultProps: { dropdownMatchSelectWidth: false } }),
   eNumber: Enum('a-input-number', '数字框', { htmlType: 'eNumber', defaultProps: { style: 'width: 100%;' } }),
   eTextarea: Enum('a-textarea', '文本域', { htmlType: 'eTextarea', defaultProps: { maxlength: 200, showCount: true, rows: 4 } }),
   eRadio: Enum('a-radio-group', '单选框', { htmlType: 'eRadio' }),

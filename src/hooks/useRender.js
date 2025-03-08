@@ -20,6 +20,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
   // 自定义渲染函数
   const getRenderFn = {
     [EControlType.eInput]: renderInput,
+    [EControlType.eAutoComplete]: renderAutoComplete,
     [EControlType.eTextarea]: renderTextarea,
     [EControlType.eNumber]: renderInputNumber,
     [EControlType.eRadio]: renderRadio,
@@ -41,7 +42,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       return fn(field)
     } else if (field.type) {
       const controlTypeEnum = EControlType._objectOf(field.type)
-      // 2.没有自定义的，尝试当全局组件渲染，当然上面所有的 ant-design 组件都可以走这里
+      // 2.没有自定义的，尝试当全局组件渲染，当然上面所有的 ant-design 组件都可以走这里，只是查看模式时，不会渲染成文本，而是渲染成禁用的组件
       return h(resolveComponent(field.type), {
         ...controlTypeEnum?.data?.defaultProps ?? {},
         ...field.props,
@@ -101,6 +102,43 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       type = 'a-input-password'
     }
     return h(resolveComponent(type), controlProps)
+  }
+
+  /**
+   * 渲染自动补全输入框
+   * @param {Object} field 字段配置信息
+   * @returns 组件VNode
+   */
+  function renderAutoComplete (field) {
+    // 查看模式，直接渲染文本
+    if (isView) {
+      return h('span', [value ?? '-'])
+    }
+    const controlTypeEnum = EControlType._objectOf(field.type)
+    const props = Object.assign(
+      {
+        placeholder: `请输入或选择${getFnValue(field.label, formData)}`
+      },
+      controlTypeEnum.data.defaultProps ?? {},
+      field.props
+    )
+    const options = transformOptions(props.options ?? dataSource)
+    const controlProps = {
+      ...props,
+      value,
+      options,
+      placeholder: getFnValue(props.placeholder, formData),
+      onChange: undefined,
+      'onUpdate:value': val => {
+        emitUpdate(val)
+        if (typeof props.onChange === 'function') {
+          setTimeout(() => {
+            props.onChange(val, formData)
+          })
+        }
+      }
+    }
+    return h(resolveComponent(field.type), controlProps)
   }
 
   /**
@@ -545,7 +583,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     return h(component, controlProps)
   }
 
-  /** 将本系统风格的 options 转成 ant-design 风格的 options，适用于 a-radio, a-select, a-checkbox 等 */
+  /** 将本系统风格的 options 转成 ant-design 风格的 options，适用于 a-radio, a-select, a-checkbox, a-auto-complete 等 */
   function transformOptions (options, useAll = false) {
     const result = options?.map(item => ({ ...item, value: item.id, label: item.name }))
     if (useAll && result) {
