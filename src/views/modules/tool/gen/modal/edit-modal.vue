@@ -187,9 +187,7 @@ const genFormConfig = computed(() => ({
           }
         },
         fieldNames: {
-          value: 'id',
-          label: 'label',
-          children: 'children'
+          label: 'label'
         }
       }
     },
@@ -226,9 +224,11 @@ const genFormConfig = computed(() => ({
       labelCol: { span: 4 },
       wrapperCol: { span: 20 },
       none: formData => formData.genType !== '1',
-      type: EControlType.eInput,
+      type: EControlType.eAutoComplete,
       required: true,
-      props: { maxlength: 100 }
+      props: {
+        options: JSON.parse(localStorage.getItem('genUiPathList'))
+      }
     },
     {
       label: '生成Controller',
@@ -512,6 +512,16 @@ async function beforeConfirm (close) {
     headers: { datasource: props.datasource }
   })
   _this.$message.success(result.msg)
+  let cacheUiPaths = localStorage.getItem('genUiPathList')
+  cacheUiPaths = cacheUiPaths ? JSON.parse(cacheUiPaths) : []
+  cacheUiPaths.push({
+    id: genData.genUiPath,
+    name: genData.genUiPath
+  })
+  if (cacheUiPaths.length > 3) {
+    cacheUiPaths.splice(0, 1)
+  }
+  localStorage.setItem('genUiPathList', JSON.stringify(cacheUiPaths))
   if (result.code === 200) {
     close()
   }
