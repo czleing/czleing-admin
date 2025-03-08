@@ -24,6 +24,9 @@
     :modal-config="modalConfig"
     :before-search="beforeSearch"
     :before-submit="beforeSubmit"
+    @added="refreshCache"
+    @updated="refreshCache"
+    @deleted="refreshCache"
   >
     <template #table_dictLabel="{ text, record }">
       <a-tag :bordered="false" :color="record.tagType">{{ text }}</a-tag>
@@ -34,12 +37,14 @@
 <script setup>
 import CPage from '@/components/crud/c-page.vue'
 import { EControlType } from '@/enum/index.js'
+import { useDictStore } from '@/stores/dict-store.js'
 
 const props = defineProps({
   dictType: String
 })
 
 const cPage = ref()
+const dictStore = useDictStore()
 
 watch(
   () => props.dictType,
@@ -230,9 +235,13 @@ const modalConfig = computed(() => ({
  * @param {Object} submitData 提交的数据
  * @param {Object} param 其他参数
  */
- function beforeSubmit (submitData, { isAdd, isEdit, isView, detail }) {
+function beforeSubmit (submitData, { isAdd, isEdit, isView, detail }) {
   submitData.dictType = props.dictType
   return submitData
+}
+
+function refreshCache () {
+  dictStore.initDictByTypes([props.dictType], { [props.dictType]: { force: true } })
 }
 </script>
 
