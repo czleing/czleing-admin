@@ -182,6 +182,9 @@ function setFormData (data = props.detail, includeFieldNames = fieldNamesArr.val
       formData[fieldName] = data[fieldName] ?? defaultObject.value[fieldName]
     }
   })
+  if (data[props.primaryKey]) {
+    formData[props.primaryKey] = data[props.primaryKey]
+  }
 }
 
 /** 是否是字段分组 */
@@ -217,6 +220,7 @@ function reset () {
       }
     })
   }
+  formData[props.primaryKey] = undefined
   resetDatas(currFields.value)
 }
 
