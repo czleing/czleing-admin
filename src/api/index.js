@@ -2,6 +2,7 @@ import axios from 'axios'
 import router from '@/router'
 import { message } from 'ant-design-vue'
 import { useAuthStore } from '@/stores/auth-store'
+import { useTabsStore } from '@/stores/tabs-store'
 
 // 创建 Axios 实例
 const instance = axios.create({
@@ -36,7 +37,9 @@ instance.interceptors.response.use((response) => {
     if (data?.code === 401) {
       message.error('未登录或会话已过期,请重新登录')
       const authStore = useAuthStore()
+      const tabStore = useTabsStore()
       authStore.clearAuthInfo()
+      tabStore.clearAllTabs()
       router.replace('/login')
       return Promise.reject(new Error('未登录或会话已过期,请重新登录'))
     } else if (data?.code === 200) {
