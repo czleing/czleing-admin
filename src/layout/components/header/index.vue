@@ -1,5 +1,5 @@
 <template>
-  <div class="header flex-x-between px20">
+  <div class="header flex-x-between px20 nowrap">
     <Logo />
     <span class="pointer ml20" @click="menuStore.toggleSidebar">
       <MenuFoldOutlined v-if="menuStore.isSidebarOpen" />
@@ -81,5 +81,8 @@ function onMenuItemClick (item) {
 <style lang="less" scoped>
 .header {
   height: 100%;
+  &__menu {
+    overflow: auto;
+  }
 }
 </style>
