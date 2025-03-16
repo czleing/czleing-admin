@@ -1,7 +1,7 @@
 <!-- 弹窗组件，分居中弹窗和侧边抽屉弹窗 -->
 <template>
   <div class="modal">
-    <a-modal v-if="currMode === 'modal'" :title="currTitle" v-model:open="visible" :width="currWidth" v-bind="$attrs" @cancel="close" @ok="onOkHandle">
+    <a-modal v-if="currMode === 'modal'" :title="currTitle" open="visible" :width="currWidth" v-bind="$attrs" @cancel="close" @ok="onOkHandle">
       <slot :visible="visible" />
       <!-- a-modal 自带有确定、取消按钮，此处使用自定义 -->
       <template v-if="$attrs.footer !== null" #footer>
@@ -13,7 +13,7 @@
         </slot>
       </template>
     </a-modal>
-    <a-drawer v-if="currMode === 'drawer'" :title="currTitle" v-model:open="visible" :width="currWidth" v-bind="$attrs" @close="close">
+    <a-drawer v-if="currMode === 'drawer'" :title="currTitle" :open="visible" :width="currWidth" v-bind="$attrs" @close="close">
       <div class="">
         <slot :visible="visible" />
       </div>
