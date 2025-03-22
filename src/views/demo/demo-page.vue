@@ -94,6 +94,23 @@ const filterConfig = {
       props: {
         options: EIsEnabled._list
       }
+    },
+    {
+      label: '字典下拉',
+      fieldName: 'xxxStatus',
+      type: EControlType.eSelect,
+      props: {
+        dictType: 'xxx_status' // 指定字典类型，自动查询出字典项数据
+      }
+    },
+    {
+      label: '时间范围',
+      fieldName: 'createTime', // 对应查询数据库中的字段，提交时会删掉，替换成 fieldNames 中设置的两个字段
+      type: EControlType.eDateRange,
+      props: {
+        // showTime: true, // 是否显示时分秒
+        // fieldNames: ['createTimeBegin', 'createTimeEnd'] // 默认是 fieldName 后面增加 'Begin', 'End'，可以不填
+      }
     }
   ]
 }

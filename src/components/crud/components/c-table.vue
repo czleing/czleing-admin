@@ -133,6 +133,14 @@ const currentRowSelection = computed(() => {
 })
 // 是否使用合计
 const useTotal = computed(() => currColumns.value.some(col => col.useTotal))
+const usePage = computed(() => props.config?.props?.usePage !== false)
+const page = computed(() => {
+  if (!usePage.value) return undefined
+  return {
+    pageNum: pagination.value.current,
+    pageSize: pagination.value.pageSize
+  }
+})
 // 合计数据
 const total = computed(() => {
   if (useTotal.value) {
@@ -169,8 +177,7 @@ async function getList () {
   const url = props.apiConfig?.list
   let params = {
     ...searchParams.value,
-    pageNum: pagination.value.current,
-    pageSize: pagination.value.pageSize
+    page: page.value
   }
   if (typeof props.beforeSearch === 'function') {
     params = props.beforeSearch(params)

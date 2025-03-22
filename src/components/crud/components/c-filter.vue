@@ -123,7 +123,7 @@ function transformDateRange (data) {
     const value = data[field.fieldName]
     if (isNotEmpty(value)) {
       // 日期范围字段处理
-      const fieldNames = field.props?.fieldNames
+      const fieldNames = field.props?.fieldNames ?? [`${field.fieldName}Begin`, `${field.fieldName}End`]
       data[fieldNames[0]] = value[0].startOf('day').hour(0).valueOf()
       data[fieldNames[1]] = value[1].endOf('day').valueOf()
     }

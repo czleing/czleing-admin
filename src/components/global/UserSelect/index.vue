@@ -168,8 +168,10 @@ async function setData (val) {
   ids = ids.map(id => Number(id))
   if (!isEmpty(ids) && selectUsers.value.length === 0) {
     const result = await axios.post('/system/user/selectUser?from=initUserSelect', {
-      pageNum: 1,
-      pageSize: 9999,
+      page: {
+        pageNum: 1,
+        pageSize: 9999
+      },
       ids
     })
     selectUsers.value = result.list
