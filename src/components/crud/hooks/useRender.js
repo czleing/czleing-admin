@@ -2,12 +2,10 @@ import { EControlType } from '@/enum/index'
 import { getFnValue, isNotEmpty, isEmpty } from '@/utils/index'
 import dayjs from 'dayjs'
 import { h, resolveComponent } from 'vue'
-import { SyncOutlined } from '@ant-design/icons-vue'
-import { useDictStore } from '@/stores/dict-store.js'
-import { message } from 'ant-design-vue'
 
 /**
  * 渲染组件
+ * 根据
  * 可以通过自定义渲染函数来改变全局组件的渲染
  * @returns 组件
  */
@@ -16,8 +14,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
   const emitUpdate = async (...args) => {
     ctx.$emit('update:value', ...args) // 统一使用 value 作为双向绑定的 props (为了与 ant-design 一致)
   }
-  const dictStore = useDictStore()
-  // 自定义渲染函数
+  // 自定义渲染函数（主要是实现统一的 onChange 事件(能在 onChange 事件里获取到 formData )，以及查看详情模式时，将控件转为纯文本显示，以及默认属性设置）
   const getRenderFn = {
     [EControlType.eInput]: renderInput,
     [EControlType.eAutoComplete]: renderAutoComplete,
@@ -315,19 +312,6 @@ export function useRender ({ ctx, isView, value, dataSource }) {
           })
         }
       }
-    }
-    if (controlProps.dictType) {
-      const refreshFn = () => {
-        dictStore.initDictByTypes([controlProps.dictType], {[controlProps.dictType]: { force: true }})
-        message.success('刷新成功')
-      }
-      // 给字典的下拉选择框，添加刷新功能
-      return h(resolveComponent('a-input-group'), { compact: true, class: 'nowrap' }, {
-        default: () => [
-          h(resolveComponent(field.type), { ...controlProps, style: 'width: calc(100% - 32px)' }),
-          h(resolveComponent('a-button'), { title: '刷新数据', onClick: refreshFn }, { icon: () => h(SyncOutlined, { class: 'em08 text-gray' }) })
-        ]
-      })
     }
     return h(resolveComponent(field.type), controlProps)
   }

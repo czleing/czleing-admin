@@ -1,8 +1,10 @@
-import { useRender } from '@/hooks/useRender.js'
+import { useRender } from '@/components/crud/hooks/useRender.js'
 import { useDict } from '@/hooks/useDict.js'
 import axios from '@/api'
 import { isEmpty } from '@/utils/index'
 import { useDictStore } from '@/stores/dict-store.js'
+import { SyncOutlined } from '@ant-design/icons-vue'
+import { message } from 'ant-design-vue'
 
 /**
  * 根据 field 配置渲染组件
@@ -30,6 +32,7 @@ export default defineComponent({
     const dictStore = useDictStore()
     const formData = inject('c-form.formData', {})
     const formRemotes = inject('c-form.formRemotes', {})
+    const triggerRemote = null // 触发获取远程数据源的方法，刷新远程数据
     const modalVisible = inject('modal.visible', false)
     const remote = props.field.props?.remote
     let remoteParams = {}
@@ -50,8 +53,12 @@ export default defineComponent({
       formRemotes[props.field.fieldName] = () => {
         return getDataSource(remoteParams)
       }
+      triggerRemote = async () => {
+        await formRemotes[props.field.fieldName]()
+        message.success('刷新成功')
+      }
       // 需要每次弹窗时刷新一次
-      if (remote.refresh) {
+      if (remote.autoRefresh) {
         watch(
           () => modalVisible.value,
           (visible) => {
@@ -90,6 +97,10 @@ export default defineComponent({
           { deep: true }
         )
       })
+      triggerRemote = async () => {
+        await dictStore.initDictByTypes([dictType], {[dictType]: { force: true }})
+        message.success('刷新成功')
+      }
     }
 
     /** 获取动态数据源 */
@@ -137,15 +148,30 @@ export default defineComponent({
       return data
     }
     // 返回
-    return { dataSource, getDataSource }
+    return { dataSource, getDataSource, triggerRemote }
   },
-  render () { // 组件的数据改变会触发重新渲染
+  render (h) { // 组件的数据改变会触发重新渲染
     const { renderByField } = useRender({
       ctx: this,
       isView: this.isView,
       value: this.value,
       dataSource: this.dataSource
     })
-    return renderByField(this.field)
+    const vNode = renderByField(this.field)
+    if (this.triggerRemote && this.field.props?.useRefresh !== false) {
+      // 给有动态数据源的组件，添加刷新功能
+      return h(resolveComponent('a-input-group'), { compact: true, class: 'nowrap' }, {
+        default: () => [
+          h(vNode, { style: 'width: calc(100% - 32px)' }),
+          h(
+            resolveComponent('a-button'),
+            { title: '刷新数据', onClick: this.triggerRemote },
+            { icon: () => h(SyncOutlined, { class: 'em08 text-gray' }) }
+          )
+        ]
+      })
+    } else {
+      return vNode
+    }
   }
 })

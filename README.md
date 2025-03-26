@@ -78,16 +78,35 @@ npm run build
 ### 1、规范
 - 请保持项目目录/文件干净整洁、风格统一
 - 业务模块目录/文件名称默认全部小写，多个单词时以 '-' 连接
-- 在 `Vue` 原型上添加属性使用`$`前缀，如：`Vue.prototype.$copy = xxx`
 - 编写组件或页面文件首行请注明该组件/页面的说明、用途、用法等
 - 使用两个空格代替缩进符，避免不同系统下缩进宽度不一致
 - 避免在模板中写复杂逻辑，应仅包含简单的属性绑定，避免写复杂的表达式或函数调用，保持模板清晰
 - 给组件添加属性时，遵守一定的优先顺序，指令 > 静态属性 > 动态属性 > 事件，
   如：`<input v-if="xxx" class="xxx" :maxlength="30" @input="onInputHandle" />`
 - 组件中 style 标签尽可能添加 `scoped`，避免全局样式污染，如：`<style scoped>`
+- 在 `Vue` 原型上添加属性使用`$`前缀，如：`Vue.prototype.$copy = xxx`
 - 相对独立的小模块，尽可能单独抽离成一个组件，避免一个文件代码过长过杂，同时也要避免过多的组件嵌套
 
-### 2、动态样式
+### 2、接口请求
+接口请求摒弃了一接口一封装模式(实际应用中弊大于利)，而是采用通用的请求方式，如：
+```javascript
+import axios from '@/api'
+const data = await axios.post('/xxx/xxx', {}, {})
+```
+#### 请求
+- 第一个参数为接口地址，第二个参数为请求参数，第三个参数为其他配置，可选，如 headers, content-type 的设置
+- Content-Type 统一为 application/json，上传下载等特殊请求除外
+- get 请求，请求参数统一通过 params 传递(URL传参)
+- post、put、delete、download 请求，请求参数统一通过 data(request body) 传递(请求体传参)
+- 不存在同时设置两种参数，除非手动拼在URL后面(不推荐)
+- 统一 post 的好处是在对接接口时，只需关注 url 和 参数，不用关注 method、content-type、传参位置等其他内容，提高沟通效率
+
+#### 响应
+- 框架对 axios 的二次封装，简化了获取响应数据，对异常统一拦截处理，使业务不需要关注异常处理
+- 得到的返回结果直接就是业务数据，不用再每次请求都要通过一堆的 .data 去获取业务数据
+
+
+### 3、动态样式
 less 中可使用 ant-design 的全局静态变量 @colorPrimary 等，但此变量不会跟随主题动态切换而变化，
 需要跟随变化请使用动态方式获取，token 内部的变量名参考[官网](https://www.antdv.com/docs/vue/customize-theme-cn)，如下：
 ```js
@@ -100,7 +119,7 @@ token.value.colorSuccess
 ...
 ```
 
-### 3、获取当前登录用户
+### 4、获取当前登录用户
 ```javascript
 import { useAuthStore } from '@/stores/auth-store.js'
 
@@ -109,7 +128,7 @@ const authStore = useAuthStore()
 console.log('当前登录用户：', authStore.userInfo)
 ```
 
-### 4、消息弹窗
+### 5、消息弹窗
 ```javascript
 import { Modal, message } from 'ant-design-vue'
 
@@ -133,7 +152,7 @@ message.success('保存成功')
 ```
 
 
-### 5、弹出模态框
+### 6、弹出模态框
 全局组件 `/global/Modal` 对 a-modal、a-drawer 进行了合并封装，简化了使用，属性设置支持标签上设置和调用时设置
 ```html
 <template>
@@ -167,9 +186,9 @@ function beforeConfirm (close, extraData) {
 ```
 
 
-### 6、CRUD快速开发案例(可直接代码生成，系统工具->代码生成)
+### 7、CRUD快速开发案例(可直接代码生成，系统工具->代码生成)
 #### 步骤一：先在数据库中设计表结构
-#### 步骤二：然后本地启动进入‘系统工具->代码生成’导入表并编辑相关信息
+#### 步骤二：然后本地启动进入菜单‘系统工具->代码生成’导入表并编辑相关信息
 #### 步骤三：预览并一键生成CRUD前后端代码
 #### 步骤四：查看生成结果或对特殊字段、控件的属性进行自定义修改
 
@@ -193,10 +212,11 @@ function beforeConfirm (close, extraData) {
   </el-select>
 </el-form-item>
 ...
-<script>
+<script setup>
+import axios from '@/api'
 const xxxList = ref()
 async function getXxxList (type = 1) {
-  xxxList.value = await this.$axios.get('/api/xxx/select', { type })
+  xxxList.value = await axios.get('/api/xxx/select', { type })
 }
 // type 变化时，重新请求下拉框数据
 function onTypeChange (type) {

@@ -80,7 +80,7 @@ const filterConfig = {
       fieldName: 'key',
       type: EControlType.eInput,
       // colSize: { span: 8 }, // 整个字段占整行24栅格的比例，默认响应式分配：colSize: { sm: 8, lg: 6, xxl: 4 }
-      // labelCol: { span: 7 }, // 字段文本部分占整个字段的比例，遵循 24 栅格规则
+      // labelCol: { span: 7 }, // 字段文本部分占整个字段的比例，遵循 24 栅格规则，或使用 flex 按比例分布，{ flex: 7 }
       // wrapperCol: { span: 18 }, // 字段控件部分占整个字段的比例
       props: {
         placeholder: '请输入姓名/手机号/账号'
@@ -528,6 +528,7 @@ const modalConfig = computed(() => ({
         type: EControlType.eSelect,
         props: {
           useAll: false, // 是否在前面添加全部，默认 false
+          useRefresh: false, // 是否开启手动刷新功能，默认 true，会在控件后面添加刷新图标，点击刷新控件的数据源
           dictType: 'sys_user_sex',
           // allowClear: true,
           // mode: '', // 下拉模式 'multiple' | 'tags' | 'combobox'
@@ -538,6 +539,7 @@ const modalConfig = computed(() => ({
         fieldName: 'dmSelect',
         type: EControlType.eSelect,
         props: {
+          // useRefresh: false, // 有动态数据源的组件特有的属性，是否开启手动刷新功能，默认 true，会在控件后面添加刷新图标，点击刷新控件的数据源
           remote: {
             url: '/system/user/selectUser',
             // method: 'get', // 默认 post
@@ -545,7 +547,7 @@ const modalConfig = computed(() => ({
               // type: 1,
               type: '{formData.radio1:required}' // 动态参数，formData代表表单数据，required代表是否必填，必填时，有值才获取数据源
             },
-            // refresh: true, // 每次弹窗后自动刷新远程数据
+            // autoRefresh: true, // 每次弹窗后自动刷新远程数据
             converter (result) { // 对接口返回数据进行修改，转成 [{id, name, xxx}] 格式
               return result.list?.map(item => ({ id: item.userId, name: item.nickName }))
             }
@@ -557,8 +559,13 @@ const modalConfig = computed(() => ({
         fieldName: 'tree',
         type: EControlType.eTreeSelect,
         props: {
+          // useRefresh: false, // 有动态数据源的组件特有的属性，是否开启手动刷新功能，默认 true，会在控件后面添加刷新图标，点击刷新控件的数据源
           remote: {
-            url: '/system/user/deptTree'
+            url: '/system/user/deptTree',
+            // method: 'get', // 默认 post
+            // params: {}, // 额外请求参数
+            // autoRefresh: true, // 每次弹窗后自动刷新远程数据
+            // converter
           },
           fieldNames: { // 与默认值一致时可以不用配
             // value: 'id', // value 对应的字段名，默认 id
