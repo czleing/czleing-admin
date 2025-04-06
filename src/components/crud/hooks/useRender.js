@@ -358,7 +358,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
    * @returns 组件VNode
    */
   function renderDateRange (field) {
-    const fieldNames = field.props.fieldNames
+    const fieldNames = field.props.fieldNames ?? [field.fieldName + 'Begin', field.fieldName + 'End']
     let start = formData[fieldNames[0]]
     let end = formData[fieldNames[1]]
     // 查看模式，直接渲染文本

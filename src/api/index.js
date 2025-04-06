@@ -65,13 +65,13 @@ instance.interceptors.response.use((response) => {
 
 // 下载blob二进制文件
 const downloadFile = (response) => {
-  const url = window.URL.createObjectURL(new Blob([response.data]))
   const filename = response.headers['download-filename']
   const blob = new Blob([response.data])
   if (window.navigator.msSaveBlob) {
     // 兼容 IE，使用 msSaveBlob 方法进行下载
     window.navigator.msSaveBlob(blob, decodeURIComponent(filename))
   } else {
+    const url = window.URL.createObjectURL(new Blob([response.data]))
     // 创建一个 <a> 元素
     const link = document.createElement('a')
     link.href = window.URL.createObjectURL(blob)

@@ -601,14 +601,14 @@ const modalConfig = computed(() => ({
       },
       {
         label: '日期范围',
-        // 这个字段名随便取，提交时会自动删掉，转换成你在 props.fieldNames 设置的两个字段
+        // 范围类字段，后端一般是设置为起、止两个字段，此处设置的字段名提交时会删掉，替换成 fieldNames 中设置的两个字段，编辑时会反向解析到该字段
         fieldName: 'dateRange',
         type: EControlType.eDateRange,
         props: {
           // 是否需要时分秒
           // showTime: true
-          // 必须设置起止字段名，日期范围都是两个值，对应表单中两个字段
-          fieldNames: ['dateRangeStart', 'dataRangeEnd']
+          // 可选，默认是 fieldName 后面增加 'Begin', 'End'
+          // fieldNames: ['dateRangeBegin', 'dataRangeEnd']
         }
       },
       {
