@@ -51,9 +51,9 @@
         </a-col>
       </a-row>
     </a-form>
-    <Modal ref="cacheNameModal" title="请输入备注" width="300">
+    <CModal ref="cacheNameModal" title="请输入备注" width="300">
       <a-input v-model:value="cacheName" placeholder="请输入备注名" :maxlength="15" />
-    </Modal>
+    </CModal>
   </div>
 </template>
 

@@ -1,13 +1,13 @@
 <!-- 代码生成-导入表弹窗 -->
 <template>
-  <Modal
+  <CModal
     ref="cModal"
     title="导入表"
     width="800"
     :confirm-disabled="selectedNum < 1"
-    :before-confirm="beforeConfirm"
+    :onConfirm="beforeConfirm"
     :confirm-text="`确定(${selectedNum})`"
-    :before-cancel="beforeCancel"
+    :onCancel="beforeCancel"
   >
     <CPage
       ref="cPage"
@@ -28,7 +28,7 @@
       :filter-config="filterConfig"
       :table-config="tableConfig"
     />
-  </Modal>
+  </CModal>
 </template>
 
 <script setup>

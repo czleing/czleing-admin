@@ -22,14 +22,14 @@
         <div class="mt8">{{ btnText }}</div>
       </div>
     </a-upload>
-    <Modal ref="previewModal">
+    <CModal ref="previewModal">
       <img :src="previewUrl" style="max-width: 100%;display:block;margin:0 auto;">
       <template #footer>
         <div class="tr">
           <a-button type="default" @click="previewModal.close">关闭</a-button>
         </div>
       </template>
-    </Modal>
+    </CModal>
   </div>
 </template>
 

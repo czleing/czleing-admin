@@ -155,14 +155,14 @@ message.success('保存成功')
 
 
 ### 6、弹出模态框
-全局组件 `/global/Modal` 对 a-modal、a-drawer 进行了合并封装，简化了使用，属性设置支持标签上设置和调用时设置
+全局组件 `/global/CModal` 对 a-modal、a-drawer 进行了合并封装，简化了使用，属性设置支持标签上设置和调用时设置
 ```html
 <template>
   <div>
     xxx
-    <Modal ref="cModal" title="xxx" width="800" :before-confirm="beforeConfirm"...>
+    <CModal ref="cModal" title="xxx" width="800" :onConfirm="onConfirm"...>
       弹出框内部内容
-    </Modal>
+    </CModal>
   </div>
 </template>
 
@@ -182,7 +182,7 @@ function openModal () {
   // cModal.value.close()
 }
 // 也可以通过传入一个函数来执行确认操作，extraData 为调用open时传入的附加数据
-function beforeConfirm (close, extraData) {
+function onConfirm (close, extraData) {
 }
 </script>
 ```

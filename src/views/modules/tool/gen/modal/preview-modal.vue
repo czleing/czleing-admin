@@ -1,6 +1,6 @@
 <!-- 代码生成-预览 -->
 <template>
-  <Modal ref="cModal" title="代码生成-预览" mode="drawer" width="1200" :body-style="{padding: '0 15px 10px 15px'}" :mask-closable="false" :show-confirm="false">
+  <CModal ref="cModal" title="代码生成-预览" mode="drawer" width="1200" :body-style="{padding: '0 15px 10px 15px'}" :mask-closable="false" :show-confirm="false">
     <a-tabs v-if="!isEmpty" v-model:activeKey="activeKey">
       <a-tab-pane
         v-for="(value, key) in detail"
@@ -14,7 +14,7 @@
       </a-tab-pane>
     </a-tabs>
     <a-empty v-else class="mt30" description="暂无预览，请先编辑，填写相关设置项" />
-  </Modal>
+  </CModal>
 </template>
 
 <script>

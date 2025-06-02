@@ -6,7 +6,7 @@
       <a-icon v-if="iconName" :type="iconName" class="mr20" style="font-size: 18px;" />
       <a-button v-if="!disabled" @click="open">请选择</a-button>
     </div>
-    <Modal v-if="!disabled" ref="cModal" title="选择图标" width="900" :footer="null">
+    <CModal v-if="!disabled" ref="cModal" title="选择图标" width="900" :footer="null">
       <div class="flex-x x-middle flex-wrap">
         <div
           class="icons-select__item"
@@ -19,7 +19,7 @@
           <component :is="createVNode(item.value)" />
         </div>
       </div>
-    </Modal>
+    </CModal>
   </div>
 </template>
 

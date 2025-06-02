@@ -32,7 +32,7 @@
     <!-- 选择弹窗 -->
     <!-- 渲染到body上 -->
     <Teleport to="body">
-      <Modal v-if="!isView" ref="cModal" title="选择用户" width="1200" v-bind="modalProps">
+      <CModal v-if="!isView" ref="cModal" title="选择用户" width="1200" v-bind="modalProps">
         <!-- 避免表单校验收集 -->
         <a-form-item-rest>
           <CPage
@@ -56,7 +56,7 @@
             </template>
           </CPage>
         </a-form-item-rest>
-      </Modal>
+      </CModal>
     </Teleport>
   </div>
 </template>
@@ -148,7 +148,9 @@ function open (_options) {
   if (_options) {
     setData(_options?.value)
   }
-  cModal.value.open()
+  cModal.value.open({
+    onConfirm
+  })
 }
 
 /** 关闭弹窗 */
@@ -298,7 +300,6 @@ function afterSearch (list) {
 
 const modalProps = computed(() => {
   return {
-    beforeConfirm: onConfirm,
     confirmDisabled: isEmpty(selectUserIds.value),
     confirmText: `确认选择${multiple.value ? ('(' + selectedNum.value + ')') : ''}`
   }

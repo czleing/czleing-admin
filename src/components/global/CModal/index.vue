@@ -1,7 +1,7 @@
 <!-- 弹窗组件，分居中弹窗和侧边抽屉弹窗 -->
 <template>
   <div class="modal">
-    <a-modal v-if="currMode === 'modal'" :title="currTitle" open="visible" :width="currWidth" v-bind="$attrs" @cancel="close" @ok="onOkHandle">
+    <a-modal v-if="currMode === 'modal'" :title="currTitle" :open="visible" :width="currWidth" v-bind="$attrs" @cancel="close" @ok="onOkHandle">
       <slot :visible="visible" />
       <!-- a-modal 自带有确定、取消按钮，此处使用自定义 -->
       <template v-if="$attrs.footer !== null" #footer>
@@ -41,8 +41,8 @@ const props = defineProps({
   showCancel: { type: Boolean, default: true },
   confirmText: { type: String, default: '确定' },
   cancelText: { type: String, default: '关闭' },
-  beforeCancel: Function, // async () => {} 取消前执行，返回 Promise.reject() 或抛出异常可阻止关闭，注!!!：如果 beforeCancel 绑定的函数又调用了此组件的 close 方法，会造成死循环
-  beforeConfirm: Function, // async (close) => {}
+  onCancel: Function, // async () => {}
+  onConfirm: Function, // async (close, extraData) => {}
   confirmDisabled: { type: Boolean, default: false } // 确认按钮是否禁用
 })
 
@@ -67,15 +67,6 @@ watch(
   }
 )
 
-function onOkHandle () {
-  loadingRequest(confirmLoading, async () => {
-    if (onConfirm && typeof onConfirm === 'function') {
-      await onConfirm(close, extraData)
-    }
-    emits('confirm', close)
-  })
-}
-
 /**
  * 弹出
  * options.mode 弹窗模式 modal, drawer
@@ -91,8 +82,8 @@ function open (options) {
   currWidth.value = ((options?.width ?? props.width) + 'px').replace('pxpx', 'px')
   currShowConfirm.value = options?.showConfirm ?? props.showConfirm
   currShowCancel.value = options?.showCancel ?? props.showCancel
-  onConfirm = options?.onConfirm ?? props.beforeConfirm
-  onCancel = options?.onCancel ?? props.beforeCancel
+  onConfirm = options?.onConfirm ?? props.onConfirm
+  onCancel = options?.onCancel ?? props.onCancel
   extraData = options?.extraData
   visible.value = true
 }
@@ -105,6 +96,16 @@ async function close () {
     await nextTick()
     visible.value = false
     emits('close')
+  })
+}
+
+/** 点击确认按钮 */
+function onOkHandle () {
+  loadingRequest(confirmLoading, async () => {
+    if (onConfirm && typeof onConfirm === 'function') {
+      await onConfirm(close, extraData)
+    }
+    emits('confirm', close)
   })
 }
 

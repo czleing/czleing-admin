@@ -1,6 +1,6 @@
 <!-- 代码生成-编辑配置 -->
 <template>
-  <Modal ref="cModal" title="代码生成-编辑" mode="drawer" width="1200" :mask-closable="false" :body-style="{padding: '0 15px 10px 15px'}" :before-confirm="beforeConfirm">
+  <CModal ref="cModal" title="代码生成-编辑" mode="drawer" width="1200" :mask-closable="false" :body-style="{padding: '0 15px 10px 15px'}">
     <a-tabs v-model:activeKey="activeKey">
       <a-tab-pane key="1" tab="基本信息">
         <CForm
@@ -35,7 +35,7 @@
         />
       </a-tab-pane>
     </a-tabs>
-  </Modal>
+  </CModal>
 </template>
 
 <script setup>
@@ -531,7 +531,9 @@ const emits = defineEmits(['completed'])
 
 function open (options) {
   record.value = options
-  cModal.value.open()
+  cModal.value.open({
+    onConfirm: beforeConfirm
+  })
   getDetail()
 }
 

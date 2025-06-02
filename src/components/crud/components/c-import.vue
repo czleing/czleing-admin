@@ -4,7 +4,7 @@
     <slot>
       <a-button v-if="showBtn" type="dashed" :icon="h(ImportOutlined)" @click="onImportHandle">{{ btnText }}</a-button>
     </slot>
-    <Modal ref="cModal" width="450" :confirm-disabled="uploadDisabled" @close="beforeCloseHandle">
+    <CModal ref="cModal" width="450" :confirm-disabled="uploadDisabled" @close="beforeCloseHandle">
       <div class="mb">
         点击此处下载
         <a href="javascript:;" @click="downloadTemplate">导入模板</a>
@@ -29,7 +29,7 @@
       <div v-if="showReplace" class="mt">
         重复记录是否覆盖更新：<a-switch v-model:checked="isReplace" />
       </div>
-    </Modal>
+    </CModal>
   </div>
 </template>
 

@@ -7,9 +7,9 @@
       :table-config="tableConfig"
       :modal-config="modalConfig"
     />
-    <Modal ref="cModal">
+    <CModal ref="cModal">
       <DictData v-if="currDictType" :dict-type="currDictType" />
-    </Modal>
+    </CModal>
   </div>
 </template>
 

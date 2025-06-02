@@ -4,7 +4,7 @@
       <SkinOutlined style="font-size: 18px;" @click="openSetting" />
     </a-tooltip>
   </div>
-  <Modal ref="settingModal" title="设置" width="450" mode="drawer" :footer="null">
+  <CModal ref="settingModal" title="设置" width="450" mode="drawer" :footer="null">
     <!-- <a-divider>主题</a-divider> -->
     <h4 class="pb10 text-gray2">主题</h4>
     <a-space class="flex-x">
@@ -70,7 +70,7 @@
       <span>展示天气：</span>
       <a-switch v-model:checked="settingStore.useWeather" />
     </a-space>
-  </Modal>
+  </CModal>
 </template>
 
 <script setup>
