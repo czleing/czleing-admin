@@ -50,6 +50,8 @@ import { Upload } from 'ant-design-vue'
 const props = defineProps({
   // 文件对象数组或文件地址逗号分隔字符串，[] 或 '', 默认 ''
   value: [Array, String],
+  /** value 数据类型, Array | String */
+  valueType: { type: String, default: 'String' },
   // 最大上传文件数
   maxCount: {
     type: Number,
@@ -58,7 +60,7 @@ const props = defineProps({
   // 文件大小限制(KB)
   fileSize: {
     type: Number,
-    default: 1024 * 5
+    default: 1024 * 10
   },
   accept: {
     type: String,
@@ -88,36 +90,37 @@ const maxFileSize = computed(() => byteFormat(props.fileSize << 10))
 
 watch(
   () => props.value,  
-  () => {
-    if (props.value) {
-      if (Array.isArray(props.value)) {
-        fileList.value = props.value
-      } else {
-        let i = 0
-        const newFileList = []
-        props.value.split(',').forEach(path => {
-          i++
-          const matchedFile = fileList.value?.find(file => file.path === path)
-          if (matchedFile) {
-            newFileList.push(matchedFile)
-          } else {
-            newFileList.push({
-              uid: Date.now() + i,
-              name: path.match(/.*\/([^/]+)\.\w+/)?.[1] || path,
-              status: 'done',
-              url: getFullUrl(path),
-              path
-            })
-          }
-        })
-        fileList.value = newFileList
-      }
-    } else {
-      fileList.value = []
-    }
+  (newVal) => {
+    setValue(newVal)
   },
-  { deep: true, immediate: true }
+  { immediate: true, deep: true }
 )
+
+async function setValue (value) {
+  await nextTick()
+  if (props.valueType === 'Array') {
+    fileList.value = value ?? []
+  } else if (props.valueType === 'String') {
+    if (!value) {
+      fileList.value = []
+      return
+    }
+    let i = 0
+    fileList.value = value?.split(',')?.filter(Boolean)?.map(path => {
+      i++
+      return {
+        uid: Date.now() + i,
+        name: path.match(/.*\/([^/]+\.\w+)/)?.[1] || path,
+        status: 'done',
+        url: getFullUrl(path),
+        path
+      }
+    }) ?? []
+  } else {
+    console.error('FileUpload 属性 valueType 必须是["Array", "String"]之一')
+  }
+}
+
 /**
  * 上传文件前的钩子，返回 false 可阻止上传
  * @param {Object} file 要上传的文件
@@ -137,18 +140,17 @@ function beforeUploadHandle (file, files) {
  * file.response: 上传服务器响应内容，从此处获取服务器地址，
  */
 function onChangeHandle ({ file, fileList: files, event }) {
-  // console.log('文件上传状态：', file.status)
-  // console.log('文件上传列表：', fileList)
-  if (file.status === 'done') {
-    const path = file.response?.data?.path // TODO 视接口返回而定
-    const currFile = files.find(item => item.uid === file.uid)
-    if (currFile) {
-      currFile.path = path
-      currFile.url = getFullUrl(path)
+  if (file.status === 'done' && file.response) {
+    const path = file.response?.data?.path
+    file.path = path
+    file.url = getFullUrl(path)
+    delete file.response
+    if (files.every(f => f.url)) {
+      emitChange()
     }
-    emitChange()
   } else if (file.status === 'removed') {
-    fileList.value = fileList.value.filter(item => item.uid !== file.uid)
+    // axios.post('/oss/delete', { path: file.path })
+    emitChange()
   }
 }
 
@@ -168,8 +170,16 @@ function previewHandle (file) {
 const emit = defineEmits(['update:value', 'update:fileList'])
 /** 提交改变 */
 function emitChange () {
-  if (Array.isArray(props.value)) {
-    emit('update:value', fileList.value)
+  if (props.valueType === 'Array') {
+    emit('update:value', fileList.value?.map(file => ({
+      name: file.name,
+      path: file.path,
+      type: file.type,
+      size: file.size,
+      uid: file.uid,
+      url: file.url,
+      status: file.status
+    })))
   } else {
     emit('update:value', fileList.value.map(file => file.path).join(','))
   }

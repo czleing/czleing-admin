@@ -66,15 +66,16 @@ import CPage from '@/components/crud/c-page.vue'
 import { EControlType } from '@/enum/index.js'
 import { isEmpty } from '@/utils/index.js'
 import axios from '@/api'
+import { nextTick } from 'vue'
 
 defineOptions({
   name: 'UserSelect'
 })
 const props = defineProps({
   value: [String, Number, Array],
-  // 组织机构树查询参数
+  // 组织机构树查询参数 如：deptId, parentId, isEnabled, deptName
   orgParams: Object,
-  // 用户列表查询参数
+  // 用户列表查询参数, 如：userId, userName, isEnabled, phonenumber, ids, roleKey, deptId
   userParams: Object,
   // 选择框提示
   placeholder: { type: String, default: '请选择用户' },
@@ -97,9 +98,7 @@ const props = defineProps({
   // 默认展开所有树节点
   expandAll: { type: Boolean, default: true },
   // 展示文本时，用于拼接多个名称的拼接符
-  joinChar: { type: String, default: ',' },
-  // 不可删除！为了从 $attrs 中剔除 onChange，避免 field.props 的 onChange 监听到 a-select 的 change 事件而冲突
-  onChange: { type: Function }
+  joinChar: { type: String, default: ',' }
 })
 
 const cModal = ref()
@@ -137,19 +136,21 @@ watch(
 )
 
 /** 打开弹窗 */
-function open (_options) {
+async function open (_options) {
   selector.value.blur()
   if (props.disabled) return
-  if (needRefresh.value) {
-    cPage.value.refresh()
-    needRefresh.value = false
-  }
   options.value = _options
   if (_options) {
     setData(_options?.value)
   }
   cModal.value.open({
     onConfirm
+  })
+  nextTick(() => {
+    if (needRefresh.value) {
+      cPage.value?.refresh()
+      needRefresh.value = false
+    }
   })
 }
 
@@ -161,19 +162,17 @@ function close () {
 /** 给控件设置值 */
 async function setData (val) {
   // 预先加载用户信息，解决回显问题
-  let ids = val ?? []
+  let ids = val || []
   if (val && typeof val === 'string') {
     ids = val.split(',')
   } else if (typeof val === 'number') {
     ids = [val]
   }
-  ids = ids.map(id => Number(id))
+  ids = ids.map(id => String(id))
   if (!isEmpty(ids) && selectUsers.value.length === 0) {
     const result = await axios.post('/system/user/selectUser?from=initUserSelect', {
-      page: {
-        pageNum: 1,
-        pageSize: 9999
-      },
+      pageNum: 1,
+      pageSize: 9999,
       ids
     })
     selectUsers.value = result.list
@@ -190,7 +189,7 @@ async function setData (val) {
 /** 以下为用户列表页相关配置 */
 const treeConfig = {
   url: '/system/user/deptTree',
-  params: props.orgParams,
+  params: { isEnabled: true, ...props.orgParams }, // deptId, parentId, isEnabled, deptName
   replaceField: { key: 'id', children: 'children', title: 'label' },
   searchField: 'deptId'
 }
@@ -207,14 +206,15 @@ const filterConfig = {
     },
     {
       label: '角色',
-      fieldName: 'roleId',
+      fieldName: 'roleKey',
       type: EControlType.eSelect,
+      defaultValue: props.userParams?.roleKey,
       props: {
         allowClear: true,
         remote: {
-          url: '/system/role/list',
-          converter (res) {
-            return res.list?.map(item => ({ id: item.roleId, name: item.roleName }))
+          url: '/system/role/select',
+          converter (list) {
+            return list?.map(item => ({ id: item.roleKey, name: item.roleName }))
           }
         }
       }

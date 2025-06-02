@@ -1,9 +1,9 @@
 <!--
   文件上传组件
-  用法：<file-upload v-model:value="form.files" accept=".zip" :file-size="20" :max-count="1" />
-  v-model 数据类型取决于 form.files 类型
-  form.files 为数组，组件则使用数组
-  form.files 为字符串或 undefined，则组件使用逗号分隔字符串
+  用法：<file-upload v-model:value="form.files" valueType="Array" accept=".zip" :file-size="20" :max-count="1" />
+  form.files 有两种类型
+  valueType === 'Array', 则 form.files 为文件数组
+  valueType === 'String', 则 form.files 为文件地址逗号分隔字符串
 -->
 <template>
   <div class="file-upload">
@@ -27,10 +27,11 @@
 </template>
 
 <script setup>
-import { UploadOutlined } from '@ant-design/icons-vue'
+import { UploadOutlined} from '@ant-design/icons-vue'
 import { useAuthStore } from '@/stores/auth-store.js'
 import { byteFormat, getFullUrl } from '@/utils/index.js'
 import { Upload } from 'ant-design-vue'
+// import axios from '@/api/index.js'
 
 /**
  * 其他属性：
@@ -41,8 +42,10 @@ import { Upload } from 'ant-design-vue'
  * name: {string} 定义文件上传字段名，默认 file
  */
 const props = defineProps({
-  // 文件对象数组或文件地址逗号分隔字符串，[file1, file] 或 'file1Url,file2Url', 默认 ''
+  // 文件对象数组或文件地址逗号分隔字符串，[file1, file2] 或 'file1Url,file2Url'
   value: [Array, String],
+  /** value 数据类型, Array | String */
+  valueType: { type: String, default: 'String' },
   // 最大上传文件数
   maxCount: {
     type: Number,
@@ -51,7 +54,7 @@ const props = defineProps({
   // 文件大小限制(KB)
   fileSize: {
     type: Number,
-    default: 1024 * 5
+    default: 1024 * 100
   },
   accept: {
     type: String,
@@ -79,27 +82,39 @@ const fileList = ref([])
 // 文件大小限制格式化字符串
 const maxFileSize = computed(() => byteFormat(props.fileSize << 10))
 
-watchEffect(() => {
-  if (props.value) {
-    if (Array.isArray(props.value)) {
-      fileList.value = props.value
-    } else {
-      let i = 0
-      fileList.value = props.value.split(',').map(path => {
-        i++
-        return {
-          uid: Date.now() + i,
-          name: path.match(/.*\/([^/]+\.\w+)/)?.[1] || path,
-          status: 'done',
-          url: getFullUrl(path),
-          path
-        }
-      })
+watch(
+  () => props.value,  
+  (newVal) => {
+    setValue(newVal)
+  },
+  { immediate: true, deep: true }
+)
+
+async function setValue (value) {
+  await nextTick()
+  if (props.valueType === 'Array') {
+    fileList.value = value ?? []
+  } else if (props.valueType === 'String') {
+    if (!value) {
+      fileList.value = []
+      return
     }
+    let i = 0
+    fileList.value = value?.split(',')?.filter(Boolean)?.map(path => {
+      i++
+      return {
+        uid: Date.now() + i,
+        name: path.match(/.*\/([^/]+\.\w+)/)?.[1] || path,
+        status: 'done',
+        url: getFullUrl(path),
+        path
+      }
+    }) ?? []
   } else {
-    fileList.value = []
+    console.error('FileUpload 属性 valueType 必须是["Array", "String"]之一')
   }
-})
+}
+
 /**
  * 上传文件前的钩子，返回 false 可阻止上传
  * @param {Object} file 要上传的文件
@@ -118,14 +133,17 @@ function beforeUploadHandle (file, files) {
  * file.status: error|uploading|done|removed
  */
 function onChangeHandle ({ file, fileList: files, event }) {
-  console.log('文件上传状态：', file.status)
-  if (file.status === 'done') {
-    const path = file.response?.data?.path // TODO 视接口返回而定
-    const currFile = files.find(item => item.uid === file.uid)
-    if (currFile) {
-      currFile.path = path
-      currFile.url = getFullUrl(path)
+  // console.log('文件上传状态：', file.status)
+  if (file.status === 'done' && file.response) {
+    const path = file.response?.data?.path
+    file.path = path
+    file.url = getFullUrl(path)
+    delete file.response
+    if (files.every(f => f.url)) {
+      emitChange()
     }
+  } else if (file.status === 'removed') {
+    // axios.post('/oss/delete', { path: file.path })
     emitChange()
   }
 }
@@ -133,10 +151,18 @@ function onChangeHandle ({ file, fileList: files, event }) {
 const emit = defineEmits(['update:value', 'update:fileList'])
 /** 提交改变 */
 function emitChange () {
-  if (Array.isArray(props.value)) {
-    emit('update:value', fileList.value)
+  if (props.valueType === 'Array') {
+    emit('update:value', fileList.value?.map(file => ({
+      name: file.name,
+      path: file.path,
+      type: file.type,
+      size: file.size,
+      uid: file.uid,
+      url: file.url,
+      status: file.status
+    })))
   } else {
-    emit('update:value', fileList.value.map(file => file.url).join(','))
+    emit('update:value', fileList.value.map(file => file.path).join(','))
   }
   emit('update:fileList', fileList.value)
 }
