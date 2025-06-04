@@ -656,6 +656,7 @@ const modalConfig = computed(() => ({
         labelCol: { span: 3 },
         wrapperCol: { span: 21 },
         singleLine: true,
+        // disabled: true,
         // required: true, // 无效配置，请配置在 props.columns 的每一项里
         // rules: {}, // 无效配置，请配置在 props.columns 的每一项里
         // 动态表格的校验规则，全部配置在 columns 内，只要有一个 column 的 required 为 true，则表示该项为必填项

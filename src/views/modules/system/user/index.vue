@@ -28,7 +28,7 @@ const treeConfig = {
 }
 
 const filterConfig = {
-  useCache: true,
+  useCache: false,
   fields: [
     {
       label: '用户',
