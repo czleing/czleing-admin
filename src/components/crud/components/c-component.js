@@ -159,7 +159,7 @@ export default defineComponent({
       dataSource: this.dataSource
     })
     const vNode = renderByField(this.field)
-    if (this.triggerRemote && this.field.props?.useRefresh !== false) {
+    if (this.triggerRemote && this.field.props?.useRefresh !== false && !this.isView) {
       // 给有动态数据源的组件，添加刷新功能
       return h(resolveComponent('a-input-group'), { compact: true, class: 'nowrap' }, {
         default: () => [

@@ -140,6 +140,7 @@ const modalConfig = computed(() => ({
         labelCol: { span: 3 },
         wrapperCol: { span: 21 },
         props: {
+          useRefresh: false,
           style: { maxHeight: '400px', overflow: 'auto', border: 'solid 1px rgba(128, 128, 128, .2)', padding: '6px', borderRadius: '6px' },
           component: 'a-tree',
           checkable: true,

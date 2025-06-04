@@ -12,9 +12,11 @@ function getI18nConfig () {
     const key = item[0].match(/^.*\/([^\/]*)\.js$/)[1]
     messages[key] = item[1].default
   })
+  const USER_SETTINGS = localStorage.getItem('USER_SETTINGS')
+  const settings = USER_SETTINGS && JSON.parse(USER_SETTINGS)
   return {
     legacy: false,
-    locale: 'zh-cn', // 默认语言
+    locale: settings?.locale || 'zh-cn', // 默认语言
     fallbackLocale: 'en', // 回退语言
     messages
   }

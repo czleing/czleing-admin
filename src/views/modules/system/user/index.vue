@@ -218,6 +218,7 @@ const modalConfig = computed(() => ({
         fieldName: 'sex',
         type: EControlType.eRadio,
         props: {
+          useRefresh: false,
           dictType: 'sys_user_sex'
         }
       },
