@@ -1,0 +1,53 @@
+/**
+ * 英文
+ */
+export default {
+  frame: {
+    themeSetting: 'Theme Settings',
+    setting: 'Settings',
+    theme: 'Theme',
+    selectTheme: 'Select Theme',
+    componentSize: 'Component Size',
+    small: 'Small',
+    middle: 'Medium',
+    large: 'Large',
+    dark: 'Dark Mode',
+    radiusLayout: 'Rounded Layout',
+    lang: 'Language',
+    selectLang: 'Select Language',
+    other: 'Other',
+    showWeather: 'Show Weather',
+    personalCenter: 'Personal Center',
+    logout: 'Log Out',
+    notLogin: 'Not Logged In',
+    fullscreen: 'Fullscreen',
+    exitFullscreen: 'Exit Fullscreen',
+    closeLeft: 'Close Left',
+    closeRight: 'Close Right',
+    closeOther: 'Close Others',
+  },
+  // crud
+  crud: {
+    add: 'Add',
+    batchDelete: 'Batch Delete',
+    export: 'Export',
+    back: 'Back',
+    search: 'Search',
+    reset: 'Reset',
+    rememberSearch: 'Remember Search',
+    notLog: 'No History',
+    pleaseEnterRemark: 'Please enter remarks',
+    pleaseEnterSearchParams: 'Please fill in search criteria first',
+    submit: 'Submit',
+    cancel: 'Cancel',
+    notNull: '{label} cannot be empty',
+    someRowNotNull: 'Row [{rowNum}][{label}] cannot be empty',
+    clickToDownload: 'Click to download',
+    importTemplate: 'Import Template',
+    dragFileToUpload: 'Drag file here or click to upload',
+    pleaseUploadExcel: 'Please upload .xls, .xlsx files',
+    sameDataIsReplace: 'Overwrite duplicate records?',
+    import: 'Import',
+    importSuccess: 'Import successful',
+  }
+}

@@ -20,11 +20,11 @@
         <a-col :span="config.useCache && fields?.length > 0 ? 6 : 4">
           <a-form-item>
             <a-space>
-              <a-button type="primary" :loading="loading" :disabled="loading" :icon="h(SearchOutlined)" html-type="submit">查询</a-button>
-              <a-button v-if="fields?.length > 0" :icon="h(UndoOutlined)" @click="onResetHandle">重置</a-button>
+              <a-button type="primary" :loading="loading" :disabled="loading" :icon="h(SearchOutlined)" html-type="submit">{{ $t('crud.search') }}</a-button>
+              <a-button v-if="fields?.length > 0" :icon="h(UndoOutlined)" @click="onResetHandle">{{ $t('crud.reset') }}</a-button>
               <!-- 记住查询 及 历史查询 -->
               <a-dropdown-button v-if="config.useCache && fields?.length > 0" placement="bottomLeft" @click="onRememberHandle">
-                {{ config.cacheBtnText || '记住查询' }}
+                {{ config.cacheBtnText || $t('crud.rememberSearch') }}
                 <template #overlay>
                   <a-menu>
                     <a-menu-item
@@ -38,7 +38,7 @@
                       </div>
                     </a-menu-item>
                     <a-menu-item v-if="!cacheList || cacheList.length === 0">
-                      <span class="text-gray">暂无历史记录</span>
+                      <span class="text-gray">{{ $t('crud.notLog') }}</span>
                     </a-menu-item>
                   </a-menu>
                 </template>
@@ -51,8 +51,8 @@
         </a-col>
       </a-row>
     </a-form>
-    <CModal ref="cacheNameModal" title="请输入备注" width="300">
-      <a-input v-model:value="cacheName" placeholder="请输入备注名" :maxlength="15" />
+    <CModal ref="cacheNameModal" :title="$t('crud.pleaseEnterRemark')" width="300">
+      <a-input v-model:value="cacheName" :placeholder="$t('crud.pleaseEnterRemark')" :maxlength="15" />
     </CModal>
   </div>
 </template>
@@ -72,6 +72,7 @@ const props = defineProps({
     default: () => ({})
   }
 })
+const { t } = useI18n()
 const colSize = { sm: 8, lg: 6, xxl: 4 }
 const { labelCol, wrapperCol, fields } = props.config
 const currFields = computed(() => {
@@ -146,7 +147,7 @@ const cacheNameModal = ref()
 const cacheName = ref('')
 function onRememberHandle () {
   if (noCondition.value) {
-    message.warning('请先填写查询条件')
+    message.warning(t('crud.pleaseEnterSearchParams'))
     return
   }
   cacheName.value = ''
@@ -156,7 +157,7 @@ function onRememberHandle () {
         setCondition(toRaw(formData), cacheName.value)
         close()
       } else {
-        message.error('请输入备注名')
+        message.error(t('crud.pleaseEnterRemark'))
       }
     }
   })

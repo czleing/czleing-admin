@@ -62,9 +62,9 @@ export const useSettingStore = defineStore('setting', {
     theme: { token: { ...themes.find(item => item.inUse)?.theme?.token } }, // 当前主题色系
     themeName: themes.find(item => item.inUse)?.name, // 当前主题名称
     mode: 'light', // 昼夜模式 light or dark
-    locale: 'zh', // 当前语言 zh or en
+    locale: 'zh-cn', // 当前语言 zh-cn, zh-hk, en
     componentSize: 'middle', // 当前组件尺寸
-    useRadius: true, // 是否使用圆角布局
+    useRadius: false, // 是否使用圆润布局
     useWeather: false // 是否使用天气组件
   }),
   actions: {
@@ -85,6 +85,9 @@ export const useSettingStore = defineStore('setting', {
     },
     toggleMode () {
       this.mode = this.isDark ? 'light' : 'dark'
+    },
+    setLocale (lang) {
+      this.locale = lang
     }
   },
   getters: {
@@ -93,6 +96,14 @@ export const useSettingStore = defineStore('setting', {
     },
     themes () {
       return themes
+    },
+    langOptions () {
+      const langFiles = import.meta.glob('@/locales/langs/*.js', { eager: true })
+      const options = []
+      Object.entries(langFiles).forEach(item => {
+        options.push(item[1].option)
+      })
+      return options
     }
   },
   persist: {

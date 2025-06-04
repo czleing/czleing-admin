@@ -1,16 +1,36 @@
 <script setup>
 import { theme } from 'ant-design-vue'
 import zhCN from 'ant-design-vue/es/locale/zh_CN'
+import zhHK from 'ant-design-vue/es/locale/zh_HK'
 import enUs from 'ant-design-vue/es/locale/en_US'
 import { useSettingStore } from '@/stores/setting-store.js'
 import { useCheckUpdate } from './hooks/useCheckUpdate'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import 'dayjs/locale/zh-cn'
+import 'dayjs/locale/zh-hk'
+import 'dayjs/locale/en'
+dayjs.extend(relativeTime)
+dayjs.locale('zh-cn')
 
-const localeMap = {
-  en: enUs,
-  zh: zhCN
-}
 const settingStore = useSettingStore()
+
+// dayjs 语言动态切换
+watch(
+  () => settingStore.locale,
+  () => {
+    dayjs.locale(settingStore.locale)
+  }
+)
+
+/** ant-design-vue 语言动态切换的 mapping */
+const localeMap = {
+  'en': enUs,
+  'zh-cn': zhCN,
+  'zh-hk': zhHK
+}
 const locale = computed(() => localeMap[settingStore.locale] ?? zhCN)
+// 动态主题
 const currTheme = computed(() => {
   return {
     ...settingStore.theme,

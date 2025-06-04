@@ -2,12 +2,12 @@
 <template>
   <div class="c-import">
     <slot>
-      <a-button v-if="showBtn" type="dashed" :icon="h(ImportOutlined)" @click="onImportHandle">{{ btnText }}</a-button>
+      <a-button v-if="showBtn" type="dashed" :icon="h(ImportOutlined)" @click="onImportHandle">{{ btnText || $t('crud.import') }}</a-button>
     </slot>
     <CModal ref="cModal" width="450" :confirm-disabled="uploadDisabled" @close="beforeCloseHandle">
       <div class="mb">
-        点击此处下载
-        <a href="javascript:;" @click="downloadTemplate">导入模板</a>
+        {{ $t('crud.clickToDownload') }}
+        <a href="javascript:;" @click="downloadTemplate">{{ $t('crud.importTemplate') }}</a>
       </div>
       <a-upload-dragger
         accept=".xls,.xlsx"
@@ -20,14 +20,14 @@
           <p class="ant-upload-drag-icon">
             <InboxOutlined />
           </p>
-          <p class="ant-upload-text">将文件拖到此处，或点击上传</p>
+          <p class="ant-upload-text">{{ $t('crud.dragFileToUpload') }}</p>
           <p class="ant-upload-hint">
-            请上传 .xls, .xlsx 文件
+            {{ $t('crud.pleaseUploadExcel') }}
           </p>
         </div>
       </a-upload-dragger>
       <div v-if="showReplace" class="mt">
-        重复记录是否覆盖更新：<a-switch v-model:checked="isReplace" />
+        {{ $t('crud.sameDataIsReplace') }}：<a-switch v-model:checked="isReplace" />
       </div>
     </CModal>
   </div>
@@ -45,15 +45,16 @@ const props = defineProps({
   // 模板下载地址
   templateUrl: { type: String },
   // 弹出层标题
-  title: { type: String, default: '导入' },
+  title: { type: String },
   // 是否显示覆盖更新控制按钮
   showReplace: { type: Boolean, default: true },
   // 是否显示导入按钮
   showBtn: { type: Boolean, default: true },
   // 导入按钮文字
-  btnText: { type: String, default: '导入' }
+  btnText: { type: String }
 })
 
+const { t } = useI18n()
 const cModal = ref()
 const isReplace = ref(false)
 const fileList = ref([])
@@ -62,7 +63,7 @@ const uploadDisabled = computed(() => fileList.value.length === 0 || uploading.v
 
 const currUrl = ref(props.url)
 const currTemplateUrl = ref(props.templateUrl)
-const currTitle = ref(props.title)
+const currTitle = ref(props.title || t('crud.import'))
 
 /** 通过 API 方式调用弹出导入窗，并设置相关属性 */
 function open (option = {}) {
@@ -104,7 +105,7 @@ function upload (close) {
     beforeCloseHandle()
     close()
     emits('success')
-  }, '导入成功')
+  }, t('crud.importSuccess'))
 }
 function beforeCloseHandle () {
   fileList.value = []

@@ -66,6 +66,10 @@ watch(
     currConfirmText.value = val
   }
 )
+watch(
+  () => props.title,
+  (t) => currTitle.value = t
+)
 
 /**
  * 弹出

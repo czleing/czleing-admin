@@ -13,19 +13,19 @@
           <a-menu-item @click="toPersonalCenter">
             <span>
               <UserOutlined />
-              个人中心
+              {{ $t('frame.personalCenter') }}
             </span>
           </a-menu-item>
           <a-menu-item @click="authStore.logout">
             <span>
               <LogoutOutlined />
-              退出系统
+              {{ $t('frame.logout') }}
             </span>
           </a-menu-item>
         </a-menu>
       </template>
     </a-dropdown>
-    <span v-else class="username" @click="toLogin">未登录</span>
+    <span v-else class="username" @click="toLogin">{{ $t('frame.notLogin') }}</span>
   </div>
 </template>
 

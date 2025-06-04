@@ -1,14 +1,13 @@
 <template>
   <div class="header-setting">
-    <a-tooltip placement="top" title="主题设置">
-      <SkinOutlined style="font-size: 18px;" @click="openSetting" />
+    <a-tooltip placement="top" :title="$t('frame.themeSetting')">
+      <SettingOutlined style="font-size: 18px;" @click="openSetting" />
     </a-tooltip>
   </div>
-  <CModal ref="settingModal" title="设置" width="450" mode="drawer" :footer="null">
-    <!-- <a-divider>主题</a-divider> -->
-    <h4 class="pb10 text-gray2">主题</h4>
+  <CModal ref="settingModal" :title="$t('frame.setting')" width="450" mode="drawer" :footer="null">
+    <h4 class="pb10 text-gray2">{{ $t('frame.theme') }}</h4>
     <a-space class="flex-x">
-      <span>选择主题：</span>
+      <span>{{ $t('frame.selectTheme') }}：</span>
       <a-select v-model:value="settingStore.themeName" style="width: 150px;" @change="handleChange">
         <a-select-option
           v-for="(item, index) in settingStore.themes"
@@ -30,44 +29,40 @@
       </a-tooltip>
     </a-space>
     <a-space class="flex-x mt20">
-      <span>组件大小：</span>
+      <span>{{ $t('frame.componentSize') }}：</span>
       <a-select v-model:value="settingStore.componentSize" style="width: 150px;">
-        <a-select-option value="small">小</a-select-option>
-        <a-select-option value="middle">中</a-select-option>
-        <a-select-option value="large">大</a-select-option>
+        <a-select-option value="small">{{ $t('frame.small') }}</a-select-option>
+        <a-select-option value="middle">{{ $t('frame.middle') }}</a-select-option>
+        <a-select-option value="large">{{ $t('frame.large') }}</a-select-option>
       </a-select>
     </a-space>
     <a-space class="flex-x mt20">
-      <span>暗色模式：</span>
+      <span>{{ $t('frame.dark') }}：</span>
       <a-switch v-model:checked="isDark" checked-children="Dark" un-checked-children="Light" @change="changeMode"></a-switch>
     </a-space>
     <a-space class="flex-x mt20">
-      <span>圆润布局：</span>
+      <span>{{ $t('frame.radiusLayout') }}：</span>
       <a-switch v-model:checked="settingStore.useRadius" />
     </a-space>
-    <!-- <a-divider>语言</a-divider> -->
-    <h4 class="mt20 text-gray2">语言</h4>
+    <h4 class="mt20 text-gray2">{{ $t('frame.lang') }}</h4>
     <a-space class="flex-x mt20">
-      <span>选择语言：</span>
+      <span>{{ $t('frame.selectLang') }}：</span>
       <a-select v-model:value="settingStore.locale" style="width: 150px;" @change="handleLocalChange">
-        <a-select-option value="zh">
+        <a-select-option
+          v-for="lang in settingStore.langOptions"
+          :key="lang.value"
+          :value="lang.value"
+        >
           <div class="flex-x x-middle">
-            <img src="@/assets/images/locale/zh.png" class="radius3" style="height: 16px;" >
-            <span class="ml8">中文</span>
-          </div>
-        </a-select-option>
-        <a-select-option value="en">
-          <div class="flex-x x-middle">
-            <img src="@/assets/images/locale/en.png" class="radius3" style="height: 16px;" >
-            <span class="ml8">English</span>
+            <img v-if="lang.image" :src="lang.image" class="radius3" style="height: 16px;" >
+            <span class="ml8">{{ lang.label }}</span>
           </div>
         </a-select-option>
       </a-select>
     </a-space>
-    <!-- <a-divider>其他</a-divider> -->
-    <h4 class="mt20 text-gray2">其他</h4>
+    <h4 class="mt20 text-gray2">{{ $t('frame.other') }}</h4>
     <a-space class="flex-x mt20">
-      <span>展示天气：</span>
+      <span>{{ $t('frame.showWeather') }}：</span>
       <a-switch v-model:checked="settingStore.useWeather" />
     </a-space>
   </CModal>
@@ -75,12 +70,13 @@
 
 <script setup>
 import { useSettingStore } from '@/stores/setting-store.js'
-import { SkinOutlined } from '@ant-design/icons-vue'
+import { SettingOutlined } from '@ant-design/icons-vue'
 
 const settingStore = useSettingStore()
 const settingModal = ref()
 const isDark = ref(settingStore.isDark)
 const currColors = computed(() => Object.entries(settingStore.theme?.token))
+const { locale } = useI18n()
 
 function changeMode (val) {
   setTimeout(settingStore.toggleMode, 200)
@@ -95,8 +91,9 @@ const closeSetting = () => {
 const handleChange = name => {
   settingStore.setThemeByName(name)
 }
-const handleLocalChange = locale => {
-  settingStore.locale = locale
+const handleLocalChange = lc => {
+  settingStore.setLocale(lc)
+  locale.value = lc
 }
 </script>
 

@@ -29,15 +29,15 @@
         <a-menu>
           <a-menu-item @click="tabsStore.clearLeftTabs()">
             <LeftCircleTwoTone slot='icon' :twoToneColor="token.colorPrimary" />
-            <span class="ml6">关闭左侧</span>
+            <span class="ml6">{{ $t('frame.closeLeft') }}</span>
           </a-menu-item>
           <a-menu-item @click="tabsStore.clearRightTabs()">
             <RightCircleTwoTone slot='icon' :twoToneColor="token.colorPrimary" />
-            <span class="ml6">关闭右侧</span>
+            <span class="ml6">{{ $t('frame.closeRight') }}</span>
           </a-menu-item>
           <a-menu-item @click="tabsStore.clearOtherTabs()">
             <CloseCircleTwoTone slot='icon' :twoToneColor="token.colorPrimary" />
-            <span class="ml6">关闭其他</span>
+            <span class="ml6">{{ $t('frame.closeOther') }}</span>
           </a-menu-item>
         </a-menu>
       </template>

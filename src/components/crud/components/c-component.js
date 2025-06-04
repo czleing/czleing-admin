@@ -5,6 +5,7 @@ import { isEmpty } from '@/utils/index'
 import { useDictStore } from '@/stores/dict-store.js'
 import { SyncOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
+import { h } from 'vue'
 
 /**
  * 根据 field 配置渲染组件
@@ -32,7 +33,7 @@ export default defineComponent({
     const dictStore = useDictStore()
     const formData = inject('c-form.formData', {})
     const formRemotes = inject('c-form.formRemotes', {})
-    const triggerRemote = null // 触发获取远程数据源的方法，刷新远程数据
+    let triggerRemote = null // 触发获取远程数据源的方法，刷新远程数据
     const modalVisible = inject('modal.visible', false)
     const remote = props.field.props?.remote
     let remoteParams = {}
@@ -150,7 +151,7 @@ export default defineComponent({
     // 返回
     return { dataSource, getDataSource, triggerRemote }
   },
-  render (h) { // 组件的数据改变会触发重新渲染
+  render () { // 组件的数据改变会触发重新渲染
     const { renderByField } = useRender({
       ctx: this,
       isView: this.isView,

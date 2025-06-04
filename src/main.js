@@ -7,25 +7,15 @@ import 'ant-design-vue/dist/reset.css'
 import '@/assets/css/index.less'
 import components from '@/components/index'
 import piniaPersist from 'pinia-plugin-persist'
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
-import 'dayjs/locale/zh-cn'
-
-dayjs.extend(relativeTime)
-dayjs.locale('zh-cn')
+import i18n from '@/locales/index'
 
 const app = createApp(App)
 const pinia = createPinia()
 pinia.use(piniaPersist)
 
-app.use(router).use(pinia).use(directives).use(AntDesignVue).use(components)
+app.use(router).use(pinia).use(directives).use(AntDesignVue).use(components).use(i18n)
 app.mount('#app')
 
 app.config.errorHandler = (err, vm, info) => {
-  console.log('[全局异常]', err, vm, info)
+  console.error('[全局异常]', err, vm, info)
 }
-
-// 定义全局属性
-// app.config.globalProperties.$axios = axios
-// 获取
-// const { $axios } = getCurrentInstance().appContext.config.globalProperties

@@ -40,8 +40,8 @@
     </a-form>
     <!-- 提交按钮，单独使用表单组件时使用 -->
     <div v-if="$attrs.footer !== null && (showConfirm || showCancel)" class="mt20" :class="alignClass">
-      <a-button v-if="showCancel" type="default" :disabled="loading" @click="cancel">{{ cancelText }}</a-button>
-      <a-button v-if="showConfirm" type="primary" :loading="loading" @click="submit">{{ confirmText }}</a-button>
+      <a-button v-if="showCancel" type="default" :disabled="loading" @click="cancel">{{ cancelText || $t('crud.cancel') }}</a-button>
+      <a-button v-if="showConfirm" type="primary" :loading="loading" @click="submit">{{ confirmText || $t('crud.submit') }}</a-button>
     </div>
   </div>
 </template>
@@ -62,15 +62,16 @@ const props = defineProps({
   onSubmitHandle: Function, // 校验通过之后，对提交的数据进行处理，如请求接口将数据提交到服务器、提交成功提示、刷新列表
   // 以下为自定义提交、取消按钮属性
   showConfirm: { type: Boolean, default: true },
-  confirmText: { type: String, default: '提交' },
+  confirmText: { type: String },
   confirmContinue: { type: [Boolean, Function], default: false },
   showCancel: { type: Boolean, default: true },
-  cancelText: { type: String, default: '取消' },
+  cancelText: { type: String },
   confirmAlign: { type: String, default: 'right' }, // 提交、取消按钮对齐方式，left，center，right
   autoReset: { type: Boolean, default: true }, // 提交之后自动清空表单
   autoClose: { type: Boolean, default: true } // 提交之后自动关闭弹窗(如果有)
 })
 
+const { t } = useI18n()
 const inputForm = ref()
 // const inModal = inject('modal.in', false)
 const closeModal = inject('modal.close', null)
@@ -274,7 +275,7 @@ function setTableRules (field) {
 
   field.rules = []
   if (isRequired) {
-    field.rules.push({ type: 'array', required: true, message: field.label + '不能为空' })
+    field.rules.push({ type: 'array', required: true, message: t('crud.notNull', { label: field.label }) })
   }
   if (hasValidator) {
     field.rules.push({
@@ -285,7 +286,7 @@ function setTableRules (field) {
             for (let c in columns) {
               const column = columns[c]
               if (column.required && isEmpty(obj[column.dataIndex])) {
-                return Promise.reject(`第[${ Number(i) + 1 }]行[${ column.title }]不能为空`)
+                return Promise.reject(t('crud.someRowNotNull', { rowNum: Number(i) + 1, label: column.title }))
               } else if (typeof column.validate === 'function') {
                 const message = column.validate(Number(i), obj[column.dataIndex], obj)
                 if (message) {
