@@ -18,8 +18,8 @@ export default defineConfig(({ command, mode }) => {
       vue(),
       AutoImport({
         imports: ['vue', 'vue-router', 'vue-i18n'],
-        // dirs: ['src/utils/index.js', 'src/enum'], // 将自定义的API也加入到自动导入
-        // dts: 'src/utils/auto-import.d.ts', // 生成类型声明文件，项目使用了 TypeScript 才需要配置该项
+        dirs: ['src/utils/index.js', 'src/enum', 'src/api/index.js'], // 将自定义的API也加入到自动导入
+        dts: 'src/plugins/auto-import.d.ts', // 生成类型声明文件
         // eslintrc: { // 如果使用了 eslint，可以开启这个配置
         //   enabled: true,
         //   filepath: 'src/utils/.eslintrc-auto-import.json',

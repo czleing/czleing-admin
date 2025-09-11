@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "checkJs": false,      // 启用 JS 类型检查
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]    // 别名配置（按需调整）
+    }
+  },
+  "include": ["src/**/*"] // 包含的文件范围
+}
