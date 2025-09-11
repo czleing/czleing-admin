@@ -212,6 +212,7 @@ function formItemProps (field) {
 /** 重置表单 */
 function reset () {
   inputForm.value.resetFields()
+  Object.keys(formData)?.forEach(key => formData[key] = undefined)
   const resetDatas = (fields) => {
     fields.forEach(field => {
       if (isFieldGroup(field)) {

@@ -45,9 +45,9 @@ instance.interceptors.response.use((response) => {
     } else if (data?.code === 200) {
       // 响应数据是有效的 JSON 格式，继续处理
       let result = data
-      if (data.list || data.rows) { // 分页列表的情况，返回分页对象
+      if (data.list !== undefined) { // 分页列表的情况，返回分页对象
         result = data
-      } else if (data.data) { // 单个对象的情况，返回对象
+      } else if (data.data !== undefined) { // 单个对象的情况，返回对象
         result = data.data
       }
       return Promise.resolve(result)
@@ -186,3 +186,5 @@ const axiosService = new AxiosService()
 
 // 导出实例化后的 AxiosService 对象
 export default axiosService
+
+export const $axios = axiosService

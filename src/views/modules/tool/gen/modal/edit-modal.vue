@@ -511,7 +511,7 @@ async function beforeConfirm (close) {
   const result = await axios.post('/tool/gen/update', genTable, {
     headers: { datasource: props.datasource }
   })
-  _this.$message.success(result.msg)
+  _this.$message.success('编辑成功')
   let cacheUiPaths = localStorage.getItem('genUiPathList')
   cacheUiPaths = cacheUiPaths ? JSON.parse(cacheUiPaths) : []
   cacheUiPaths.push({
@@ -522,9 +522,7 @@ async function beforeConfirm (close) {
     cacheUiPaths.splice(0, 1)
   }
   localStorage.setItem('genUiPathList', JSON.stringify(cacheUiPaths))
-  if (result.code === 200) {
-    close()
-  }
+  close()
 }
 
 const emits = defineEmits(['completed'])
