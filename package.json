@@ -8,8 +8,9 @@
     "pnpm": ">=9.2"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "vite --mode dev",
+    "build": "vite build --mode prod",
+    "build:test": "vite build --mode test",
     "preview": "vite preview"
   },
   "dependencies": {
