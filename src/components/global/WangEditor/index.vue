@@ -2,16 +2,16 @@
 <!-- https://www.wangeditor.com/v5/getting-started.html -->
 <!-- 需要安装依赖： @wangeditor/editor, @wangeditor/editor-for-vue@next -->
 <template>
-  <div style="border: 1px solid #ccc;">
+  <div class="editor-container">
     <Toolbar
-      style="border-bottom: 1px solid #ccc"
+      class="editor-container__toolbar"
       :editor="editor"
       :defaultConfig="toolbarConfig"
       :mode="mode"
       :disabled="disabled"
     />
     <Editor
-      style="height: 500px; overflow-y: hidden;"
+      class="editor-container__editor"
       v-model="editorContent"
       :defaultConfig="editorConfig"
       :mode="mode"
@@ -29,7 +29,9 @@ import { useAuthStore } from '@/stores/auth-store'
 
 const props = defineProps({
   value: String,
-  disabled: Boolean
+  disabled: Boolean,
+  // 高度，'500px' 或 '50vh'
+  height: { type: String, default: '500px' }
 })
 const mode = 'default'
 const editor = shallowRef()
@@ -46,14 +48,14 @@ const editorConfig = {
   MENU_CONF: {
     // 上传图片配置
     uploadImage: {
-      server: process.env.VUE_APP_BASE_API + '/oss/upload',
+      server: import.meta.env.VUE_APP_BASE_API + '/oss/upload',
       headers: {
         Authorization: "Bearer " + token,
       },
       fieldName: 'file',
       // 由于后端返回的结构与默认的不一致，需要自定义插入图片
       customInsert (res, insertFn) {
-        insertFn(process.env.VUE_APP_RESOURCE_API + res.data.path, '图片')
+        insertFn(import.meta.env.VUE_APP_RESOURCE_API + res.data.path, '图片')
       }
     },
     // 行高配置
@@ -88,5 +90,34 @@ const emits = defineEmits(['update:value', 'change'])
 
 </script>
 
+<style scoped lang="less">
+.editor-container {
+  border: 1px solid var(--ant-colorBorder);
+  border-radius: var(--ant-borderRadius);
+  z-index: 1;
+  overflow: hidden;
+  &__toolbar {
+    border-bottom: 1px solid var(--ant-colorBorder);
+  }
+  &__editor {
+    height: v-bind(height) !important;
+    overflow-y: hidden;
+  }
+}
+</style>
 <style>
+body[theme='dark'] {
+  --w-e-toolbar-color: #e0e0e0;
+  --w-e-toolbar-bg-color: #1f1f1f;
+  --w-e-textarea-bg-color: #141414;
+  --w-e-textarea-color: #e0e0e0;
+  --w-e-textarea-border-color: #434343;
+  --w-e-textarea-slight-border-color: #434343;
+  --w-e-textarea-slight-color: #595959;
+  --w-e-textarea-slight-bg-color: #262626;
+  --w-e-textarea-selected-border-color: #177ddc;
+  --w-e-textarea-handler-bg-color: #177ddc;
+  --w-e-toolbar-active-bg-color: #111b26;
+  --w-e-toolbar-active-color: #177ddc;
+}
 </style>
