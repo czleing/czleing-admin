@@ -15,8 +15,10 @@ init(EUserType)
  */
 export const EControlType = {
   eInput: Enum('a-input', '文本框', { htmlType: 'eInput', defaultProps: { maxlength: 50 } }),
+  eHidden: Enum('a-hidden', '隐藏域', { htmlType: 'eHidden' }),
   eAutoComplete: Enum('a-auto-complete', '自动补全文本框', { htmlType: 'eAutoComplete', defaultProps: { dropdownMatchSelectWidth: false } }),
   eNumber: Enum('a-input-number', '数字框', { htmlType: 'eNumber', defaultProps: { style: 'width: 100%;' } }),
+  eNumberRange: Enum('a-input-number-range', '数字范围框', { htmlType: 'eNumberRange', defaultProps: { style: 'width: 100%;' } }),
   eTextarea: Enum('a-textarea', '文本域', { htmlType: 'eTextarea', defaultProps: { maxlength: 200, showCount: true, rows: 4 } }),
   eRadio: Enum('a-radio-group', '单选框', { htmlType: 'eRadio' }),
   eCheckbox: Enum('a-checkbox-group', '多选框', { htmlType: 'eCheckbox' }),
@@ -26,7 +28,7 @@ export const EControlType = {
   eSwitch: Enum('a-switch', '开关', { htmlType: 'eSwitch' }),
   eFileUpload: Enum('FileUpload', '文件上传', { htmlType: 'eFileUpload' }),
   eImageUpload: Enum('ImageUpload', '图片上传', { htmlType: 'eImageUpload' }),
-  eEditor: Enum('Editor', '富文本', { htmlType: 'eEditor' }),
+  eEditor: Enum('WangEditor', '富文本', { htmlType: 'eEditor' }),
   eTreeSelect: Enum('a-tree-select', '树形选择', { htmlType: 'eTreeSelect', defaultProps: { treeDefaultExpandAll: true } }),
   eProvinceCityAreaSelector: Enum('ProvinceCityAreaSelector', '省市区选择', { htmlType: 'eProvinceCityAreaSelector' }),
   eUserSelect: Enum('UserSelect', '用户选择', { htmlType: 'eUserSelect' }),

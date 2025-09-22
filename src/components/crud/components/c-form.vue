@@ -17,7 +17,7 @@
               <FieldGroup :title="getFnValue(field.title, formData)" :subTitle="getFnValue(field.subTitle, formData)">
                 <a-row :gutter="15">
                   <template v-for="child in field.fields" :key="child.fieldName">
-                    <a-col v-if="child.inUse" :span="child.colSpan">
+                    <a-col v-if="child.inUse" v-show="child.type !== EControlType.eHidden" :span="child.colSpan">
                       <a-form-item v-bind="formItemProps(child)">
                         <CComponent v-model:value="formData[child.fieldName]" :field="child" :is-view="isView" />
                       </a-form-item>
@@ -29,7 +29,7 @@
           </template>
           <template v-else-if="field.inUse">
             <!-- 控件 -->
-            <a-col :span="field.colSpan">
+            <a-col :span="field.colSpan" v-show="field.type !== EControlType.eHidden">
               <a-form-item v-bind="formItemProps(field)">
                 <CComponent v-model:value="formData[field.fieldName]" :field="field" :is-view="isView" />
               </a-form-item>

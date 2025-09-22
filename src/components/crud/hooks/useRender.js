@@ -17,9 +17,11 @@ export function useRender ({ ctx, isView, value, dataSource }) {
   // 自定义渲染函数（主要是实现统一的 onChange 事件(能在 onChange 事件里获取到 formData )，以及查看详情模式时，将控件转为纯文本显示，以及默认属性设置）
   const getRenderFn = {
     [EControlType.eInput]: renderInput,
+    [EControlType.eHidden]: renderHidden,
     [EControlType.eAutoComplete]: renderAutoComplete,
     [EControlType.eTextarea]: renderTextarea,
     [EControlType.eNumber]: renderInputNumber,
+    [EControlType.eNumberRange]: renderInputNumberRange,
     [EControlType.eRadio]: renderRadio,
     [EControlType.eCheckbox]: renderCheckbox,
     [EControlType.eSelect]: renderSelect,
@@ -102,6 +104,43 @@ export function useRender ({ ctx, isView, value, dataSource }) {
   }
 
   /**
+   * 渲染隐藏域
+   * @param {Object} field 字段配置信息
+   * @returns 组件VNode
+   */
+  function renderHidden (field) {
+    // 查看模式，直接渲染文本
+    if (isView) {
+      return h('span', { style: 'display: none;'}, [value ?? '-'])
+    }
+    const controlTypeEnum = EControlType._objectOf(field.type)
+    const props = Object.assign(
+      {
+        type: 'text',
+        placeholder: `请输入${getFnValue(field.label, formData)}`,
+        maxlength: 50
+      },
+      controlTypeEnum.data.defaultProps ?? {},
+      field.props
+    )
+    const controlProps = {
+      ...props,
+      value,
+      placeholder: getFnValue(props.placeholder, formData),
+      onChange: undefined,
+      'onUpdate:value': val => {
+        emitUpdate(val)
+        if (typeof props.onChange === 'function') {
+          setTimeout(() => {
+            props.onChange(val, formData)
+          })
+        }
+      }
+    }
+    return h(resolveComponent('a-input'), controlProps)
+  }
+
+  /**
    * 渲染自动补全输入框
    * @param {Object} field 字段配置信息
    * @returns 组件VNode
@@ -171,6 +210,70 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       }
     }
     return h(resolveComponent(field.type), controlProps)
+  }
+
+  /**
+   * 渲染数字范围组件
+   * @param {Object} field 字段配置信息
+   * @returns 组件VNode
+   */
+  function renderInputNumberRange (field) {
+    // 查看模式，直接渲染文本
+    if (isView) {
+      return h('span', [value?.[0] ?? '-', field.props?.addonAfters?.[0], '~', value?.[1] ?? '-', field.props?.addonAfters?.[1]])
+    }
+    const controlTypeEnum = EControlType._objectOf(field.type)
+    const props = Object.assign(
+      {
+        placeholders: [`${field.label}起`, `${field.label}止`]
+      },
+      controlTypeEnum.data.defaultProps ?? {},
+      field.props
+    )
+    let values = [value?.[0], value?.[1]]
+    function updateValue (val, index) {
+      if (isEmpty(values)) {
+        values = []
+      }
+      values[index] = val
+      if (isEmpty(values[0]) && isEmpty(values[1])) {
+        values = undefined
+      }
+      emitUpdate(values)
+      if (typeof props.onChange === 'function') {
+        setTimeout(() => {
+          props.onChange(values, formData)
+        })
+      }
+    }
+    const props1 = {
+      onChange: undefined,
+      value: values[0],
+      'onUpdate:value': val => updateValue(val, 0)
+    }
+    const props2 = {
+      onChange: undefined,
+      value: values[1],
+      'onUpdate:value': val => updateValue(val, 1)
+    }
+    for (const entry in Object.entries(props)) {
+      const key = entry[0]
+      const value = entry[1]
+      const prop = key.substring(0, key.length - 1)
+      if (Array.isArray(value)) {
+        props1[prop] = value?.[0]
+        props2[prop] = value?.[1]
+      }
+    }
+    return h(resolveComponent('a-form-item-rest'), null, {
+      default: () => h(resolveComponent('a-input-group'), { compact: true, style: 'white-space:nowrap;display:flex;' }, {
+        default: () => [
+          h(resolveComponent('a-input-number'), { ...props1, style: 'flex: 45;' }),
+          h(resolveComponent('a-input'), { disabled: true, placeholder: '~', style: 'width:30px;pointer-events:none;' }),
+          h(resolveComponent('a-input-number'), { ...props2, style: 'flex: 45' })
+        ]
+      })
+    })
   }
 
   /**
@@ -435,7 +538,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
   function renderEditor (field) {
     // 查看模式，直接渲染文本
     if (isView) {
-      return h('div', [value])
+      return h('div', { class: 'pa5', innerHTML: value })
     }
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
@@ -457,8 +560,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
         }
       }
     }
-    const component = import.meta.glob('@/components/common/WangEditor/index.vue', { eager: true })
-    return h(component, controlProps)
+    return h(resolveComponent(field.type), controlProps)
   }
 
   function renderTreeSelect (field) {
