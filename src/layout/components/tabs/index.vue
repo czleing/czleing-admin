@@ -13,10 +13,10 @@
         >
           <a-tab-pane
             v-for="tab in tabsStore.tabList"
-            :key="tab.path"
+            :key="tab.fullPath"
           >
             <template #tab>
-              <template v-if="currentTab === tab.path">
+              <template v-if="currentTab === tab.fullPath">
                 <SyncOutlined v-if="!tabsStore.refreshing" @click="tabsStore.refreshTab" />
                 <LoadingOutlined v-else />
               </template>
@@ -52,12 +52,12 @@ import { theme } from 'ant-design-vue'
 const router = useRouter()
 const route = useRoute()
 const tabsStore = useTabsStore()
-const currentTab = ref(route.path)
+const currentTab = ref(route.fullPath)
 const { useToken } = theme
 const { token } = useToken()
 
 watchEffect(() => {
-  currentTab.value = route.path
+  currentTab.value = route.fullPath
 })
 
 function onTabClick (path) {

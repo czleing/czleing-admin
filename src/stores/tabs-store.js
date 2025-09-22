@@ -12,8 +12,9 @@ export const useTabsStore = defineStore('tabs', {
   actions: {
     // 打开 Tab，新增并选中 或 已存在则选中，遵循幂等性原则
     openTab (route) {
-      if (!route || !route.path || route.name === 'login') return
-      const exist = this.tabList.find(item => item.path === route.path)
+      if (!route || (!route.fullPath && !route.path)) return
+      if (route.meta?.hiddenTab === true) return
+      const exist = this.tabList.find(item => item.fullPath === route.fullPath)
       if (!exist) {
         // 对象瘦身，把不需要用到的属性剔除，只留下需要的属性
         // Tab 对象保留了大部分路由属性
@@ -39,9 +40,11 @@ export const useTabsStore = defineStore('tabs', {
       }
     },
     // 删除 Tab
-    removeTab (path) {
+    removeTab (fullPath) {
       // 要删除的索引
-      const index = this.tabList.findIndex(item => item.path === path)
+      const index = this.tabList.findIndex(item => item.fullPath === fullPath)
+      // 没有找到则忽略
+      if (index === -1) return
       // 如果删除的是当前选中的索引
       let newIndex = this.currentIndex
       if (index === this.currentIndex) {
@@ -61,15 +64,20 @@ export const useTabsStore = defineStore('tabs', {
     },
     // 清除其他 Tab
     clearOtherTabs () {
-      this.tabList = this.tabList.filter((item, index) => item.name === 'index' || index === this.currentIndex)
+      this.tabList = this.tabList.filter((item, index) => index === this.currentIndex)
     },
     // 清除左边 Tab
     clearLeftTabs () {
-      this.tabList = this.tabList.filter((item, index) => item.name === 'index' || index >= this.currentIndex)
+      this.tabList = this.tabList.filter((item, index) => index >= this.currentIndex)
     },
     // 清除右边 Tab
     clearRightTabs () {
-      this.tabList = this.tabList.filter((item, index) => item.name === 'index' || index <= this.currentIndex)
+      this.tabList = this.tabList.filter((item, index) => index <= this.currentIndex)
+    },
+    // 清除所有 Tab
+    clearAllTabs () {
+      this.tabList = []
+      router.push({ name: 'index' })
     },
     // 刷新当前 Tab
     refreshTab () {
@@ -77,12 +85,17 @@ export const useTabsStore = defineStore('tabs', {
       setTimeout(() => {
         this.refreshing = false
       }, 300)
+    },
+    // 设置tab名称
+    setTabName (title, fullPath) {
+      const idx = fullPath ? this.tabList.findIndex(item => item.fullPath === fullPath) : this.currentIndex
+      this.tabList[idx].meta.title = title
     }
   },
   getters: {
     // 当前 Tab 激活项的索引
     currentIndex () {
-      return this.tabList.findIndex(item => item.path === router.currentRoute?.value?.path)
+      return this.tabList.findIndex(item => item.fullPath === router.currentRoute?.value?.fullPath)
     },
     // 当前 tabList 中支持缓存的路由组件名称数组，用于 Tab 缓存
     // 从 tabList 中筛选出需要缓存的页面组件名数组，用于 keepalive 缓存
