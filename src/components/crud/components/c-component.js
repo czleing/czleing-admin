@@ -159,7 +159,13 @@ export default defineComponent({
       dataSource: this.dataSource
     })
     const vNode = renderByField(this.field)
-    if (this.triggerRemote && this.field.props?.useRefresh !== false && !this.isView) {
+    let useRefresh = true
+    // 以下两种控件，默认不显示刷新按钮，手动设置除外
+    if ([EControlType.eRadio, EControlType.eCheckbox].includes(this.field.type)) {
+      useRefresh = false
+    }
+    useRefresh = this.field.props?.useRefresh ?? useRefresh
+    if (this.triggerRemote && useRefresh !== false && !this.isView) {
       // 给有动态数据源的组件，添加刷新功能
       return h(resolveComponent('a-input-group'), { compact: true, class: 'nowrap' }, {
         default: () => [
@@ -167,7 +173,9 @@ export default defineComponent({
           h(
             resolveComponent('a-button'),
             { title: '刷新数据', onClick: this.triggerRemote },
-            { icon: () => h(SyncOutlined, { class: 'em08 text-gray' }) }
+            {
+              icon: () => h(SyncOutlined, { class: 'em08 text-gray' })
+            }
           )
         ]
       })
