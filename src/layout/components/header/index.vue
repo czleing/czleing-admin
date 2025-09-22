@@ -6,14 +6,27 @@
       <MenuUnfoldOutlined v-else />
     </span>
     <div class="header__menu flex-auto ml30">
-      <a-menu v-model:selectedKeys="selectedKeys" mode="horizontal">
-        <template v-for="item in headerMenus">
-          <a-menu-item v-if="!item.hidden" :key="item.path" @click="onMenuItemClick(item)">
-            <div class="px10">
-              <a-icon v-if="item.icon" :type="item.icon" />
-              <span>{{ item.title ?? item.path }}</span>
-            </div>
-          </a-menu-item>
+      <a-menu
+        v-if="settingStore.menuLayout !== 'left'"
+        class="menu-side__list"
+        v-model:selectedKeys="selectedKeys"
+        v-model:openKeys="openKeys"
+        mode="horizontal"
+      >
+        <template v-for="item in menuStore.headerNavRoutes">
+          <template v-if="item.meta?.hidden !== true && !item.children">
+            <a-menu-item :key="item.path" @click="onMenuItemClick(item)">
+              <a-icon v-if="item.meta?.icon" :type="item.meta?.icon" />
+              <span>{{ item.meta?.title }}</span>
+            </a-menu-item>
+          </template>
+          <template v-else-if="item.meta?.hidden !== true">
+            <SideItem
+              :key="item.path"
+              :menu-info="item"
+              @menu-click="onMenuItemClick"
+            />
+          </template>
         </template>
       </a-menu>
     </div>
@@ -38,6 +51,7 @@
 
 <script setup>
 import Logo from './logo.vue'
+import SideItem from '../side/SideItem.vue'
 import { useMenuStore } from '@/stores/menu-store.js'
 import { useSettingStore } from '@/stores/setting-store.js'
 import HeaderUser from './header-user.vue'
@@ -48,6 +62,7 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'
 const menuStore = useMenuStore()
 const settingStore = useSettingStore()
 const selectedKeys = ref([])
+const openKeys = ref([])
 const route = useRoute()
 const router = useRouter()
 const headerMenus = computed(() => {
@@ -63,17 +78,13 @@ const headerMenus = computed(() => {
 })
 
 watchEffect(() => {
-  selectedKeys.value = route.meta.matchedPaths ?? [route.path]
+  selectedKeys.value = route.meta.matchedPaths
+  openKeys.value = route.meta?.matchedPaths?.slice(1) ?? [route.path]
   menuStore.firstRoutePath = route.meta?.matchedPaths?.[0] ?? route.path
 })
 
 function onMenuItemClick (item) {
-  if (item.isLeaf) { // 是叶子节点，直接打开
-    router.push(item.path)
-  } else {
-    selectedKeys.value = [item.path]
-  }
-  menuStore.firstRoutePath = item.path
+  menuStore.handleMenuClick(router, item)
 }
 
 </script>

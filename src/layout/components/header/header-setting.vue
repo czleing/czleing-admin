@@ -44,6 +44,22 @@
       <span>{{ $t('frame.radiusLayout') }}：</span>
       <a-switch v-model:checked="settingStore.useRadius" />
     </a-space>
+    <a-space class="flex-x mt20">
+      <span>{{ $t('frame.menuLayout') }}：</span>
+      <a-radio-group v-model:value="settingStore.menuLayout">
+        <a-radio value="top">{{ $t('frame.top') }}</a-radio>
+        <a-radio value="left">{{ $t('frame.left') }}</a-radio>
+        <a-radio value="top-left">{{ $t('frame.topLeft') }}</a-radio>
+      </a-radio-group>
+    </a-space>
+    <a-space class="flex-x mt20">
+      <span>{{ $t('frame.useTabs') }}：</span>
+      <a-switch v-model:checked="settingStore.useTabs" />
+    </a-space>
+    <a-space class="flex-x mt20">
+      <span>{{ $t('frame.useDynamicPageTitle') }}：</span>
+      <a-switch v-model:checked="settingStore.useDynamicPageTitle" />
+    </a-space>
     <h4 class="mt20 text-gray2">{{ $t('frame.lang') }}</h4>
     <a-space class="flex-x mt20">
       <span>{{ $t('frame.selectLang') }}：</span>

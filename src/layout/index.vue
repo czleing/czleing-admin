@@ -12,7 +12,7 @@
       <a-layout-content>
         <div class="pa5 flex-y y-stretch" style="height:100%;">
           <!-- 右侧 Tabs 栏 -->
-          <div class="">
+          <div v-if="settingStore.useTabs" class="">
             <Tabs />
           </div>
           <!-- 右侧工作区 -->
@@ -45,18 +45,36 @@ const tabsStore = useTabsStore()
 const settingStore = useSettingStore()
 const { token } = useThemeToken()
 const themeStyle = ref()
+const root = document.documentElement
 
 /** 使用动态色彩，跟随 ant-design 主题 */
-watchEffect(() => {
-  // 设置整个网页的默认字体颜色跟随主题变化
-  document.body.style.color = token.value.colorText
-  document.body.setAttribute('theme', settingStore.mode)
-  themeStyle.value = {
-    backgroundColor: token.value.colorBgContainer,
-    color: token.value.colorText,
-    borderColor: token.value.colorBorderSecondary
-  }
-})
+watch(
+  () => token.value,
+  () => {
+    // 设置整个网页的默认字体颜色跟随主题变化
+    document.body.style.color = token.value.colorText
+    document.body.setAttribute('theme', settingStore.mode)
+    themeStyle.value = {
+      backgroundColor: token.value.colorBgContainer,
+      color: token.value.colorText,
+      borderColor: token.value.colorBorderSecondary
+    }
+    // 动态设置css变量，跟随 ant-design 主题，可根据需要扩展
+    root.style.setProperty('--ant-colorText', token.value.colorText)
+    root.style.setProperty('--ant-colorInfo', token.value.colorInfo)
+    root.style.setProperty('--ant-colorPrimary', token.value.colorPrimary)
+    root.style.setProperty('--ant-colorSuccess', token.value.colorSuccess)
+    root.style.setProperty('--ant-colorWarning', token.value.colorWarning)
+    root.style.setProperty('--ant-colorError', token.value.colorError)
+    root.style.setProperty('--ant-colorBorder', token.value.colorBorder)
+    root.style.setProperty('--ant-colorBorderSecondary', token.value.colorBorderSecondary)
+    root.style.setProperty('--ant-colorBgContainer', token.value.colorBgContainer)
+    root.style.setProperty('--ant-colorBgElevated', token.value.colorBgElevated)
+    root.style.setProperty('--ant-colorBgLayout', token.value.colorBgContainer)
+    root.style.setProperty('--ant-borderRadius', token.value.borderRadius + 'px')
+  },
+  { deep: true, immediate: true }
+)
 
 /**
  * 监听窗体大小变化，自动展开收起左侧菜单栏

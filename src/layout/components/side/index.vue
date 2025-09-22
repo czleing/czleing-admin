@@ -7,13 +7,13 @@
       mode="inline"
     >
       <template v-for="item in menuStore.leftNavRoutes">
-        <template v-if="!item.hidden && !item.children">
+        <template v-if="item.meta?.hidden !== true && !item.children">
           <a-menu-item :key="item.path" @click="onMenuItemClick(item)">
             <a-icon v-if="item.meta?.icon" :type="item.meta.icon" />
             <span>{{ item.meta?.title ?? item.path }}</span>
           </a-menu-item>
         </template>
-        <template v-else-if="!item.hidden">
+        <template v-else-if="item.meta?.hidden !== true">
           <SideItem
             :key="item.path"
             :menu-info="item"
@@ -36,15 +36,13 @@ const openKeys = ref([route.path])
 const selectedKeys = ref([route.path])
 
 watchEffect(() => {
-  openKeys.value = route.matched.map(m => m.path)
+  openKeys.value = route.meta?.matchedPaths
   selectedKeys.value = [route.path]
 })
 
 // 处理菜单项点击事件
 function onMenuItemClick (item) {
-  if (item.meta.isLeaf) {
-    router.push(item.fullPath || item.path)
-  }
+  menuStore.handleMenuClick(router, item)
 }
 </script>
 

@@ -3,6 +3,7 @@ import { createNavRoute } from '@/router/nav.routes'
 import routers from '@/router'
 import axios from '@/api'
 import { isEmpty, isNotEmpty } from '@/utils/index'
+import { useSettingStore } from './setting-store'
 
 /**
  * 菜单、路由相关 store
@@ -86,13 +87,13 @@ export const useMenuStore = defineStore('menu', {
             path: currPath,
             query: item.queryParam ? JSON.parse(item.queryParam) : undefined,
             component: getComponent(item.component),
-            hidden: item.isHidden,
             redirect: item.redirect,
             // name: item.name,
             meta: {
               needLogin: item.needLogin || true,
               title: item.title || item.menuName,
               icon: item.icon,
+              hidden: item.isHidden,
               cache: item.isCache || false,
               // 菜单类型，M 目录, C 菜单, F 功能
               menuType: item.menuType,
@@ -101,7 +102,7 @@ export const useMenuStore = defineStore('menu', {
               // 是否是一级路由
               isFirst: parentPaths.length === 0,
               // 是否是叶子节点
-              isLeaf: isEmpty(item.children)
+              isLeaf: isEmpty(item.children?.filter(c => !c.isHidden))
             },
             children: isNotEmpty(item.children) && transform(item.children, [...parentPaths, currPath]) || undefined
           }
@@ -141,19 +142,47 @@ export const useMenuStore = defineStore('menu', {
     },
     toggleSidebar () {
       this.isSidebarOpen = !this.isSidebarOpen
+    },
+    handleMenuClick (router, menu) {
+      if (menu.meta?.target === '_blank') {
+        window.open(menu.path, '_blank')
+        return
+      }
+      if (menu.meta?.isLeaf || menu.meta?.menuType === EMenuType.eMenu) { // 是菜单，直接打开
+        router.push(menu.path)
+      }
+      if (menu.meta?.isFirst) {
+        this.firstRoutePath = menu.path
+      }
     }
   },
   getters: {
     // 顶部一级路由(用于渲染顶部一级菜单)
     headerNavRoutes () {
-      return this.navRoutes
+      const settingStore = useSettingStore()
+      switch (settingStore.menuLayout) {
+        case 'top':
+          return this.navRoutes ?? []
+        case 'left':
+          return []
+        case 'top-left':
+          return (this.navRoutes ?? []).map(item => ({ ...item, children: undefined }))
+      }
     },
     // 左侧子路由（顶部一级路由的子路由，用于渲染左侧菜单）
     leftNavRoutes () {
-      if (this.firstRoutePath) {
-        return this.navRoutes?.find(route => route.path === this.firstRoutePath)?.children ?? []
+      const settingStore = useSettingStore()
+      switch (settingStore.menuLayout) {
+        case 'top':
+          return []
+        case 'left':
+          return this.navRoutes ?? []
+        case 'top-left':
+          if (this.firstRoutePath) {
+            return this.navRoutes?.find(route => route.path === this.firstRoutePath)?.children ?? []
+          }
+          return []
       }
-      return []
     }
   }
 })

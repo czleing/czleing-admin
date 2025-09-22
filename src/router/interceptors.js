@@ -2,6 +2,7 @@ import settings from '@/config/setting.js'
 import { useAuthStore } from '@/stores/auth-store'
 import { useMenuStore } from '@/stores/menu-store'
 import { useTabsStore } from '@/stores/tabs-store'
+import { useSettingStore } from '@/stores/setting-store'
 
 /**
  * 路由拦截器-前置守卫
@@ -44,7 +45,12 @@ export async function beforeInterceptor (to, from, next) {
  * @param {*} from 
  */
 export function afterInterceptor (to, from) {
-  window.document.title = to.meta.title || settings.websiteInfo.systemName
+  const settingStore = useSettingStore()
+  if (settingStore.useDynamicPageTitle) {
+    window.document.title = to.meta.title || settings.websiteInfo.systemName
+  } else {
+    window.document.title = settings.websiteInfo.systemName
+  }
   const tabsStore = useTabsStore()
   tabsStore.openTab(to)
 }

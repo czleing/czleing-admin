@@ -64,8 +64,11 @@ export const useSettingStore = defineStore('setting', {
     mode: 'light', // 昼夜模式 light or dark
     locale: 'zh-cn', // 当前语言 zh-cn, zh-hk, en
     componentSize: 'middle', // 当前组件尺寸
-    useRadius: false, // 是否使用圆润布局
-    useWeather: false // 是否使用天气组件
+    menuLayout: 'top',     // 菜单布局方式，top: 全部显示在顶部，left: 全部显示在左侧，top-left: 顶部一级菜单，左侧子菜单
+    useRadius: false,   // 是否使用圆润布局
+    useWeather: false,  // 是否使用天气组件
+    useTabs: true, // 是否使用 tabs 栏
+    useDynamicPageTitle: true, // 是否动态设置浏览器标签名，设置为路由上的 meta.title
   }),
   actions: {
     /** 根据主题名称设置主题 */

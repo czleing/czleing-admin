@@ -5,7 +5,7 @@
     </template>
     <template #title>{{ menuInfo.meta.title }}</template>
     <template v-for="item in menuInfo.children" :key="item.path">
-      <template v-if="!item.hidden && !item.children">
+      <template v-if="item.meta?.hidden !== true && !item.children">
         <a-menu-item
           :key="item.path"
           @click="handleMenuItem(item)"
@@ -16,7 +16,7 @@
           {{ item.meta.title }}
         </a-menu-item>
       </template>
-      <template v-else-if="!item.hidden">
+      <template v-else-if="item.meta?.hidden !== true ">
         <SideItem
           :menu-info="item"
           :key="item.path"

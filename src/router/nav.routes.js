@@ -9,8 +9,8 @@ const errorRoutes = [
   {
     path: '/403',
     component: () => import('@/views/exception/403-page.vue'),
-    hidden: true, 
     meta: {
+      hidden: true,
       title: '403'
     },
   },
@@ -18,15 +18,17 @@ const errorRoutes = [
     path: '/404',
     name: '404',
     component: () => import('@/views/exception/404-page.vue'),
-    hidden: true, 
     meta: {
+      hidden: true,
       title: '404'
     }
   },
   {
     path: '/:catchAll(.*)',
     redirect: '/404',
-    hidden: true
+    meta: {
+      hidden: true,
+    }
   }
 ]
 
@@ -38,10 +40,12 @@ const developerRoutes = [
   {
     path: '/developer',
     redirect: '/developer/demo',
-    hidden: true,
     meta: {
+      isFirst: true,
       icon: 'CodeOutlined',
-      title: '开发中心'
+      hidden: !import.meta.env.DEV,
+      title: '开发中心',
+      cache: true
     },
     children: [
       {
@@ -52,6 +56,23 @@ const developerRoutes = [
           isLeaf: true,
           matchedPaths: ['/developer', '/developer/demo'],
           cache: true
+        }
+      },
+      {
+        path: '/tool/gen',
+        component: () => import('@/views/modules/tool/gen/index.vue'),
+        meta: {
+          title: '代码生成',
+          isLeaf: true,
+          matchedPaths: ['/developer', '/tool/gen'],
+          cache: true
+        }
+      },
+      {
+        path: import.meta.env.VITE_APP_BASE_API + '/swagger-ui/index.html',
+        meta: {
+          title: '接口文档',
+          target: '_blank',
         }
       }
     ]

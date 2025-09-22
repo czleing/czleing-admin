@@ -12,6 +12,9 @@ import { beforeInterceptor, afterInterceptor, errorInterceptor } from './interce
     meta: {
       title: '欢迎登录',      // 网页标题，动态更新到浏览器选项卡中
       needLogin: false,      // 是否需要登录才能访问，默认 true
+      hidden: true,          // 是否在菜单栏中隐藏，默认不隐藏
+      hiddenTab: true,       // 是否在Tab栏中隐藏，默认不隐藏
+      target: '_blank',      // 在浏览器新窗口打开（如打开外部系统页面）
       cache: true,           // 是否缓存页面，切换 Tabs 时状态不会被清空，默认不缓存
       icon: 'HomeOutlined',  // 菜单图标，ant-design/icons
     },
@@ -24,9 +27,10 @@ const staticRoutes = [
     path: '/login',
     name: 'login',
     component: () => import('@/views/login/login-page.vue'),
-    hidden: true, 
     meta: {
       title: '欢迎登录',
+      hidden: true,
+      hiddenTab: true,
       needLogin: false
     }
   },
@@ -35,7 +39,7 @@ const staticRoutes = [
     // 重定向到首页的第一个页面
     redirect: { name: 'index' },
     component: () => import('@/layout/index.vue'),
-    hidden: true,
+    meta: { hidden: true },
     children: [
       {
         path: '/home',
