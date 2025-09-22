@@ -27,11 +27,10 @@
 - 使用动态路由及权限配置
 - 统一接口异常拦截及处理
 - 统一路由拦截及校验
-- 采用顶部一级菜单和左侧子菜单布局
-- 支持 Tab 栏展示多个页面
+- 多种菜单布局方式
+- 支持标签栏展示多个页面
 - 支持多级路由缓存及刷新
 - 最新技术、前后端分离
-- 代码简洁、清爽、优雅
 - 使用 JavaScript
 - 支持国际化(vue-i18n)
 - 线上自动检测版本更新
@@ -55,7 +54,7 @@ q
 ### 4. 访问 http://127.0.0.1:3000/
 
 ### 5. 默认登录账号密码：
-admin/GfAdmin321@
+admin/123456
 
 ## 打包
 ```
@@ -77,7 +76,6 @@ npm run build
 ## 其他说明
 ### 1、规范
 - 请保持项目目录/文件干净整洁、风格统一
-- 业务模块目录/文件名称默认全部小写，多个单词时以 '-' 连接
 - 编写组件或页面文件首行请注明该组件/页面的说明、用途、用法等
 - 使用两个空格代替缩进符，避免不同系统下缩进宽度不一致
 - 避免在模板中写复杂逻辑，应仅包含简单的属性绑定，避免写复杂的表达式或函数调用，保持模板清晰
@@ -85,7 +83,6 @@ npm run build
   如：`<input v-if="xxx" class="xxx" :maxlength="30" @input="onInputHandle" />`
 - 组件中 style 标签尽可能添加 `scoped`，避免全局样式污染，如：`<style scoped>`
 - 查询区域/表单区域使用日期/时间范围时，字段名设计统一使用'Begin'、'End'后缀，便于代码生成及使用默认值简化配置，如：xxxBegin, xxxEnd
-- 在 `Vue` 原型上添加属性使用`$`前缀，如：`Vue.prototype.$copy = xxx`
 - 相对独立的小模块，尽可能单独抽离成一个组件，避免一个文件代码过长过杂，同时也要避免过多的组件嵌套
 
 
@@ -120,6 +117,14 @@ token.value.colorWarning
 token.value.colorSuccess
 ...
 ```
+或者使用全局 css 变量，css 变量根据主题切换动态变化，变量参考 `layout/index.vue`
+```
+--ant-colorText
+--ant-colorInfo
+...
+```
+
+
 
 ### 4、获取当前登录用户
 ```javascript
@@ -218,7 +223,7 @@ function onConfirm (close, extraData) {
 import axios from '@/api'
 const xxxList = ref()
 async function getXxxList (type = 1) {
-  xxxList.value = await axios.get('/api/xxx/select', { type })
+  xxxList.value = await axios.post('/api/xxx/select', { type })
 }
 // type 变化时，重新请求下拉框数据
 function onTypeChange (type) {
@@ -249,4 +254,41 @@ function onTypeChange (type) {
 }
 ...
 </script>
+```
+### 8、表单联动方式
+#### 在表单配置中
+```javascript
+/**
+ * 新增、修改、详情弹窗配置
+ */
+const modalConfig = computed(() => ({
+  // ... 省略其他配置
+  // 表单配置 Object || ({ isAdd, isEdit, isView, detail }) => Object
+  formConfig: ({ isAdd, isEdit, isView, detail }) => ({
+    labelCol: { span: 6 },
+    wrapperCol: { span: 18 },
+    colSize: 2, // 一行显示几列
+    // 表单字段
+    fields: [ // 表单字段数组，可分组
+      {
+        label: (formData) => formData.type === 1 ? '商品名称' : '赠品名称', // String | formData => String
+        fieldName: 'productName', // 暂不支持函数
+        type: EControlType.eInput, // 暂不支持函数
+        required: (formData) => formData.type === 1, // Boolean | (formData) => Boolean
+        disabled: isEdit, // 编辑时禁用, Boolean | (formData) => Boolean
+        none: isEdit, // 编辑时不使用该字段, Boolean | (formData) => Boolean
+        rules: (formData) => [{}], // 通过函数，动态生成校验规则 Object | Array | (formData) => Object | Array
+        props: {
+          onChange (val, formData) { // 所有控件都有 onChange 事件，都能拿到 formData，但是不同控件，入参个数及顺序有区别
+            // 通过 formData 修改其他表单项的值，实现联动
+            if (val.length > 5) {
+              formData.xxx = 'xxx'
+            }
+          }
+        }
+      },
+      // ...其他字段
+    ]
+  })
+}))
 ```

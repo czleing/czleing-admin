@@ -6,6 +6,10 @@
     hasImport
     hasExport
     hasGoBack
+    :no-add="false"
+    :no-delete="false"
+    :no-select="false"
+    :no-tools="false"
     primary-key="id"
     :api-config="{
       // 预设功能接口地址配置，默认根据当前路由生成，如：/system/user 页面下新增接口 => /system/user/add，配置了可进行覆盖
@@ -13,7 +17,7 @@
       // update: '',
       // detail: '',
       // delete: '',
-      // list: '',
+      list: '/system/user/list',
       // toggle: '',
       // import: '',
       // importTemplate: '',
@@ -70,14 +74,15 @@ const treeConfig = {
 const filterConfig = {
   // useCache: true, // 使用查询条件暂存
   // cacheBtnText: '记住查询', // 暂存按钮文字，默认 '记住查询'
-  // labelCol: { span: 8 },
-  // wrapperCol: { span: 16 },
+  // labelCol: { span: 6 },
+  // wrapperCol: { span: 18 },
   // 一行显示几列由每个字段的 colSize 决定，一行 24 格，每个字段可以设置占用格数，一行不够时自动换行，注：查询重置按钮固定占 4-6 格(使用记住查询时占用6格，否则4格)
   // 字段配置
   fields: [
     {
       label: '关键字',
       fieldName: 'key',
+      colSize: { span: 8 },
       type: EControlType.eInput,
       // colSize: { span: 8 }, // 整个字段占整行24栅格的比例，默认响应式分配：colSize: { sm: 8, lg: 6, xxl: 4 }
       // labelCol: { span: 7 }, // 字段文本部分占整个字段的比例，遵循 24 栅格规则，或使用 flex 按比例分布，{ flex: 7 }
@@ -89,6 +94,7 @@ const filterConfig = {
     {
       label: '是否启用',
       fieldName: 'isEnabled',
+      colSize: { span: 8 },
       type: EControlType.eSelect,
       defaultValue: 1, // 给一个默认值，注：设置了默认值后，页面初始化时 c-filter 组件会自动提交一次查询，tableConfig.initSearch 将会默认关闭
       props: {
@@ -98,13 +104,24 @@ const filterConfig = {
     {
       label: '字典下拉',
       fieldName: 'xxxStatus',
+      colSize: { span: 8 },
       type: EControlType.eSelect,
       props: {
+        useRefresh: false, // 是否需要刷新按钮
         dictType: 'xxx_status' // 指定字典类型，自动查询出字典项数据
       }
     },
     {
+      label: '数字范围',
+      colSize: { span: 8 },
+      fieldName: 'numberRange', // 后端使用数组接收
+      type: EControlType.eNumberRange,
+      props: {
+      }
+    },
+    {
       label: '时间范围',
+      colSize: { span: 8 },
       fieldName: 'createTime', // 对应查询数据库中的字段，提交时会删掉，替换成 fieldNames 中设置的两个字段
       type: EControlType.eDateRange,
       props: {
@@ -114,12 +131,13 @@ const filterConfig = {
     }
   ]
 }
-/** 自定义工具栏按钮配置 */
-const toolsConfig = {
+const uploadFile = ref()
+/** 自定义工具栏按钮配置 object | computed(() => object) */
+const toolsConfig = computed(() => ({
   // addBtnText: '新增',
   // addInitData: { parentId: 0 }, // 新增时初始化表单的数据
   // backBtnText: '返回',
-  otherToolsBtns: [
+  otherTools: [
     {
       name: '自定义按钮', // String | ({ selectedIds, selectedObjs, pagination }) => String
       permission: 'system:user:diy',
@@ -141,12 +159,46 @@ const toolsConfig = {
           // })
         }
       }
-    }
+    },
+    // 自定义其他组件
+    // {
+    //   component: 'FileUpload', // 全局组件，直接写组件名，如 'a-button', 非全局组件，可以在上面 import, 然后指定，如：component: MyComponent
+    //   permission: 'system:user:diy',
+    //   props: {
+    //     value: uploadFile.value,
+    //     maxCount: 1,
+    //     accept: '.doc,.docx',
+    //     showUploadList: false,
+    //     btnText: '上传文件',
+    //     btnProps: {
+    //       // icon: false,
+    //       type: 'primary'
+    //     }
+    //   },
+    //   // 事件监听，对象方式
+    //   on: {
+    //     click () {
+    //       // 我被点击了
+    //     }
+    //   },
+    //   // 事件监听，函数方式，可以获取到页面相关信息
+    //   // on: ({ selectedIds, selectedObjs, searchParams, pagination }) => {
+    //   //   return {
+    //   //     'update:value' (fileList) {
+    //   //       uploadFile.value = fileList
+    //   //       setTimeout(() => {
+    //   //         uploadFile.value = undefined
+    //   //       })
+    //   //     }
+    //   //   }
+    //   // }
+    // }
   ]
-}
+}))
 /** 数据列表配置 */
 const tableConfig = computed(() => ({
   props: {
+    scroll: { x: 'max-content' }
     // 参考 a-table props
     // bordered: true, // 是否使用边框线，默认使用
     // size: 'small', // 组件尺寸，默认 small
@@ -169,7 +221,10 @@ const tableConfig = computed(() => ({
       tooltip: '用户真实姓名',
       dataIndex: 'nickName',
       resizable: true,
-      width: 100
+      width: 100,
+      // sorter: true, // 服务端排序
+      sorter: (a, b) => (a.nickName ?? '').localeCompare(b.nickName ?? '', 'zh-Hans-CN') // 本地排序，中文排序
+      // sorter: (a, b) => a.totalCount - b.totalCount, // 本地排序，非中文排序
     },
     {
       title: '年龄',
@@ -183,26 +238,31 @@ const tableConfig = computed(() => ({
     {
       title: '带单位',
       dataIndex: 'withUnit',
-      unit: '元' // 在后面拼上单位
+      unit: '元', // 在后面拼上单位
+      width: 100
     },
     {
       title: '名称2',
       dataIndex: 'name2',
+      width: 100,
       hidden: true // 该列暂时隐藏，可通过列筛选勾选显示
     },
     {
       title: '类型',
       dataIndex: 'type2',
-      customRender: ({ value }) => '历史'
+      customRender: ({ value }) => '类型1',
+      width: 100
     },
     {
       title: '字典',
       dataIndex: 'dict',
+      width: 100,
       dictType: 'dict_type' // 自动按指定的字典类型解析出中文
     },
     {
       title: '状态',
       dataIndex: 'status',
+      width: 100,
       customRender: ({ value, record, index, column }) => { // 自定义渲染函数
         return h('span', {
           class: 'text-danger'
@@ -212,6 +272,7 @@ const tableConfig = computed(() => ({
     {
       title: '自定义组件',
       dataIndex: 'diy',
+      width: 120,
       customRender: ({ value, record, index, column }) => {
         return h(resolveComponent('a-tag'), {
           bordered: false,
@@ -222,11 +283,13 @@ const tableConfig = computed(() => ({
     {
       title: '是否启用',
       dataIndex: 'isEnabled',
+      width: 100,
       type: 'isEnabled' // type 预处理类型，isEnabled，格式化为是否启用
     },
     {
       title: '字符串脱敏',
       dataIndex: 'phonenumber',
+      width: 100,
       hideChar: [3, 4, '*'] // 字符串脱敏，第一个值为左边显示字符数，第二个参数为右边显示字符数，剩下的使用第三个参数代替，默认'*'可不传
     },
     {
@@ -239,17 +302,21 @@ const tableConfig = computed(() => ({
     {
       title: '插槽',
       dataIndex: 'slotField',
+      width: 100,
       slot: 'table_slotField' // 使用插槽渲染
     },
     {
       title: '日期自动格式化',
       dataIndex: 'createTime',
+      width: 150,
       // isDate: true, // 自动格式化为 YYYY-MM-DD
       isDateTime: true, // 或 自动格式化为 YYYY-MM-DD HH:mm
       // dateFormat: 'YYYY-MM-DD HH:mm:ss' // 或 自定义格式
     },
     {
       title: '操作',
+      width: 140,
+      fixed: 'right',
       actionShowNum: 2, // 展示操作按钮数量，剩余的将收进更多里
       actionMoreText: '更多', // 更多按钮名称，默认"更多"
       // action: 操作列配置，T[] || ({ record }) => T[]
@@ -295,14 +362,14 @@ const tableConfig = computed(() => ({
           //   }
           // }
         ]
-        if (record.age > 35) {
+        if (record.type === '3') {
           btns.push({
-            name: '辞退',
-            permission: 'system:user:getout',
+            name: '动态操作',
+            permission: 'system:user:opt',
             confirm: true,
-            confirmContent: `确认要辞退${record.name}吗？`,
+            confirmContent: `确认xxx${record.name}吗？`,
             callback ({}) {
-              console.log(record.name + '被辞退了')
+              //console.log(record.name + 'xxx')
             }
           })
         }
@@ -338,16 +405,22 @@ const modalConfig = computed(() => ({
       {
         label: '短文本',
         fieldName: 'shortText',
-        type: EControlType.eInput, // 控件类型
+        // type: EControlType.eInput, // 控件类型，默认文本框
         // required: true, // 是否必填 Boolean || formData => Boolean
         // disabled: isEdit, // 是否禁用 Boolean || formData => Boolean
         // none: isView, // 是否不需要改字段，Boolean || formData => Boolean
         // extra: formData => '222', // 字段额外说明， String || formData => String
         // rules: [], // 校验规则，与 <a-form-item> 一致， object || array
-        props: {
+        props: { // 没有属性可以不配
           // 根据 type 继承自对应 ant-design-vue 控件的属性和事件
+          // placeholder 会默认生成，可以不配
           allowClear: true
         }
+      },
+      {
+        label: '隐藏域',
+        fieldName: 'hidden1',
+        type: EControlType.eHidden,
       },
       {
         label: formData => '整数', // 字段描述 String || formData => String
@@ -650,6 +723,17 @@ const modalConfig = computed(() => ({
         }
       },
       {
+        label: '富文本',
+        fieldName: 'editor',
+        type: EControlType.eEditor,
+        required: true,
+        singleLine: true,
+        labelCol: { span: 3 },
+        wrapperCol: { span: 21 },
+        props: {
+        }
+      },
+      {
         label: '动态表格',
         fieldName: 'table',
         type: EControlType.eTable,
@@ -720,7 +804,7 @@ const modalConfig = computed(() => ({
 
 /**
  * 查询前修改查询参数
- * @param {Object} searchParams 查询参数
+ * @param {object} searchParams 查询参数
  */
 function beforeSearch (searchParams) {
   return searchParams
