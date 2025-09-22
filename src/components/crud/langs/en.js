@@ -8,11 +8,18 @@ export default {
     theme: 'Theme',
     selectTheme: 'Select Theme',
     componentSize: 'Component Size',
+    menuLayout: 'Menu Layout',
+    formLayout: 'Form Layout',
+    horizontal: 'horizontal',
+    vertical: 'vertical',
+    inline: 'inline',
     small: 'Small',
     middle: 'Medium',
     large: 'Large',
     dark: 'Dark Mode',
     radiusLayout: 'Rounded Layout',
+    useTabs: 'Use Tabs Page',
+    useDynamicPageTitle: 'Dynamic Page Title',
     lang: 'Language',
     selectLang: 'Select Language',
     other: 'Other',
@@ -25,6 +32,9 @@ export default {
     closeLeft: 'Close Left',
     closeRight: 'Close Right',
     closeOther: 'Close Others',
+    top: 'Top',
+    left: 'Left',
+    topLeft: 'TopLeft',
   },
   // crud
   crud: {
@@ -49,5 +59,7 @@ export default {
     sameDataIsReplace: 'Overwrite duplicate records?',
     import: 'Import',
     importSuccess: 'Import successful',
+    yes: 'Yes',
+    no: 'No',
   }
 }

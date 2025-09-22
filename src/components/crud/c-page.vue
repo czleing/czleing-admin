@@ -222,7 +222,7 @@ defineExpose({
   }
   &__page {
     flex: auto;
-    max-width: 100%;
+    width: 70%;
   }
 }
 </style>

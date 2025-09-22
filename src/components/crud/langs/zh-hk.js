@@ -9,11 +9,18 @@ export default {
     theme: '主題',
     selectTheme: '選擇主題',
     componentSize: '元件大小',
+    menuLayout: '菜單佈局',
+    formLayout: '表單佈局',
+    horizontal: 'horizontal',
+    vertical: 'vertical',
+    inline: 'inline',
     small: '小',
     middle: '中',
     large: '大',
     dark: '深色模式',
     radiusLayout: '圓角佈局',
+    useTabs: '使用標簽頁',
+    useDynamicPageTitle: '動態網頁標題',
     lang: '語言',
     selectLang: '選擇語言',
     other: '其他',
@@ -26,6 +33,9 @@ export default {
     closeLeft: '關閉左側',
     closeRight: '關閉右側',
     closeOther: '關閉其他',
+    top: '頂部',
+    left: '左側',
+    topLeft: '混合',
   },
   // crud
   crud: {
@@ -50,5 +60,7 @@ export default {
     sameDataIsReplace: '重複記錄是否覆蓋更新',
     import: '匯入',
     importSuccess: '匯入成功',
+    yes: '是',
+    no: '否',
   }
 }
