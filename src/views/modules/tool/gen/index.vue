@@ -58,7 +58,7 @@ const filterConfig = computed(() => ({
   ]
 }))
 const toolsConfig = computed(() => ({
-  otherToolsBtns: [
+  otherTools: [
     {
       name: '导入表',
       permission: 'tool:gen:import',

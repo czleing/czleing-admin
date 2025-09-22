@@ -231,7 +231,7 @@ const filterConfig = {
 }
 
 const toolsConfig = {
-  otherToolsBtns: [
+  otherTools: [
     {
       name: '清空',
       props: {

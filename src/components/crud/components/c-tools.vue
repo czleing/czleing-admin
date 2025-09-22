@@ -10,18 +10,23 @@
         <!-- 批量删除 -->
         <a-button v-if="noDelete !== true" v-hasPermi="permissionConfig.delete" type="primary" danger :icon="h(DeleteOutlined)" :disabled="selectNum === 0" @click="onDeleteHandle">{{ $t('crud.batchDelete') }} {{ selectNum > 0 ? `(${ selectNum })` : '' }}</a-button>
         <!-- 自定义按钮 -->
-        <a-button
-          v-for="(btn, index) in config?.otherToolsBtns"
-          :key="index"
-          v-hasPermi="btn.permission"
-          v-bind="{ ...btn.props, disabled: getFnValue(btn.props.disabled, callbackParams), icon: undefined, onClick: undefined }"
-          @click="onToolClickHandle(btn)"
-        >
-          <template #icon v-if="btn.props.icon">
-            <a-icon :type="btn.props.icon" />
-          </template>
-          {{ getFnValue(btn.name, callbackParams) }}
-        </a-button>
+        <template v-for="(btn, index) in config?.otherTools">
+          <!-- 自定义按钮 -->
+          <a-button
+            v-if="!btn.component || btn.component === 'a-button'"
+            :key="index"
+            v-hasPermi="btn.permission"
+            v-bind="{ ...btn.props, disabled: getFnValue(btn.props.disabled, callbackParams), icon: undefined, onClick: undefined }"
+            @click="onToolClickHandle(btn)"
+          >
+            <template #icon v-if="btn.props.icon">
+              <a-icon :type="btn.props.icon" />
+            </template>
+            {{ getFnValue(btn.name, callbackParams) }}
+          </a-button>
+          <!-- 自定义组件 -->
+          <component v-else :is="btn.component" v-hasPermi="btn.permission" v-bind="{ ...btn.props, disabled: getFnValue(btn.props.disabled, callbackParams) }" v-on="getFnValue(btn.on ?? {}, callbackParams)" />
+        </template>
         <!-- 导入 -->
         <CImport v-if="hasImport" v-hasPermi="permissionConfig.import" :url="apiConfig.import" :template-url="apiConfig.importTemplate" @success="onImportSuccessHandle" />
         <!-- 导出 -->

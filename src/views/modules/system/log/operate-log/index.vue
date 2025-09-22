@@ -64,7 +64,6 @@
         fieldName: 'operTime',
         type: EControlType.eDateRange,
         props: {
-          fieldNames: ['beginTime', 'endTime']
         }
       }
     ]
@@ -72,7 +71,7 @@
 
   /** 自定义工具栏按钮配置 */
   const toolsConfig = {
-    otherToolsBtns: [
+    otherTools: [
       {
         name: '清空所有日志',
         permission: 'system:operlog:delet',

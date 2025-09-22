@@ -55,18 +55,17 @@
       },
       {
         label: '登录时间',
-        fieldName: 'dateRange',
+        fieldName: 'loginTime',
         type: EControlType.eDateRange,
         colSize: { span: 7 },
         props: {
-          fieldNames: ['beginTime', 'endTime']
         }
       },
     ]
   }
   /** 自定义工具栏按钮配置 */
   const toolsConfig = {
-    otherToolsBtns: [
+    otherTools: [
       {
         name: '账户解锁',
         permission: 'system:loginlog:unlock',
