@@ -278,7 +278,10 @@ const modalConfig = computed(() => ({
         disabled: isEdit, // 编辑时禁用, Boolean | (formData) => Boolean
         none: isEdit, // 编辑时不使用该字段, Boolean | (formData) => Boolean
         rules: (formData) => [{}], // 通过函数，动态生成校验规则 Object | Array | (formData) => Object | Array
+        extra: formData => 'xxx', // 字段额外说明， String || formData => String
+        tooltip: formData => 'xxx', // 字段提示， String || formData => String
         props: {
+          placeholder: formData => 'xxx', // 通过 formData 动态生成，String | formData => String
           onChange (val, formData) { // 所有控件都有 onChange 事件，都能拿到 formData，但是不同控件，入参个数及顺序有区别
             // 通过 formData 修改其他表单项的值，实现联动
             if (val.length > 5) {
