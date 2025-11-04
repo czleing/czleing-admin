@@ -8,7 +8,6 @@ import { beforeInterceptor, afterInterceptor, errorInterceptor } from './interce
     path: '/login',         // 路由地址，全局唯一
     name: 'login',          // 路由别名，全局唯一，用法：router.push({ name: 'login' })
     component: () => import('@/views/login/login-page.vue'), // 静态路由懒加载组件
-    hidden: true,           // 是否在左侧菜单栏中隐藏，默认不隐藏
     meta: {
       title: '欢迎登录',      // 网页标题，动态更新到浏览器选项卡中
       needLogin: false,      // 是否需要登录才能访问，默认 true

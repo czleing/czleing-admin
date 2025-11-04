@@ -62,6 +62,9 @@ import CPage from '@/components/crud/c-page.vue'
 import { EControlType, EIsEnabled } from '@/enum/index.js'
 
 const cPage = ref()
+defineOptions({
+  name: 'DemoPage'
+})
 /** 树形配置，不配置则不使用树 */
 const treeConfig = {
   url: '/system/user/deptTree',
@@ -82,10 +85,11 @@ const filterConfig = {
     {
       label: '关键字',
       fieldName: 'key',
-      colSize: { span: 8 },
-      type: EControlType.eInput,
-      // colSize: { span: 8 }, // 整个字段占整行24栅格的比例，默认响应式分配：colSize: { sm: 8, lg: 6, xxl: 4 }
-      // labelCol: { span: 7 }, // 字段文本部分占整个字段的比例，遵循 24 栅格规则，或使用 flex 按比例分布，{ flex: 7 }
+      // type: EControlType.eInput, // 默认 eInput 可以不设置
+      colSize: { flex: '230px' },
+      // 每个字段的宽度可以很灵活控制，固定宽度、同宽、自适应等 参考 ant-design-vue a-col 的属性
+      // colSize: { span: 8 }, // 整个字段(包含文本和控件)占整行24栅格的比例，固定宽度可以设置为 { flex: '280px' }, 默认响应式分配：{ sm: 8, lg: 6, xxl: 4 }
+      // labelCol: { span: 7 }, // 字段文本部分占整个字段的比例，遵循 24 栅格规则，或使用 flex 布局，{ flex: 2 }
       // wrapperCol: { span: 18 }, // 字段控件部分占整个字段的比例
       props: {
         placeholder: '请输入姓名/手机号/账号'
@@ -94,8 +98,8 @@ const filterConfig = {
     {
       label: '是否启用',
       fieldName: 'isEnabled',
-      colSize: { span: 8 },
       type: EControlType.eSelect,
+      colSize: { flex: '0 0 180px' },
       defaultValue: 1, // 给一个默认值，注：设置了默认值后，页面初始化时 c-filter 组件会自动提交一次查询，tableConfig.initSearch 将会默认关闭
       props: {
         options: EIsEnabled._list
@@ -104,16 +108,14 @@ const filterConfig = {
     {
       label: '字典下拉',
       fieldName: 'xxxStatus',
-      colSize: { span: 8 },
       type: EControlType.eSelect,
       props: {
         useRefresh: false, // 是否需要刷新按钮
-        dictType: 'xxx_status' // 指定字典类型，自动查询出字典项数据
+        dictType: 'audit_status' // 指定字典类型，自动查询出字典项数据
       }
     },
     {
       label: '数字范围',
-      colSize: { span: 8 },
       fieldName: 'numberRange', // 后端使用数组接收
       type: EControlType.eNumberRange,
       props: {
@@ -121,7 +123,7 @@ const filterConfig = {
     },
     {
       label: '时间范围',
-      colSize: { span: 8 },
+      colSize: { flex: '320px' },
       fieldName: 'createTime', // 对应查询数据库中的字段，提交时会删掉，替换成 fieldNames 中设置的两个字段
       type: EControlType.eDateRange,
       props: {

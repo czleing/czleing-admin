@@ -44,8 +44,7 @@ const developerRoutes = [
       isFirst: true,
       icon: 'CodeOutlined',
       hidden: !import.meta.env.DEV,
-      title: '开发中心',
-      cache: true
+      title: '开发中心'
     },
     children: [
       {

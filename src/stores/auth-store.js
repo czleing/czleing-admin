@@ -27,14 +27,17 @@ export const useAuthStore = defineStore('auth', {
      * @param {} data 
      */
     async login (data) {
-      await this.loginByAccount(data)
+      if (data.account && data.password) {
+        await this.loginByAccount(data)
+      } else {
+        console.error('未找到匹配的登录方式')
+      }
     },
     /**
      * 账号密码登录
      * @param {*} param
      */
     async loginByAccount ({ account, password, code, uuid, remember }) {
-      let menuStore = useMenuStore()
       const data = {
         username: account, // : window.btoa(window.btoa(account)),
         password, // : window.btoa(window.btoa(password)),
@@ -46,12 +49,8 @@ export const useAuthStore = defineStore('auth', {
       this.token = result.token
       // 加密持久化需要记住的账号
       setAccount(account, password, remember)
-      // 获取菜单生成动态路由
-      await menuStore.loadMenuToRoute(true)
-      // 获取最新的登录用户信息
-      await this.getUserInfo(true)
-      // 跳转到首页
-      router.replace('/')
+      // 登录成功后处理
+      await this.loginSuccessHandle()
     },
     /**
      * 退出登录
@@ -87,6 +86,28 @@ export const useAuthStore = defineStore('auth', {
       this.permissions = []
     },
     /**
+     * 登录成功后处理
+     */
+    async loginSuccessHandle () {
+      const menuStore = useMenuStore()
+      // 获取菜单生成动态路由
+      await menuStore.loadMenuToRoute(true)
+      // 获取最新的登录用户信息
+      await this.getUserInfo(true)
+      // 跳转
+      const redirect = router.currentRoute.value.query.redirect
+      if (redirect) {
+        if (redirect.startsWith('http')) {
+          window.location.href = redirect
+        } else {
+          router.replace(redirect)
+        }
+      } else {
+        // 跳转到首页
+        router.replace('/')
+      }
+    },
+    /**
      * 获取当前登录用户信息
      * @param {boolean} force 是否强制获取而不使用缓存
      * @returns 
@@ -120,8 +141,8 @@ export const useAuthStore = defineStore('auth', {
     strategies: [{ // 可以多种方案组合
       key: 'AUTH_INFO',
       // storage: window.localStorage, // 使用的持久化方案，默认 sessionStorage
-      // 此处将 userInfo 加入缓存要注意，浏览器刷新时不会等待优先获取用户信息，导致 permissions 为空，从而页面权限校验错误，应与 permissions 一起加入缓存
-      // permissions 为敏感信息，有手动修改的可能，最好不要加入缓存，每次刷新时重新获取为好
+      // !!! 不能将 userInfo 加入缓存，userInfo 与 permissions 来自同一个接口，只缓存 userInfo 刷新时会导致 permissions 为空，从而页面权限校验错误，必须与 permissions 一起加入缓存
+      // !!! permissions 为敏感信息，有手动修改的可能，最好不要加入缓存，所以 userInfo 和 permissoins 每次刷新时重新获取为好
       paths: ['token'] // 需要持久化的属性，不设置则默认所有属性
     }]
   }

@@ -32,7 +32,7 @@ instance.interceptors.response.use((response) => {
   if (contentType?.indexOf('application/octet-stream') > -1 ||
     contentType?.indexOf('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') > -1) {
     // 注意：Blob类型文件下载需要请求头参数添加 responseType:'blob'  下载 导出等功能需要
-    downloadFile(response)
+    handleDownload(response)
   } else {
     if (data?.code === 401) {
       message.error('未登录或会话已过期,请重新登录')
@@ -40,7 +40,11 @@ instance.interceptors.response.use((response) => {
       const tabStore = useTabsStore()
       authStore.clearAuthInfo()
       tabStore.clearAllTabs()
-      router.replace('/login')
+      const currentPath = router.currentRoute.value.fullPath
+      router.replace({
+        path: '/login',
+        query: { redirect: currentPath }
+      })
       return Promise.reject(new Error('未登录或会话已过期,请重新登录'))
     } else if (data?.code === 200) {
       // 响应数据是有效的 JSON 格式，继续处理
@@ -64,7 +68,7 @@ instance.interceptors.response.use((response) => {
 })
 
 // 下载blob二进制文件
-const downloadFile = (response) => {
+const handleDownload = (response) => {
   const filename = response.headers['download-filename']
   const blob = new Blob([response.data])
   if (window.navigator.msSaveBlob) {

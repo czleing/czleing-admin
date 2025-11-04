@@ -78,7 +78,7 @@ const headerMenus = computed(() => {
 })
 
 watchEffect(() => {
-  selectedKeys.value = route.meta.matchedPaths
+  selectedKeys.value = route.meta.matchedPaths ?? [route.path]
   openKeys.value = route.meta?.matchedPaths?.slice(1) ?? [route.path]
   menuStore.firstRoutePath = route.meta?.matchedPaths?.[0] ?? route.path
 })

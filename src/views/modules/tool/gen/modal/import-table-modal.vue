@@ -11,8 +11,6 @@
   >
     <CPage
       ref="cPage"
-      noAdd
-      noDelete
       noTools
       :api-config="{
         list: '/tool/gen/db/list'
@@ -32,9 +30,7 @@
 </template>
 
 <script setup>
-import { EControlType } from '@/enum/index.js'
-import { isEmpty } from '@/utils/index.js'
-import axios from '@/api/index.js'
+import CPage from '@/components/crud/c-page.vue'
 
 const _this = getCurrentInstance().proxy
 const cPage = ref()
@@ -105,7 +101,7 @@ async function beforeConfirm (close) {
     _this.$message.error('请先选择表')
     throw new Error('请先选择表')
   }
-  await axios.post('/tool/gen/importTable', { tables: selectedTableNames.join(',') }, {
+  await $axios.post('/tool/gen/importTable', { tables: selectedTableNames.join(',') }, {
     headers: {
       datasource: props.datasource
     }
