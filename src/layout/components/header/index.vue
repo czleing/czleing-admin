@@ -65,17 +65,6 @@ const selectedKeys = ref([])
 const openKeys = ref([])
 const route = useRoute()
 const router = useRouter()
-const headerMenus = computed(() => {
-  return menuStore.headerNavRoutes?.filter(item => !item.hidden).map(item => {
-    return {
-      path: item.path,
-      icon: item.meta?.icon,
-      title: item.meta?.title,
-      firstPath: item.matched?.[0]?.path,
-      isLeaf: item.meta?.isLeaf
-    }
-  })
-})
 
 watchEffect(() => {
   selectedKeys.value = route.meta.matchedPaths ?? [route.path]
