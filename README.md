@@ -1,6 +1,6 @@
 # Vue3 + Vite + Pinia + Ant-design-vue4 + JavaScript + axios + vue-router + pnpm
 
-使用最新技术栈封装的一套后台管理前端开发框架，追求精简、优雅，没有个人的包名、前缀、广告，拿来免改，干净整洁，易懂易用易扩展，将常用的功能进行了非常灵活的封装，不再需要编写繁琐的表单、控件、校验、联动逻辑、获取数据逻辑、表单回填逻辑、数据转换逻辑、列表、弹窗等重复性代码，通过简单配置即可解决，个别地方约定大于配置，让开发尽量简单
+使用最新技术栈封装的一套后台管理前端开发框架，追求精简、优雅，没有个人的包名、前缀、广告，拿来免改，干净整洁，易懂易用易扩展，将常用的功能进行了灵活的封装，不再需要编写繁琐的表单、控件、校验、联动逻辑、获取数据逻辑、表单回填逻辑、数据转换逻辑、列表、弹窗等重复性代码，通过简单配置即可解决，个别地方约定大于配置，让开发尽量简单
 
 ## 环境要求
 - node: 18+
@@ -87,11 +87,11 @@ npm run build
 
 
 ### 2、接口请求
-接口请求摒弃了restfull规范及一接口一封装模式(实际应用中弊大于利)，而是采用通用的请求方式，method 一般统一使用 post，参数统一使用请求体传参，如：
+接口请求摒弃了restfull规范及一接口一封装模式，而是采用通用的请求方式，method 统一使用 post，参数统一使用请求体传参，如：
 ```javascript
-import axios from '@/api'
+import api from '@/api'
 ...
-const data = await axios.post('/xxx/xxx', {})
+const data = await api.post('/xxx/xxx', {})
 ```
 #### 请求
 - 第一个参数为接口地址，第二个参数为请求参数，第三个参数为其他配置，可选，如 headers, content-type 的设置
@@ -135,7 +135,15 @@ const authStore = useAuthStore()
 console.log('当前登录用户：', authStore.userInfo)
 ```
 
-### 5、消息弹窗
+### 5、权限控制
+使用自定义指令 `v-hasPermi`、`v-noPermi`
+
+```html
+<a-button v-hasPermi="'system:user:add'">新增</a-button>
+<a-button v-hasPermi="['xxx:xxx:xxx1', 'xxx:xxx:xxx2']">新增</a-button>
+```
+
+### 6、消息弹窗
 ```javascript
 import { Modal, message } from 'ant-design-vue'
 
@@ -159,7 +167,7 @@ message.success('保存成功')
 ```
 
 
-### 6、弹出模态框
+### 7、弹出模态框（简化版）
 全局组件 `/global/CModal` 对 a-modal、a-drawer 进行了合并封装，简化了使用，属性设置支持标签上设置和调用时设置
 ```html
 <template>
@@ -179,7 +187,7 @@ function openModal () {
     mode: 'modal', // 弹窗类型，modal | drawer
     width: 600, // 弹窗宽度
     showConfirm: true, // 是否需要确认按钮，默认需要
-    // ... 其他属性，参考 src/components/global/Modal/index.vue
+    // ... 其他属性，参考 src/components/global/CModal/index.vue
     async onConfirm (close) {}, // 点击确认按钮时执行，调用 close() 关闭弹窗
     async onCancel () {} // 点击取消时执行
   }, extraData)
@@ -193,14 +201,15 @@ function onConfirm (close, extraData) {
 ```
 
 
-### 7、CRUD快速开发案例(可直接代码生成，系统工具->代码生成)
+### 8、CRUD快速开发案例(可直接代码生成，开发中心->代码生成)
 #### 步骤一：先在数据库中设计表结构
-#### 步骤二：然后本地启动进入菜单‘系统工具->代码生成’导入表并编辑相关信息
+#### 步骤二：然后本地启动进入菜单‘开发中心->代码生成’导入表并编辑相关信息
 #### 步骤三：预览并一键生成CRUD前后端代码
 #### 步骤四：查看生成结果或对特殊字段、控件的属性进行自定义修改
 
 参考案例：`/src/views/demo/demo-page.vue`
 
+与传统开发模式对比：
 ```html
 <!-- 传统的写法，需要编写大量 Dom 和 js -->
 ...
@@ -255,7 +264,7 @@ function onTypeChange (type) {
 ...
 </script>
 ```
-### 8、表单联动方式
+### 9、表单联动方式
 #### 在表单配置中
 ```javascript
 /**
