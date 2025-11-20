@@ -76,15 +76,17 @@ function filterTreeData (datas, _searchValue) {
   return datas.reduce((result, node) => {
     const newNode = { ...node } // 创建一个新的节点，避免直接修改原始数据
     // 如果当前节点匹配搜索关键字，则加入到结果中
+    let nodeIsPush = false
     if (newNode[titleField].indexOf(_searchValue) !== -1) {
       result.push(newNode)
+      nodeIsPush = true
     }
     // 如果有子节点，则递归过滤子节点并加入到当前节点的子节点中
     if (newNode[childrenField]) {
       const filteredChildren = filterTreeData(newNode[childrenField], _searchValue)
       if (isNotEmpty(filteredChildren)) {
         newNode[childrenField] = filteredChildren
-        result.push(newNode)
+        !nodeIsPush && result.push(newNode)
       }
     }
     return result
