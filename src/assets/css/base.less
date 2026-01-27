@@ -18,21 +18,42 @@
 .tr { text-align: right; }
 // 鼠标
 .pointer { cursor: pointer }
+.pointer:active { opacity: .7; }
+.not-allowed { cursor: not-allowed }
+.select-text { user-select: text; }
+.select-none { user-select: none; }
+.no-events { pointer-events: none; }
 // box
 .inline { display: inline; }
 .block { display: block; }
 .inline-block { display: inline-block; }
 .none { display: none; }
+// 定位
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+.sticky { position: sticky; }
 // 不换行
 .nowrap { white-space: nowrap; }
+.pre-wrap { white-space: pre-wrap; }
 // 文字任意位置换行
 .break-all { word-break: break-all; }
+.break-word { word-break: break-word; }
 // 文字超出，后面...隐藏，视情况与.nowrap配合使用
 .text-over-hidden { overflow: hidden; text-overflow: ellipsis; }
+// 超出省略
+.text-ellipsis { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.line-clamp2 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.line-clamp3 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
 // 圆角
+.radius2 { border-radius: 2px; }
 .radius3 { border-radius: 3px; }
+.radius4 { border-radius: 4px; }
 .radius5 { border-radius: 5px; }
+.radius6 { border-radius: 6px; }
+.radius8 { border-radius: 8px; }
 .radius10 { border-radius: 10px; }
+.radius15 { border-radius: 15px; }
 .radius20 { border-radius: 20px; }
 .radius-circle { border-radius: 5000px; }
 // 边界
@@ -48,6 +69,9 @@
 .border-right { border-right: 0.5px solid @colorBorder; }
 .border-bottom { border-bottom: 0.5px solid @colorBorder; }
 .border-left { border-left: 0.5px solid @colorBorder; }
+// 盒子
+.border-box { box-sizing: border-box; }
+.content-box { box-sizing: content-box; }
 
 // 文字大小
 .em06 { font-size: 0.6em; }
