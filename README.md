@@ -36,6 +36,7 @@
 - 线上自动检测版本更新
 - CRUD 配置化开发
 - 系统管理基础功能
+- Swagger 接口文档(入口：打开菜单：开发中心 -> 接口文档)
 - CRUD 可视化代码生成
 
 ## 初始化
@@ -281,15 +282,16 @@ const modalConfig = computed(() => ({
     fields: [ // 表单字段数组，可分组
       {
         label: (formData) => formData.type === 1 ? '商品名称' : '赠品名称', // String | formData => String
-        fieldName: 'productName', // 暂不支持函数
-        type: EControlType.eInput, // 暂不支持函数
+        fieldName: 'productName', // 字段名，暂不支持函数
+        type: EControlType.eInput, // 控件类型，暂不支持函数
         required: (formData) => formData.type === 1, // Boolean | (formData) => Boolean
         disabled: isEdit, // 编辑时禁用, Boolean | (formData) => Boolean
         none: isEdit, // 编辑时不使用该字段, Boolean | (formData) => Boolean
         rules: (formData) => [{}], // 通过函数，动态生成校验规则 Object | Array | (formData) => Object | Array
         extra: formData => 'xxx', // 字段额外说明， String || formData => String
         tooltip: formData => 'xxx', // 字段提示， String || formData => String
-        props: {
+        defaultValue: 'xxx', // 默认值，暂不支持函数
+        props: { // 控件属性
           placeholder: formData => 'xxx', // 通过 formData 动态生成，String | formData => String
           onChange (val, formData) { // 所有控件都有 onChange 事件，都能拿到 formData，但是不同控件，入参个数及顺序有区别
             // 通过 formData 修改其他表单项的值，实现联动

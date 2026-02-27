@@ -758,7 +758,7 @@ const modalConfig = computed(() => ({
               dataIndex: 'field1',
               type: EControlType.eInput,
               required: true,
-              validate: (index, value) => {
+              validate: (index, value, record, list) => { // record: 当前行的数据对象，list: 所有行数据
                 if (value.length < 3) {
                   // 错误时，return 'message'
                   return `第${ index + 1 }行字段1长度不能小于3`

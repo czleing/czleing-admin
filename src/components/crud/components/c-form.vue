@@ -289,7 +289,7 @@ function setTableRules (field) {
               if (column.required && isEmpty(obj[column.dataIndex])) {
                 return Promise.reject(t('crud.someRowNotNull', { rowNum: Number(i) + 1, label: column.title }))
               } else if (typeof column.validate === 'function') {
-                const message = column.validate(Number(i), obj[column.dataIndex], obj)
+                const message = column.validate(Number(i), obj[column.dataIndex], obj, list)
                 if (message) {
                   return Promise.reject(message)
                 }
