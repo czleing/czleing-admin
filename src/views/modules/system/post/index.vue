@@ -1,14 +1,8 @@
-<!-- 岗位信息 -->
+<!-- 岗位管理 -->
 <template>
   <CPage
-    hasExport
     primary-key="postId"
     :filter-config="filterConfig"
-    :before-search="beforeSearch"
-    :after-search="afterSearch"
-    :before-submit="beforeSubmit"
-    :after-open-modal="afterOpenModal"
-    :transform-detail="transformDetail"
     :table-config="tableConfig"
     :modal-config="modalConfig"
   />
@@ -16,7 +10,6 @@
 
 <script setup>
   import CPage from '@/components/crud/c-page.vue'
-  import { EControlType, EIsEnabled } from '@/enum/index.js'
 
   /** 查询条件配置 */
   const filterConfig = {
@@ -45,6 +38,7 @@
       },
     ]
   }
+
   /** 数据列表配置 */
   const tableConfig = computed(() => ({
     columns: [
@@ -102,6 +96,7 @@
       }
     ]
   }))
+
   /**
    * 新增、修改、详情弹窗配置
    */
@@ -122,7 +117,6 @@
         {
           label: '岗位编码',
           fieldName: 'postCode',
-          type: EControlType.eInput,
           required: true,
           props: {
           }
@@ -130,7 +124,6 @@
         {
           label: '岗位名称',
           fieldName: 'postName',
-          type: EControlType.eInput,
           required: true,
           props: {
           }
@@ -160,48 +153,4 @@
       ]
     })
   }))
-
-  /**
-   * 查询前修改查询参数
-   * @param {Object} searchParams 查询参数
-   */
-  function beforeSearch (searchParams) {
-    return searchParams
-  }
-
-  /**
-   * 查询后修改查询结果
-   * @param {Array} list 查询结果列表
-   */
-  function afterSearch (list) {
-    return list
-  }
-
-  /**
-   * 提交表单数据前处理
-   * @param {Object} submitData 提交的数据
-   * @param {Object} param 其他参数
-   */
-  function beforeSubmit (submitData, { isAdd, isEdit, isView, detail }) {
-    return submitData
-  }
-
-  /**
-   * 弹窗(新增、修改、详情弹窗)后执行
-   * @param {Object} param 其他参数
-   */
-  function afterOpenModal ({ isAdd, isEdit, isView, options }) {
-  }
-
-  /**
-   * 编辑、详情时，对详情数据修改
-   * @param {Object} detail 详情数据
-   * @param {Object} param 其他参数
-   */
-  function transformDetail (detail, { isEdit, isView }) {
-    return detail
-  }
 </script>
-
-<style lang="scss" scoped>
-</style>

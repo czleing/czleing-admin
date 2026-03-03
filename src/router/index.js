@@ -51,6 +51,17 @@ const staticRoutes = [
           cache: true
         }
       },
+      // {
+      //   path: '/developer/demo',
+      //   component: () => import('@/views/demo/demo-page.vue'),
+      //   meta: {
+      //     title: 'Demo',
+      //     isLeaf: true,
+      //     needLogin: false,
+      //     matchedPaths: ['/developer', '/developer/demo'],
+      //     cache: true
+      //   }
+      // },
       {
         path: '/personal-center',
         name: 'personal-center',

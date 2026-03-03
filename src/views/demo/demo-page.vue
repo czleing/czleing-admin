@@ -408,11 +408,12 @@ const modalConfig = computed(() => ({
         label: '短文本',
         fieldName: 'shortText',
         // type: EControlType.eInput, // 控件类型，默认文本框
-        // required: true, // 是否必填 Boolean || formData => Boolean
-        // disabled: isEdit, // 是否禁用 Boolean || formData => Boolean
-        // none: isView, // 是否不需要改字段，Boolean || formData => Boolean
-        // extra: formData => '222', // 字段额外说明， String || formData => String
-        // rules: [], // 校验规则，与 <a-form-item> 一致， object || array
+        // required: true, // 是否必填 Boolean | formData => Boolean
+        // disabled: isEdit, // 是否禁用 Boolean | formData => Boolean
+        // hidden: isView, // 是否隐藏该字段，数据仍在表单中，Boolean | formData => Boolean
+        // none: isView, // 是否不需要该字段，是则提交时该字段收集的数据将不在表单中，Boolean | formData => Boolean
+        // extra: formData => '222', // 字段额外说明， String | formData => String
+        // rules: [], // 校验规则，与 <a-form-item> 一致， object | array
         props: { // 没有属性可以不配
           // 根据 type 继承自对应 ant-design-vue 控件的属性和事件
           // placeholder 会默认生成，可以不配
@@ -420,9 +421,10 @@ const modalConfig = computed(() => ({
         }
       },
       {
-        label: '隐藏域',
+        label: '隐藏字段', // 类似隐藏域，可以放置一些提交时需要的额外信息，可以在表单联动时动态设置值
         fieldName: 'hidden1',
-        type: EControlType.eHidden,
+        hidden: true, // 强制隐藏
+        defaultValue: '默认值'
       },
       {
         label: formData => '整数', // 字段描述 String || formData => String
@@ -593,8 +595,11 @@ const modalConfig = computed(() => ({
         props: {
           useAll: true, // 是否在前面添加全部
           // allowClear: true,
-          options: [{ id: 1, name: 'name1' }, { id: 2, name: 'name2' }]
+          options: [{ id: 1, name: 'name1', other: 'other1' }, { id: 2, name: 'name2', other: 'other2' }],
           // mode: '', // 下拉模式 'multiple' | 'tags' | 'combobox'
+          // onChange (val, option, formData) {
+          //   console.log(val, option, formData)
+          // }
         }
       },
       {
@@ -746,7 +751,7 @@ const modalConfig = computed(() => ({
         // required: true, // 无效配置，请配置在 props.columns 的每一项里
         // rules: {}, // 无效配置，请配置在 props.columns 的每一项里
         // 动态表格的校验规则，全部配置在 columns 内，只要有一个 column 的 required 为 true，则表示该项为必填项
-        // 校验规则 只支持 required, validate: (index, value, record) => {} ()
+        // 校验规则 只支持 required, validator: (index, value, record) => {} ()
         props: {
           // primaryKey: 'id',
           // maxNum: 10,
@@ -757,14 +762,26 @@ const modalConfig = computed(() => ({
               tooltip: '字段1描述',
               dataIndex: 'field1',
               type: EControlType.eInput,
-              required: true,
-              validate: (index, value, record, list) => { // record: 当前行的数据对象，list: 所有行数据
-                if (value.length < 3) {
+              disabled: (record, records) => record.field2 === 2, // Boolean | (record, records) => Boolean
+              required: (record, records) => record.field2 === 1, // Boolean | (record, records) => Boolean
+              // rules: [], // 不生效，请用 validator
+              validator: (index, value, record, records) => { // record: 当前行的数据对象，records: 所有行数据
+                if (value && value.length < 3) {
                   // 错误时，return 'message'
                   return `第${ index + 1 }行字段1长度不能小于3`
                 }
                 // 正确时无需返回
+              },
+              props: {
+                // onChange (val, record, records) {
+                //   console.log(val, record, records)
+                // }
               }
+            },
+            {
+              title: '隐藏域',
+              dataIndex: 'fieldHidden',
+              hidden: true
             },
             {
               title: '字段2',
@@ -772,7 +789,20 @@ const modalConfig = computed(() => ({
               type: EControlType.eSelect,
               props: {
                 useAll: true,
-                options: [{id: 1, name: 1}]
+                options: [
+                  { id: 1, name: 1 },
+                  { id: 2, name: 2 }
+                ],
+                // dictType: 'xxx_xxx' // 或者使用字典为数据源
+                // remote: {...} // 或者使用远程数据源
+                onChange (val, record, records) {
+                  // 通过修改 record.xxx 联动其他列
+                  console.log(val, record, records)
+                  // if (val === 2 && !record.field1) {
+                  //   record.fieldHidden = '赋值给隐藏域'
+                  //   record.field1 = '联动修改了这里'
+                  // }
+                }
               }
             }
           ]

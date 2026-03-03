@@ -80,31 +80,34 @@ npm run build
 - 编写组件或页面文件首行请注明该组件/页面的说明、用途、用法等
 - 使用两个空格代替缩进符，避免不同系统下缩进宽度不一致
 - 避免在模板中写复杂逻辑，应仅包含简单的属性绑定，避免写复杂的表达式或函数调用，保持模板清晰
-- 给组件添加属性时，遵守一定的优先顺序，指令 > 静态属性 > 动态属性 > 事件，
-  如：`<input v-if="xxx" class="xxx" :maxlength="30" @input="onInputHandle" />`
+- 给组件添加属性时，遵守一定的优先顺序，指令 > 动/静态属性 > 事件，
+  如：`<input v-if="xxx" :maxlength="30" class="xxx" @input="onInputHandle" />`
 - 组件中 style 标签尽可能添加 `scoped`，避免全局样式污染，如：`<style scoped>`
 - 查询区域/表单区域使用日期/时间范围时，字段名设计统一使用'Begin'、'End'后缀，便于代码生成及使用默认值简化配置，如：xxxBegin, xxxEnd
 - 相对独立的小模块，尽可能单独抽离成一个组件，避免一个文件代码过长过杂，同时也要避免过多的组件嵌套
 
 
 ### 2、接口请求
-接口请求摒弃了restfull规范及一接口一封装模式，而是采用通用的请求方式，method 统一使用 post，参数统一使用请求体传参，如：
+接口请求摒弃了`restfull`规范及一接口一封装模式，而是采用通用的请求方式，method 统一使用 post，参数统一使用请求体传参，如：
 ```javascript
 import api from '@/api'
 ...
-const data = await api.post('/xxx/xxx', {})
+const goodsList = await api.post('/goods/list', { priceRange: [10, 100] })
 ```
 #### 请求
 - 第一个参数为接口地址，第二个参数为请求参数，第三个参数为其他配置，可选，如 headers, content-type 的设置
 - Content-Type 统一为 application/json，上传下载等特殊请求除外
+- method 统一为 post
+- 传参位置：
 - get 请求，请求参数统一通过 params 传递(URL传参)
 - post、put、delete、download 请求，请求参数统一通过 data(request body) 传递(请求体传参)
 - 不存在同时设置两种参数，除非手动拼在URL后面(不推荐)
-- 统一 post 的好处是在对接接口时，只需关注 url 和 参数，不用关注 method、content-type、传参位置等其他内容，提高沟通效率
+- 统一 post 的好处是在对接接口时，只需关注 url 和 参数，不用关注 method、content-type、传参位置等其他内容，以及省去数据来回的类型转换，提高沟通和开发效率
 
 #### 响应
-- 框架对 axios 的二次封装，简化了获取响应数据步骤，对异常统一拦截处理，使业务不需要关注异常处理，
-- 得到的返回结果直接就是业务数据，不用再每次请求都要通过一堆的 .data 去获取业务数据
+- 框架对 axios 的二次封装，简化了获取响应数据步骤，对全局异常统一拦截处理，使业务不需要关注全局异常处理，全局异常如：未登录或登录失效、未绑定手机号码、用户状态异常等
+- <font color="orange">【需要前端特殊处理的业务异常】请按正常状态(200)返回，将异常信息放在 data 里，来绕过统一拦截<br/>【不需要前端特殊处理的业务异常】直接返回5xx,6xx等状态，系统拦截后将统一弹出错误提示</font>
+- 返回结果就是业务数据，不用再每次请求都要通过一堆的 `.data` 去获取业务数据
 
 ### 3、动态样式
 less 中可使用 ant-design 的全局静态变量 @colorPrimary 等，但此变量不会跟随主题动态切换而变化，
@@ -283,13 +286,14 @@ const modalConfig = computed(() => ({
       {
         label: (formData) => formData.type === 1 ? '商品名称' : '赠品名称', // String | formData => String
         fieldName: 'productName', // 字段名，暂不支持函数
-        type: EControlType.eInput, // 控件类型，暂不支持函数
+        type: EControlType.eInput, // 控件类型，暂不支持函数，详情时组件会以纯文本渲染
         required: (formData) => formData.type === 1, // Boolean | (formData) => Boolean
-        disabled: isEdit, // 编辑时禁用, Boolean | (formData) => Boolean
-        none: isEdit, // 编辑时不使用该字段, Boolean | (formData) => Boolean
+        disabled: isEdit, // 是否禁用, Boolean | (formData) => Boolean
+        // hidden: isView, // 是否隐藏该字段，数据仍在表单中，Boolean | formData => Boolean
+        // none: isView, // 是否不需要该字段，数据不在表单中，Boolean | formData => Boolean
         rules: (formData) => [{}], // 通过函数，动态生成校验规则 Object | Array | (formData) => Object | Array
-        extra: formData => 'xxx', // 字段额外说明， String || formData => String
-        tooltip: formData => 'xxx', // 字段提示， String || formData => String
+        extra: formData => 'xxx', // 字段额外说明， String | formData => String
+        tooltip: formData => 'xxx', // 字段提示， String | formData => String
         defaultValue: 'xxx', // 默认值，暂不支持函数
         props: { // 控件属性
           placeholder: formData => 'xxx', // 通过 formData 动态生成，String | formData => String

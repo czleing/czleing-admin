@@ -23,7 +23,7 @@ export const useAuthStore = defineStore('auth', {
       return axios.get('/captchaImage', null, { headers: { isToken: false } })
     },
     /**
-     * 登录
+     * 登录统一入口
      * @param {} data 
      */
     async login (data) {
@@ -34,7 +34,7 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     /**
-     * 账号密码登录
+     * 1、账号密码登录
      * @param {*} param
      */
     async loginByAccount ({ account, password, code, uuid, remember }) {
