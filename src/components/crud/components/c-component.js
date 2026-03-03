@@ -9,7 +9,7 @@ import { h } from 'vue'
 
 /**
  * 根据 field 配置渲染组件
- * 该组件的的目的是给所有通过 field 配置生成的组件添加统一的功能，如远程数据源、监听表单数据进行组件数据联动
+ * 该组件的的目的是给所有通过 field 配置生成的组件添加统一的功能，如远程数据源、字典集成、表单联动逻辑、刷新按钮等
  */
 export default defineComponent({
   props: {

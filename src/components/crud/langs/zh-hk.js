@@ -52,7 +52,7 @@ export default {
     submit: '提交',
     cancel: '取消',
     notNull: '{label}不能為空',
-    someRowNotNull: '第[{rowNum}][{label}]不能為空',
+    someRowNotNull: '第 {rowNum} 行[{label}]不能為空',
     clickToDownload: '點擊此處下載',
     importTemplate: '匯入範本',
     dragFileToUpload: '將檔案拖曳到此處，或點擊上傳',

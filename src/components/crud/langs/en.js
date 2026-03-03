@@ -51,7 +51,7 @@ export default {
     submit: 'Submit',
     cancel: 'Cancel',
     notNull: '{label} cannot be empty',
-    someRowNotNull: 'Row [{rowNum}][{label}] cannot be empty',
+    someRowNotNull: 'Row {rowNum} [{label}] cannot be empty',
     clickToDownload: 'Click to download',
     importTemplate: 'Import Template',
     dragFileToUpload: 'Drag file here or click to upload',
