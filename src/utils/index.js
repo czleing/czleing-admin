@@ -213,9 +213,9 @@ export function stringStar (value, startLen, endLen, mark = '*', markLen = 6) {
 }
 
 /** 获得一个值，可能来源于一个函数的结果 */
-export function getFnValue (value, args) {
+export function getFnValue (value, ...args) {
   if (typeof value === 'function') {
-    return value(args)
+    return value(...args)
   } else {
     return value
   }
