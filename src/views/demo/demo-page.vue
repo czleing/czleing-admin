@@ -54,6 +54,7 @@
     <template #table_slotField="{ text, record, index, column }">
       插槽内容==={{ record.age }}
     </template>
+    <!-- 其他插槽如：header、filter、tools、table -->
   </CPage>
 </template>
 
