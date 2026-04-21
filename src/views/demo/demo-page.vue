@@ -251,19 +251,13 @@ const tableConfig = computed(() => ({
       hidden: true // 该列暂时隐藏，可通过列筛选勾选显示
     },
     {
-      title: '类型',
-      dataIndex: 'type2',
-      customRender: ({ value }) => '类型1',
-      width: 100
-    },
-    {
       title: '字典',
       dataIndex: 'dict',
       width: 100,
       dictType: 'dict_type' // 自动按指定的字典类型解析出中文
     },
     {
-      title: '状态',
+      title: '自定义',
       dataIndex: 'status',
       width: 100,
       customRender: ({ value, record, index, column }) => { // 自定义渲染函数
