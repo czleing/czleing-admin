@@ -211,7 +211,7 @@ function onConfirm (close, extraData) {
 #### 步骤三：预览并一键生成CRUD前后端代码
 #### 步骤四：查看生成结果或对特殊字段、控件的属性进行自定义修改
 
-参考案例：[`/src/views/demo/demo-page.vue`](src/views/demo/demo-page.vue)
+参考案例：[`/src/views/demo/demo-page.vue`](https://gitee.com/czleing/base-backend-static/blob/master/src/views/demo/demo-page.vue)
 
 与传统开发模式对比：
 ```html
