@@ -32,11 +32,10 @@
             </div>
           </template>
           <!-- 操作列 -->
-          <template v-else-if="useDelete && column.type === 'action' && !disabled">
+          <template v-else-if="useDelete && modelValue.length > minNum && column.type === 'action' && !disabled">
             <a-popconfirm
-              v-if="modelValue.length > 1"
               placement="left"
-              title="确认要删除改行吗？"
+              title="确认要删除该行吗？"
               @confirm="deleteHandle(index)"
             >
               <a href="javascript:;">删除</a>
@@ -67,27 +66,34 @@ const props = defineProps({
   },
   // 主键字段名
   primaryKey: { type: String, default: 'id' },
+  // 最小条数限制
+  minNum: {
+    type: Number,
+    default: 0
+  },
   // 最大条数限制
   maxNum: {
     type: Number,
     default: 10
   },
   /**
-   * 列信息，对象数组
+   * 列信息，对象数组，在 ant-design-vue 的 columns 基础上增加了一些属性配置项(以下带++标识的为新增配置)
    * title: 表头名称
-   * tooltip: 表头提示说明
+   * tooltip: 表头提示说明（++）
    * dataIndex: 该列对应字段名
    * width: 100, // 宽度
    * minWidth: 40,
    * maxWidth: 200,
-   * type: 控件类型，枚举：EControlType
-   * defaultValue: 默认值
-   * hidden: true, // 该列隐藏（类似 <input type="hidden" /> 适合需要给每行附加固定字段，又不需要显示出来的场景）
-   * required: true, // 该列是否必填，支持函数 Boolean | (record, records) => Boolean
-   * disabled: false, // 该列是否禁用，支持函数 Boolean | (record, records) => Boolean
-   * isView: false, // 该列是否仅展示文本值
-   * props: 组件属性配置
-   * props.onChange: // 控件值改变事件，通过修改record里的属性进行多列间联动 (val, record, records) => {}
+   * resizeble: true, // 是否可调整列宽
+   * type: 控件类型（++），枚举：EControlType
+   * defaultValue: 默认值（++）
+   * hidden: true, // 该列隐藏（++）（类似 <input type="hidden" /> 适合需要给每行附加固定字段，又不需要显示出来的场景，也可以用 type: EControlType.eHidden 隐藏）
+   * required: true, // 该列是否必填（++），支持函数 Boolean | (record, records) => Boolean，需配合 c-form.vue 使用才能动态生成校验规则
+   * validator: 校验逻辑函数，(rowIndex, value, record, records) => string，需配合 c-form.vue 使用才能动态生成校验规则
+   * disabled: false, // 该列是否禁用（++），支持函数 Boolean | (record, records) => Boolean
+   * isView: false, // 该列是否仅展示文本值（++）
+   * props: 组件属性配置（++）
+   * props.onChange: // 控件值改变事件（++），通过修改record里的属性进行多列间联动 (val, record, records) => {}
    */
   columns: {
     type: Array,
@@ -98,6 +104,11 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  // 是否需要默认新增一行
+  useAddDefault: {
+    type: Boolean,
+    default: true
+  },
   // 是否需要删除按钮
   useDelete: {
     type: Boolean,
@@ -107,7 +118,7 @@ const props = defineProps({
 
 const modelValue = ref([])
 const currColumns = ref([
-  ...props.columns.filter(item => !item.hidden).map(item => {
+  ...props.columns.filter(item => !item.hidden && item.type !== EControlType.eHidden).map(item => {
     return {
       ...item,
       type: undefined,
@@ -136,7 +147,7 @@ if (props.useDelete) {
 }
 onMounted(() => {
   if (!props.disabled && (!props.value || props.value.length === 0)) {
-    addHandle()
+    props.useAddDefault && addHandle()
   }
 })
 
