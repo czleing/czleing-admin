@@ -4,10 +4,7 @@
     ref="cPage"
     primary-key="deptId"
     :filter-config="filterConfig"
-    :before-search="beforeSearch"
     :after-search="afterSearch"
-    :before-submit="beforeSubmit"
-    :transform-detail="transformDetail"
     :table-config="tableConfig"
     :modal-config="modalConfig"
   />
@@ -209,14 +206,6 @@ function addChildren (record) {
 }
 
 /**
- * 查询前修改查询参数
- * @param {Object} searchParams 查询参数
- */
-function beforeSearch (searchParams) {
-  return searchParams
-}
-
-/**
  * 查询后修改查询结果
  * @param {Array} list 查询结果列表
  */
@@ -224,25 +213,4 @@ function afterSearch (list) {
   const tree = listToTree(list, 0, 'deptId')
   return tree
 }
-
-/**
- * 提交表单数据前处理
- * @param {Object} submitData 提交的数据
- * @param {Object} param 其他参数
- */
-function beforeSubmit (submitData, { isAdd, isEdit, isView, detail }) {
-  return submitData
-}
-
-/**
- * 编辑回填、详情展示时，对详情数据修改
- * @param {Object} detail 详情数据
- * @param {Object} param 其他参数
- */
-function transformDetail (detail, { isEdit, isView }) {
-  return detail
-}
 </script>
-
-<style lang="scss" scoped>
-</style>
