@@ -136,6 +136,10 @@ const pagination = ref({
   current: 1,
   total: 0
 })
+const sorter = ref({
+  field: undefined,
+  order: undefined
+})
 const filterAutoSearch = computed(() => {
   return props.filterConfig?.fields?.some(field => isNotEmpty(field.defaultValue))
 })
@@ -176,6 +180,7 @@ provide('c-page.selectedIds', selectedIds)
 provide('c-page.selectedObjs', selectedObjs)
 provide('c-page.searchParams', searchParams)
 provide('c-page.pagination', pagination)
+provide('c-page.sorter', sorter)
 provide('c-page.checkedFieldNames', checkedFieldNames)
 provide('c-page.onRefreshHandle', onRefreshHandle)
 
