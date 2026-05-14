@@ -136,7 +136,6 @@ const currentRowSelection = computed(() => {
 const useTotal = computed(() => currColumns.value.some(col => col.useTotal))
 const usePage = computed(() => props.config?.props?.usePage !== false)
 const page = computed(() => {
-  if (!usePage.value) return undefined
   return {
     pageNum: usePage.value ? pagination.value.current : undefined,
     pageSize: usePage.value ? pagination.value.pageSize : undefined,
