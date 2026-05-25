@@ -251,7 +251,7 @@ function onConfirm (close, extraData) {
 #### 步骤四：查看生成结果或对特殊字段、控件的属性进行自定义修改
 
 #### 9.1、CRUD 简单案例：
-```vue
+```html
 <!-- xxx管理 -->
 <template>
   <!-- 预设功能 API、权限 默认根据路由动态生成，可不配 -->
