@@ -109,8 +109,9 @@ const goodsList = await api.post('/goods/list', { priceRange: [10, 100] })
 - <font color="orange">【需要前端特殊处理的业务异常】请按正常状态(200)返回，将异常信息放在 data 里，来绕过统一拦截<br/>【不需要前端特殊处理的业务异常】直接返回5xx,6xx等状态，系统拦截后将统一弹出错误提示</font>
 - 返回结果就是业务数据，不用再每次请求都要通过一堆的 `.data` 去获取业务数据
 
-### 3、动态样式
-less 中可使用 ant-design 的全局静态变量 @colorPrimary 等，但此变量不会跟随主题动态切换而变化，
+### 3、样式
+- 框架中自带了一套基础样式库(原子样式)：`@/assets/css/base.less`，基本可以覆盖90%的场景，无法覆盖的单独写样式即可
+- less 中可使用 ant-design 的全局静态变量 @colorPrimary 等，但此变量不会跟随主题动态切换而变化，
 需要跟随变化请使用动态方式获取，token 内部的变量名参考[官网](https://www.antdv.com/docs/vue/customize-theme-cn)，如下：
 ```js
 import { useThemeToken } from '@/hooks/useThemeToken.js'
@@ -147,7 +148,45 @@ console.log('当前登录用户：', authStore.userInfo)
 <a-button v-hasPermi="['xxx:xxx:xxx1', 'xxx:xxx:xxx2']">新增</a-button>
 ```
 
-### 6、消息弹窗
+### 6、字典使用
+- CRUD 配置中使用，系统CRUD各部分组件已经深度集成了字典功能，在首次需要时加载，加载过的字典会缓存在内存中，避免频繁、重复加载，更新策略：刷新页面、手动点击刷新按钮、通过 useDict 第三个参数配置强制加载，dict-store 中提供了手动刷新方法：getDatasByType
+```javascript
+  // 表单组件中使用
+  {
+    label: '字典下拉',
+    fieldName: 'xxxStatus',
+    type: EControlType.eSelect,
+    props: {
+      dictType: 'xxx_status' // 指定字典类型，自动查询出字典项数据
+    }
+  }
+  // 列表 column 中使用
+  {
+    title: 'xx状态',
+    dataIndex: 'status',
+    width: 100,
+    dictType: 'xxx_status' // 自动按指定的字典类型解析出名称
+  },
+```
+
+- 独立使用，通过 `useDict`
+```javascript
+import { useDict } from '@/hooks/useDict.js'
+// 用法一：
+const dict = useDict(['is_delete', 'audit_status'])
+
+dict['audit_status'] // 异步赋值 reactive 响应式对象 dict
+
+// 用法二：
+useDict(['audit_status'], dict => {
+  console.log(dict['audit_status'])
+})
+
+<!-- 字典解析全局组件，支持多个值 -->
+<DictView dictType="audit_status" value="1,2" />
+```
+
+### 7、消息弹窗
 ```javascript
 import { Modal, message } from 'ant-design-vue'
 
@@ -171,7 +210,7 @@ message.success('保存成功')
 ```
 
 
-### 7、弹出模态框（简化版）
+### 8、弹出模态框（简化版）
 全局组件 `/global/CModal` 对 a-modal、a-drawer 进行了合并封装，简化了使用，属性设置支持标签上设置和调用时设置
 ```html
 <template>
@@ -205,13 +244,74 @@ function onConfirm (close, extraData) {
 ```
 
 
-### 8、CRUD快速开发案例(可直接代码生成，开发中心->代码生成)
+### 9、CRUD快速开发案例(可直接代码生成，开发中心->代码生成)
 #### 步骤一：先在数据库中设计表结构
 #### 步骤二：然后本地启动进入菜单‘开发中心->代码生成’导入表并编辑相关信息
-#### 步骤三：预览并一键生成CRUD前后端代码
+#### 步骤三：预览并一键生成菜单及CRUD前后端代码
 #### 步骤四：查看生成结果或对特殊字段、控件的属性进行自定义修改
 
-参考案例：[demo-page.vue](https://gitee.com/czleing/base-backend-static/blob/master/src/views/demo/demo-page.vue)
+#### 9.1、CRUD 简单案例：
+```vue
+<!-- xxx管理 -->
+<template>
+  <!-- 预设功能 API、权限 默认根据路由动态生成，可不配 -->
+  <CPage
+    :filter-config="filterConfig"
+    :table-config="tableConfig"
+    :modal-config="modalConfig"
+  />
+</template>
+
+<script setup>
+  import CPage from '@/components/crud/c-page.vue'
+
+  /** 查询条件配置 */
+  const filterConfig = {
+    fields: [
+      { label: '编码', fieldName: 'postCode' }, // 不写 type，默认 Input
+      { label: '名称', fieldName: 'postName' },
+      { label: '是否启用', fieldName: 'isEnabled', type: EControlType.eSelect, props: { options: EIsEnabled._list } }
+    ]
+  }
+
+  /** 数据列表配置 */
+  const tableConfig = {
+    columns: [
+      { title: '编码', dataIndex: 'postCode' },
+      { title: '名称', dataIndex: 'postName' },
+      { title: '是否启用', dataIndex: 'isEnabled', type: 'isEnabled' },
+      {
+        title: '操作',
+        actionShowNum: 2, // 展示操作按钮数量，剩余的将收进更多里
+        action: ({ record }) => [
+          // 预设：edit, detail, delete, toggle，预设功能 callback 可以直接写字符串
+          { name: '详情', callback: 'detail' },
+          { name: '编辑', callback: 'edit' },
+          { name: '删除', callback: 'delete' }, // 删除操作默认带确认框
+          { name: record.isEnabled ? '禁用' : '启用', confirm: true, callback: 'toggle' }
+        ]
+      }
+    ]
+  }
+
+  /** 新增、修改、详情弹窗配置 */
+  const modalConfig = {
+    title: 'xx信息', // 弹窗标题，会自动根据类型拼上新增、编辑、详情关键字
+    // width: 700, // 弹窗宽度，默认 600
+    // mode: 'modal', // 弹窗模式, modal 或 drawer
+    formConfig: {
+      colSize: 2, // 一行显示几列
+      fields: [ // 表单字段
+        { label: '编码', fieldName: 'postCode', required: true }, // 不写 type，默认 Input
+        { label: '名称', fieldName: 'postName', required: true }, // 不写 type，默认 Input
+      ]
+    }
+  }
+</script>
+```
+
+#### 9.2、配置完整参考案例：[demo-page.vue](https://gitee.com/czleing/base-backend-static/blob/master/src/views/demo/demo-page.vue)
+
 
 与传统开发模式对比：
 ```html
@@ -268,7 +368,7 @@ function onTypeChange (type) {
 ...
 </script>
 ```
-### 9、表单联动方式
+### 10、表单联动方式
 #### 在表单配置中
 ```javascript
 /**

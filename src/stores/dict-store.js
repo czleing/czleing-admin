@@ -39,6 +39,7 @@ export const useDictStore = defineStore('dict', () => {
         value: item.dictValue
       }))
       cache[type] = dicts
+      dictMap[type] = dicts
       return dicts
     }).catch(e => {
       console.error('获取字典项数据失败', e)

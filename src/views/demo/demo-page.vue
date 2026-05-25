@@ -66,7 +66,7 @@ const cPage = ref()
 defineOptions({
   name: 'DemoPage'
 })
-/** 树形配置，不配置则不使用树 */
+/** 左侧树形配置，不配置则不使用树 */
 const treeConfig = {
   url: '/system/user/deptTree',
   params: {}, // 查询参数
@@ -384,17 +384,17 @@ const modalConfig = computed(() => ({
   width: 800, // 弹窗宽度，默认 600
   mode: 'modal', // 弹窗模式, modal 或 drawer
   // props: { maskClosable: false }, // 其他参数, 会直接绑定到 a-modal 或 a-drawer
-  // 弹窗按钮属性修改 Object || ({ isAdd, isEdit, isView }) => Object
+  // 弹窗按钮属性修改 Object | ({ isAdd, isEdit, isView }) => Object
   buttonConfig: ({ isAdd, isEdit, isView }) => ({
     // showConfirm: !isEdit, // 确认按钮是否可见，默认可见
     confirmText: isEdit ? '确认修改' : '确认提交', // 默认是确定
-    // confirmContinue: true, // true || (formData, submitData) => {}，提交之后是否继续，继续则不关闭弹窗，只清空数据，可传一个函数对继续后的表单数据初始化(如给排序序号+1)
+    // confirmContinue: true, // true | (formData, submitData) => {}，提交之后是否继续，继续则不关闭弹窗，只清空数据，可传一个函数对继续后的表单数据初始化(如给排序序号+1)
     // showCancel: !isEdit // 取消按钮是否可见，默认可见
     cancelText: '关闭', // 默认是关闭
   }),
-  // 表单配置 Object || ({ isAdd, isEdit, isView, detail }) => Object
+  // 表单配置 Object | ({ isAdd, isEdit, isView, detail }) => Object
   formConfig: ({ isAdd, isEdit, isView, detail }) => ({
-    labelCol: { span: 6 },
+    labelCol: { span: 6 }, // 如果需要固定label宽度，可设为 { flex: '120px' }，参考 ant-design-vue a-col 的属性设置
     wrapperCol: { span: 18 },
     colSize: 2, // 一行显示几列
     // 表单字段
@@ -443,7 +443,7 @@ const modalConfig = computed(() => ({
         // 字段分组
         title: '分组标题', // String || formData => String
         subTitle: '分组副标题', // String || formData => String
-        // none: formData => !formData.userName, // true表示该项不可见(不使用该字段)，Boolean || formData => Boolean
+        // none: formData => !formData.userName, // true表示不需要该组(从表单中移除)，Boolean || formData => Boolean
         fields: [
           {
             label: '密码',
@@ -615,7 +615,7 @@ const modalConfig = computed(() => ({
         type: EControlType.eSelect,
         props: {
           // useRefresh: false, // 有动态数据源的组件特有的属性，是否开启手动刷新功能，默认 true，会在控件后面添加刷新图标，点击刷新控件的数据源
-          remote: {
+          remote: { // 远程数据源配置，配置了 remote 就不需要配置 options，所有组件都支持 remote 配置
             url: '/system/user/selectUser',
             // method: 'get', // 默认 post
             params: {
