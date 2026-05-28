@@ -78,7 +78,7 @@ const closeModal = inject('modal.close', null)
 const formData = reactive({})
 const formRemotes = reactive({}) // 收集组件的 remote 方法，用于需要重新刷新 remote 数据时使用
 const loading = ref(false)
-const { labelCol, wrapperCol, colSize } = props.formConfig // 已经解构失去响应式
+const { labelCol, wrapperCol, colSize = 2 } = props.formConfig // 已经解构失去响应式
 const colSpan = parseInt(24 / colSize)
 let dateFields = [] // 收集的日期字段数组，便于统一转换格式
 let dateRangeFields = [] // 收集的日期范围字段数组
