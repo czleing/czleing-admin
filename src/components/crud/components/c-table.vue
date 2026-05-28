@@ -56,6 +56,10 @@
         <template v-else-if="column.unit && text">
           {{ text }}{{ column.unit }}
         </template>
+        <!-- 带默认值 -->
+        <template v-else-if="column.default && !text">
+          <span v-html="column.default"></span>
+        </template>
         <!-- 操作列 -->
         <template v-else-if="column.action">
           <CTableAction :record="record" :column="column" :permission-config="permissionConfig" @action="onActionHandle" />

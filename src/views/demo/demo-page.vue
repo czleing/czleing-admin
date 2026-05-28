@@ -294,6 +294,7 @@ const tableConfig = computed(() => ({
       dataIndex: 'address',
       hidden: true,
       width: 180,
+      default: '-', // 设置默认值，支持html，如：default: '<div class="text-gray">xxx</div>'
       ellipsis: true // ant-design 自带的超出宽度隐藏
     },
     {
