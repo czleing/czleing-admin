@@ -48,17 +48,11 @@
             <span :class="EIsEnabled._classOf(text ? 1 : 0)">{{ EIsEnabled._of(text ? 1 : 0) }}</span>
           </template>
         </template>
-        <!-- 字符串脱敏 -->
-        <template v-else-if="column.hideChar && text">
-          {{ stringStar(text, ...column.hideChar) }}
-        </template>
-        <!-- 带单位 -->
-        <template v-else-if="column.unit && text">
-          {{ text }}{{ column.unit }}
-        </template>
-        <!-- 带默认值 -->
-        <template v-else-if="column.default && !text">
-          <span v-html="column.default"></span>
+        <!-- 带单位、带默认值、字符串脱敏 -->
+        <template v-else-if="column.hideChar || column.default || column.unit">
+          <span v-if="isEmpty(text)" v-html="column.default" />
+          <span v-else>{{ column.hideChar ? stringStar(text, ...column.hideChar) : text }}</span>
+          {{ column.unit ?? '' }}
         </template>
         <!-- 操作列 -->
         <template v-else-if="column.action">
