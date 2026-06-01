@@ -300,7 +300,7 @@ function onConfirm (close, extraData) {
     // width: 700, // 弹窗宽度，默认 600
     // mode: 'modal', // 弹窗模式, modal 或 drawer
     formConfig: {
-      colSize: 2, // 一行显示几列
+      cols: 2, // 一行显示几列
       fields: [ // 表单字段
         { label: '编码', fieldName: 'postCode', required: true }, // 不写 type，默认 Input
         { label: '名称', fieldName: 'postName', required: true }, // 不写 type，默认 Input
@@ -380,7 +380,7 @@ const modalConfig = computed(() => ({
   formConfig: ({ isAdd, isEdit, isView, detail }) => ({
     labelCol: { span: 6 },
     wrapperCol: { span: 18 },
-    colSize: 2, // 一行显示几列
+    cols: 2, // 一行显示几列，默认 2 列
     // 表单字段
     fields: [ // 表单字段数组，可分组
       {

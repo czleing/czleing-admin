@@ -111,7 +111,7 @@
     formConfig: ({ isAdd, isEdit, isView, detail }) => ({
       labelCol: { span: 8 },
       wrapperCol: { span: 16 },
-      colSize: 2, // 一行显示几列
+      cols: 2, // 一行显示几列
       // 表单字段
       fields: [
         {

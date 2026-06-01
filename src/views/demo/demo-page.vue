@@ -78,20 +78,21 @@ const treeConfig = {
 const filterConfig = {
   // useCache: true, // 使用查询条件暂存
   // cacheBtnText: '记住查询', // 暂存按钮文字，默认 '记住查询'
-  // labelCol: { span: 6 },
-  // wrapperCol: { span: 18 },
-  // 一行显示几列由每个字段的 colSize 决定，一行 24 格，每个字段可以设置占用格数，一行不够时自动换行，注：查询重置按钮固定占 4-6 格(使用记住查询时占用6格，否则4格)
+  // labelCol: { span: 6 }, // 所有表单项文本部分栅格设置，参照 a-col
+  // wrapperCol: { span: 18 }, // 所有表单项控件部分栅格设置，参照 a-col
+  // buttonsCol: { flex: 'auto' }, // 查询重置等按钮栅格设置
+  // buttonsAlign: 'right', // 查询重置等按钮水平对齐方式，left(默认), center, right
+  // 一行显示几列由每个字段的 col 决定，默认自适应列数，一行 24 格，每个字段可以设置占用格数，一行不够时自动换行，注：查询重置按钮固定占 4-6 格(使用记住查询时占用6格，否则4格)
   // 字段配置
   fields: [
     {
       label: '关键字',
       fieldName: 'key',
       // type: EControlType.eInput, // 默认 eInput 可以不设置
-      colSize: { flex: '230px' },
-      // 每个字段的宽度可以很灵活控制，固定宽度、同宽、自适应等 参考 ant-design-vue a-col 的属性
-      // colSize: { span: 8 }, // 整个字段(包含文本和控件)占整行24栅格的比例，固定宽度可以设置为 { flex: '280px' }, 默认响应式分配：{ sm: 8, lg: 6, xxl: 4 }
-      // labelCol: { span: 7 }, // 字段文本部分占整个字段的比例，遵循 24 栅格规则，或使用 flex 布局，{ flex: 2 }
-      // wrapperCol: { span: 18 }, // 字段控件部分占整个字段的比例
+      // col: { flex: '230px' }, // 表单项(包含文本和控件)栅格设置，默认响应式分配：{ sm: 8, lg: 6, xxl: 4 }
+      // 每个字段的宽度可以很灵活控制，固定宽度、同宽、自适应等 参照 ant-design-vue a-col 的属性
+      // labelCol: { span: 7 }, // 表单项文本部分栅格设置，参照 a-col
+      // wrapperCol: { span: 17 }, // 表单项控件部分栅格设置，参照 a-col
       props: {
         placeholder: '请输入姓名/手机号/账号'
       }
@@ -100,7 +101,7 @@ const filterConfig = {
       label: '是否启用',
       fieldName: 'isEnabled',
       type: EControlType.eSelect,
-      colSize: { flex: '0 0 180px' },
+      col: { flex: '0 0 180px' },
       defaultValue: 1, // 给一个默认值，注：设置了默认值后，页面初始化时 c-filter 组件会自动提交一次查询，tableConfig.initSearch 将会默认关闭
       props: {
         options: EIsEnabled._list
@@ -124,7 +125,7 @@ const filterConfig = {
     },
     {
       label: '时间范围',
-      colSize: { flex: '320px' },
+      col: { flex: '320px' },
       fieldName: 'createTime', // 对应查询数据库中的字段，提交时会删掉，替换成 fieldNames 中设置的两个字段
       type: EControlType.eDateRange,
       props: {
@@ -395,9 +396,9 @@ const modalConfig = computed(() => ({
   }),
   // 表单配置 Object | ({ isAdd, isEdit, isView, detail }) => Object
   formConfig: ({ isAdd, isEdit, isView, detail }) => ({
-    labelCol: { span: 6 }, // 如果需要固定label宽度，可设为 { flex: '120px' }，参考 ant-design-vue a-col 的属性设置
-    wrapperCol: { span: 18 },
-    colSize: 2, // 一行显示几列
+    // cols: 2, // 一行显示几列，默认 2 列
+    // labelCol: { span: 6 }, // 如果需要固定label宽度，可设为 { flex: '120px' }，参考 ant-design-vue a-col 的属性设置
+    // wrapperCol: { span: 18 },
     // 表单字段
     fields: [ // 表单字段数组，可分组
       {
@@ -407,9 +408,15 @@ const modalConfig = computed(() => ({
         // required: true, // 是否必填 Boolean | formData => Boolean
         // disabled: isEdit, // 是否禁用 Boolean | formData => Boolean
         // hidden: isView, // 是否隐藏该字段，数据仍在表单中，Boolean | formData => Boolean
-        // none: isView, // 是否不需要该字段，是则提交时该字段收集的数据将不在表单中，Boolean | formData => Boolean
+        // none: isView, // 是否不需要该字段，数据不在表单中，Boolean | formData => Boolean
         // extra: formData => '222', // 字段额外说明， String | formData => String
+        // tooltip: formData => '111', // 字段(?)提示， String | formData => String
+        // defaultValue: 'xxx', // 默认值
         // rules: [], // 校验规则，与 <a-form-item> 一致， object | array
+        // singleLine: true, // 单独占一行，优先级高于 col
+        // col: { span: 12 }, // 表单项(包含文本和控件)栅格设置，固定宽度可以设置为 { flex: '280px' }，参照 a-col 属性，默认根据列数计算
+        // labelCol: { span: 3 }, // 表单项文本部分栅格设置，参照 a-col，{ flex: '120px' }、{ flex: '30%' }
+        // wrapperCol: { span: 21 }, // 表单项控件部分栅格设置，参照 a-col，{ flex: '120px' }、{ flex: '30%' }
         props: { // 没有属性可以不配
           // 根据 type 继承自对应 ant-design-vue 控件的属性和事件
           // placeholder 会默认生成，可以不配
@@ -536,7 +543,6 @@ const modalConfig = computed(() => ({
             fieldName: 'unitName',
             type: EControlType.eInput,
             singleLine: true, // 单独占一行
-            // colSpan: 12, // 该字段占一行的多少比例，24栅格
             labelCol: { span: 3 },
             wrapperCol: { span: 21 },
             props: {},

@@ -132,19 +132,17 @@ const tableConfig = computed(() => ({
  * 新增、修改、详情配置
  */
 const modalConfig = computed(() => ({
-  title: '字典类型', // 弹窗标题，会自动根据类型拼上新增、编辑、详情关键字
-  width: 400, // 弹窗宽度，默认 600
-  mode: 'modal', // 弹窗模式, modal 或 drawer
+  title: '字典类型',
+  width: 400,
+  mode: 'modal',
   buttonConfig: ({ isAdd, isEdit, isView }) => ({
-    confirmText: isEdit ? '确认修改' : '确认提交' // 默认是确定
+    confirmText: isEdit ? '确认修改' : '确认提交'
   }),
-  // 表单配置 Object || ({ isAdd, isEdit, isView, detail }) => Object
   formConfig: ({ isAdd, isEdit, isView, detail }) => ({
     labelCol: { span: 6 },
     wrapperCol: { span: 18 },
-    colSize: 1, // 一行显示几列
-    // 表单字段
-    fields: [ // 表单字段数组，可分组
+    cols: 1,
+    fields: [
       {
         label: '类型',
         fieldName: 'dictType',
@@ -180,7 +178,7 @@ const modalConfig = computed(() => ({
         type: EControlType.eDate,
         none: !isView,
         props: {
-          showTime: true // 是否需要时分秒
+          showTime: true
         }
       }
     ]

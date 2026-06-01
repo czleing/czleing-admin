@@ -12,12 +12,15 @@
     >
       <a-row :gutter="10" wrap>
         <!-- 动态字段 -->
-        <a-col v-for="(field, index) in currFields" :key="index" v-bind="field.colSize || colSize">
+        <a-col v-for="(field, index) in currFields" :key="index" v-bind="field.col ?? col">
           <a-form-item :label="field.label" :name="field.fieldName" :label-col="field.labelCol" :wrapper-col="field.wrapperCol">
             <CComponent v-model:value="formData[field.fieldName]" :field="field" />
           </a-form-item>
         </a-col>
-        <a-col :span="config.useCache && fields?.length > 0 ? 6 : 4">
+        <a-col v-bind="config.buttonsCol ?? { span: config.useCache && fields?.length > 0 ? 6 : 4 }" class="flex-x" :class="{
+          'x-center': config.buttonsAlign === 'center',
+          'x-end': config.buttonsAlign === 'right',
+        }">
           <a-form-item>
             <a-space>
               <a-button type="primary" :loading="loading" :disabled="loading" :icon="h(SearchOutlined)" html-type="submit">{{ $t('crud.search') }}</a-button>
@@ -73,7 +76,7 @@ const props = defineProps({
   }
 })
 const { t } = useI18n()
-const colSize = { sm: 8, lg: 6, xxl: 4 }
+const col = { sm: 8, lg: 6, xxl: 4 }
 const { labelCol, wrapperCol, fields } = props.config
 const currFields = computed(() => {
   return fields.map(field => {

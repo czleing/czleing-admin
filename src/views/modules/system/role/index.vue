@@ -96,7 +96,7 @@ const modalConfig = computed(() => ({
   formConfig: ({ isAdd, isEdit, isView, detail }) => ({
     labelCol: { span: 6 },
     wrapperCol: { span: 18 },
-    colSize: 2,
+    cols: 2,
     fields: [
       {
         label: '角色名称',

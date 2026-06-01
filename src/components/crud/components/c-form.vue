@@ -17,7 +17,7 @@
               <FieldGroup :title="getFnValue(field.title, formData)" :subTitle="getFnValue(field.subTitle, formData)">
                 <a-row :gutter="15">
                   <template v-for="child in field.fields" :key="child.fieldName">
-                    <a-col v-if="child.inUse" v-show="!child.hidden" :span="child.colSpan">
+                    <a-col v-if="child.inUse" v-show="!child.hidden" v-bind="child.col">
                       <a-form-item v-bind="formItemProps(child)">
                         <CComponent v-model:value="formData[child.fieldName]" :field="child" :is-view="isView" @update:value="(...args) => field.props?.onChange?.(...args, formData)" />
                       </a-form-item>
@@ -29,7 +29,7 @@
           </template>
           <template v-else-if="field.inUse">
             <!-- 控件 -->
-            <a-col :span="field.colSpan" v-show="!field.hidden">
+            <a-col v-bind="field.col" v-show="!field.hidden">
               <a-form-item v-bind="formItemProps(field)">
                 <CComponent v-model:value="formData[field.fieldName]" :field="field" :is-view="isView" @update:value="(...args) => field.props?.onChange?.(...args, formData)" />
               </a-form-item>
@@ -78,8 +78,8 @@ const closeModal = inject('modal.close', null)
 const formData = reactive({})
 const formRemotes = reactive({}) // 收集组件的 remote 方法，用于需要重新刷新 remote 数据时使用
 const loading = ref(false)
-const { labelCol, wrapperCol, colSize = 2 } = props.formConfig // 已经解构失去响应式
-const colSpan = parseInt(24 / colSize)
+const { labelCol, wrapperCol, cols = 2 } = props.formConfig // 已经解构失去响应式
+const colSpan = parseInt(24 / cols)
 let dateFields = [] // 收集的日期字段数组，便于统一转换格式
 let dateRangeFields = [] // 收集的日期范围字段数组
 let rangeFieldNamesMap = {} // 日期范围，一般有两个值，其字段名用 map 暂存
@@ -108,7 +108,7 @@ const currFields = computed(() => {
         // 表格类型，根据 columns 自动生成 rules
         setTableRules(item)
       }
-      item.colSpan = item.colSpan ?? (item.singleLine ? 24 : colSpan)
+      item.col = item.singleLine ? { span: 24 } : (item.col ?? { span: colSpan })
       if (!props.isView) {
         item.props = item.props ?? {}
         item.props.disabled = getFnValue(item.disabled, formData)

@@ -27,7 +27,7 @@
         label: '用户账号',
         fieldName: 'userName',
         type: EControlType.eInput,
-        colSize: { span: 4 },
+        col: { span: 4 },
         props: {
         }
       },
@@ -35,7 +35,7 @@
         label: '登录IP',
         fieldName: 'ipaddr',
         type: EControlType.eInput,
-        colSize: { span: 4 },
+        col: { span: 4 },
         props: {
         }
       },
@@ -43,7 +43,7 @@
         label: '登录状态',
         fieldName: 'status',
         type: EControlType.eSelect,
-        colSize: { span: 4 },
+        col: { span: 4 },
         props: {
           dictType: 'sys_common_status',
         }
@@ -52,7 +52,7 @@
         label: '登录时间',
         fieldName: 'loginTime',
         type: EControlType.eDateRange,
-        colSize: { span: 7 },
+        col: { span: 7 },
         props: {
         }
       },
@@ -135,7 +135,7 @@
     formConfig: ({ isAdd, isEdit, isView, detail }) => ({
       labelCol: { span: 8 },
       wrapperCol: { span: 16 },
-      colSize: 2,
+      cols: 2,
       fields: [
         {
           label: '用户账号',

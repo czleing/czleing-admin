@@ -86,7 +86,7 @@ async function getDetail () {
 const basicFormConfig = computed(() => ({
   labelCol: { span: 6 },
   wrapperCol: { span: 18 },
-  colSize: 2,
+  cols: 2,
   fields: [
     {
       label: '表名称',
@@ -124,7 +124,7 @@ const basicFormConfig = computed(() => ({
 const genFormConfig = computed(() => ({
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
-  colSize: 2,
+  cols: 2,
   fields: [
     {
       label: '生成模板',
@@ -316,7 +316,7 @@ const genFormConfig = computed(() => ({
 const columnFormConfig = computed(() => ({
   labelCol: { span: 0 },
   wrapperCol: { span: 24 },
-  colSize: 1,
+  cols: 1,
   fields: [
     {
       label: '',

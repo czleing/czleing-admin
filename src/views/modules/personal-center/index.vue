@@ -64,7 +64,7 @@ const infoFormConfig = computed(() => {
   return {
     labelCol: { span: 6 },
     wrapperCol: { span: 18 },
-    colSize: 1, // 一行显示几列
+    cols: 1, // 一行显示几列
     // 表单字段
     fields: [
       {
@@ -135,7 +135,7 @@ const pwdFormConfig = computed(() => {
   return {
     labelCol: { span: 7 },
     wrapperCol: { span: 17 },
-    colSize: 1, // 一行显示几列
+    cols: 1, // 一行显示几列
     // 表单字段
     fields: [
       {

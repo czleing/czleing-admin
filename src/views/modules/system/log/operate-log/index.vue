@@ -154,7 +154,7 @@
     formConfig: ({ isAdd, isEdit, isView, detail }) => ({
       labelCol: { span: 8 },
       wrapperCol: { span: 16 },
-      colSize: 2,
+      cols: 2,
       fields: [
         {
           label: '模块标题',

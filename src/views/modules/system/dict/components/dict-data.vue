@@ -58,7 +58,7 @@ const filterConfig = computed(() => ({
   fields: [
     {
       label: '名称',
-      colSize: { span: 8 },
+      col: { span: 8 },
       fieldName: 'dictLabel',
       type: EControlType.eInput,
       props: {
@@ -141,7 +141,7 @@ const modalConfig = computed(() => ({
   formConfig: ({ isAdd, isEdit, isView, detail }) => ({
     labelCol: { span: 6 },
     wrapperCol: { span: 18 },
-    colSize: 1,
+    cols: 1,
     fields: [
       {
         label: '类型',
