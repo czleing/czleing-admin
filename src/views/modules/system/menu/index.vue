@@ -102,10 +102,6 @@ const tableConfig = computed(() => ({
       action: ({ record }) => {
         const btns = [
           // 预设：edit, detail, delete, toggle
-          // {
-          //   name: '详情',
-          //   callback: 'detail'
-          // },
           {
             name: '编辑',
             callback: 'edit'
