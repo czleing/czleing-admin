@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>base-backend</h1>
+  <h1>base-backend-admin</h1>
   <h3>中后台管理系统配置化框架</h3>
 </div>
 
@@ -401,7 +401,7 @@ const modalConfig = computed(() => ({
 
 ## 贡献者
 
-<img src="./src/doc/avatar.png" style="vertical-align:middle;" />
+<img src="./src/doc/avatar.png" align="center" />
 czleing
 
 ## 感谢支持
@@ -409,13 +409,10 @@ czleing
 
 或者还可以小费打赏哦 ^_^
 
-<div style="width:310px;">
-  <div style="display:flex;justify-content:space-around;">
-    <div>微信</div>
-    <div>支付宝</div>
-  </div>
-  <img src="./src/doc/wx.jpg" height="150" />
-  <img src="./src/doc/zfb.jpg" height="150" />
+<div>
+微信　　　　　　　　　支付宝
 </div>
+<img src="./src/doc/wx.jpg" height="150" />
+<img src="./src/doc/zfb.jpg" height="150" />
 
 <img src="./src/doc/yf.png" width="60" />
