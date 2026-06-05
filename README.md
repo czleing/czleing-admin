@@ -1,6 +1,12 @@
-# Vue3 + Vite + Pinia + Ant-design-vue4 + JavaScript + axios + vue-router + pnpm
+<div align="center">
+  <h1>base-backend</h1>
+  <h3>中后台管理系统配置化框架</h3>
+</div>
 
-使用最新技术栈封装的一套后台管理前端开发框架，追求精简、优雅，没有个人的包名、前缀、广告，拿来免改，干净整洁，易懂易用易扩展，将常用的功能进行了灵活的封装，不再需要编写繁琐的表单、控件、校验、联动逻辑、获取数据逻辑、表单回填逻辑、数据转换逻辑、列表、弹窗等重复性代码，通过简单配置即可使用，个别地方约定大于配置，让开发尽量简单
+## 简介
+### Vue3 + Vite + Pinia + Ant-design-vue4 + JavaScript + axios + vue-router + pnpm
+
+个人利用业余时间使用最新技术栈封装的一套后台管理前端开发框架，追求精简、优雅，没有个人的包名、前缀、广告，拿来免改，干净整洁，易懂易用易扩展，将常用的功能进行了灵活的封装，不再需要编写繁琐的表单、控件、校验、联动逻辑、获取数据逻辑、表单回填逻辑、数据转换逻辑、列表、弹窗等重复性代码，通过简单配置即可使用，部分约定大于配置，让开发尽量简单
 
 ## 环境要求
 - node: 18+
@@ -9,7 +15,7 @@
 ## 相关技术及依赖
 - Vue 3.4+ 开发框架
 - Vite 4.4+ 打包构建，目前最快的构建工具
-- [pinia 2.1+](https://pinia.web3doc.top/) 全局状态管理，比 vuex 简单好用
+- [pinia 2.1+](https://pinia.web3doc.top/) 全局状态管理，比 vuex 更简单好用
 - ant-design-vue 4+ UI库，ant-design-vue 最新版，体验与颜值并存
 - vue-router 4.4+ 路由管理
 - [VueUse](https://vueuse.org/) 集成了很多组合式API的库
@@ -18,10 +24,10 @@
 - pinia-plugin-persist pinia持久化插件，
 - unplugin-auto-import 常用API免导入插件，如使用 ref, reactive 不在需要写 import { ref, reactive } from 'vue'
 - pnpm 包管理工具，目前最优的包管理工具，更快速且体积更小
-- [后端源码](https://gitee.com/czleing/base-backend-api)
+- [后端源码](https://gitee.com/czleing/base-backend-api) 基于若依单体后端修改
 
 ## 框架功能及特点
-- 主题色动态切换
+- 主题色动态切换(使用 CSS 变量 + ThemeToken 双方案)
 - 全局明/暗色模式
 - 统一动态调整组件大小
 - 使用动态路由及权限配置
@@ -34,10 +40,14 @@
 - 使用 JavaScript
 - 支持国际化(vue-i18n)
 - 线上自动检测版本更新
-- CRUD 配置化开发
+- CRUD 配置化自动生成，告别传统的大量DOM重复堆砌
 - 系统管理基础功能
 - Swagger 接口文档(入口：打开菜单：开发中心 -> 接口文档)
 - CRUD 可视化代码生成
+- 一个CRUD页面只有一个文件，不用到处跳，开发不割裂，代码简短，如：一个部门管理只需几十行代码，一个用户管理也仅200多行，菜单管理300多行
+- ==========================
+- 未来持续更新
+- 接下来集成SSE消息通知、数据权限设置、忘记/重置密码、定时任务设置等...
 
 ## 初始化
 ### 1. 安装依赖
@@ -63,6 +73,7 @@ npm run build
 ```
 
 ## 预览
+<img src='./src/doc/login.jpg' alt="light">
 <img src='./src/doc/light.png' alt="light">
 <img src='./src/doc/light2.png' alt="light">
 <img src='./src/doc/light3.png' alt="light">
@@ -96,7 +107,7 @@ const goodsList = await api.post('/goods/list', { priceRange: [10, 100] })
 ```
 #### 请求
 - 第一个参数为接口地址，第二个参数为请求参数，第三个参数为其他配置，可选，如 headers, content-type 的设置
-- Content-Type 统一为 application/json，上传下载等特殊请求除外
+- Content-Type 统一为 application/json，一般情况无需设置
 - method 统一为 post
 - 传参位置：
 - get 请求，请求参数统一通过 params 传递(URL传参)
@@ -106,7 +117,7 @@ const goodsList = await api.post('/goods/list', { priceRange: [10, 100] })
 
 #### 响应
 - 框架对 axios 的二次封装，简化了获取响应数据步骤，对全局异常统一拦截处理，使业务不需要关注全局异常处理，全局异常如：未登录或登录失效、未绑定手机号码、用户状态异常等
-- <font color="orange">【需要前端特殊处理的业务异常】请按正常状态(200)返回，将异常信息放在 data 里，来绕过统一拦截<br/>【不需要前端特殊处理的业务异常】直接返回5xx,6xx等状态，系统拦截后将统一弹出错误提示</font>
+- <font color="orange">【局部异常：需要前端个别地方特殊处理的业务异常】请按正常状态(200)返回，将异常信息放在 data 里，避免被统一拦截<br/>【全局异常：前端统一处理的异常】直接返回4xx,5xx,6xx等状态，在响应拦截器中统一处理，如重新登录、业务异常错误提示</font>
 - 返回结果就是业务数据，不用再每次请求都要通过一堆的 `.data` 去获取业务数据
 
 ### 3、样式
@@ -186,31 +197,8 @@ useDict(['audit_status'], dict => {
 <DictView dictType="audit_status" value="1,2" />
 ```
 
-### 7、消息弹窗
-```javascript
-import { Modal, message } from 'ant-design-vue'
 
-// 弹出确认框
-Modal.confirm({
-  title: '温馨提示',
-  content: '确认要删除该用户吗？',
-  // icon: createVNode(ExclamationCircleOutlined),
-  // okText: '确认',
-  // okType: 'danger', // 确认按钮类型，a-button 的 type
-  // okButtonProps: {},
-  // cancelText: '取消',
-  // onCancel () {},
-  onOk () {
-    // 相关操作
-  }
-})
-// 弹出成功提示
-message.success('保存成功')
-
-```
-
-
-### 8、弹出模态框（简化版）
+### 7、弹出模态框（简化版）
 全局组件 `/global/CModal` 对 a-modal、a-drawer 进行了合并封装，简化了使用，属性设置支持标签上设置和调用时设置
 ```html
 <template>
@@ -244,13 +232,13 @@ function onConfirm (close, extraData) {
 ```
 
 
-### 9、CRUD快速开发案例(可直接代码生成，开发中心->代码生成)
+### 8、CRUD快速开发案例(可直接代码生成，菜单：开发中心->代码生成)
 #### 步骤一：先在数据库中设计表结构
 #### 步骤二：然后本地启动进入菜单‘开发中心->代码生成’导入表并编辑相关信息
 #### 步骤三：预览并一键生成菜单及CRUD前后端代码
 #### 步骤四：查看生成结果或对特殊字段、控件的属性进行自定义修改
 
-#### 9.1、CRUD 简单案例：
+#### 8.1、CRUD 简单案例：
 ```html
 <!-- xxx管理 -->
 <template>
@@ -301,7 +289,7 @@ function onConfirm (close, extraData) {
     // mode: 'modal', // 弹窗模式, modal 或 drawer
     formConfig: {
       cols: 2, // 一行显示几列
-      fields: [ // 表单字段
+      fields: [ // 表单字段，可分租
         { label: '编码', fieldName: 'postCode', required: true }, // 不写 type，默认 Input
         { label: '名称', fieldName: 'postName', required: true }, // 不写 type，默认 Input
       ]
@@ -368,7 +356,7 @@ function onTypeChange (type) {
 ...
 </script>
 ```
-### 10、表单联动方式
+### 9、表单联动方式
 #### 在表单配置中
 ```javascript
 /**
@@ -410,3 +398,24 @@ const modalConfig = computed(() => ({
   })
 }))
 ```
+
+## 贡献者
+
+<img src="./src/doc/avatar.png" style="vertical-align:middle;" />
+czleing
+
+## 感谢支持
+开源不易，如果觉得对您有帮助，可以帮忙点个 Star, 感激不尽！
+
+或者还可以小费打赏哦 ^_^
+
+<div style="width:310px;">
+  <div style="display:flex;justify-content:space-around;">
+    <div>微信</div>
+    <div>支付宝</div>
+  </div>
+  <img src="./src/doc/wx.jpg" height="150" />
+  <img src="./src/doc/zfb.jpg" height="150" />
+</div>
+
+<img src="./src/doc/yf.png" width="60" />
