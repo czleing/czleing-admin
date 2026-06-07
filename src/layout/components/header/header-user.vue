@@ -2,7 +2,10 @@
   <div class="header-user">
     <a-dropdown v-if="authStore.hasLogin" class="">
       <a-space class="pointer">
-        <a-avatar :src="getFullUrl(authStore.userInfo.avatar) || DefaultAvatar" class="shadow1" />
+        <a-avatar :src="getFullUrl(authStore.userInfo.avatar) || DefaultAvatar" class="shadow1">
+          <!-- <img :src="DefaultAvatar" width="33" /> -->
+          <UserOutlined />
+        </a-avatar>
         <span class="header-user-name">
           {{ authStore.userInfo.nickName }}
         </span>
