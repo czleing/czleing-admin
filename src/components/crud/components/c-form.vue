@@ -111,8 +111,12 @@ const currFields = computed(() => {
       item.col = item.singleLine ? { span: 24 } : (item.col ?? { span: colSpan })
       if (!props.isView) {
         item.props = item.props ?? {}
-        item.props.disabled = getFnValue(item.disabled, formData)
-        item.props.placeholder = getFnValue(item.placeholder, formData)
+        if (item.disabled !== undefined) {
+          item.props.disabled = getFnValue(item.disabled, formData)
+        }
+        if (item.props.placeholder !== undefined) {
+          item.props.placeholder = getFnValue(item.props.placeholder, formData)
+        }
       }
       return item
     })
@@ -187,8 +191,10 @@ function setFormData (data = props.detail, includeFieldNames = fieldNamesArr.val
         formData[fieldName] = data[fieldName] ? dayjs(data[fieldName]) : defaultObject.value[fieldName]
       } else if (dateRangeFields.includes(fieldName)) {
         const fieldNames = rangeFieldNamesMap[fieldName]
-        if (Array.isArray(fieldNames) && fieldNames.length === 2 && data[fieldNames[0]] && data[fieldNames[1]]) {
-          formData[fieldName] = [dayjs(data[fieldNames[0]]), dayjs(data[fieldNames[1]])]
+        if (Array.isArray(fieldNames) && fieldNames.length === 2) {
+          if (data[fieldNames[0]] && data[fieldNames[1]]) {
+            formData[fieldName] = [dayjs(data[fieldNames[0]]), dayjs(data[fieldNames[1]])]
+          }
         } else {
           console.error(`字段[${fieldName}]设置的 fieldNames 不正确，跳过赋值`, fieldNames)
         }

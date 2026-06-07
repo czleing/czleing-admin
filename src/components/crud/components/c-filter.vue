@@ -76,8 +76,8 @@ const props = defineProps({
   }
 })
 const { t } = useI18n()
-const col = { sm: 8, lg: 6, xxl: 4 }
-const { labelCol, wrapperCol, fields } = props.config
+const defaultCol = { sm: 8, lg: 6, xxl: 4 }
+const { col = defaultCol, labelCol, wrapperCol, fields } = props.config
 const currFields = computed(() => {
   return fields.map(field => {
     return {

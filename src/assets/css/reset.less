@@ -27,5 +27,10 @@ a + a {
 div[aria-hidden=true] { display: none !important; }
 // 顶部菜单间隔太大，从 16px 缩小为 6px
 .ant-menu-horizontal .ant-menu-item {
-  padding-inline: 6px;
+  padding-inline: 10px;
+}
+// 调整横向菜单底部的高亮条宽度
+.ant-menu-light.ant-menu-horizontal >.ant-menu-item::after {
+  left: 5px;
+  right: 5px;
 }

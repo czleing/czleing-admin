@@ -5,11 +5,12 @@
       :columns="currColumns"
       :data-source="dataSource"
       :pagination="config?.props?.usePage === false ? false : pagination"
-      v-bind="{ ...defaultProps, ...config?.props }"
       :rowKey="primaryKey"
       :row-class-name="`striped-row ${config?.props?.rowClick ? 'pointer' : ''}`"
       :row-selection="currentRowSelection"
       :custom-row="customRow"
+      :showSorterTooltip="config?.props?.showSorterTooltip ?? false"
+      v-bind="{ ...defaultProps, ...config?.props }"
       @resizeColumn="(w, col) => col.width = w"
       @change="onPageChangeHandle"
     >

@@ -74,16 +74,18 @@ npm run build
 
 ## 预览
 <img src='./src/doc/login.jpg' alt="light">
-<img src='./src/doc/light.png' alt="light">
-<img src='./src/doc/light2.png' alt="light">
-<img src='./src/doc/light3.png' alt="light">
-<img src='./src/doc/light4.png' alt="light">
-<img src='./src/doc/light5.png' alt="light">
-<img src='./src/doc/dark.png' alt="dark">
-<img src='./src/doc/light6-1.png' alt="light">
-<img src='./src/doc/light6-2.png' alt="light">
-<img src='./src/doc/light7.png' alt="light">
-<img src='./src/doc/light8.png' alt="light">
+<img src='./src/doc/light.jpg' alt="light">
+<img src='./src/doc/light2.jpg' alt="light">
+<img src='./src/doc/light3.jpg' alt="light">
+<img src='./src/doc/light4.jpg' alt="light">
+<img src='./src/doc/light9.jpg' alt="light">
+<img src='./src/doc/light5.jpg' alt="light">
+<img src='./src/doc/dark.jpg' alt="dark">
+<img src='./src/doc/dark2.jpg' alt="dark">
+<img src='./src/doc/light6-1.jpg' alt="light">
+<img src='./src/doc/light6-2.jpg' alt="light">
+<img src='./src/doc/light7.jpg' alt="light">
+<img src='./src/doc/light8.jpg' alt="light">
 
 ## 其他说明
 ### 1、规范

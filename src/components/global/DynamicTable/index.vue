@@ -32,7 +32,7 @@
             </div>
           </template>
           <!-- 操作列 -->
-          <template v-else-if="useDelete && modelValue.length > minNum && column.type === 'action' && !disabled">
+          <template v-else-if="useDelete && modelValue.length > minCount && column.type === 'action' && !disabled">
             <a-popconfirm
               placement="left"
               title="确认要删除该行吗？"
@@ -43,7 +43,7 @@
           </template>
         </template>
       </a-table>
-      <div v-if="!disabled && modelValue.length <= maxNum" class="tc py10">
+      <div v-if="!disabled && modelValue.length <= maxCount" class="tc py10">
         <a class="" href="javascript:;" @click="addHandle">
           <PlusCircleOutlined />
           新增
@@ -67,12 +67,12 @@ const props = defineProps({
   // 主键字段名
   primaryKey: { type: String, default: 'id' },
   // 最小条数限制
-  minNum: {
+  minCount: {
     type: Number,
     default: 0
   },
   // 最大条数限制
-  maxNum: {
+  maxCount: {
     type: Number,
     default: 10
   },

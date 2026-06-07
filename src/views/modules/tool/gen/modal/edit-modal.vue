@@ -324,7 +324,7 @@ const columnFormConfig = computed(() => ({
       type: EControlType.eTable,
       required: true,
       props: {
-        maxNum: 0, // 最多0条，表示不要新增按钮
+        maxCount: 0, // 最多0条，表示不要新增按钮
         useDelete: false, // 不要删除功能
         scroll: { x: 1400 },
         primaryKey: 'columnId',

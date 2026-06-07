@@ -78,6 +78,7 @@ const treeConfig = {
 const filterConfig = {
   // useCache: true, // 使用查询条件暂存
   // cacheBtnText: '记住查询', // 暂存按钮文字，默认 '记住查询'
+  // col: { span: 8 }, // 所有表单项栅格设置，默认：{ sm: 8, lg: 6, xxl: 4 }，参照 a-col
   // labelCol: { span: 6 }, // 所有表单项文本部分栅格设置，参照 a-col
   // wrapperCol: { span: 18 }, // 所有表单项控件部分栅格设置，参照 a-col
   // buttonsCol: { flex: 'auto' }, // 查询重置等按钮栅格设置
@@ -89,7 +90,7 @@ const filterConfig = {
       label: '关键字',
       fieldName: 'key',
       // type: EControlType.eInput, // 默认 eInput 可以不设置
-      // col: { flex: '230px' }, // 表单项(包含文本和控件)栅格设置，默认响应式分配：{ sm: 8, lg: 6, xxl: 4 }
+      // col: { flex: '280px' }, // 表单项(包含文本和控件)栅格设置，默认响应式分配：{ sm: 8, lg: 6, xxl: 4 }
       // 每个字段的宽度可以很灵活控制，固定宽度、同宽、自适应等 参照 ant-design-vue a-col 的属性
       // labelCol: { span: 7 }, // 表单项文本部分栅格设置，参照 a-col
       // wrapperCol: { span: 17 }, // 表单项控件部分栅格设置，参照 a-col
@@ -101,7 +102,6 @@ const filterConfig = {
       label: '是否启用',
       fieldName: 'isEnabled',
       type: EControlType.eSelect,
-      col: { flex: '0 0 180px' },
       defaultValue: 1, // 给一个默认值，注：设置了默认值后，页面初始化时 c-filter 组件会自动提交一次查询，tableConfig.initSearch 将会默认关闭
       props: {
         options: EIsEnabled._list
@@ -120,16 +120,17 @@ const filterConfig = {
       label: '数字范围',
       fieldName: 'numberRange', // 后端使用数组接收
       type: EControlType.eNumberRange,
+      col: { flex: '300px' },
       props: {
       }
     },
     {
       label: '时间范围',
-      col: { flex: '320px' },
+      col: { flex: '460px' },
       fieldName: 'createTime', // 对应查询数据库中的字段，提交时会删掉，替换成 fieldNames 中设置的两个字段
       type: EControlType.eDateRange,
       props: {
-        // showTime: true, // 是否显示时分秒
+        showTime: true, // 是否显示时分秒
         // fieldNames: ['createTimeBegin', 'createTimeEnd'] // 默认是 fieldName 后面增加 'Begin', 'End'，可以不填
       }
     }
@@ -627,12 +628,32 @@ const modalConfig = computed(() => ({
             // method: 'get', // 默认 post
             params: {
               // type: 1,
-              type: '{formData.radio1:required}' // 动态参数，formData代表表单数据，required代表是否必填，必填时，有值才获取数据源
+              // type: '{formData.radio1:required}' // 动态参数，formData代表表单数据，required代表是否必填，必填时，有值才获取数据源
             },
             // autoRefresh: true, // 每次弹窗后自动刷新远程数据
             converter (result) { // 对接口返回数据进行修改，转成 [{id, name, xxx}] 格式
               return result.list?.map(item => ({ id: item.userId, name: item.nickName }))
             }
+          }
+        }
+      },
+      {
+        label: '选择用户',
+        fieldName: 'userIds',
+        type: EControlType.eUserSelect,
+        props: {
+          maxCount: 5
+        }
+      },
+      {
+        label: '选择部门',
+        fieldName: 'deptId',
+        type: EControlType.eTreeSelect,
+        required: true,
+        props: {
+          fieldNames: { value: 'id', label: 'label' },
+          remote: {
+            url: '/system/dept/tree',
           }
         }
       },
@@ -661,8 +682,13 @@ const modalConfig = computed(() => ({
         fieldName: 'treeMul',
         type: EControlType.eTreeSelect,
         props: {
+          // useRefresh: false,
           remote: {
-            url: '/system/user/deptTree'
+            url: '/system/user/deptTree',
+            // method: 'get', // 默认 post
+            // params: {}, // 额外请求参数
+            // autoRefresh: true, // 每次弹窗后自动刷新远程数据
+            // converter
           },
           treeCheckable: true,
           fieldNames: {
@@ -740,6 +766,7 @@ const modalConfig = computed(() => ({
         labelCol: { span: 3 },
         wrapperCol: { span: 21 },
         props: {
+          height: '200px'
         }
       },
       {
@@ -756,7 +783,7 @@ const modalConfig = computed(() => ({
         // 校验规则 只支持 required, validator: (index, value, record) => {} ()
         props: {
           // primaryKey: 'id',
-          // maxNum: 10,
+          // maxCount: 10,
           columns: [
             {
               // 表格列字段参考 DynamicTable 的 props.columns
