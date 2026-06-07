@@ -17,9 +17,9 @@
               <FieldGroup :title="getFnValue(field.title, formData)" :subTitle="getFnValue(field.subTitle, formData)">
                 <a-row :gutter="15">
                   <template v-for="child in field.fields" :key="child.fieldName">
-                    <a-col v-if="child.inUse" v-show="child.type !== EControlType.eHidden" :span="child.colSpan">
+                    <a-col v-if="child.inUse" v-show="!child.hidden" v-bind="child.col">
                       <a-form-item v-bind="formItemProps(child)">
-                        <CComponent v-model:value="formData[child.fieldName]" :field="child" :is-view="isView" />
+                        <CComponent v-model:value="formData[child.fieldName]" :field="child" :is-view="isView" @update:value="(...args) => field.props?.onChange?.(...args, formData)" />
                       </a-form-item>
                     </a-col>
                   </template>
@@ -29,9 +29,9 @@
           </template>
           <template v-else-if="field.inUse">
             <!-- 控件 -->
-            <a-col :span="field.colSpan" v-show="field.type !== EControlType.eHidden">
+            <a-col v-bind="field.col" v-show="!field.hidden">
               <a-form-item v-bind="formItemProps(field)">
-                <CComponent v-model:value="formData[field.fieldName]" :field="field" :is-view="isView" />
+                <CComponent v-model:value="formData[field.fieldName]" :field="field" :is-view="isView" @update:value="(...args) => field.props?.onChange?.(...args, formData)" />
               </a-form-item>
             </a-col>
           </template>
@@ -78,8 +78,8 @@ const closeModal = inject('modal.close', null)
 const formData = reactive({})
 const formRemotes = reactive({}) // 收集组件的 remote 方法，用于需要重新刷新 remote 数据时使用
 const loading = ref(false)
-const { labelCol, wrapperCol, colSize } = props.formConfig // 已经解构失去响应式
-const colSpan = parseInt(24 / colSize)
+const { labelCol, wrapperCol, cols = 2 } = props.formConfig // 已经解构失去响应式
+const colSpan = parseInt(24 / cols)
 let dateFields = [] // 收集的日期字段数组，便于统一转换格式
 let dateRangeFields = [] // 收集的日期范围字段数组
 let rangeFieldNamesMap = {} // 日期范围，一般有两个值，其字段名用 map 暂存
@@ -90,6 +90,7 @@ const currFields = computed(() => {
   const initFields = (_fields) => {
     return _fields.map(item => {
       item.inUse = !getFnValue(item.none, formData)
+      item.hidden = getFnValue(item.hidden, formData)
       // 字段组，递归处理
       if (isFieldGroup(item)) {
         item.fields = initFields(item.fields)
@@ -107,10 +108,11 @@ const currFields = computed(() => {
         // 表格类型，根据 columns 自动生成 rules
         setTableRules(item)
       }
-      item.colSpan = item.colSpan ?? (item.singleLine ? 24 : colSpan)
+      item.col = item.singleLine ? { span: 24 } : (item.col ?? { span: colSpan })
       if (!props.isView) {
         item.props = item.props ?? {}
         item.props.disabled = getFnValue(item.disabled, formData)
+        item.props.placeholder = getFnValue(item.placeholder, formData)
       }
       return item
     })
@@ -180,7 +182,19 @@ onMounted(() => {
 function setFormData (data = props.detail, includeFieldNames = fieldNamesArr.value, excludeFieldNames = []) {
   includeFieldNames.forEach(fieldName => {
     if (!excludeFieldNames || !excludeFieldNames.includes(fieldName)) {
-      formData[fieldName] = data[fieldName] ?? defaultObject.value[fieldName]
+      // 回填时，对日期类型特殊处理
+      if (dateFields.includes(fieldName)) {
+        formData[fieldName] = data[fieldName] ? dayjs(data[fieldName]) : defaultObject.value[fieldName]
+      } else if (dateRangeFields[fieldName]) {
+        const fieldNames = dateRangeFields[fieldName]
+        if (Array.isArray(fieldNames) && fieldNames.length === 2 && data[fieldNames[0]] && data[fieldNames[1]]) {
+          formData[fieldName] = [dayjs(data[fieldNames[0]]), dayjs(data[fieldNames[1]])]
+        } else {
+          console.error(`字段[${fieldName}]设置的 fieldNames 不正确，跳过赋值`, fieldNames)
+        }
+      } else {
+        formData[fieldName] = data[fieldName] ?? defaultObject.value[fieldName]
+      }
     }
   })
   if (data[props.primaryKey]) {
@@ -226,7 +240,7 @@ function reset () {
   resetDatas(currFields.value)
 }
 
-/** 日期数据统一转换 */
+/** 提交表单时，对日期数据统一转换 */
 function transferDate (data) {
   for (const key in data) {
     const value = data[key]
@@ -252,7 +266,7 @@ function pushDateFields (fieldName) {
 function pushDateRangeFields (fieldName, fieldNames) {
   if (fieldName) {
     dateRangeFields.push(fieldName)
-    rangeFieldNamesMap[fieldName] = fieldNames
+    rangeFieldNamesMap[fieldName] = fieldNames ?? [`${fieldName}Begin`, `${fieldName}End`]
   } else {
     dateRangeFields = []
     rangeFieldNamesMap = {}
@@ -269,7 +283,7 @@ function setTableRules (field) {
     if (item.required && !isRequired) {
       isRequired = true
     }
-    if (!!item.validate && !hasValidator) {
+    if (!!item.validator && !hasValidator) {
       hasValidator = true
     }
   })
@@ -286,10 +300,11 @@ function setTableRules (field) {
             const obj = list[i]
             for (let c in columns) {
               const column = columns[c]
-              if (column.required && isEmpty(obj[column.dataIndex])) {
+              const required = getFnValue(column.required, obj, list)
+              if (required && isEmpty(obj[column.dataIndex])) {
                 return Promise.reject(t('crud.someRowNotNull', { rowNum: Number(i) + 1, label: column.title }))
-              } else if (typeof column.validate === 'function') {
-                const message = column.validate(Number(i), obj[column.dataIndex], obj)
+              } else if (typeof column.validator === 'function') {
+                const message = column.validator(Number(i), obj[column.dataIndex], obj, list)
                 if (message) {
                   return Promise.reject(message)
                 }

@@ -9,7 +9,7 @@
       <slot name="header" />
       <!-- 过滤器 -->
       <CFilter v-if="filterConfig" :config="filterConfig" @search="onSearchHandle" />
-      <slot name="filter" />
+      <slot name="filter" :search="onSearchHandle" />
       <!-- 工具栏 -->
       <CTools
         v-if="noTools !== true"
@@ -29,7 +29,7 @@
         @add="onAddHandle(toolsConfig?.addInitData)"
         @delete="onBatchDeleteHandle"
       />
-      <slot name="tools" />
+      <slot name="tools" :refresh="onRefreshHandle" :add="onAddHandle" :delete="onBatchDeleteHandle" />
       <!-- 表格数据 -->
       <CTable
         ref="cTable"
@@ -50,7 +50,7 @@
           <slot :name="sl.slot" v-bind="options" />
         </template>
       </CTable>
-      <slot name="table" />
+      <slot name="table" :action="onActionHandle" />
     </div>
     <!-- 弹窗 -->
     <!-- 新增修改详情弹窗页面，如果想自定义不想要默认的弹窗或行为可以通过自定义操作按钮来实现 -->
@@ -128,13 +128,17 @@ const cForm = ref()
 const selectedIds = ref([])
 const selectedObjs = ref([])
 const searchParams = ref({})
-const checkedFieldNames = ref(props.tableConfig.columns?.filter(item => item.hidden !== true)?.map(item => item.dataIndex))
+const checkedFieldNames = ref(props.tableConfig?.columns?.filter(item => item.hidden !== true)?.map(item => item.dataIndex))
 const pagination = ref({
   showSizeChanger: true,
   showTotal: (total, range) => `共 ${total} 条`,
   pageSize: props.tableConfig?.props?.pageSize ?? 10,
   current: 1,
   total: 0
+})
+const sorter = ref({
+  field: undefined,
+  order: undefined
 })
 const filterAutoSearch = computed(() => {
   return props.filterConfig?.fields?.some(field => isNotEmpty(field.defaultValue))
@@ -176,6 +180,7 @@ provide('c-page.selectedIds', selectedIds)
 provide('c-page.selectedObjs', selectedObjs)
 provide('c-page.searchParams', searchParams)
 provide('c-page.pagination', pagination)
+provide('c-page.sorter', sorter)
 provide('c-page.checkedFieldNames', checkedFieldNames)
 provide('c-page.onRefreshHandle', onRefreshHandle)
 

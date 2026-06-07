@@ -47,7 +47,7 @@ const filterConfig = {
       label: '表名称',
       fieldName: 'tableName',
       type: EControlType.eInput,
-      colSize: { span: 8 },
+      col: { span: 8 },
       props: {
       }
     },
@@ -55,7 +55,7 @@ const filterConfig = {
       label: '表描述',
       fieldName: 'tableComment',
       type: EControlType.eInput,
-      colSize: { span: 8 },
+      col: { span: 8 },
       props: {
       }
     }

@@ -32,11 +32,6 @@
           <span>电子邮箱：</span>
           <span>{{ userInfo.email || '-' }}</span>
         </div>
-        <!-- <template #actions>
-          <setting-outlined key="setting" />
-          <edit-outlined key="edit" />
-          <ellipsis-outlined key="ellipsis" />
-        </template> -->
       </a-card>
       <a-card class="center shadow2 flex-auto" title="修改个人信息">
         <CForm isEdit :autoReset="false" :detail="userInfo" primaryKey="userId" :formConfig="infoFormConfig" :onSubmitHandle="onInfoSubmitHandle" confirmText="保存" :showCancel="false" confirmAlign="center" />
@@ -64,7 +59,7 @@ const infoFormConfig = computed(() => {
   return {
     labelCol: { span: 6 },
     wrapperCol: { span: 18 },
-    colSize: 1, // 一行显示几列
+    cols: 1, // 一行显示几列
     // 表单字段
     fields: [
       {
@@ -135,7 +130,7 @@ const pwdFormConfig = computed(() => {
   return {
     labelCol: { span: 7 },
     wrapperCol: { span: 17 },
-    colSize: 1, // 一行显示几列
+    cols: 1, // 一行显示几列
     // 表单字段
     fields: [
       {

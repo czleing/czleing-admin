@@ -54,6 +54,7 @@
     <template #table_slotField="{ text, record, index, column }">
       插槽内容==={{ record.age }}
     </template>
+    <!-- 其他插槽如：header、filter、tools、table -->
   </CPage>
 </template>
 
@@ -65,7 +66,7 @@ const cPage = ref()
 defineOptions({
   name: 'DemoPage'
 })
-/** 树形配置，不配置则不使用树 */
+/** 左侧树形配置，不配置则不使用树 */
 const treeConfig = {
   url: '/system/user/deptTree',
   params: {}, // 查询参数
@@ -77,20 +78,21 @@ const treeConfig = {
 const filterConfig = {
   // useCache: true, // 使用查询条件暂存
   // cacheBtnText: '记住查询', // 暂存按钮文字，默认 '记住查询'
-  // labelCol: { span: 6 },
-  // wrapperCol: { span: 18 },
-  // 一行显示几列由每个字段的 colSize 决定，一行 24 格，每个字段可以设置占用格数，一行不够时自动换行，注：查询重置按钮固定占 4-6 格(使用记住查询时占用6格，否则4格)
+  // labelCol: { span: 6 }, // 所有表单项文本部分栅格设置，参照 a-col
+  // wrapperCol: { span: 18 }, // 所有表单项控件部分栅格设置，参照 a-col
+  // buttonsCol: { flex: 'auto' }, // 查询重置等按钮栅格设置
+  // buttonsAlign: 'right', // 查询重置等按钮水平对齐方式，left(默认), center, right
+  // 一行显示几列由每个字段的 col 决定，默认自适应列数，一行 24 格，每个字段可以设置占用格数，一行不够时自动换行，注：查询重置按钮固定占 4-6 格(使用记住查询时占用6格，否则4格)
   // 字段配置
   fields: [
     {
       label: '关键字',
       fieldName: 'key',
       // type: EControlType.eInput, // 默认 eInput 可以不设置
-      colSize: { flex: '230px' },
-      // 每个字段的宽度可以很灵活控制，固定宽度、同宽、自适应等 参考 ant-design-vue a-col 的属性
-      // colSize: { span: 8 }, // 整个字段(包含文本和控件)占整行24栅格的比例，固定宽度可以设置为 { flex: '280px' }, 默认响应式分配：{ sm: 8, lg: 6, xxl: 4 }
-      // labelCol: { span: 7 }, // 字段文本部分占整个字段的比例，遵循 24 栅格规则，或使用 flex 布局，{ flex: 2 }
-      // wrapperCol: { span: 18 }, // 字段控件部分占整个字段的比例
+      // col: { flex: '230px' }, // 表单项(包含文本和控件)栅格设置，默认响应式分配：{ sm: 8, lg: 6, xxl: 4 }
+      // 每个字段的宽度可以很灵活控制，固定宽度、同宽、自适应等 参照 ant-design-vue a-col 的属性
+      // labelCol: { span: 7 }, // 表单项文本部分栅格设置，参照 a-col
+      // wrapperCol: { span: 17 }, // 表单项控件部分栅格设置，参照 a-col
       props: {
         placeholder: '请输入姓名/手机号/账号'
       }
@@ -99,7 +101,7 @@ const filterConfig = {
       label: '是否启用',
       fieldName: 'isEnabled',
       type: EControlType.eSelect,
-      colSize: { flex: '0 0 180px' },
+      col: { flex: '0 0 180px' },
       defaultValue: 1, // 给一个默认值，注：设置了默认值后，页面初始化时 c-filter 组件会自动提交一次查询，tableConfig.initSearch 将会默认关闭
       props: {
         options: EIsEnabled._list
@@ -123,7 +125,7 @@ const filterConfig = {
     },
     {
       label: '时间范围',
-      colSize: { flex: '320px' },
+      col: { flex: '320px' },
       fieldName: 'createTime', // 对应查询数据库中的字段，提交时会删掉，替换成 fieldNames 中设置的两个字段
       type: EControlType.eDateRange,
       props: {
@@ -250,19 +252,13 @@ const tableConfig = computed(() => ({
       hidden: true // 该列暂时隐藏，可通过列筛选勾选显示
     },
     {
-      title: '类型',
-      dataIndex: 'type2',
-      customRender: ({ value }) => '类型1',
-      width: 100
-    },
-    {
       title: '字典',
       dataIndex: 'dict',
       width: 100,
       dictType: 'dict_type' // 自动按指定的字典类型解析出中文
     },
     {
-      title: '状态',
+      title: '自定义',
       dataIndex: 'status',
       width: 100,
       customRender: ({ value, record, index, column }) => { // 自定义渲染函数
@@ -299,6 +295,7 @@ const tableConfig = computed(() => ({
       dataIndex: 'address',
       hidden: true,
       width: 180,
+      default: '-', // 设置默认值，支持html，如：default: '<div class="text-gray">xxx</div>'
       ellipsis: true // ant-design 自带的超出宽度隐藏
     },
     {
@@ -389,30 +386,37 @@ const modalConfig = computed(() => ({
   width: 800, // 弹窗宽度，默认 600
   mode: 'modal', // 弹窗模式, modal 或 drawer
   // props: { maskClosable: false }, // 其他参数, 会直接绑定到 a-modal 或 a-drawer
-  // 弹窗按钮属性修改 Object || ({ isAdd, isEdit, isView }) => Object
+  // 弹窗按钮属性修改 Object | ({ isAdd, isEdit, isView }) => Object
   buttonConfig: ({ isAdd, isEdit, isView }) => ({
     // showConfirm: !isEdit, // 确认按钮是否可见，默认可见
     confirmText: isEdit ? '确认修改' : '确认提交', // 默认是确定
-    // confirmContinue: true, // true || (formData, submitData) => {}，提交之后是否继续，继续则不关闭弹窗，只清空数据，可传一个函数对继续后的表单数据初始化(如给排序序号+1)
+    // confirmContinue: true, // true | (formData, submitData) => {}，提交之后是否继续，继续则不关闭弹窗，只清空数据，可传一个函数对继续后的表单数据初始化(如给排序序号+1)
     // showCancel: !isEdit // 取消按钮是否可见，默认可见
     cancelText: '关闭', // 默认是关闭
   }),
-  // 表单配置 Object || ({ isAdd, isEdit, isView, detail }) => Object
+  // 表单配置 Object | ({ isAdd, isEdit, isView, detail }) => Object
   formConfig: ({ isAdd, isEdit, isView, detail }) => ({
-    labelCol: { span: 6 },
-    wrapperCol: { span: 18 },
-    colSize: 2, // 一行显示几列
+    // cols: 2, // 一行显示几列，默认 2 列
+    // labelCol: { span: 6 }, // 如果需要固定label宽度，可设为 { flex: '120px' }，参考 ant-design-vue a-col 的属性设置
+    // wrapperCol: { span: 18 },
     // 表单字段
     fields: [ // 表单字段数组，可分组
       {
         label: '短文本',
         fieldName: 'shortText',
         // type: EControlType.eInput, // 控件类型，默认文本框
-        // required: true, // 是否必填 Boolean || formData => Boolean
-        // disabled: isEdit, // 是否禁用 Boolean || formData => Boolean
-        // none: isView, // 是否不需要改字段，Boolean || formData => Boolean
-        // extra: formData => '222', // 字段额外说明， String || formData => String
-        // rules: [], // 校验规则，与 <a-form-item> 一致， object || array
+        // required: true, // 是否必填 Boolean | formData => Boolean
+        // disabled: isEdit, // 是否禁用 Boolean | formData => Boolean
+        // hidden: isView, // 是否隐藏该字段，数据仍在表单中，Boolean | formData => Boolean
+        // none: isView, // 是否不需要该字段，数据不在表单中，Boolean | formData => Boolean
+        // extra: formData => '222', // 字段额外说明， String | formData => String
+        // tooltip: formData => '111', // 字段(?)提示， String | formData => String
+        // defaultValue: 'xxx', // 默认值
+        // rules: [], // 校验规则，与 <a-form-item> 一致， object | array
+        // singleLine: true, // 单独占一行，优先级高于 col
+        // col: { span: 12 }, // 表单项(包含文本和控件)栅格设置，固定宽度可以设置为 { flex: '280px' }，参照 a-col 属性，默认根据列数计算
+        // labelCol: { span: 3 }, // 表单项文本部分栅格设置，参照 a-col，{ flex: '120px' }、{ flex: '30%' }
+        // wrapperCol: { span: 21 }, // 表单项控件部分栅格设置，参照 a-col，{ flex: '120px' }、{ flex: '30%' }
         props: { // 没有属性可以不配
           // 根据 type 继承自对应 ant-design-vue 控件的属性和事件
           // placeholder 会默认生成，可以不配
@@ -420,9 +424,10 @@ const modalConfig = computed(() => ({
         }
       },
       {
-        label: '隐藏域',
+        label: '隐藏字段', // 类似隐藏域，可以放置一些提交时需要的额外信息，可以在表单联动时动态设置值
         fieldName: 'hidden1',
-        type: EControlType.eHidden,
+        hidden: true, // 强制隐藏
+        defaultValue: '默认值'
       },
       {
         label: formData => '整数', // 字段描述 String || formData => String
@@ -446,7 +451,7 @@ const modalConfig = computed(() => ({
         // 字段分组
         title: '分组标题', // String || formData => String
         subTitle: '分组副标题', // String || formData => String
-        // none: formData => !formData.userName, // true表示该项不可见(不使用该字段)，Boolean || formData => Boolean
+        // none: formData => !formData.userName, // true表示不需要该组(从表单中移除)，Boolean || formData => Boolean
         fields: [
           {
             label: '密码',
@@ -538,7 +543,6 @@ const modalConfig = computed(() => ({
             fieldName: 'unitName',
             type: EControlType.eInput,
             singleLine: true, // 单独占一行
-            // colSpan: 12, // 该字段占一行的多少比例，24栅格
             labelCol: { span: 3 },
             wrapperCol: { span: 21 },
             props: {},
@@ -593,8 +597,11 @@ const modalConfig = computed(() => ({
         props: {
           useAll: true, // 是否在前面添加全部
           // allowClear: true,
-          options: [{ id: 1, name: 'name1' }, { id: 2, name: 'name2' }]
+          options: [{ id: 1, name: 'name1', other: 'other1' }, { id: 2, name: 'name2', other: 'other2' }],
           // mode: '', // 下拉模式 'multiple' | 'tags' | 'combobox'
+          // onChange (val, option, formData) {
+          //   console.log(val, option, formData)
+          // }
         }
       },
       {
@@ -615,7 +622,7 @@ const modalConfig = computed(() => ({
         type: EControlType.eSelect,
         props: {
           // useRefresh: false, // 有动态数据源的组件特有的属性，是否开启手动刷新功能，默认 true，会在控件后面添加刷新图标，点击刷新控件的数据源
-          remote: {
+          remote: { // 远程数据源配置，配置了 remote 就不需要配置 options，所有组件都支持 remote 配置
             url: '/system/user/selectUser',
             // method: 'get', // 默认 post
             params: {
@@ -746,7 +753,7 @@ const modalConfig = computed(() => ({
         // required: true, // 无效配置，请配置在 props.columns 的每一项里
         // rules: {}, // 无效配置，请配置在 props.columns 的每一项里
         // 动态表格的校验规则，全部配置在 columns 内，只要有一个 column 的 required 为 true，则表示该项为必填项
-        // 校验规则 只支持 required, validate: (index, value, record) => {} ()
+        // 校验规则 只支持 required, validator: (index, value, record) => {} ()
         props: {
           // primaryKey: 'id',
           // maxNum: 10,
@@ -757,14 +764,26 @@ const modalConfig = computed(() => ({
               tooltip: '字段1描述',
               dataIndex: 'field1',
               type: EControlType.eInput,
-              required: true,
-              validate: (index, value) => {
-                if (value.length < 3) {
+              disabled: (record, records) => record.field2 === 2, // Boolean | (record, records) => Boolean
+              required: (record, records) => record.field2 === 1, // Boolean | (record, records) => Boolean
+              // rules: [], // 不生效，请用 validator
+              validator: (index, value, record, records) => { // record: 当前行的数据对象，records: 所有行数据
+                if (value && value.length < 3) {
                   // 错误时，return 'message'
                   return `第${ index + 1 }行字段1长度不能小于3`
                 }
                 // 正确时无需返回
+              },
+              props: {
+                // onChange (val, record, records) {
+                //   console.log(val, record, records)
+                // }
               }
+            },
+            {
+              title: '隐藏域',
+              dataIndex: 'fieldHidden',
+              hidden: true
             },
             {
               title: '字段2',
@@ -772,7 +791,20 @@ const modalConfig = computed(() => ({
               type: EControlType.eSelect,
               props: {
                 useAll: true,
-                options: [{id: 1, name: 1}]
+                options: [
+                  { id: 1, name: 1 },
+                  { id: 2, name: 2 }
+                ],
+                // dictType: 'xxx_xxx' // 或者使用字典为数据源
+                // remote: {...} // 或者使用远程数据源
+                onChange (val, record, records) {
+                  // 通过修改 record.xxx 联动其他列
+                  console.log(val, record, records)
+                  // if (val === 2 && !record.field1) {
+                  //   record.fieldHidden = '赋值给隐藏域'
+                  //   record.field1 = '联动修改了这里'
+                  // }
+                }
               }
             }
           ]

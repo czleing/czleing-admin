@@ -6,9 +6,7 @@
     primary-key="userId"
     :tree-config="treeConfig"
     :filter-config="filterConfig"
-    :before-search="beforeSearch"
     :after-search="afterSearch"
-    :before-submit="beforeSubmit"
     :after-open-modal="afterOpenModal"
     :transform-detail="transformDetail"
     :table-config="tableConfig"
@@ -33,7 +31,6 @@ const filterConfig = {
     {
       label: '用户',
       fieldName: 'userName',
-      type: EControlType.eInput,
       props: {
         placeholder: '请输入姓名/账号'
       }
@@ -129,16 +126,12 @@ const modalConfig = computed(() => ({
   formConfig: ({ isAdd, isEdit, isView, detail }) => ({
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
-    colSize: 2,
+    cols: 2,
     fields: [
       {
         label: '用户姓名',
         fieldName: 'nickName',
-        type: EControlType.eInput,
         required: true,
-        props: {
-          allowClear: true
-        }
       },
       {
         label: '所属部门',
@@ -159,7 +152,6 @@ const modalConfig = computed(() => ({
         label: '登录账号',
         fieldName: 'userName',
         tooltip: isView ? undefined : '可输入数字、字母、下划线，长度为 2 至 20 个字符',
-        type: EControlType.eInput,
         none: formData => formData.userId !== undefined,
         required: true,
         rules: {
@@ -171,7 +163,6 @@ const modalConfig = computed(() => ({
       {
         label: '登录密码',
         fieldName: 'password',
-        type: EControlType.eInput,
         tooltip: '可输入数字、字母、下划线，长度为 5 至 20 个字符',
         none: !isAdd,
         required: true,
@@ -191,7 +182,6 @@ const modalConfig = computed(() => ({
       {
         label: '手机号码',
         fieldName: 'phonenumber',
-        type: EControlType.eInput,
         rules: {
           pattern: new RegExp(/^1[3456789]\d{9}$/),
           message: '请输入正确的手机号码',
@@ -204,7 +194,6 @@ const modalConfig = computed(() => ({
       {
         label: '邮箱地址',
         fieldName: 'email',
-        type: EControlType.eInput,
         rules: {
           type: 'email',
           message: '请输入正确的邮箱地址',
@@ -265,28 +254,11 @@ const modalConfig = computed(() => ({
 }))
 
 /**
- * 查询前修改查询参数
- * @param {Object} searchParams 查询参数
- */
-function beforeSearch (searchParams) {
-  return searchParams
-}
-
-/**
  * 查询后修改查询结果
  * @param {Array} list 查询结果列表
  */
 function afterSearch (list) {
   return list.map(item => ({ ...item, selectDisabled: item.userId === 1 }))
-}
-
-/**
- * 提交表单数据前处理
- * @param {Object} submitData 提交的数据
- * @param {Object} param 其他参数
- */
-function beforeSubmit (submitData, { isAdd, isEdit, isView, detail }) {
-  return submitData
 }
 
 /**
@@ -314,6 +286,3 @@ function transformDetail (detail, { isEdit, isView }) {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-</style>

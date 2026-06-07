@@ -4,6 +4,7 @@ import routers from '@/router'
 import axios from '@/api'
 import { isEmpty, isNotEmpty } from '@/utils/index'
 import { useSettingStore } from './setting-store'
+import { RouterView } from 'vue-router'
 
 /**
  * 菜单、路由相关 store
@@ -53,7 +54,7 @@ export const useMenuStore = defineStore('menu', {
         if (component === 'Layout') {
           return () => import('@/layout/index.vue')
         } else if (component === 'RouterView' || component === 'ParentView') {
-          return () => import('@/layout/components/router-view.vue')
+          return RouterView
         } else if (typeof component === 'function') {
           return component
         } else if (component) {

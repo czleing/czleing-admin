@@ -13,7 +13,6 @@
 
 <script setup>
 import CPage from '@/components/crud/c-page.vue'
-import { EControlType } from '@/enum/index.js'
 import axios from '@/api/index.js'
 
 const filterConfig = computed(() => ({
@@ -21,10 +20,6 @@ const filterConfig = computed(() => ({
     {
       label: '名称',
       fieldName: 'dictName',
-      type: EControlType.eInput,
-      props: {
-        placeholder: '请输入名称'
-      }
     }
   ]
 }))
@@ -96,18 +91,16 @@ const modalConfig = computed(() => ({
   formConfig: ({ isAdd, isEdit, isView, detail }) => ({
     labelCol: { span: 6 },
     wrapperCol: { span: 18 },
-    colSize: 2,
+    cols: 2,
     fields: [
       {
         label: '角色名称',
         fieldName: 'roleName',
-        type: EControlType.eInput,
         required: true
       },
       {
         label: '角色标识',
         fieldName: 'roleKey',
-        type: EControlType.eInput,
         disabled: isEdit,
         required: true
       },
@@ -188,6 +181,3 @@ async function afterOpenModal ({ record, detail }) {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-</style>

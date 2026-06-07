@@ -48,13 +48,11 @@
             <span :class="EIsEnabled._classOf(text ? 1 : 0)">{{ EIsEnabled._of(text ? 1 : 0) }}</span>
           </template>
         </template>
-        <!-- 字符串脱敏 -->
-        <template v-else-if="column.hideChar && text">
-          {{ stringStar(text, ...column.hideChar) }}
-        </template>
-        <!-- 带单位 -->
-        <template v-else-if="column.unit && text">
-          {{ text }}{{ column.unit }}
+        <!-- 带单位、带默认值、字符串脱敏 -->
+        <template v-else-if="column.hideChar || column.default || column.unit">
+          <span v-if="isEmpty(text)" v-html="column.default" />
+          <span v-else>{{ column.hideChar ? stringStar(text, ...column.hideChar) : text }}</span>
+          {{ column.unit ?? '' }}
         </template>
         <!-- 操作列 -->
         <template v-else-if="column.action">
@@ -116,6 +114,7 @@ const props = defineProps({
 const checkedFieldNames = inject('c-page.checkedFieldNames', ref([]))
 const searchParams = inject('c-page.searchParams', ref({}))
 const pagination = inject('c-page.pagination', ref({}))
+const cPageSorter = inject('c-page.sorter', ref({}))
 const loading = inject('c-page.loading', ref(false))
 const selectedIds = inject('c-page.selectedIds', ref([]))
 const selectedObjs = inject('c-page.selectedObjs', ref([]))
@@ -135,10 +134,11 @@ const currentRowSelection = computed(() => {
 const useTotal = computed(() => currColumns.value.some(col => col.useTotal))
 const usePage = computed(() => props.config?.props?.usePage !== false)
 const page = computed(() => {
-  if (!usePage.value) return undefined
   return {
-    pageNum: pagination.value.current,
-    pageSize: pagination.value.pageSize
+    pageNum: usePage.value ? pagination.value.current : undefined,
+    pageSize: usePage.value ? pagination.value.pageSize : undefined,
+    orderByColumn: cPageSorter.value.field,
+    isAsc: cPageSorter.value.order && {ascend: 'asc', descend: 'desc'}[cPageSorter.value.order]
   }
 })
 // 合计数据
@@ -208,10 +208,21 @@ function clearSelect () {
   selectedIds.value = []
   selectedObjs.value = []
 }
-function onPageChangeHandle (page) {
+function onPageChangeHandle (page, filter, sorter) {
+  let needRefresh = false
+  if (pagination.value.current !== page.current || pagination.value.pageSize !== page.pageSize) {
+    needRefresh = true
+  }
   pagination.value.current = page.current
   pagination.value.pageSize = page.pageSize
-  getList()
+  if (sorter.order && sorter.column.sorter === true) { // sorter 为 true，服务端排序，sorter 为 function 则客户端排序
+    cPageSorter.value.field = sorter.field
+    cPageSorter.value.order = sorter.order
+  } else {
+    cPageSorter.value.field = undefined
+    cPageSorter.value.order = undefined
+  }
+  needRefresh && getList()
 }
 
 function search () {

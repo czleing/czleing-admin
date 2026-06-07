@@ -5,16 +5,17 @@ import { h, resolveComponent } from 'vue'
 
 /**
  * 渲染组件
- * 根据
+ * 根据 field 配置
  * 可以通过自定义渲染函数来改变全局组件的渲染
+ * 到这里，组件的所有 props 都已经解析为静态属性，不存在函数式动态属性
  * @returns 组件
  */
 export function useRender ({ ctx, isView, value, dataSource }) {
-  const formData = inject('c-form.formData', {}) // 获取 c-form 组件的 formData 表单数据对象
+  const formData = inject('c-form.formData', {})
   const emitUpdate = async (...args) => {
     ctx.$emit('update:value', ...args) // 统一使用 value 作为双向绑定的 props (为了与 ant-design 一致)
   }
-  // 自定义渲染函数（主要是实现统一的 onChange 事件(能在 onChange 事件里获取到 formData )，以及查看详情模式时，将控件转为纯文本显示，以及默认属性设置）
+  // 自定义渲染函数
   const getRenderFn = {
     [EControlType.eInput]: renderInput,
     [EControlType.eHidden]: renderHidden,
@@ -49,14 +50,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
         isView,
         onChange: undefined,
         disabled: field.props.disabled ?? isView,
-        'onUpdate:value': (...args) => {
-          emitUpdate(...args)
-          if (typeof field.props.onChange === 'function') {
-            setTimeout(() => {
-              field.props.onChange(...args, formData)
-            })
-          }
-        }
+        'onUpdate:value': emitUpdate
       })
     } else {
       console.warn('field.type 不存在')
@@ -76,7 +70,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const props = Object.assign(
       {
         type: 'text',
-        placeholder: `请输入${getFnValue(field.label, formData)}`,
+        placeholder: field.props?.placeholder ?? `请输入${field.label}`,
         maxlength: 50
       },
       controlTypeEnum.data.defaultProps ?? {},
@@ -85,16 +79,8 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlProps = {
       ...props,
       value,
-      placeholder: getFnValue(props.placeholder, formData),
       onChange: undefined,
-      'onUpdate:value': val => {
-        emitUpdate(val)
-        if (typeof props.onChange === 'function') {
-          setTimeout(() => {
-            props.onChange(val, formData)
-          })
-        }
-      }
+      'onUpdate:value': emitUpdate
     }
     let type = field.type
     if (field.props?.type === 'password') {
@@ -117,8 +103,6 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const props = Object.assign(
       {
         type: 'text',
-        placeholder: `请输入${getFnValue(field.label, formData)}`,
-        maxlength: 50
       },
       controlTypeEnum.data.defaultProps ?? {},
       field.props
@@ -126,16 +110,8 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlProps = {
       ...props,
       value,
-      placeholder: getFnValue(props.placeholder, formData),
       onChange: undefined,
-      'onUpdate:value': val => {
-        emitUpdate(val)
-        if (typeof props.onChange === 'function') {
-          setTimeout(() => {
-            props.onChange(val, formData)
-          })
-        }
-      }
+      'onUpdate:value': emitUpdate
     }
     return h(resolveComponent('a-input'), controlProps)
   }
@@ -153,7 +129,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
       {
-        placeholder: `请输入或选择${getFnValue(field.label, formData)}`
+        placeholder: field.props?.placeholder ?? `请输入或选择${field.label}`
       },
       controlTypeEnum.data.defaultProps ?? {},
       field.props
@@ -163,16 +139,8 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       value,
       options,
-      placeholder: getFnValue(props.placeholder, formData),
       onChange: undefined,
-      'onUpdate:value': val => {
-        emitUpdate(val)
-        if (typeof props.onChange === 'function') {
-          setTimeout(() => {
-            props.onChange(val, formData)
-          })
-        }
-      }
+      'onUpdate:value': emitUpdate
     }
     return h(resolveComponent(field.type), controlProps)
   }
@@ -190,7 +158,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
       {
-        placeholder: `请输入${field.label}`
+        placeholder: field.props?.placeholder ?? `请输入${field.label}`
       },
       controlTypeEnum.data.defaultProps ?? {},
       field.props
@@ -198,16 +166,8 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlProps = {
       ...props,
       value,
-      placeholder: getFnValue(props.placeholder, formData),
       onChange: undefined,
-      'onUpdate:value': val => {
-        emitUpdate(val)
-        if (typeof props.onChange === 'function') {
-          setTimeout(() => {
-            props.onChange(val, formData)
-          })
-        }
-      }
+      'onUpdate:value': emitUpdate
     }
     return h(resolveComponent(field.type), controlProps)
   }
@@ -225,7 +185,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
       {
-        placeholders: [`${field.label}起`, `${field.label}止`]
+        placeholders: field.props?.placeholder ?? [`${field.label}起`, `${field.label}止`]
       },
       controlTypeEnum.data.defaultProps ?? {},
       field.props
@@ -240,11 +200,6 @@ export function useRender ({ ctx, isView, value, dataSource }) {
         values = undefined
       }
       emitUpdate(values)
-      if (typeof props.onChange === 'function') {
-        setTimeout(() => {
-          props.onChange(values, formData)
-        })
-      }
     }
     const props1 = {
       onChange: undefined,
@@ -289,7 +244,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
       {
-        placeholder: `请输入${field.label}`
+        placeholder: field.props?.placeholder ?? `请输入${field.label}`
       },
       controlTypeEnum.data.defaultProps ?? {},
       field.props
@@ -297,16 +252,8 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlProps = {
       ...props,
       value,
-      placeholder: getFnValue(props.placeholder, formData),
       onChange: undefined,
-      'onUpdate:value': val => {
-        emitUpdate(val)
-        if (typeof props.onChange === 'function') {
-          setTimeout(() => {
-            props.onChange(val, formData)
-          })
-        }
-      }
+      'onUpdate:value': emitUpdate
     }
     return h(resolveComponent(field.type), controlProps)
   }
@@ -329,14 +276,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       options,
       value,
       onChange: undefined,
-      'onUpdate:value': val => {
-        emitUpdate(val)
-        if (typeof props.onChange === 'function') {
-          setTimeout(() => {
-            props.onChange(val, formData)
-          })
-        }
-      }
+      'onUpdate:value': emitUpdate
     }
     return h(resolveComponent(field.type), controlProps)
   }
@@ -361,14 +301,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       options,
       value,
       onChange: undefined,
-      'onUpdate:value': val => {
-        emitUpdate(val)
-        if (typeof props.onChange === 'function') {
-          setTimeout(() => {
-            props.onChange(val, formData)
-          })
-        }
-      }
+      'onUpdate:value': emitUpdate
     }
     return h(resolveComponent(field.type), controlProps)
   }
@@ -382,7 +315,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
       {
-        placeholder: `请选择${field.label}`
+        placeholder: field.props?.placeholder ?? `请选择${field.label}`
       },
       controlTypeEnum.data.defaultProps ?? {},
       field.props
@@ -400,20 +333,12 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       options,
       onChange: undefined,
       style: { flex: 'auto' },
-      'onUpdate:value': (val, option) => {
-        option = {
-          ...option,
-          props: undefined // 去掉 ant-design 添加的死循环自引用
-        }
+      'onUpdate:value': (val) => {
+        const option = options?.find(item => item.id === val)
         if (import.meta.env.VITE_APP_DEBUG_MODE === 'true') {
           console.log('selected', val, option)
         }
-        emitUpdate(val)
-        if (typeof props.onChange === 'function') {
-          setTimeout(() => {
-            props.onChange(val, option, formData)
-          })
-        }
+        emitUpdate(val, option)
       }
     }
     return h(resolveComponent(field.type), controlProps)
@@ -433,7 +358,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
       {
-        placeholder: `请选择${field.label}`
+        placeholder: field.props?.placeholder ?? `请选择${field.label}`
       },
       controlTypeEnum.data.defaultProps ?? {},
       field.props
@@ -441,16 +366,8 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlProps = {
       ...props,
       value: value ? dayjs(value) : value,
-      placeholder: getFnValue(props.placeholder, formData),
       onChange: undefined,
-      'onUpdate:value': val => {
-        emitUpdate(val)
-        if (typeof props.onChange === 'function') {
-          setTimeout(() => {
-            props.onChange(val, formData)
-          })
-        }
-      }
+      'onUpdate:value': emitUpdate
     }
     return h(resolveComponent(field.type), controlProps)
   }
@@ -461,44 +378,30 @@ export function useRender ({ ctx, isView, value, dataSource }) {
    * @returns 组件VNode
    */
   function renderDateRange (field) {
-    const fieldNames = field.props.fieldNames ?? [field.fieldName + 'Begin', field.fieldName + 'End']
-    let start = formData[fieldNames[0]]
-    let end = formData[fieldNames[1]]
+    let start = value && value[0]
+    let end = value && value[1]
     // 查看模式，直接渲染文本
     if (isView) {
-      start = formatToDateStr(start, field.props?.showTime)
-      end = formatToDateStr(end)
-      return h('span', [start + ' ~ ' + end])
-    }
-    if (!value) {
-      start = start ? dayjs(start) : undefined
-      end = end ? dayjs(end) : undefined
-      if (start) {
-        setTimeout(() => emitUpdate([start, end]))
+      if (start && end) {
+        start = formatToDateStr(start, field.props?.showTime)
+        end = formatToDateStr(end, field.props?.showTime)
+        return h('span', [start + ' ~ ' + end])
       }
+      return h('span', '-')
     }
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
       {
-        placeholder: [`请选择${field.label}起`, `请选择${field.label}止`]
+        placeholder: field.props?.placeholder ?? [`请选择${field.label}起`, `请选择${field.label}止`]
       },
       controlTypeEnum.data.defaultProps ?? {},
       field.props
     )
-    const onValueChange = (val) => {
-      emitUpdate(val)
-      if (typeof props.onChange === 'function') {
-        setTimeout(() => {
-          props.onChange(val, formData)
-        })
-      }
-    }
     const controlProps = {
       ...props,
       value,
-      placeholder: getFnValue(props.placeholder, formData),
       onChange: undefined,
-      'onUpdate:value': onValueChange
+      'onUpdate:value': emitUpdate
     }
     return h(resolveComponent(field.type), controlProps)
   }
@@ -523,14 +426,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       ...props,
       checked: value,
       onChange: undefined,
-      'onUpdate:checked': val => {
-        emitUpdate(val)
-        if (typeof props.onChange === 'function') {
-          setTimeout(() => {
-            props.onChange(val, formData)
-          })
-        }
-      }
+      'onUpdate:checked': emitUpdate
     }
     return h(resolveComponent(field.type), controlProps)
   }
@@ -549,16 +445,8 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlProps = {
       ...props,
       value,
-      disabled: props.disabled ?? isView,
       onChange: undefined,
-      'onUpdate:value': val => {
-        emitUpdate(val)
-        if (typeof props.onChange === 'function') {
-          setTimeout(() => {
-            props.onChange(val, formData)
-          })
-        }
-      }
+      'onUpdate:value': emitUpdate
     }
     return h(resolveComponent(field.type), controlProps)
   }
@@ -591,7 +479,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
       {
-        placeholder: `请选择${field.label}`
+        placeholder: field.props?.placeholder ?? `请选择${field.label}`
       },
       controlTypeEnum.data.defaultProps ?? {},
       field.props
@@ -599,7 +487,6 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlProps = {
       ...props,
       value,
-      disabled: props.disabled ?? isView,
       treeData,
       fieldNames: {
         value: valueField,
@@ -607,14 +494,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
         children: childrenField
       },
       onChange: undefined,
-      'onUpdate:value': val => {
-        emitUpdate(val)
-        if (typeof props.onChange === 'function') {
-          setTimeout(() => {
-            props.onChange(val, formData)
-          })
-        }
-      }
+      'onUpdate:value': emitUpdate
     }
     return h(resolveComponent(field.type), controlProps)
   }
@@ -626,19 +506,19 @@ export function useRender ({ ctx, isView, value, dataSource }) {
    */
   function renderCustom (field) {
     const props = field.props
-    const onChange = (...val) => {
-      emitUpdate(...val)
-      if (typeof props.onChange === 'function') {
-        setTimeout(() => {
-          props.onChange(...val, formData)
-        })
-      }
-    }
+    // const onChange = (...val) => {
+    //   emitUpdate(...val)
+    //   // if (typeof props.onChange === 'function') {
+    //   //   setTimeout(() => {
+    //   //     props.onChange(...val, formData)
+    //   //   })
+    //   // }
+    // }
     const controlProps = {
       ...props,
       value,
-      onChange: props.onChange ? onChange : undefined, // 如果有设置
-      'onUpdate:value': props.onChange ? emitUpdate : onChange,
+      onChange: undefined,
+      'onUpdate:value': emitUpdate,
       disabled: props.disabled ?? isView,
       component: undefined
     }
@@ -648,7 +528,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     }
     // 自定义 model 事件，实现数据双向绑定(默认通过 onChange 驱动，但个别特殊组件没有 onChange，需要自定义)
     if (props.modelEvent) {
-      controlProps[props.modelEvent] = onChange
+      controlProps[props.modelEvent] = emitUpdate // onChange
     }
     // 自定义数据源字段
     if (props.modelData) {

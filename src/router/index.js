@@ -16,10 +16,12 @@ import { beforeInterceptor, afterInterceptor, errorInterceptor } from './interce
       target: '_blank',      // 在浏览器新窗口打开（如打开外部系统页面）
       cache: true,           // 是否缓存页面，切换 Tabs 时状态不会被清空，默认不缓存
       icon: 'HomeOutlined',  // 菜单图标，ant-design/icons
+      isFirst: true,         // 是否'/'下面的第一级路由，比如：'/system'，菜单联动时有用，不需要联动子菜单则不用配置，动态路由会自动生成，静态路由需手动配置
+      isLeaf: true,          // 是否叶子节点，处理菜单点击行为时有用，动态路由会自动生成，静态路由需手动配置
+      matchedPaths: ['/developer', '/developer/demo'], // 匹配到的路由链，菜单自动选中、自动展开时有用，动态路由会自动生成，静态路由需手动配置
     },
     children: []             // 子路由
   }
-  不需要在 layout 中显示的路由
  */
 const staticRoutes = [
   {
@@ -49,6 +51,17 @@ const staticRoutes = [
           cache: true
         }
       },
+      // {
+      //   path: '/developer/demo',
+      //   component: () => import('@/views/demo/demo-page.vue'),
+      //   meta: {
+      //     title: 'Demo',
+      //     isLeaf: true,
+      //     needLogin: false,
+      //     matchedPaths: ['/developer', '/developer/demo'],
+      //     cache: true
+      //   }
+      // },
       {
         path: '/personal-center',
         name: 'personal-center',

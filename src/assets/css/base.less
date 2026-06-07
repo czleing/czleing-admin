@@ -18,21 +18,42 @@
 .tr { text-align: right; }
 // 鼠标
 .pointer { cursor: pointer }
+.pointer:active { opacity: .7; }
+.not-allowed { cursor: not-allowed }
+.select-text { user-select: text; }
+.select-none { user-select: none; }
+.no-events { pointer-events: none; }
 // box
 .inline { display: inline; }
 .block { display: block; }
 .inline-block { display: inline-block; }
 .none { display: none; }
+// 定位
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+.sticky { position: sticky; }
 // 不换行
 .nowrap { white-space: nowrap; }
+.pre-wrap { white-space: pre-wrap; }
 // 文字任意位置换行
 .break-all { word-break: break-all; }
+.break-word { word-break: break-word; }
 // 文字超出，后面...隐藏，视情况与.nowrap配合使用
 .text-over-hidden { overflow: hidden; text-overflow: ellipsis; }
+// 超出省略
+.text-ellipsis { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.line-clamp2 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.line-clamp3 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
 // 圆角
+.radius2 { border-radius: 2px; }
 .radius3 { border-radius: 3px; }
+.radius4 { border-radius: 4px; }
 .radius5 { border-radius: 5px; }
+.radius6 { border-radius: 6px; }
+.radius8 { border-radius: 8px; }
 .radius10 { border-radius: 10px; }
+.radius15 { border-radius: 15px; }
 .radius20 { border-radius: 20px; }
 .radius-circle { border-radius: 5000px; }
 // 边界
@@ -48,6 +69,9 @@
 .border-right { border-right: 0.5px solid @colorBorder; }
 .border-bottom { border-bottom: 0.5px solid @colorBorder; }
 .border-left { border-left: 0.5px solid @colorBorder; }
+// 盒子
+.border-box { box-sizing: border-box; }
+.content-box { box-sizing: content-box; }
 
 // 文字大小
 .em06 { font-size: 0.6em; }
@@ -78,28 +102,28 @@
 .font50 { font-size: 50px; }
 .font60 { font-size: 60px; }
 
-// 颜色，此颜色不会动态跟随主题色，慎用
-.text-danger { color: @colorError !important; }
-.text-primary { color: @colorPrimary !important; }
-.text-success { color: @colorSuccess !important; }
-.text-warning { color: @colorWarning !important; }
-.text-info { color: @colorInfo !important; }
+// 颜色，跟随主题变化
+.text-danger { color: var(--ant-colorError) !important; }
+.text-primary { color: var(--ant-colorPrimary) !important; }
+.text-success { color: var(--ant-colorSuccess) !important; }
+.text-warning { color: var(--ant-colorWarning) !important; }
+.text-info { color: var(--ant-colorInfo) !important; }
 .text-gray { color: gray !important; }
 .text-gray2 { color: #ccc !important; }
 .text-white { color: white !important; }
 .text-black { color: black !important; }
-.bg-danger { background-color: @colorError !important; }
-.bg-danger-20 { background-color: fade(@colorError, 20) !important; }
-.bg-danger-50 { background-color: fade(@colorError, 50) !important; }
-.bg-warning { background-color: @colorWarning  !important; }
-.bg-warning-20 { background-color: fade(@colorWarning, 20)  !important; }
-.bg-warning-50 { background-color: fade(@colorWarning, 50)  !important; }
-.bg-primary { background-color: @colorPrimary  !important; }
-.bg-primary-20 { background-color: fade(@colorPrimary, 20)  !important; }
-.bg-primary-50 { background-color: fade(@colorPrimary, 50)  !important; }
-.bg-success { background-color: @colorSuccess !important; }
-.bg-success-20 { background-color: fade(@colorSuccess, 20) !important; }
-.bg-success-50 { background-color: fade(@colorSuccess, 50) !important; }
+.bg-danger { background-color: var(--ant-colorError) !important; }
+.bg-danger-20 { background-color: color-mix(in oklch, var(--ant-colorError) 20%, transparent) !important; }
+.bg-danger-50 { background-color: color-mix(in oklch, var(--ant-colorError) 50%, transparent) !important; }
+.bg-warning { background-color: var(--ant-colorWarning)  !important; }
+.bg-warning-20 { background-color: color-mix(in oklch, var(--ant-colorWarning) 20%, transparent)  !important; }
+.bg-warning-50 { background-color: color-mix(in oklch, var(--ant-colorWarning) 50%, transparent)  !important; }
+.bg-primary { background-color: var(--ant-colorPrimary)  !important; }
+.bg-primary-20 { background-color: color-mix(in oklch, var(--ant-colorPrimary) 20%, transparent)  !important; }
+.bg-primary-50 { background-color: color-mix(in oklch, var(--ant-colorPrimary) 50%, transparent)  !important; }
+.bg-success { background-color: var(--ant-colorSuccess) !important; }
+.bg-success-20 { background-color: color-mix(in oklch, var(--ant-colorSuccess) 20%, transparent) !important; }
+.bg-success-50 { background-color: color-mix(in oklch, var(--ant-colorSuccess) 50%, transparent) !important; }
 .bg-gray { background-color: gray !important; }
 .bg-gray2 { background-color: #ccc !important; }
 .bg-gray3 { background-color: #eee !important; }

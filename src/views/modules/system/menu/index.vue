@@ -7,13 +7,10 @@
     no-select
     :tools-config="{ addBtnText: '新增根级菜单' }"
     :filter-config="filterConfig"
-    :before-search="beforeSearch"
-    :after-search="afterSearch"
-    :before-submit="beforeSubmit"
-    :after-open-modal="afterOpenModal"
-    :transform-detail="transformDetail"
     :table-config="tableConfig"
     :modal-config="modalConfig"
+    :after-search="afterSearch"
+    :before-submit="beforeSubmit"
   >
     <template #table_menuName="{ record }">
       {{ record.sort }}、
@@ -105,10 +102,6 @@ const tableConfig = computed(() => ({
       action: ({ record }) => {
         const btns = [
           // 预设：edit, detail, delete, toggle
-          // {
-          //   name: '详情',
-          //   callback: 'detail'
-          // },
           {
             name: '编辑',
             callback: 'edit'
@@ -153,7 +146,7 @@ const modalConfig = computed(() => ({
   formConfig: ({ isAdd, isEdit, isView, detail }) => ({
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
-    colSize: 2, // 一行显示几列
+    cols: 2, // 一行显示几列
     // 表单字段
     fields: [ // 表单字段数组，可分组
       {
@@ -172,6 +165,7 @@ const modalConfig = computed(() => ({
             params: {
               menuType: `${EMenuType.eDir},${EMenuType.eMenu}`,
             },
+            autoRefresh: true,
             converter (result) {
               return [
                 {
@@ -339,33 +333,11 @@ function addChildren (record) {
 }
 
 /**
- * 查询前修改查询参数
- * @param {Object} searchParams 查询参数
- */
-function beforeSearch (searchParams) {
-  return searchParams
-}
-
-/**
  * 查询后修改查询结果
  * @param {Array} list 查询结果列表
  */
 function afterSearch (list) {
-  const tree = listToTree(list, 0, 'menuId')
-  if (parentIdRemote) {
-    parentIdRemote() // 菜单数据变了，重新获取数据源(选择父级菜单的数据源)
-  }
-  return tree
-}
-
-/**
- * 弹窗(新增、修改、详情弹窗)后执行
- * @param {Object} param 其他参数
- */
-let parentIdRemote = null
-function afterOpenModal ({ isAdd, isEdit, isView, record, detail, cForm }) {
-  const formRemotes = cForm.value.remotes()
-  parentIdRemote = formRemotes['parentId']
+  return listToTree(list, 0, 'menuId')
 }
 
 /**
@@ -390,15 +362,6 @@ function beforeSubmit (submitData, { isAdd, isEdit, isView, detail }) {
     submitData.queryParam = ''
   }
   return submitData
-}
-
-/**
- * 编辑回填、详情展示时，对详情数据修改
- * @param {Object} detail 详情数据
- * @param {Object} param 其他参数
- */
-function transformDetail (detail, { isEdit, isView }) {
-  return detail
 }
 </script>
 
