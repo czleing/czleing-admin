@@ -185,8 +185,8 @@ function setFormData (data = props.detail, includeFieldNames = fieldNamesArr.val
       // 回填时，对日期类型特殊处理
       if (dateFields.includes(fieldName)) {
         formData[fieldName] = data[fieldName] ? dayjs(data[fieldName]) : defaultObject.value[fieldName]
-      } else if (dateRangeFields[fieldName]) {
-        const fieldNames = dateRangeFields[fieldName]
+      } else if (dateRangeFields.includes(fieldName)) {
+        const fieldNames = rangeFieldNamesMap[fieldName]
         if (Array.isArray(fieldNames) && fieldNames.length === 2 && data[fieldNames[0]] && data[fieldNames[1]]) {
           formData[fieldName] = [dayjs(data[fieldNames[0]]), dayjs(data[fieldNames[1]])]
         } else {
