@@ -42,6 +42,7 @@
       :style="settingStore.isDark ? 'filter:invert(1);' : ''"
     ></iframe>
     <a-space :size="15">
+      <HeaderMessage />
       <HeaderFullscreen />
       <HeaderSetting />
       <HeaderUser />
@@ -55,6 +56,7 @@ import SideItem from '../side/SideItem.vue'
 import { useMenuStore } from '@/stores/menu-store.js'
 import { useSettingStore } from '@/stores/setting-store.js'
 import HeaderUser from './header-user.vue'
+import HeaderMessage from './header-message.vue'
 import HeaderFullscreen from './header-fullscreen.vue'
 import HeaderSetting from './header-setting.vue'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'

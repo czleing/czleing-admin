@@ -78,8 +78,8 @@ const treeConfig = {
 const filterConfig = {
   // useCache: true, // 使用查询条件暂存
   // cacheBtnText: '记住查询', // 暂存按钮文字，默认 '记住查询'
-  // col: { span: 8 }, // 所有表单项栅格设置，默认：{ sm: 8, lg: 6, xxl: 4 }，参照 a-col
-  // labelCol: { span: 6 }, // 所有表单项文本部分栅格设置，参照 a-col
+  col: { sm: 8, lg: 6, xxl: 6 }, // 所有表单项栅格设置，默认：{ sm: 8, lg: 6, xxl: 4 }，参照 a-col
+  labelCol: { flex: '80px' }, // 所有表单项文本部分栅格设置，参照 a-col
   // wrapperCol: { span: 18 }, // 所有表单项控件部分栅格设置，参照 a-col
   // buttonsCol: { flex: 'auto' }, // 查询重置等按钮栅格设置
   // buttonsAlign: 'right', // 查询重置等按钮水平对齐方式，left(默认), center, right
@@ -120,7 +120,6 @@ const filterConfig = {
       label: '数字范围',
       fieldName: 'numberRange', // 后端使用数组接收
       type: EControlType.eNumberRange,
-      col: { flex: '300px' },
       props: {
       }
     },
@@ -130,7 +129,7 @@ const filterConfig = {
       fieldName: 'createTime', // 对应查询数据库中的字段，提交时会删掉，替换成 fieldNames 中设置的两个字段
       type: EControlType.eDateRange,
       props: {
-        showTime: true, // 是否显示时分秒
+        // showTime: true, // 是否显示时分秒
         // fieldNames: ['createTimeBegin', 'createTimeEnd'] // 默认是 fieldName 后面增加 'Begin', 'End'，可以不填
       }
     }

@@ -358,7 +358,8 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
       {
-        placeholder: field.props?.placeholder ?? `请选择${field.label}`
+        placeholder: field.props?.placeholder ?? `请选择${field.label}`,
+        style: { width: '100%' }
       },
       controlTypeEnum.data.defaultProps ?? {},
       field.props
@@ -392,7 +393,8 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
       {
-        placeholder: field.props?.placeholder ?? [`请选择${field.label}起`, `请选择${field.label}止`]
+        placeholder: field.props?.placeholder ?? [`请选择${field.label}起`, `请选择${field.label}止`],
+        style: { width: '100%' }
       },
       controlTypeEnum.data.defaultProps ?? {},
       field.props
