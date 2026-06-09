@@ -42,7 +42,7 @@ import axios from '@/api/index.js'
 import { useRouter } from 'vue-router'
 import { watch, onMounted, onUnmounted } from 'vue'
 import { useAuthStore } from '@/stores/auth-store.js'
-import { useSSE } from '@/utils/sse.js'
+import { useSSE } from '@/hooks/useSEE.js'
 
 const { connect, addSSEListener, disconnect } = useSSE()
 const router = useRouter()
