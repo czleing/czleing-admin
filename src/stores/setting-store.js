@@ -85,13 +85,13 @@ export const useSettingStore = defineStore('setting', () => {
   function setDark () {
     // if (isTransitioning.value) return
     mode.value = 'dark'
-    // transitionTheme()
+    // transitionTheme(() => mode.value = 'dark')
   }
 
   function setLight () {
     // if (isTransitioning.value) return
     mode.value = 'light'
-    // transitionTheme()
+    // transitionTheme(() => mode.value = 'light')
   }
 
   function toggleMode () {
