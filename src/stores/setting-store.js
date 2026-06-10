@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia'
+import { useThemeModeTransition } from '@/hooks/useThemeModeTransition'
+import { ref, computed } from 'vue'
 
 // ant-design-vue4.x 主题定义
 const themes = [
@@ -57,64 +59,90 @@ const themes = [
 /**
  * 主题、语言、设置相关 store
  */
-export const useSettingStore = defineStore('setting', {
-  state: () => ({
-    theme: { token: { ...themes.find(item => item.inUse)?.theme?.token } }, // 当前主题色系
-    themeName: themes.find(item => item.inUse)?.name, // 当前主题名称
-    mode: 'light', // 昼夜模式 light or dark
-    locale: 'zh-cn', // 当前语言 zh-cn, zh-hk, en
-    componentSize: 'middle', // 当前组件尺寸
-    menuLayout: 'top',     // 菜单布局方式，top: 全部显示在顶部，left: 全部显示在左侧，top-left: 顶部一级菜单，左侧子菜单
-    useRadius: false,   // 是否使用圆润布局
-    useWeather: false,  // 是否使用天气组件
-    useTabs: true, // 是否使用 tabs 栏
-    useDynamicPageTitle: true, // 是否动态设置浏览器标签名，设置为路由上的 meta.title
-  }),
-  actions: {
-    /** 根据主题名称设置主题 */
-    setThemeByName (name) {
-      if (!name) return
-      const theme = themes.find(item => item.name === name)?.theme
-      if (theme) {
-        this.theme = { token: { ...theme.token } }
-        this.themeName = name
-      }
-    },
-    setDark () {
-      this.mode = 'dark'
-    },
-    setLight () {
-      this.mode = 'light'
-    },
-    toggleMode () {
-      this.mode = this.isDark ? 'light' : 'dark'
-    },
-    setLocale (lang) {
-      this.locale = lang
+export const useSettingStore = defineStore('setting', () => {
+  const theme = ref({ token: { ...themes.find(item => item.inUse)?.theme?.token } }) // 当前主题色系
+  const themeName = ref(themes.find(item => item.inUse)?.name) // 当前主题名称
+  const mode = ref('light') // 昼夜模式 light or dark
+  const locale = ref('zh-cn') // 当前语言 zh-cn, zh-hk, en
+  const componentSize = ref('middle') // 当前组件尺寸
+  const menuLayout = ref('top') // 菜单布局方式，top: 全部显示在顶部，left: 全部显示在左侧，top-left: 顶部一级菜单，左侧子菜单
+  const useRadius = ref(false) // 是否使用圆润布局
+  const useWeather = ref(false) // 是否使用天气组件
+  const useTabs = ref(true) // 是否使用 tabs 栏
+  const useDynamicPageTitle = ref(true) // 是否动态设置浏览器标签名，设置为路由上的 meta.title
+
+  const { transitionTheme, isTransitioning } = useThemeModeTransition()
+  /** 根据主题名称设置主题 */
+  function setThemeByName (name) {
+    if (!name) return
+    const t = themes.find(item => item.name === name)?.theme
+    if (t) {
+      theme.value = { token: { ...t.token } }
+      themeName.value = name
     }
-  },
-  getters: {
-    isDark () {
-      return this.mode === 'dark'
-    },
-    themes () {
-      return themes
-    },
-    langOptions () {
-      const langFiles = import.meta.glob('@/locales/langs/*.js', { eager: true })
-      const options = []
-      Object.entries(langFiles).forEach(item => {
-        options.push(item[1].option)
-      })
-      return options
-    }
-  },
+  }
+
+  function setDark () {
+    // if (isTransitioning.value) return
+    mode.value = 'dark'
+    // transitionTheme()
+  }
+
+  function setLight () {
+    // if (isTransitioning.value) return
+    mode.value = 'light'
+    // transitionTheme()
+  }
+
+  function toggleMode () {
+    if (isDark.value) setLight()
+    else setDark()
+  }
+
+  function setLocale (lang) {
+    locale.value = lang
+  }
+
+  const isDark = computed(() => mode.value === 'dark')
+  const themesGetter = computed(() => themes)
+  const langOptions = computed(() => {
+    const langFiles = import.meta.glob('@/locales/langs/*.js', { eager: true })
+    const options = []
+    Object.entries(langFiles).forEach(item => {
+      options.push(item[1].option)
+    })
+    return options
+  })
+
+  return {
+    theme,
+    themeName,
+    mode,
+    locale,
+    componentSize,
+    menuLayout,
+    useRadius,
+    useWeather,
+    useTabs,
+    useDynamicPageTitle,
+    isDark,
+    themes: themesGetter,
+    langOptions,
+    setThemeByName,
+    setDark,
+    setLight,
+    toggleMode,
+    setLocale,
+  }
+},
+{
   persist: {
-    enabled: true, // 开启持久化
-    strategies: [{ // 可以多种方案组合
-      key: 'USER_SETTINGS',
-      storage: window.localStorage, // 使用的持久化方案，默认 sessionStorage
-      // paths: ['theme'] // 需要持久化的属性，默认所有属性
-    }]
+    enabled: true,
+    strategies: [
+      {
+        key: 'USER_SETTINGS',
+        storage: window.localStorage
+      }
+    ]
   }
 })
