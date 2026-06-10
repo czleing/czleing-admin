@@ -50,11 +50,12 @@
     :after-open-modal="afterOpenModal"
     :transform-detail="transformDetail"
   >
-    <!-- 表格单元格内容过于复杂时，可以使用插槽 -->
+    <!-- 表格单元格内容过于复杂时，可以使用插槽，插槽名动态根据配置生成 -->
     <template #table_slotField="{ text, record, index, column }">
       插槽内容==={{ record.age }}
     </template>
     <!-- 其他插槽如：header、filter、tools、table -->
+    <!-- 可以不传对应的配置，通过插槽自定义实现对应部分 -->
   </CPage>
 </template>
 
@@ -218,7 +219,7 @@ const tableConfig = computed(() => ({
       // }
     // }
   },
-  initSearch: true, // 默认 true，初始化时查询
+  // initSearch: true, // 默认 true，初始化时查询
   columns: [
     {
       title: '姓名',

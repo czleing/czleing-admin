@@ -11,22 +11,17 @@ export const option = {
 }
 export default {
   ...en,
-  add: 'Add',
-  copy: 'Copy',
-  cancel: 'Cancel',
-  confirm: 'Confirm',
-  save: 'Save',
-  saveSuccess: 'Save successfully',
-  delete: 'Delete',
-  deleteSuccess: 'Delete successfully',
-  tips: 'Reminder',
-  more: 'More',
-  pleaseEnter: 'Please enter {text}',
-  login: {
-    
-  },
-  // 个人中心
-  member: {
-    
+  common: {
+    add: 'Add',
+    copy: 'Copy',
+    cancel: 'Cancel',
+    confirm: 'Confirm',
+    save: 'Save',
+    saveSuccess: 'Save successfully',
+    delete: 'Delete',
+    deleteSuccess: 'Delete successfully',
+    tips: 'Reminder',
+    more: 'More',
+    pleaseEnter: 'Please enter {text}',
   },
 }

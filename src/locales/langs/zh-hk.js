@@ -11,22 +11,17 @@ export const option = {
 }
 export default {
   ...zhHk,
-  add: '新增',
-  copy: '複製',
-  cancel: '取消',
-  confirm: '確認',
-  save: '保存',
-  saveSuccess: '保存成功',
-  delete: '刪除',
-  deleteSuccess: '刪除成功',
-  tips: '溫馨提示',
-  more: '更多',
-  pleaseEnter: '請輸入{text}',
-  login: {
-    
-  },
-  // 个人中心
-  member: {
-    
+  common: {
+    add: '新增',
+    copy: '複製',
+    cancel: '取消',
+    confirm: '確認',
+    save: '保存',
+    saveSuccess: '保存成功',
+    delete: '刪除',
+    deleteSuccess: '刪除成功',
+    tips: '溫馨提示',
+    more: '更多',
+    pleaseEnter: '請輸入{text}',
   },
 }
