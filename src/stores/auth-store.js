@@ -116,7 +116,14 @@ export const useAuthStore = defineStore('auth', {
       if (!force && this.userInfo) {
         return this.userInfo
       } else {
-        const authInfo = await axios.get('/authInfo')
+        let authInfo = {}
+        try {
+          authInfo = await axios.get('/authInfo')
+        } catch (e) {
+          if (import.meta.env.VITE_APP_IGNORE_LOGIN !== 'true') {
+            throw e
+          }
+        }
         this.userInfo = authInfo.user
         this.roles = authInfo.roles
         this.permissions = authInfo.permissions ?? []

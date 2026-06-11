@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { useThemeModeTransition } from '@/hooks/useThemeModeTransition'
 import { ref, computed } from 'vue'
 
 // ant-design-vue4.x 主题定义
@@ -71,7 +70,6 @@ export const useSettingStore = defineStore('setting', () => {
   const useTabs = ref(true) // 是否使用 tabs 栏
   const useDynamicPageTitle = ref(true) // 是否动态设置浏览器标签名，设置为路由上的 meta.title
 
-  const { transitionTheme, isTransitioning } = useThemeModeTransition()
   /** 根据主题名称设置主题 */
   function setThemeByName (name) {
     if (!name) return
@@ -83,18 +81,11 @@ export const useSettingStore = defineStore('setting', () => {
   }
 
   function setDark () {
-    if (isTransitioning.value) return
-    transitionTheme(() => {
-      mode.value = 'dark'
-    }, isDark.value)
+    mode.value = 'dark'
   }
 
   function setLight () {
-    if (isTransitioning.value) return
-    // mode.value = 'light'
-    transitionTheme(() => {
-      mode.value = 'light'
-    }, isDark.value)
+    mode.value = 'light'
   }
 
   function toggleMode () {
@@ -108,14 +99,6 @@ export const useSettingStore = defineStore('setting', () => {
 
   const isDark = computed(() => mode.value === 'dark')
   const themesGetter = computed(() => themes)
-  const langOptions = computed(() => {
-    const langFiles = import.meta.glob('@/locales/langs/*.js', { eager: true })
-    const options = []
-    Object.entries(langFiles).forEach(item => {
-      options.push(item[1].option)
-    })
-    return options
-  })
 
   return {
     theme,
@@ -130,7 +113,6 @@ export const useSettingStore = defineStore('setting', () => {
     useDynamicPageTitle,
     isDark,
     themes: themesGetter,
-    langOptions,
     setThemeByName,
     setDark,
     setLight,

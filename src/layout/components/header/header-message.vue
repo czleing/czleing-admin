@@ -88,11 +88,11 @@ watch(() => authStore.token, (newToken) => {
 }, { immediate: true })
 
 onMounted(() => {
-  if (authStore.token) {
+  // if (authStore.token) {
     setTimeout(() => {
       getList()
     }, 1000)
-  }
+  // }
 })
 
 onUnmounted(() => {

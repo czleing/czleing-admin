@@ -65,7 +65,7 @@
       <span>{{ $t('frame.selectLang') }}：</span>
       <a-select v-model:value="settingStore.locale" style="width: 150px;" @change="handleLocalChange">
         <a-select-option
-          v-for="lang in settingStore.langOptions"
+          v-for="lang in langOptions"
           :key="lang.value"
           :value="lang.value"
         >
@@ -87,6 +87,7 @@
 <script setup>
 import { useSettingStore } from '@/stores/setting-store.js'
 import { SettingOutlined } from '@ant-design/icons-vue'
+import { langOptions } from '@/locales/index'
 
 const settingStore = useSettingStore()
 const settingModal = ref()
@@ -95,7 +96,9 @@ const currColors = computed(() => Object.entries(settingStore.theme?.token))
 const { locale } = useI18n()
 
 function changeMode (val) {
-  setTimeout(settingStore.toggleMode, 200)
+  setTimeout(() => {
+    settingStore.toggleMode()
+  }, 200)
 }
 const openSetting = () => {
   settingModal.value.open()
