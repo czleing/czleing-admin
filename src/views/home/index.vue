@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import { useThemeModeTransition } from '@/hooks/useThemeModeTransition'
+import { useThemeModeTransition } from '@/layout/components/hooks/useThemeModeTransition'
 defineOptions({
   name: 'HomePage'
 })

@@ -26,13 +26,21 @@ export const useMenuStore = defineStore('menu', {
     async loadMenuToRoute (force = false) {
       if (force || !this.loaded) {
         this.loaded = true
-        const tree = await this.getMenuTree()
-        const routes = this.menuToRoute(tree)
-        this.menuList = routes
-        const navRoute = createNavRoute(routes)
-        this.navRoutes = navRoute.children
-        const navRoute2d = this.to2DRoutes(navRoute)
-        routers.addRoute(navRoute2d)
+        try {
+          const tree = await this.getMenuTree()
+          const routes = this.menuToRoute(tree)
+          this.menuList = routes
+          const navRoute = createNavRoute(routes)
+          this.navRoutes = navRoute.children
+          const navRoute2d = this.to2DRoutes(navRoute)
+          routers.addRoute(navRoute2d)
+        } catch (e) {
+          // 接口服务无效时，只加载本地路由
+          const navRoute = createNavRoute([])
+          this.navRoutes = navRoute.children
+          const navRoute2d = this.to2DRoutes(navRoute)
+          routers.addRoute(navRoute2d)
+        }
       }
     },
     async getMenuTree () {

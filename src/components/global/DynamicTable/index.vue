@@ -38,44 +38,67 @@
               title="确认要删除该行吗？"
               @confirm="deleteHandle(index)"
             >
-              <a href="javascript:;">删除</a>
+              <span class="text-danger pointer">删除</span>
             </a-popconfirm>
           </template>
         </template>
       </a-table>
-      <div v-if="!disabled && modelValue.length <= maxCount" class="tc py10">
+      <div v-if="!disabled && modelValue.length <= maxCount" class="add-row tc py8 em09 flex-x-center">
         <a class="" href="javascript:;" @click="addHandle">
           <PlusCircleOutlined />
-          新增
+          新增一行
         </a>
+        <!-- 文本OCR -->
+        <template v-if="useTextOCR">
+          <span class="text-gray2 mx20">|</span>
+          <span class="flex-x x-middle gap10">
+            <a-popover v-model:open="textOcrOpen">
+              <template #content>
+                <div style="width:500px;">
+                  <div class="bold">文本识别：</div>
+                  <a-textarea v-model:value="textContent" :rows="8" :placeholder="`请输入内容，如：\n1,2,3\n4,5,6\n`" class="mt10"></a-textarea>
+                  <div class="mt10 flex-x-between">
+                    <div>* 每行不同列之间用 <a-tag>|</a-tag><a-tag>,</a-tag><a-tag>，</a-tag> 或制表符间隔，回车结束</div>
+                    <a-button type="primary" :loading="textOcring" @click="textOcrHandle">识别</a-button>
+                  </div>
+                </div>
+              </template>
+              <a href="javascript:;">
+                <FormOutlined /> {{ textOcring ? '识别中...' : '从文本中识别' }}
+              </a>
+            </a-popover>
+          </span>
+        </template>
+        <!-- 清空 -->
+        <template v-if="useClear && value.length > 0">
+          <a-popconfirm
+            title="确认要清空所有数据？"
+            @confirm="clearHandle"
+          >
+            <span class="text-gray2 mx20">|</span>
+            <span class="text-danger pointer"><ClearOutlined /> 清空</span>
+          </a-popconfirm>
+        </template>
       </div>
     </a-form-item-rest>
   </div>
 </template>
 
 <script setup>
-import { QuestionCircleOutlined, PlusCircleOutlined } from '@ant-design/icons-vue'
+import { QuestionCircleOutlined, PlusCircleOutlined, ClearOutlined, FormOutlined } from '@ant-design/icons-vue'
 import CComponent from '@/components/crud/components/c-component'
 import { getFnValue } from '@/utils'
+import { message } from 'ant-design-vue'
 
 const props = defineProps({
   // 组件值，对象数组
-  value: {
-    type: Array,
-    default: () => []
-  },
+  value: { type: Array, default: () => [] },
   // 主键字段名
   primaryKey: { type: String, default: 'id' },
   // 最小条数限制
-  minCount: {
-    type: Number,
-    default: 0
-  },
+  minCount: { type: Number, default: 0 },
   // 最大条数限制
-  maxCount: {
-    type: Number,
-    default: 10
-  },
+  maxCount: { type: Number, default: 10 },
   /**
    * 列信息，对象数组，在 ant-design-vue 的 columns 基础上增加了一些属性配置项(以下带++标识的为新增配置)
    * title: 表头名称
@@ -95,25 +118,17 @@ const props = defineProps({
    * props: 组件属性配置（++）
    * props.onChange: // 控件值改变事件（++），通过修改record里的属性进行多列间联动 (val, record, records) => {}
    */
-  columns: {
-    type: Array,
-    required: true
-  },
+  columns: { type: Array, required: true },
   // 是否禁用组件，禁用后只能查看，不能操作
-  disabled: {
-    type: Boolean,
-    default: false
-  },
+  disabled: { type: Boolean, default: false },
   // 是否需要默认新增一行
-  useAddDefault: {
-    type: Boolean,
-    default: true
-  },
+  useAddDefault: { type: Boolean, default: true },
   // 是否需要删除按钮
-  useDelete: {
-    type: Boolean,
-    default: true
-  }
+  useDelete: { type: Boolean, default: true },
+  /** 是否使用清空功能 */
+  useClear: { type: Boolean, default: true },
+  /** 是否使用文本识别功能 */
+  useTextOCR: { type: Boolean, default: true },
 })
 
 const modelValue = ref([])
@@ -200,6 +215,41 @@ function addHandle() {
   modelValue.value.push(emptyObj)
   emitChange()
 }
+/** 清空 */
+function clearHandle () {
+  modelValue.value = []
+  emitChange()
+}
+
+// 文本识别
+const textOcring = ref(false)
+const textOcrOpen = ref(false)
+const textContent = ref('')
+function textOcrHandle () {
+  if (!textContent.value) {
+    message.warning('请输入文本内容')
+    return
+  }
+  textOcring.value = true
+  try {
+    const lines = textContent.value.split('\n').filter(line => line.trim())
+    let now = Date.now()
+    const newData = lines.map(line => {
+      const obj = {[props.primaryKey]: ++now}
+      const values = line.split(/[\|,， \t]+/)
+      props.columns.filter(item => !item.hidden).forEach((col, index) => {
+        obj[col.dataIndex] = values[index] ?? null
+      })
+      return obj
+    })
+    modelValue.value.push(...newData)
+    textContent.value = ''
+    textOcrOpen.value = false
+    emitChange()
+  } finally {
+    textOcring.value = false
+  }
+}
 
 const emit = defineEmits(['update:value', 'change'])
 async function emitChange() {
@@ -210,4 +260,11 @@ async function emitChange() {
 </script>
 
 <style lang="scss" scoped>
+.dynamic-table{
+  .add-row {
+    border: solid 1px var(--ant-colorBorderSecondary);
+    border-top: none;
+    border-radius: 0 0 var(--ant-borderRadius) var(--ant-borderRadius);
+  }
+}
 </style>
