@@ -20,6 +20,8 @@ export default {
     saveSuccess: 'Save successfully',
     delete: 'Delete',
     deleteSuccess: 'Delete successfully',
+    disabled: 'Disabled',
+    enabled: 'Enabled',
     tips: 'Reminder',
     more: 'More',
     pleaseEnter: 'Please enter {text}',

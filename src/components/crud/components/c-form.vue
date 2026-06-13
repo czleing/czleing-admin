@@ -48,8 +48,7 @@
 
 <script setup>
 import CComponent from './c-component.js'
-import { isDayjs, getFnValue, loadingRequest, isEmpty, isNotEmpty } from '@/utils/index'
-import { EControlType } from '@/enum'
+import dayjs from 'dayjs'
 
 const props = defineProps({
   isAdd: Boolean,

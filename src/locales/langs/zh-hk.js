@@ -20,6 +20,8 @@ export default {
     saveSuccess: '保存成功',
     delete: '刪除',
     deleteSuccess: '刪除成功',
+    disabled: '禁用',
+    enabled: '啟用',
     tips: '溫馨提示',
     more: '更多',
     pleaseEnter: '請輸入{text}',

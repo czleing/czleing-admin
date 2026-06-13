@@ -36,7 +36,7 @@ function getI18nConfig () {
   return {
     legacy: false,
     locale: settings?.locale || 'zh-cn', // 默认语言
-    fallbackLocale: 'en', // 回退语言
+    fallbackLocale: 'zh-cn', // 回退语言
     messages
   }
 }

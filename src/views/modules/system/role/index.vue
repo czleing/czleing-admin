@@ -2,75 +2,94 @@
 <template>
   <div class="role-page">
     <CPage
+      ref="cPage"
       primary-key="roleId"
       :filter-config="filterConfig"
       :table-config="tableConfig"
       :modal-config="modalConfig"
       :after-open-modal="afterOpenModal"
     />
+    <!-- 数据权限分配 -->
+    <CModal ref="cModal" :footer="null">
+      <CForm
+        ref="cForm"
+        :detail="scopeDetail"
+        :form-config="formConfig"
+        :onSubmitHandle="onSubmitHandle"
+      />
+    </CModal>
   </div>
 </template>
 
 <script setup>
 import CPage from '@/components/crud/c-page.vue'
 import axios from '@/api/index.js'
+import { message } from 'ant-design-vue'
 
+const { t } = useI18n()
 const filterConfig = computed(() => ({
   fields: [
     {
-      label: '名称',
+      label: t('system.role.name'),
       fieldName: 'dictName',
+      type: EControlType.eInput,
+      props: {
+        placeholder: t('system.role.namePlaceholder')
+      }
     }
   ]
 }))
 const tableConfig = computed(() => ({
   columns: [
     {
-      title: '排序',
+      title: t('system.role.sort'),
       dataIndex: 'roleSort'
     },
     {
-      title: '角色编码',
+      title: t('system.role.code'),
       dataIndex: 'roleId',
       hidden: true
     },
     {
-      title: '角色名称',
+      title: t('system.role.name'),
       dataIndex: 'roleName'
     },
     {
-      title: '角色标识',
+      title: t('system.role.key'),
       dataIndex: 'roleKey'
     },
     {
-      title: '是否启用',
+      title: t('system.role.status'),
       dataIndex: 'isEnabled',
       type: 'isEnabled'
     },
     {
-      title: '创建时间',
+      title: t('system.role.createTime'),
       dataIndex: 'createTime'
     },
     {
-      title: '操作',
+      title: t('system.role.actions'),
       actionShowNum: 4,
       action: ({ record }) => {
         return [
           {
-            name: '详情',
-            callback: 'detail'
+            name: t('system.role.dataPermission'),
+            permission: 'system:role:edit',
+            callback () {
+              openDataScope(record)
+            }
           },
           {
-            name: '编辑',
+            name: t('system.role.edit'),
             callback: 'edit'
           },
           {
-            name: record.isEnabled ? '禁用' : '启用',
+            name: record.isEnabled ? t('system.role.disable') : t('system.role.enable'),
             confirm: true,
             callback: 'toggle'
           },
           {
-            name: '删除',
+            name: t('system.role.delete'),
             callback: 'delete' // 删除操作默认带确认框
           }
         ]
@@ -82,11 +101,11 @@ const tableConfig = computed(() => ({
  * 新增、修改、详情配置
  */
 const modalConfig = computed(() => ({
-  title: '角色管理',
+  title: t('system.role.title'),
   width: 800,
   mode: 'modal',
   buttonConfig: ({ isAdd, isEdit, isView }) => ({
-    confirmText: isEdit ? '确认修改' : '确认提交'
+    confirmText: isEdit ? t('system.role.confirmEdit') : t('system.role.confirmSubmit')
   }),
   formConfig: ({ isAdd, isEdit, isView, detail }) => ({
     labelCol: { span: 6 },
@@ -94,18 +113,20 @@ const modalConfig = computed(() => ({
     cols: 2,
     fields: [
       {
-        label: '角色名称',
+        label: t('system.role.name'),
         fieldName: 'roleName',
+        type: EControlType.eInput,
         required: true
       },
       {
-        label: '角色标识',
+        label: t('system.role.key'),
         fieldName: 'roleKey',
+        type: EControlType.eInput,
         disabled: isEdit,
         required: true
       },
       {
-        label: '排序',
+        label: t('system.role.sort'),
         fieldName: 'roleSort',
         type: EControlType.eNumber,
         required: true,
@@ -117,7 +138,7 @@ const modalConfig = computed(() => ({
         }
       },
       {
-        label: '备注',
+        label: t('system.role.remark'),
         fieldName: 'remark',
         type: EControlType.eTextarea,
         props: {
@@ -125,7 +146,7 @@ const modalConfig = computed(() => ({
         }
       },
       {
-        label: '菜单权限',
+        label: t('system.role.menuPermission'),
         fieldName: 'menuIds',
         type: EControlType.eCustom,
         required: true,
@@ -146,7 +167,7 @@ const modalConfig = computed(() => ({
             title: 'label',
             children: 'children'
           },
-          defaultExpandAll: true,
+          defaultExpandAll: false,
           modelProps: 'checkedKeys', // 自定义组件的 v-model:value 字段
           modelEvent: 'onCheck', // 自定义组件的 v-model 事件字段
           modelData: 'treeData', // 自定义组件的 dataSource 字段
@@ -154,13 +175,13 @@ const modalConfig = computed(() => ({
         }
       },
       {
-        label: '是否启用',
+        label: t('system.role.status'),
         fieldName: 'isEnabled',
         type: EControlType.eSwitch,
         none: !isView
       },
       {
-        label: '创建时间',
+        label: t('system.role.createTime'),
         fieldName: 'createTime',
         type: EControlType.eDate,
         none: !isView,
@@ -180,4 +201,87 @@ async function afterOpenModal ({ record, detail }) {
     detail.value.menuIds = result?.checkedKeys ?? []
   }
 }
+
+/** 数据权限配置 */
+const cPage = ref()
+const cModal = ref()
+const cForm = ref()
+const roleId = ref()
+const scopeDetail = ref({})
+async function openDataScope (record) {
+  roleId.value = record.roleId
+  scopeDetail.value.roleName = record.roleName
+  scopeDetail.value.roleKey = record.roleKey
+  scopeDetail.value.dataScope = record.dataScope
+  cModal.value.open({
+    title: t('system.role.assignDataPermission'),
+    width: 600,
+  })
+  await nextTick()
+  if (record.dataScope === '2') {
+    scopeDetail.value.deptIds = await axios.post('/system/role/deptTree/' + record.roleId)
+  }
+}
+async function onSubmitHandle (submitData) {
+  submitData.roleId = roleId.value
+  await axios.post('/system/role/dataScope', submitData)
+  message.success(t('system.role.saveSuccess'))
+  cPage.value.refresh()
+}
+const formConfig = computed(() => ({
+  labelCol: { span: 6 },
+  wrapperCol: { span: 18 },
+  cols: 1,
+  fields: [
+    {
+      label: t('system.role.name'),
+      fieldName: 'roleName',
+      disabled: true
+    },
+    {
+      label: t('system.role.key'),
+      fieldName: 'roleKey',
+      disabled: true
+    },
+    {
+      label: t('system.role.permissionScope'),
+      fieldName: 'dataScope',
+      type: EControlType.eSelect,
+      props: {
+        options: [
+          { id: '1', name: t('system.role.allDataPermission') },
+          { id: '2', name: t('system.role.customDataPermission') },
+          { id: '3', name: t('system.role.deptDataPermission') },
+          { id: '4', name: t('system.role.deptAndBelowDataPermission') },
+          { id: '5', name: t('system.role.selfDataPermission') },
+        ]
+      }
+    },
+    {
+      label:   t('system.role.dataPermission') ,
+      fieldName: 'deptIds',
+      type: EControlType.eCustom,
+      none: (formData) => formData.dataScope !== '2',
+      props: {
+        useRefresh: false,
+        style: { maxHeight: '400px', overflow: 'auto', border: 'solid 1px rgba(128, 128, 128, .2)', padding: '6px', borderRadius: '6px' },
+        component: 'a-tree',
+        checkable: true,
+        remote: {
+          url: '/system/dept/tree'
+        },
+        fieldNames: {
+          key: 'id',
+          title: 'label',
+          children: 'children'
+        },
+        defaultExpandAll: true,
+        modelProps: 'checkedKeys', // 自定义组件的 v-model:value 字段
+        modelEvent: 'onCheck', // 自定义组件的 v-model 事件字段
+        modelData: 'treeData', // 自定义组件的 dataSource 字段
+        renderNeedDataSource: true // 需要有数据源才渲染
+      }
+    },
+  ]
+}))
 </script>

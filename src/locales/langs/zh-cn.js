@@ -21,6 +21,8 @@ export default {
     saveSuccess: '保存成功',
     delete: '删除',
     deleteSuccess: '删除成功',
+    disabled: '禁用',
+    enabled: '启用',
     tips: '温馨提示',
     more: '更多',
     pleaseEnter: '请输入{text}',

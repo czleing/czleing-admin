@@ -6,7 +6,12 @@
       :filter-config="filterConfig"
       :table-config="tableConfig"
       :modal-config="modalConfig"
-    />
+    >
+      <template #table_dictType="{ text, record, index, column }">
+        <a href="javascript:;" @click="openDictData(text, record)">{{ text }}</a>
+        <a href="javascript:;" v-copy="text" class="ml10"><CopyOutlined/></a>
+      </template>
+    </CPage>
     <CModal ref="cModal">
       <DictData v-if="currDictType" :dict-type="currDictType" />
     </CModal>
@@ -15,128 +20,102 @@
 
 <script setup>
 import CPage from '@/components/crud/c-page.vue'
-import { EControlType } from '@/enum/index.js'
 import DictData from './components/dict-data.vue'
+import { CopyOutlined } from '@ant-design/icons-vue'
 
 const cModal = ref()
 const currDictType = ref()
+const {t} = useI18n()
 
 const filterConfig = computed(() => ({
   fields: [
     {
-      label: '类型',
+      label: t('system.dict.type'),
       fieldName: 'dictType',
       type: EControlType.eInput,
       props: {
-        placeholder: '请输入类型'
+        placeholder: t('system.dict.typePlaceholder')
       }
     },
     {
-      label: '名称',
+      label: t('system.dict.name'),
       fieldName: 'dictName',
       type: EControlType.eInput,
       props: {
-        placeholder: '请输入名称'
+        placeholder: t('system.dict.namePlaceholder')
       }
     }
   ]
 }))
 const tableConfig = computed(() => ({
-  props: {
-    // rowClick (record, index, selected) { // 配置数据行点击事件
-    //   selectedObj.value = selected ? record : undefined
-    // }
-  },
-  initSearch: true, // 默认 true，初始化时查询
+  props: {},
+  initSearch: true,
   columns: [
     {
-      title: 'ID',
+      title: t('system.dict.id'),
       dataIndex: 'dictId',
       hidden: true
     },
     {
-      title: '类型',
+      title: t('system.dict.type'),
       dataIndex: 'dictType',
-      customRender: ({ value, record, index, column }) => {
-        return h('a', {
-          href: 'javascript:;',
-          onClick () {
-            currDictType.value = value
-            cModal.value.open({
-              title: `字典【${record.dictName}】字典项列表`,
-              width: 1000,
-              mode: 'drawer',
-              showConfirm: false
-            })
-          }
-        }, value)
-      }
+      slot: 'table_dictType',
     },
     {
-      title: '名称',
+      title: t('system.dict.name'),
       dataIndex: 'dictName'
     },
     {
-      title: '备注',
+      title: t('system.dict.remark'),
       dataIndex: 'remark'
     },
     {
-      title: '是否启用',
+      title: t('system.dict.isEnabled'),
       dataIndex: 'isEnabled',
       type: 'isEnabled'
     },
     {
-      title: '创建时间',
+      title: t('system.dict.createTime'),
       dataIndex: 'createTime'
     },
     {
-      title: '操作',
-      actionShowNum: 3,
+      title: t('system.dict.operation'),
+      actionShowNum: 5,
       action: ({ record }) => {
         return [
           {
-            name: '字典项管理',
-            callback: () => {
-              currDictType.value = record.dictType
-              cModal.value.open({
-                title: `字典【${record.dictName}】字典项列表`,
-                width: 1000,
-                mode: 'drawer',
-                showConfirm: false
-              })
-            }
+            name: t('system.dict.manageItems'),
+            callback: () => openDictData(record.dictType, record)
           },
           {
-            name: record.isEnabled ? '禁用' : '启用',
+            name: record.isEnabled ? t('common.disabled') : t('common.enabled'),
             confirm: true,
             callback: 'toggle'
           },
           {
-            name: '编辑',
+            name: t('system.dict.edit'),
             callback: 'edit'
           },
           {
-            name: '详情',
+            name: t('system.dict.detail'),
             callback: 'detail'
           },
           {
-            name: '删除',
-            callback: 'delete' // 删除操作默认带确认框
+            name: t('system.dict.delete'),
+            callback: 'delete'
           }
         ]
       }
     }
   ]
 }))
-/**
- * 新增、修改、详情配置
- */
+
 const modalConfig = computed(() => ({
-  title: '字典类型',
+  title: t('system.dict.dictType'),
   width: 400,
   mode: 'modal',
   buttonConfig: ({ isAdd, isEdit, isView }) => ({
-    confirmText: isEdit ? '确认修改' : '确认提交'
+    confirmText: isEdit ? t('system.dict.confirmEdit') : t('system.dict.confirmSubmit')
   }),
   formConfig: ({ isAdd, isEdit, isView, detail }) => ({
     labelCol: { span: 6 },
@@ -144,36 +123,34 @@ const modalConfig = computed(() => ({
     cols: 1,
     fields: [
       {
-        label: '类型',
+        label: t('system.dict.type'),
         fieldName: 'dictType',
         type: EControlType.eInput,
-        tooltip: !isView ? '字典类型必须以字母开头，且只能为（小写字母，数字，下滑线）' : undefined,
+        tooltip: !isView ? t('system.dict.typeTooltip') : undefined,
         disabled: isEdit,
         required: true
       },
       {
-        label: '名称',
+        label: t('system.dict.name'),
         fieldName: 'dictName',
         type: EControlType.eInput,
         required: true
       },
       {
-        label: '备注',
+        label: t('system.dict.remark'),
         fieldName: 'remark',
         type: EControlType.eTextarea,
-        props: {
-        }
+        props: {}
       },
       {
-        label: '是否启用',
+        label: t('system.dict.isEnabled'),
         fieldName: 'isEnabled',
         type: EControlType.eSwitch,
         none: !isView,
-        props: {
-        }
+        props: {}
       },
       {
-        label: '创建时间',
+        label: t('system.dict.createTime'),
         fieldName: 'createTime',
         type: EControlType.eDate,
         none: !isView,
@@ -184,6 +161,16 @@ const modalConfig = computed(() => ({
     ]
   })
 }))
+
+function openDictData (value, record) {
+  currDictType.value = value
+  cModal.value.open({
+    title: t('system.dict.dictItemListTitle', { name: record.dictName }),
+    width: 1000,
+    mode: 'drawer',
+    showConfirm: false
+  })
+}
 </script>
 
 <style lang="scss" scoped>
