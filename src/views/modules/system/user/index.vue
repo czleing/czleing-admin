@@ -18,6 +18,7 @@
 import CPage from '@/components/crud/c-page.vue'
 import { EControlType, EIsEnabled } from '@/enum/index.js'
 import axios from '@/api'
+import { Modal } from 'ant-design-vue'
 
 const treeConfig = {
   url: '/system/user/deptTree',
@@ -104,8 +105,19 @@ const tableConfig = computed(() => ({
             name: record.isEnabled ? '禁用' : '启用',
             confirm: true,
             callback: 'toggle'
+          } : null,
+          record.userId !== 1 ? {
+            name: '重置密码',
+            confirm: true,
+            callback: async () => {
+              const data = await axios.post('/system/user/resetPwd', { userId: record.userId })
+              Modal.success({
+                title: '重置密码成功',
+                content: `${record.nickName}的密码已重置为：${data}`
+              })
+            }
           } : null
-        ].filter(b => !!b)
+        ].filter(Boolean)
         return btns
       }
     }

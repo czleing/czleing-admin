@@ -20,6 +20,7 @@ const errorRoutes = [
     component: () => import('@/views/exception/404-page.vue'),
     meta: {
       hidden: true,
+      hiddenTab: true,
       title: '404'
     }
   },
@@ -28,6 +29,7 @@ const errorRoutes = [
     redirect: '/404',
     meta: {
       hidden: true,
+      hiddenTab: true,
     }
   }
 ]
