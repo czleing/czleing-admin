@@ -1,6 +1,6 @@
 <!-- 实时显示当前日期时间的组件 -->
 <template>
-  <span>{{ dayjs(time).format(format) }}</span>
+  <span>{{ time.format(format) }}</span>
 </template>
 
 <script setup>
@@ -12,13 +12,24 @@ const props = defineProps({
     default: 'HH:mm:ss'
   }
 })
-const time = ref()
+const time = ref(dayjs())
 const timer = ref()
+
+const hasSecond = computed(() => props.format.includes('ss'))
+const hasMinute = computed(() => props.format.includes('mm'))
+const duration = computed(() => hasSecond.value ? 1000 : 6000)
+
 onMounted(() => {
-  time.value = Date.now()
+  time.value = dayjs()
   timer.value = setInterval(() => {
-    time.value = Date.now()
-  }, props.format.includes('ss') ? 1000 : 60000)
+    if (hasSecond.value) {
+      time.value = time.value.subtract(1, 'second')
+    } else if (hasMinute.value) {
+      time.value = time.value.subtract(1, 'minute')
+    } else {
+      time.value = dayjs()
+    }
+  }, duration.value)
 })
 onUnmounted(() => {
   clearInterval(timer.value)
