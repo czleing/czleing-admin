@@ -12,7 +12,7 @@
       <div class="bold mt20">语音转文字</div>
       <div class="mt10 flex-x gap10">
         <a-input-group compact>
-          <a-input v-model:value="text" placeholder="请输入或录入" style="width: auto;flex: auto;" />
+          <a-input v-model:value="text" placeholder="请输入或录入" style="width: auto;" />
           <a-button type="primary" @click="start">
             <PauseCircleFilled v-if="loading" />
             <AudioFilled v-else />
