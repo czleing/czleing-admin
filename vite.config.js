@@ -49,7 +49,34 @@ export default defineConfig(({ command, mode }) => {
       }
     },
     build: {
-      outDir: `dist/${mode}`
+      outDir: `dist/${mode}`,
+      chunkSizeWarningLimit: 800,
+      rolldownOptions: {
+        output: {
+          codeSplitting: {
+            groups: [
+              {
+                name: 'libs',
+                test: /node_modules/,
+                minSize: 100000, // 100KB
+                maxSize: 500000, // 500KB
+                priority: 10,
+              },
+            ],
+          }
+        },
+        // 为了移除 @vueuse/core 等包中包含特殊注释导致打包告警问题，待他们修复后可删除
+        onwarn(warning, warn) {
+          if (
+            warning.code === 'COMMENT_ANCHOR_NOT_FOUND' ||
+            (warning.message &&
+              warning.message.includes('contains an annotation that Rolldown cannot interpret'))
+          ) {
+            return;
+          }
+          warn(warning);
+        },
+      }
     },
     resolve: {
       alias: {
