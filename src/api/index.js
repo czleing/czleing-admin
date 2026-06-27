@@ -1,5 +1,4 @@
 import axios from 'axios'
-import router from '@/router'
 import { message } from 'ant-design-vue'
 import { useAuthStore } from '@/stores/auth-store'
 import { useTabsStore } from '@/stores/tabs-store'
@@ -35,16 +34,9 @@ instance.interceptors.response.use((response) => {
     handleDownload(response)
   } else {
     if (data?.code === 401) {
-      message.error('未登录或会话已过期,请重新登录')
+      message.error({ content: '未登录或会话已过期,请重新登录', key: '401' })
       const authStore = useAuthStore()
-      const tabStore = useTabsStore()
-      authStore.clearAuthInfo()
-      tabStore.clearAllTabs()
-      const currentPath = router.currentRoute.value.fullPath
-      router.replace({
-        path: '/login',
-        query: { redirect: currentPath }
-      })
+      authStore.authExpiredHandle()
       return Promise.reject(new Error('未登录或会话已过期,请重新登录'))
     } else if (data?.code === 200) {
       // 响应数据是有效的 JSON 格式，继续处理

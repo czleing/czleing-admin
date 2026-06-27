@@ -107,6 +107,19 @@ export const useAuthStore = defineStore('auth', {
         router.replace('/')
       }
     },
+    /** 登录失效处理，跳转到登录页 或者 弹出登录窗体 */
+    authExpiredHandle () {
+      const currentPath = router.currentRoute.value.fullPath
+      if (router.currentRoute.value.name !== 'login') {
+        const tabStore = useTabsStore()
+        tabStore.clearAllTabs()
+        this.clearAuthInfo()
+        router.replace({
+          name: 'login',
+          query: { redirect: currentPath }
+        })
+      }
+    },
     /**
      * 获取当前登录用户信息
      * @param {boolean} force 是否强制获取而不使用缓存
