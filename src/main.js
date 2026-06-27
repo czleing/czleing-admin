@@ -6,12 +6,12 @@ import AntDesignVue from 'ant-design-vue'
 import 'ant-design-vue/dist/reset.css'
 import '@/assets/css/index.less'
 import components from '@/components/index'
-import piniaPersist from 'pinia-plugin-persist'
+import piniaPlugin from 'pinia-plugin-persistedstate'
 import i18n from '@/locales/index'
 
 const app = createApp(App)
 const pinia = createPinia()
-pinia.use(piniaPersist)
+pinia.use(piniaPlugin)
 
 app.use(router).use(pinia).use(directives).use(AntDesignVue).use(components).use(i18n)
 app.mount('#app')

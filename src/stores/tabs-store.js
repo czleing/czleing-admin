@@ -123,11 +123,7 @@ export const useTabsStore = defineStore('tabs', {
     }
   },
   persist: {
-    enabled: true, // 开启持久化
-    strategies: [{ // 可以多种方案组合
-      key: 'USER_TABS',
-      // storage: window.localStorage, // 使用的持久化方案，默认 sessionStorage
-      paths: ['tabList'] // 需要持久化的属性，默认所有属性
-    }]
+    key: 'USER_TABS',
+    pick: ['tabList']
   }
 })
