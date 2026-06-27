@@ -4,20 +4,20 @@
 </div>
 
 ## 简介
-### Vue3 + Vite + Pinia + Ant-design-vue4 + JavaScript + axios + vue-router + pnpm
+### Vue3.5 + Vite8 + Pinia3 + Ant-design-vue4 + JavaScript + axios + vue-router + pnpm
 
 个人利用业余时间使用最新技术栈封装的一套后台管理前端开发框架，追求精简、优雅，没有个人的包名、前缀、广告，拿来免改，干净整洁，易懂易用易扩展，将常用的功能进行了灵活的封装，不再需要编写繁琐的表单、控件、校验、联动逻辑、获取数据逻辑、表单回填逻辑、数据转换逻辑、列表、弹窗等重复性代码，通过简单配置即可使用，部分约定大于配置，让开发尽量简单
 
 ## 环境要求
-- node: 18+
+- node: 20+
 - pnpm: 9+
 
 ## 相关技术及依赖
-- Vue 3.4+ 开发框架
-- Vite 4.4+ 打包构建，目前最快的构建工具
-- [pinia 2.1+](https://pinia.web3doc.top/) 全局状态管理，比 vuex 更简单好用
+- Vue 3.5+ 开发框架
+- Vite 8+ 打包构建，目前最快的构建工具
+- [pinia 3.0](https://pinia.web3doc.top/) 全局状态管理，比 vuex 更简单好用
 - ant-design-vue 4+ UI库，ant-design-vue 最新版，体验与颜值并存
-- vue-router 4.4+ 路由管理
+- vue-router 5.1 路由管理
 - [VueUse](https://vueuse.org/) 集成了很多组合式API的库
 - axios 服务请求
 - dayjs 日期处理(moment的简化版, ant-design-vue 4 默认的日期处理工具)
@@ -59,18 +59,19 @@
 ```
 npm run dev
 ```
-### 3. 停止本地服务，用 q 或 Ctrl + C
-```
-q
-```
-### 4. 访问 http://127.0.0.1:3000/
+### 3. 访问 http://127.0.0.1:3000/
 
-### 5. 默认登录账号密码：
+### 4. 默认登录账号密码：
 admin/123456
 
-## 打包
+### 5. 打包
 ```
 npm run build
+
+```
+### 6. 本地预览打包结果
+```
+npm run preview
 ```
 
 ## 预览

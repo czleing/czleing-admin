@@ -1,7 +1,7 @@
 <!-- 待办消息 -->
 <template>
   <div class="header-message">
-    <a-popover title="通知消息" trigger="click">
+    <a-popover title="通知消息" placement="bottomRight" trigger="click">
       <a-badge :count="total" :overflow-count="99">
         <BellOutlined class="em14" />
       </a-badge>
@@ -19,7 +19,7 @@
             </div>
             <a-empty v-if="total === 0" description="暂无消息" />
           </div>
-          <div class="tc" v-if="total > 0">
+          <div class="tc mt5" v-if="total > 0">
             <a-pagination
               size="small"
               :current="pageParam.pageNum"
@@ -158,5 +158,8 @@ function toDo (item) {
 .list-container {
   width: 400px;
   min-height: 440px;
+  .item:hover {
+    background-color: rgba(155, 155, 155, .1);
+  }
 }
 </style>

@@ -6,7 +6,7 @@ export default function useSpeak () {
   const isPlaying = ref(false)
   const speech = window.speechSynthesis
   const utterance = new SpeechSynthesisUtterance()
-  const msgList = [] // { text: '消息内容', time: 1 }
+  let msgList = [] // { text: '消息内容', time: 1 }
 
   utterance.lang = 'zh-CN'
   utterance.onstart = () => { isPlaying.value = true }
@@ -29,7 +29,9 @@ export default function useSpeak () {
         text: msg,
         time
       })
-      play()
+      if (!isPlaying.value) {
+        play()
+      }
     } else {
       console.warn('Web Speech API is not supported by this browser.')
     }
@@ -40,8 +42,8 @@ export default function useSpeak () {
     if (msg) {
       utterance.text = msg.text,
       msg.time--
-      speech.speak(utterance)
       msgList = msgList.filter(item => item.time > 0)
+      speech.speak(utterance)
     }
   }
 

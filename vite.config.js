@@ -37,7 +37,7 @@ export default defineConfig(({ command, mode }) => {
     ],
     base: env.VITE_APP_CONTEXT_PATH, // 公共基础路径，会注入到全局变量 import.meta.env.BASE_URL，创建router时也需要指定根路径为此路径
     server: {
-      host: '127.0.0.1',
+      host: true, // '0.0.0.0' or true(简写) 支持局域网访问，默认的 'localhost', 和 '127.0.0.1' 不支持局域网访问
       port: 3000,
       strictPort: false, // 设为 true 时若端口已被占用则会直接退出，而不是尝试下一个可用端口。
       proxy: {
@@ -49,7 +49,34 @@ export default defineConfig(({ command, mode }) => {
       }
     },
     build: {
-      outDir: `dist/${mode}`
+      outDir: `dist/${mode}`,
+      chunkSizeWarningLimit: 800,
+      rolldownOptions: {
+        output: {
+          codeSplitting: {
+            groups: [
+              {
+                name: 'libs',
+                test: /node_modules/,
+                minSize: 100000, // 100KB
+                maxSize: 500000, // 500KB
+                priority: 10,
+              },
+            ],
+          }
+        },
+        // 为了移除 @vueuse/core 等包中包含特殊注释导致打包告警问题，待他们修复后可删除
+        onwarn(warning, warn) {
+          if (
+            warning.code === 'COMMENT_ANCHOR_NOT_FOUND' ||
+            (warning.message &&
+              warning.message.includes('contains an annotation that Rolldown cannot interpret'))
+          ) {
+            return;
+          }
+          warn(warning);
+        },
+      }
     },
     resolve: {
       alias: {
