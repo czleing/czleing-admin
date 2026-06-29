@@ -11,15 +11,15 @@
     >
       <a-row :gutter="15">
         <template v-for="field in currFields" :key="field.fieldName || field.title">
-          <template v-if="isFieldGroup(field) && field.inUse">
+          <template v-if="isFieldGroup(field) && !getFnValue(field.none, formData)">
             <!-- 控件组 -->
             <a-col span="24">
               <FieldGroup :title="getFnValue(field.title, formData)" :subTitle="getFnValue(field.subTitle, formData)">
                 <a-row :gutter="15">
                   <template v-for="child in field.fields" :key="child.fieldName">
-                    <a-col v-if="child.inUse" v-show="!child.hidden" v-bind="child.col">
+                    <a-col v-if="!getFnValue(child.none, formData)" v-show="!getFnValue(child.hidden, formData)" v-bind="child.col">
                       <a-form-item v-bind="formItemProps(child)">
-                        <CComponent v-model:value="formData[child.fieldName]" :field="child" :is-view="isView" @update:value="(...args) => field.props?.onChange?.(...args, formData)" />
+                        <CComponent v-model:value="formData[child.fieldName]" :field="staticField(child)" :is-view="isView" @update:value="(...args) => field.props?.onChange?.(...args, formData)" />
                       </a-form-item>
                     </a-col>
                   </template>
@@ -27,11 +27,11 @@
               </FieldGroup>
             </a-col>
           </template>
-          <template v-else-if="field.inUse">
+          <template v-else-if="!getFnValue(field.none, formData)">
             <!-- 控件 -->
-            <a-col v-bind="field.col" v-show="!field.hidden">
+            <a-col v-bind="field.col" v-show="!getFnValue(field.hidden, formData)">
               <a-form-item v-bind="formItemProps(field)">
-                <CComponent v-model:value="formData[field.fieldName]" :field="field" :is-view="isView" @update:value="(...args) => field.props?.onChange?.(...args, formData)" />
+                <CComponent v-model:value="formData[field.fieldName]" :field="staticField(field)" :is-view="isView" @update:value="(...args) => field.props?.onChange?.(...args, formData)" />
               </a-form-item>
             </a-col>
           </template>
@@ -49,6 +49,7 @@
 <script setup>
 import CComponent from './c-component.js'
 import dayjs from 'dayjs'
+import { getFnValue } from '@/utils'
 
 const props = defineProps({
   isAdd: Boolean,
@@ -88,8 +89,6 @@ const currFields = computed(() => {
   pushDateRangeFields()
   const initFields = (_fields) => {
     return _fields.map(item => {
-      item.inUse = !getFnValue(item.none, formData)
-      item.hidden = getFnValue(item.hidden, formData)
       // 字段组，递归处理
       if (isFieldGroup(item)) {
         item.fields = initFields(item.fields)
@@ -108,15 +107,6 @@ const currFields = computed(() => {
         setTableRules(item)
       }
       item.col = item.singleLine ? { span: 24 } : (item.col ?? { span: colSpan })
-      if (!props.isView) {
-        item.props = item.props ?? {}
-        if (item.disabled !== undefined) {
-          item.props.disabled = getFnValue(item.disabled, formData)
-        }
-        if (item.props.placeholder !== undefined) {
-          item.props.placeholder = getFnValue(item.props.placeholder, formData)
-        }
-      }
       return item
     })
   }
@@ -220,11 +210,23 @@ function formItemProps (field) {
     name: field.fieldName,
     label: getFnValue(field.label, formData),
     disabled: props.isView ? false : getFnValue(field.disabled, formData),
-    inUse: !getFnValue(field.none, formData),
     required: props.isView ? false : getFnValue(field.required, formData),
     tooltip: getFnValue(field.tooltip, formData),
     extra: props.isView ? undefined : getFnValue(field.extra, formData),
     rules: props.isView ? undefined : getFnValue(field.rules, formData)
+  }
+}
+
+/** 通过字段动态配置，生成组件静态属性 */
+function staticField (field) {
+  return {
+    ...field,
+    label: getFnValue(field.label, formData),
+    props: {
+      ...getFnValue(field.props, formData),
+      disabled: getFnValue(field.disabled, formData),
+      placeholder: getFnValue(field.props?.placeholder, formData),
+    }
   }
 }
 

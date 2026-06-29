@@ -387,7 +387,7 @@ const modalConfig = computed(() => ({
         extra: formData => 'xxx', // 字段额外说明， String | formData => String
         tooltip: formData => 'xxx', // 字段提示， String | formData => String
         defaultValue: 'xxx', // 默认值，暂不支持函数
-        props: { // 控件属性
+        props: { // 控件属性配置，Object | formData => Object, 没有属性可以不配
           placeholder: formData => 'xxx', // 通过 formData 动态生成，String | formData => String
           onChange (val, formData) { // 所有控件都有 onChange 事件，都能拿到 formData，但是不同控件，入参个数及顺序有区别
             // 通过 formData 修改其他表单项的值，实现联动

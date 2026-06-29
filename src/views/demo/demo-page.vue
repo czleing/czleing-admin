@@ -418,7 +418,7 @@ const modalConfig = computed(() => ({
         // col: { span: 12 }, // 表单项(包含文本和控件)栅格设置，固定宽度可以设置为 { flex: '280px' }，参照 a-col 属性，默认根据列数计算
         // labelCol: { span: 3 }, // 表单项文本部分栅格设置，参照 a-col，{ flex: '120px' }、{ flex: '30%' }
         // wrapperCol: { span: 21 }, // 表单项控件部分栅格设置，参照 a-col，{ flex: '120px' }、{ flex: '30%' }
-        props: { // 没有属性可以不配
+        props: formData => { // 控件属性配置，Object | formData => Object, 没有属性可以不配
           // 根据 type 继承自对应 ant-design-vue 控件的属性和事件
           // placeholder 会默认生成，可以不配
           allowClear: true
@@ -440,7 +440,7 @@ const modalConfig = computed(() => ({
         defaultValue: 23,
         // disabled: formData => !formData.userName, // 组件是否禁用，Boolean || formData => Boolean
         // rules: [], // object || array || formData => { return {} || [] }
-        props: {
+        props: { // 控件属性配置，Object | formData => Object, 没有属性可以不配
           precision: 0,
           min: 1,
           max: 100
