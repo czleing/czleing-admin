@@ -22,6 +22,8 @@ export default {
     deleteSuccess: 'Delete successfully',
     disabled: 'Disabled',
     enabled: 'Enabled',
+    confirmUpdate: 'Confirm update',
+    confirmSubmit: 'Confirm submission',
     tips: 'Reminder',
     more: 'More',
     pleaseEnter: 'Please enter {text}',

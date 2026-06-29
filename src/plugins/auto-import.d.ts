@@ -10,6 +10,7 @@ declare global {
   const EControlType: typeof import('../enum/index.js').EControlType
   const EIsEnabled: typeof import('../enum/index.js').EIsEnabled
   const EMenuType: typeof import('../enum/index.js').EMenuType
+  const EMisfirePolicy: typeof import('../enum/index.js').EMisfirePolicy
   const EUserType: typeof import('../enum/index.js').EUserType
   const EYesNo: typeof import('../enum/index.js').EYesNo
   const EffectScope: typeof import('vue').EffectScope

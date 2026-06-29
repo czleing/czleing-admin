@@ -23,6 +23,8 @@ export default {
     deleteSuccess: '删除成功',
     disabled: '禁用',
     enabled: '启用',
+    confirmUpdate: '确认修改',
+    confirmSubmit: '确认提交',
     tips: '温馨提示',
     more: '更多',
     pleaseEnter: '请输入{text}',

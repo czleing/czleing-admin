@@ -64,3 +64,12 @@ export const EMenuType = {
   eBtn: Enum('F', '按钮')
 }
 init(EMenuType)
+
+/** 任务计划漏执行补救策略 */
+export const EMisfirePolicy = {
+  eDefault: Enum('0', '默认，立即补执行一次'),
+  eOneNow: Enum('1', '立即补执行一次'),
+  eDoNothing: Enum('2', '忽略且不补执行'),
+  eIgnore: Enum('-1', '忽略不补执行且不留痕'),
+}
+init(EMisfirePolicy)
