@@ -24,7 +24,7 @@
 - pinia-plugin-persist pinia持久化插件，
 - unplugin-auto-import 常用API免导入插件，如使用 ref, reactive 不在需要写 import { ref, reactive } from 'vue'
 - pnpm 包管理工具，目前最优的包管理工具，更快速且体积更小
-- [后端源码](https://gitee.com/czleing/base-backend-api) 基于若依单体后端修改
+- [后端源码](https://gitee.com/czleing/czleing-admin-api) 轻量化 spring-boot 单体后端服务
 
 ## 框架功能及特点
 - 主题色动态切换(使用 CSS 变量 + ThemeToken 双方案)
@@ -303,7 +303,7 @@ function onConfirm (close, extraData) {
 </script>
 ```
 
-#### 9.2、配置完整参考案例：[demo-page.vue](https://gitee.com/czleing/base-backend-static/blob/master/src/views/demo/demo-page.vue)
+#### 9.2、配置完整参考案例：[demo-page.vue](https://gitee.com/czleing/czleing-admin/blob/master/src/views/demo/demo-page.vue)
 
 
 与传统开发模式对比：
