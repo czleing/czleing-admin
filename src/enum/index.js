@@ -12,6 +12,13 @@ init(EUserType)
 /**
  * 控件类型
  * htmlType 用于代码生成时获取枚举key
+ * 如果需要增加类型：
+ * 1、EControlType 枚举增加一项
+ * 2、增加的组件建议是全局组件
+ * 2.1、如果是自己写的组件，接收和实现 value, disabled, isView 属性，以适配新增、修改、详情场景
+ * 2.2、如果是第三方组件，无法实现 isView 属性，则通过自定义渲染函数包一层来实现(可选)，参考第 3 点
+ * 2.3、非全局组件建议通过自定义组件 eCustom 使用
+ * 3、如果需要自定义渲染，在 src/components/crud/hooks/useRender.js 增加对应自定义渲染函数(可选,为第三方组件实现isView模式)
  */
 export const EControlType = {
   eInput: Enum('a-input', '文本框', { htmlType: 'eInput', defaultProps: { maxlength: 50 } }),
@@ -30,7 +37,6 @@ export const EControlType = {
   eImageUpload: Enum('ImageUpload', '图片上传', { htmlType: 'eImageUpload' }),
   eEditor: Enum('WangEditor', '富文本', { htmlType: 'eEditor' }),
   eTreeSelect: Enum('a-tree-select', '树形选择', { htmlType: 'eTreeSelect', defaultProps: { treeDefaultExpandAll: true } }),
-  eProvinceCityAreaSelector: Enum('ProvinceCityAreaSelector', '省市区选择', { htmlType: 'eProvinceCityAreaSelector' }),
   eUserSelect: Enum('UserSelect', '用户选择', { htmlType: 'eUserSelect' }),
   eTable: Enum('DynamicTable', '动态表格', { htmlType: 'eTable', defaultProps: { bordered: true, size: 'small' } }),
   eCustom: Enum('Custom', '自定义', { htmlType: 'eCustom' })
