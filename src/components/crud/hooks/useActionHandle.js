@@ -7,7 +7,7 @@ import { createVNode } from 'vue'
  * 处理操作相关、表格预设操作等
  * @returns
  */
-export function useActionHandle ({ cModal, cForm, cTable, modalConfig, api, apiMethod, transformDetail, afterOpenModal, primaryKey, apiOptionConfig, afterSubmit, emit }) {
+export function useActionHandle ({ cModal, cForm, cTable, modalConfig = {}, api, apiMethod, transformDetail, afterOpenModal, primaryKey, apiOptionConfig, afterSubmit, emit }) {
   const isAdd = ref(false)
   const isEdit = ref(false)
   const isView = ref(false)
@@ -39,8 +39,8 @@ export function useActionHandle ({ cModal, cForm, cTable, modalConfig, api, apiM
   async function openModal (options) {
     await nextTick()
     cModal.value.open({
-      mode: modalConfig?.mode,
-      width: modalConfig?.width,
+      mode: modalConfig.mode,
+      width: modalConfig.width,
       ...options
     })
     await nextTick()
@@ -66,7 +66,7 @@ export function useActionHandle ({ cModal, cForm, cTable, modalConfig, api, apiM
     setViewType('add')
     detail.value = initData
     openModal({
-      title: modalConfig?.fullTitle ?? (modalConfig?.title + '-新增')
+      title: modalConfig.fullTitle ?? (modalConfig.title + '-新增')
     })
   }
   async function onEditHandle (record) {
@@ -74,7 +74,7 @@ export function useActionHandle ({ cModal, cForm, cTable, modalConfig, api, apiM
     detail.value = await getDetail(record[primaryKey])
     openModal({
       record,
-      title: modalConfig?.fullTitle ?? (modalConfig?.title + '-编辑')
+      title: modalConfig.fullTitle ?? (modalConfig.title + '-编辑')
     })
   }
   async function onDetailHandle (record) {
@@ -82,7 +82,7 @@ export function useActionHandle ({ cModal, cForm, cTable, modalConfig, api, apiM
     detail.value = await getDetail(record[primaryKey])
     openModal({
       record,
-      title: modalConfig?.fullTitle ?? (modalConfig?.title + '-详情')
+      title: modalConfig.fullTitle ?? (modalConfig.title + '-详情')
     })
   }
   async function onDeleteHandle (ids) {

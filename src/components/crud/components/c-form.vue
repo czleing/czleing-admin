@@ -13,7 +13,7 @@
         <template v-for="field in currFields" :key="field.fieldName || field.title">
           <template v-if="isFieldGroup(field) && !getFnValue(field.none, formData)">
             <!-- 控件组 -->
-            <a-col span="24">
+            <a-col span="24" v-show="!getFnValue(field.hidden, formData)">
               <FieldGroup :title="getFnValue(field.title, formData)" :subTitle="getFnValue(field.subTitle, formData)">
                 <a-row :gutter="15">
                   <template v-for="child in field.fields" :key="child.fieldName">

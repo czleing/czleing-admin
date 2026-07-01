@@ -413,7 +413,7 @@ const modalConfig = computed(() => ({
         // extra: formData => '222', // 字段额外说明， String | formData => String
         // tooltip: formData => '111', // 字段(?)提示， String | formData => String
         // defaultValue: 'xxx', // 默认值
-        // rules: [], // 校验规则，与 <a-form-item> 一致， object | array
+        // rules: [], // 校验规则，与 <a-form-item> 一致， object | array | formData => { return {} || [] }
         // singleLine: true, // 单独占一行，优先级高于 col
         // col: { span: 12 }, // 表单项(包含文本和控件)栅格设置，固定宽度可以设置为 { flex: '280px' }，参照 a-col 属性，默认根据列数计算
         // labelCol: { span: 3 }, // 表单项文本部分栅格设置，参照 a-col，{ flex: '120px' }、{ flex: '30%' }
@@ -431,15 +431,11 @@ const modalConfig = computed(() => ({
         defaultValue: '默认值'
       },
       {
-        label: formData => '整数', // 字段描述 String || formData => String
+        label: formData => '整数', // 字段描述 String | formData => String
         fieldName: 'int',
         type: EControlType.eNumber,
-        tooltip: formData => '111', // 字段提示， String || formData => String
-        // extra: formData => '222', // 字段额外说明， String || formData => String
-        // required: true, // 是否必填，Boolean || formData => Boolean
+        tooltip: formData => '111', // 字段提示， String | formData => String
         defaultValue: 23,
-        // disabled: formData => !formData.userName, // 组件是否禁用，Boolean || formData => Boolean
-        // rules: [], // object || array || formData => { return {} || [] }
         props: { // 控件属性配置，Object | formData => Object, 没有属性可以不配
           precision: 0,
           min: 1,
@@ -452,6 +448,7 @@ const modalConfig = computed(() => ({
         // 字段分组
         title: '分组标题', // String || formData => String
         subTitle: '分组副标题', // String || formData => String
+        // hidden: formData => !formData.userName, // true表示隐藏该组(数据仍在)，Boolean || formData => Boolean
         // none: formData => !formData.userName, // true表示不需要该组(从表单中移除)，Boolean || formData => Boolean
         fields: [
           {

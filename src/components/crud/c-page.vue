@@ -33,6 +33,7 @@
       <!-- 表格数据 -->
       <CTable
         ref="cTable"
+        v-if="tableConfig"
         :primaryKey="primaryKey"
         :no-select="noSelect"
         :config="tableConfig"
@@ -50,7 +51,22 @@
           <slot :name="sl.slot" v-bind="options" />
         </template>
       </CTable>
-      <slot name="table" :action="onActionHandle" />
+      <!-- 表格部分自定义插槽，需要什么属性添加什么属性 -->
+      <slot
+        v-if="$slots.table"
+        name="table"
+        :primaryKey="primaryKey"
+        :no-select="noSelect"
+        :api-config="api"
+        :selectedIds="selectedIds"
+        :selectedObjs="selectedObjs"
+        :api-method-config="apiMethod"
+        :api-option-config="apiOptionConfig"
+        :permission-config="permission"
+        :before-search="beforeSearch"
+        :after-search="afterSearch"
+        :action="onActionHandle"
+      />
     </div>
     <!-- 弹窗 -->
     <!-- 新增修改详情弹窗页面，如果想自定义不想要默认的弹窗或行为可以通过自定义操作按钮来实现 -->
@@ -104,8 +120,8 @@ const props = defineProps({
   treeConfig: Object,
   /** 过滤条件配置，可选 */
   filterConfig: Object,
-  /** 表格配置，必须 */
-  tableConfig: { type: Object, required: true },
+  /** 表格配置，可选，也可以通过插槽自定义实现表格部分，比如需要以卡片形式展示 */
+  tableConfig: Object,
   /** 增改查弹窗配置，可选 */
   modalConfig: { type: Object, default: () => ({}) },
   /** 查询前修改查询参数，可选，params => ({ ...params, type: 1 }) */
