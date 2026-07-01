@@ -508,14 +508,6 @@ export function useRender ({ ctx, isView, value, dataSource }) {
    */
   function renderCustom (field) {
     const props = field.props
-    // const onChange = (...val) => {
-    //   emitUpdate(...val)
-    //   // if (typeof props.onChange === 'function') {
-    //   //   setTimeout(() => {
-    //   //     props.onChange(...val, formData)
-    //   //   })
-    //   // }
-    // }
     const controlProps = {
       ...props,
       value,
