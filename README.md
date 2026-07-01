@@ -106,4 +106,3 @@ czleing
 | 微信 | 支付宝 |
 | --- | --- |
 |<img src="./src/doc/wx.jpg" height="150" />|<img src="./src/doc/zfb.jpg" height="150" />|
-|<img src="./src/doc/yf.png" width="60" />|
