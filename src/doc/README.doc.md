@@ -72,6 +72,15 @@ console.log('当前登录用户：', authStore.userInfo)
 <a-button v-hasPermi="['xxx:xxx:xxx1', 'xxx:xxx:xxx2']">新增</a-button>
 ```
 
+使用 hook
+```javascript
+import usePermission from '@/hooks/usePermission'
+const { hasPermission } = usePermission()
+if (hasPermission('system:user:add')) {
+  // 有 system:user:add 权限
+}
+```
+
 ### 6、字典使用
 - CRUD 配置中使用，系统CRUD各部分组件已经深度集成了字典功能，在首次需要时加载，加载过的字典会缓存在内存中，避免频繁、重复加载，更新策略：刷新页面、手动点击刷新按钮、通过 useDict 第三个参数配置强制加载，dict-store 中提供了手动刷新方法：getDatasByType
 ```javascript

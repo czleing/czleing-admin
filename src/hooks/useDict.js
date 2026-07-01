@@ -35,3 +35,4 @@ export function useDict (types, callback, config = {}) {
   })
   return dictDataMap
 }
+export default useDict

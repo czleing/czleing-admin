@@ -24,3 +24,5 @@ export function useWindowSize (callback) {
 
   return { width, height }
 }
+
+export default useWindowSize

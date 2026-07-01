@@ -10,3 +10,4 @@ export function useThemeToken () {
 
   return { token }
 }
+export default useThemeToken

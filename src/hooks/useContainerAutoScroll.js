@@ -10,7 +10,7 @@
  * @param {number} options.turnAroundDelay: 到达边界掉头时等待时间(ms)，默认 3000ms;
  * @returns
  */
-export default function useContainerAutoScroll(container, list, pause,
+export function useContainerAutoScroll(container, list, pause,
   { scrollDirection = 'y', scrollSpeed = 1, scrollDelay = 0, turnAroundDelay = 3000 } = {},
 ) {
   const isHover = ref(false);
@@ -132,3 +132,4 @@ export default function useContainerAutoScroll(container, list, pause,
     scrollContainer.value?.removeEventListener('mouseleave', mouseleave);
   });
 }
+export default useContainerAutoScroll

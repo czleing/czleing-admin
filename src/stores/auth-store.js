@@ -15,7 +15,9 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: null,
     userInfo: null,
+    /** 当前角色字符串数组 ['xxx', 'xxxx'] */
     roles: null,
+    /** 支持的权限字符串数组 ['system:user:add', 'xxx:xxx:xxx'] */
     permissions: []
   }),
   actions: {
