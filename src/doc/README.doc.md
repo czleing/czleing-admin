@@ -220,7 +220,7 @@ function onConfirm (close, extraData) {
 </script>
 ```
 
-#### 8.2、全配置参考案例：[demo-page.vue](./src/views/demo/demo-page.vue)
+#### 8.2、全配置参考案例：[demo-page](../views/demo/demo-page.vue)
 
 
 #### 8.3、与传统开发模式对比：
