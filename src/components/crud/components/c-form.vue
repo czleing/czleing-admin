@@ -335,29 +335,35 @@ function cancel () {
   }
 }
 
+/** 获取提交数据 */
+async function getSubmitData () {
+  if (import.meta.env.VITE_APP_DEBUG_MODE === 'true') {
+    console.log('formData', formData)
+  }
+  await inputForm.value.validate()
+  let submitData = { ...formData }
+  // 日期统一转成时间戳
+  transferDate(submitData)
+  if (props.beforeSubmit) {
+    submitData = await props.beforeSubmit(submitData, {
+      isAdd: props.isAdd,
+      isEdit: props.isEdit,
+      detail: props.detail
+    })
+  }
+  if (props.isEdit && props.primaryKey) {
+    submitData[props.primaryKey] = props.detail[props.primaryKey]
+  }
+  if (import.meta.env.VITE_APP_DEBUG_MODE === 'true') {
+    console.log('submitData', submitData)
+  }
+  return submitData
+}
+
 /** 提交表单 */
 function submit () {
   loadingRequest(loading, async () => {
-    if (import.meta.env.VITE_APP_DEBUG_MODE === 'true') {
-      console.log('formData', formData)
-    }
-    await inputForm.value.validate()
-    let submitData = { ...formData }
-    // 日期统一转成时间戳
-    transferDate(submitData)
-    if (props.beforeSubmit) {
-      submitData = await props.beforeSubmit(submitData, {
-        isAdd: props.isAdd,
-        isEdit: props.isEdit,
-        detail: props.detail
-      })
-    }
-    if (props.isEdit && props.primaryKey) {
-      submitData[props.primaryKey] = props.detail[props.primaryKey]
-    }
-    if (import.meta.env.VITE_APP_DEBUG_MODE === 'true') {
-      console.log('submitData', submitData)
-    }
+    const submitData = await getSubmitData()
     if (props.onSubmitHandle) {
       await props.onSubmitHandle(submitData)
     }
@@ -384,6 +390,7 @@ function remotes () {
 defineExpose({
   submit,
   validate,
+  getSubmitData,
   setFormData,
   reset,
   remotes
