@@ -38,6 +38,9 @@ const importTableModal = ref()
 const editModal = ref()
 const previewModal = ref()
 const datasource = 'master'
+defineOptions({
+  name: 'ToolGenPage'
+})
 
 const filterConfig = computed(() => ({
   fields: [

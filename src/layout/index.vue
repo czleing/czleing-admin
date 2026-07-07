@@ -19,9 +19,11 @@
           <div class="view-main flex-auto pa10" :style="themeStyle">
             <!-- {{ tabsStore.cachedViews }} -->
             <router-view v-slot="{ Component, route }">
-              <keep-alive :max="20" :include="tabsStore.cachedViews">
-                <component v-if="!tabsStore.refreshing" :is="Component" :key="route.fullPath" />
-              </keep-alive>
+              <Transition name="slide-right">
+                <keep-alive :max="20" :include="tabsStore.cachedViews">
+                  <component v-if="!tabsStore.refreshing" :is="Component" :key="route.fullPath" />
+                </keep-alive>
+              </Transition>
             </router-view>
           </div>
         </div>
@@ -70,7 +72,7 @@ watch(
     root.style.setProperty('--ant-colorBorderSecondary', token.value.colorBorderSecondary)
     root.style.setProperty('--ant-colorBgContainer', token.value.colorBgContainer)
     root.style.setProperty('--ant-colorBgElevated', token.value.colorBgElevated)
-    root.style.setProperty('--ant-colorBgLayout', token.value.colorBgContainer)
+    root.style.setProperty('--ant-colorBgLayout', token.value.colorBgLayout)
     root.style.setProperty('--ant-borderRadius', token.value.borderRadius + 'px')
   },
   { deep: true, immediate: true }

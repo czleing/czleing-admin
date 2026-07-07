@@ -110,6 +110,9 @@ export const useTabsStore = defineStore('tabs', {
         const useCache = tab.meta?.cache
         if (useCache && componentName) {
           return componentName
+        } else if (useCache && !componentName) {
+          console.error('当前 Tab 页开启了缓存，但是未获取到组件名称，缓存失败')
+          return null
         } else {
           return null
         }

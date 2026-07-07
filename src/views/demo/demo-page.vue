@@ -50,7 +50,7 @@
     :after-open-modal="afterOpenModal"
     :transform-detail="transformDetail"
   >
-    <!-- 表格单元格内容过于复杂时，可以使用插槽，插槽名动态根据配置生成 -->
+    <!-- 表格单元格内容过于复杂时，可以使用插槽，插槽名根据配置动态生成 -->
     <template #table_slotField="{ text, record, index, column }">
       插槽内容==={{ record.age }}
     </template>
@@ -397,9 +397,10 @@ const modalConfig = computed(() => ({
   }),
   // 表单配置 Object | ({ isAdd, isEdit, isView, detail }) => Object
   formConfig: ({ isAdd, isEdit, isView, detail }) => ({
+    // layout: 'horizontal', // 表单布局 horizontal | vertical | inline 默认 horizontal
     // cols: 2, // 一行显示几列，默认 2 列
-    // labelCol: { span: 6 }, // 如果需要固定label宽度，可设为 { flex: '120px' }，参考 ant-design-vue a-col 的属性设置
-    // wrapperCol: { span: 18 },
+    // labelCol: { span: 6 }, // 如果需要固定label宽度，可设为 { flex: '120px' }, 默认 span: 6，参考 ant-design-vue a-col 的属性设置
+    // wrapperCol: { span: 18 }, // 如果需要固定控件宽度，可设为 { flex: '280px' }, 默认 span: 18，参考 ant-design-vue a-col 的属性设置
     // 表单字段
     fields: [ // 表单字段数组，可分组
       {

@@ -4,9 +4,10 @@
     <a-form
       name="inputForm"
       ref="inputForm"
+      :layout="layout"
       :model="formData"
-      :label-col="labelCol"
-      :wrapper-col="wrapperCol"
+      :label-col="isHorizontal ? labelCol : undefined"
+      :wrapper-col="isHorizontal ? wrapperCol : undefined"
       autocomplete="off"
     >
       <a-row :gutter="15">
@@ -78,7 +79,8 @@ const closeModal = inject('modal.close', null)
 const formData = reactive({})
 const formRemotes = reactive({}) // 收集组件的 remote 方法，用于需要重新刷新 remote 数据时使用
 const loading = ref(false)
-const { labelCol, wrapperCol, cols = 2 } = props.formConfig // 已经解构失去响应式
+const { layout = 'horizontal', labelCol = { span: 6 }, wrapperCol = { span: 18 }, cols = 2 } = props.formConfig // 已经解构失去响应式
+const isHorizontal = layout === 'horizontal'
 const colSpan = parseInt(24 / cols)
 let dateFields = [] // 收集的日期字段数组，便于统一转换格式
 let dateRangeFields = [] // 收集的日期范围字段数组
@@ -205,8 +207,8 @@ function isFieldGroup (field) {
 /** 通过字段配置，生成表单项的属性 */
 function formItemProps (field) {
   return {
-    labelCol: field.labelCol ?? labelCol ?? { span: 6 },
-    wrapperCol: field.wrapperCol ?? wrapperCol ?? { span: 18 },
+    labelCol: isHorizontal ? field.labelCol : undefined,
+    wrapperCol: isHorizontal ? field.wrapperCol : undefined,
     name: field.fieldName,
     label: getFnValue(field.label, formData),
     disabled: props.isView ? false : getFnValue(field.disabled, formData),
