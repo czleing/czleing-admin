@@ -26,13 +26,12 @@
 
 <script setup>
 import CPage from '@/components/crud/c-page.vue'
-import { EControlType } from '@/enum/index.js'
 import ImportTableModal from './modal/import-table-modal.vue'
 import EditModal from './modal/edit-modal.vue'
 import PreviewModal from './modal/preview-modal.vue'
 import axios from '@/api/index.js'
+import { message } from 'ant-design-vue'
 
-const _this = getCurrentInstance().proxy
 const cPage = ref()
 const importTableModal = ref()
 const editModal = ref()
@@ -177,7 +176,7 @@ function handlePreview (record) {
  */
 async function handleSyncDb (record) {
   await axios.post('/tool/gen/synchDb/' + record.tableName, {}, { headers: { datasource } })
-  _this.$message.success('同步成功')
+  message.success('同步成功')
 }
 
 /**
@@ -187,7 +186,7 @@ async function handleSyncDb (record) {
 async function handleGenTable (record) {
   if (record.genType === '1') {
     await axios.post('/tool/gen/genCode/' + record.tableName, {}, { headers: { datasource } })
-    _this.$message.success('成功生成到自定义路径')
+    message.success('成功生成到自定义路径')
     refresh()
   } else {
     await axios.download('/tool/gen/download/' + record.tableName, {}, { headers: { datasource } })

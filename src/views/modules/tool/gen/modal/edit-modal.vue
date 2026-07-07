@@ -151,24 +151,24 @@ const genFormConfig = computed(() => ({
     },
     {
       label: '生成模块名',
-      tooltip: '可理解为子系统名，如系统管理 “com.admin.system” 中的 “system”',
+      tooltip: '大模块英文名，如系统管理 “com.admin.system” 中的 “system”',
       fieldName: 'moduleName',
       type: EControlType.eInput,
       required: true,
       props: {
-        placeholder: '如：系统管理 “modules.system.user” 中的 “system”'
+        placeholder: '如：系统管理 “com.admin.system” 中的 “system”'
       }
     },
     {
       label: '生成业务名',
-      tooltip: '可理解为功能英文名，例如用户管理的 “user”',
+      tooltip: '小模块英文名，如用户管理 “com.admin.system.user” 中的 “user”',
       fieldName: 'businessName',
       type: EControlType.eInput,
       required: true
     },
     {
       label: '生成功能名',
-      tooltip: '用作类描述，例如 “用户”',
+      tooltip: '小模块中文名，用作类描述，如用户管理 “com.admin.system.user” 中与 user 对应的 “用户”',
       fieldName: 'functionName',
       type: EControlType.eInput,
       required: true

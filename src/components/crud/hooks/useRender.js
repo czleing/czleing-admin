@@ -545,7 +545,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
 
   /** 将本系统风格的 options 转成 ant-design 风格的 options，适用于 a-radio, a-select, a-checkbox, a-auto-complete 等 */
   function transformOptions (options, useAll = false) {
-    const result = options?.map(item => ({ ...item, value: item.id, label: item.name }))
+    const result = options?.map(item => ({ ...item, value: item.id ?? item.value, label: item.name ?? item.label }))
     if (useAll && result) {
       result.unshift({ value: null, label: '全部' })
     }
