@@ -7,7 +7,7 @@
   <CModal ref="settingModal" :title="$t('frame.setting')" width="450" mode="drawer" :footer="null">
     <h4 class="pb10 text-gray2">{{ $t('frame.theme') }}</h4>
     <a-space class="flex-x">
-      <span>{{ $t('frame.selectTheme') }}：</span>
+      <span class="nowrap">{{ $t('frame.selectTheme') }}：</span>
       <a-select v-model:value="settingStore.themeName" style="width: 150px;" @change="handleChange">
         <a-select-option
           v-for="(item, index) in settingStore.themes"
@@ -29,6 +29,29 @@
       </a-tooltip>
     </a-space>
     <a-space class="flex-x mt20">
+      <span>{{ $t('frame.menuLayout') }}：</span>
+      <a-radio-group v-model:value="settingStore.menuLayout">
+        <div class="flex-x gap10">
+          <label class="pointer flex-y-center gap5">
+            <Top class="menu-layout-icon" :class="{'is-active': settingStore.menuLayout === 'top'}" width="90" height="60" />
+            <a-radio value="top">{{ $t('frame.top') }}</a-radio>
+          </label>
+          <label class="pointer flex-y-center gap5">
+            <Left class="menu-layout-icon" :class="{'is-active': settingStore.menuLayout === 'left'}" width="90" height="60" />
+            <a-radio value="left">{{ $t('frame.left') }}</a-radio>
+          </label>
+          <label class="pointer flex-y-center gap5">
+            <TopLeft class="menu-layout-icon" :class="{'is-active': settingStore.menuLayout === 'top-left'}" width="90" height="60" />
+            <a-radio value="top-left">{{ $t('frame.topLeft') }}</a-radio>
+          </label>
+        </div>
+      </a-radio-group>
+    </a-space>
+    <a-space class="flex-x mt20">
+      <span>{{ $t('frame.dark') }}：</span>
+      <a-switch v-model:checked="isDark" checked-children="Dark" un-checked-children="Light" @change="changeMode"></a-switch>
+    </a-space>
+    <a-space class="flex-x mt20">
       <span>{{ $t('frame.componentSize') }}：</span>
       <a-select v-model:value="settingStore.componentSize" style="width: 150px;">
         <a-select-option value="small">{{ $t('frame.small') }}</a-select-option>
@@ -37,20 +60,8 @@
       </a-select>
     </a-space>
     <a-space class="flex-x mt20">
-      <span>{{ $t('frame.dark') }}：</span>
-      <a-switch v-model:checked="isDark" checked-children="Dark" un-checked-children="Light" @change="changeMode"></a-switch>
-    </a-space>
-    <a-space class="flex-x mt20">
       <span>{{ $t('frame.radiusLayout') }}：</span>
       <a-switch v-model:checked="settingStore.useRadius" />
-    </a-space>
-    <a-space class="flex-x mt20">
-      <span>{{ $t('frame.menuLayout') }}：</span>
-      <a-radio-group v-model:value="settingStore.menuLayout">
-        <a-radio value="top">{{ $t('frame.top') }}</a-radio>
-        <a-radio value="left">{{ $t('frame.left') }}</a-radio>
-        <a-radio value="top-left">{{ $t('frame.topLeft') }}</a-radio>
-      </a-radio-group>
     </a-space>
     <a-space class="flex-x mt20">
       <span>{{ $t('frame.useTabs') }}：</span>
@@ -88,6 +99,9 @@
 import { useSettingStore } from '@/stores/setting-store.js'
 import { SettingOutlined } from '@ant-design/icons-vue'
 import { langOptions } from '@/locales/index'
+import Top from './icons/top.vue'
+import TopLeft from './icons/top-left.vue'
+import Left from './icons/left.vue'
 
 const settingStore = useSettingStore()
 const settingModal = ref()
@@ -122,5 +136,13 @@ const handleLocalChange = lc => {
   width: 20px;
   height: 20px;
   border-radius: 3px;
+}
+.menu-layout-icon {
+  padding: 2px;
+  transition: all 0.3s;
+  border-radius: var(--ant-borderRadius);
+  &:hover, &.is-active {
+    box-shadow: 0 0 0 3px var(--ant-colorPrimary);
+  }
 }
 </style>
