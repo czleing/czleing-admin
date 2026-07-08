@@ -36,6 +36,12 @@
       </a-space>
     </div>
     <a-space>
+      <!-- 隐藏搜索区 -->
+      <a-button :type="showSearch ? 'default' : 'primary'" @click="onToggleShowSearchHandle">
+        <template v-if="!loading" #icon>
+          <SearchOutlined :style="{ fontSize: '0.9em' }" />
+        </template>
+      </a-button>
       <!-- 刷新 -->
       <a-button :loading="loading" @click="onRefreshHandle">
         <template v-if="!loading" #icon>
@@ -64,7 +70,7 @@
 </template>
 
 <script setup>
-import { PlusOutlined, DeleteOutlined, ExportOutlined, RollbackOutlined, SyncOutlined, FilterOutlined } from '@ant-design/icons-vue'
+import { PlusOutlined, DeleteOutlined, ExportOutlined, RollbackOutlined, SyncOutlined, FilterOutlined, SearchOutlined } from '@ant-design/icons-vue'
 import CImport from './c-import.vue'
 import { Modal } from 'ant-design-vue'
 import { h } from 'vue'
@@ -82,6 +88,8 @@ const props = defineProps({
   hasImport: Boolean,
   /** 有导出按钮 */
   hasExport: Boolean,
+  /** 是否显示搜索区 */
+  showSearch: Boolean,
   /** 工具栏配置 */
   config: Object,
   /** 接口配置 */
@@ -152,7 +160,10 @@ function onToolClickHandle (btn) {
   }
 }
 
-const emits = defineEmits(['add', 'delete', 'refresh', 'update:checkedFieldNames'])
+const emits = defineEmits(['add', 'delete', 'refresh', 'update:checkedFieldNames', 'toggleShowSearch'])
+function onToggleShowSearchHandle () {
+  emits('toggleShowSearch')
+}
 function onRefreshHandle () {
   emits('refresh')
 }

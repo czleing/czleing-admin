@@ -1,6 +1,6 @@
 <!-- c-page 条件过滤组件 -->
 <template>
-  <div class="c-filter">
+  <div class="c-filter relative" :class="{ 'overflow-hidden': needFold, 'is-fold': isFold }">
     <a-form
       name="searchForm"
       ref="searchForm"
@@ -12,7 +12,7 @@
     >
       <a-row :gutter="10" wrap>
         <!-- 动态字段 -->
-        <a-col v-for="(field, index) in currFields" :key="index" v-bind="field.col ?? col">
+        <a-col v-for="(field, index) in currFields" :key="field.fieldName" v-bind="field.col ?? col" v-show="!isFold || (isFold && index < 3)">
           <a-form-item :label="field.label" :name="field.fieldName" :label-col="field.labelCol" :wrapper-col="field.wrapperCol">
             <CComponent v-model:value="formData[field.fieldName]" :field="field" />
           </a-form-item>
@@ -54,6 +54,13 @@
         </a-col>
       </a-row>
     </a-form>
+    <!-- 折叠 -->
+    <div v-if="needFold" ref="foldRef" class="c-filter__fold pointer relative" @click="toggleFold" @mousemove="onMouseover">
+      <div class="bar flex-y-center" :style="`--x: ${mouseX}px`">
+        <UpOutlined class="em06" v-show="!isFold" />
+        <DownOutlined class="em06" v-show="isFold" />
+      </div>
+    </div>
     <CModal ref="cacheNameModal" :title="$t('crud.pleaseEnterRemark')" width="300">
       <a-input v-model:value="cacheName" :placeholder="$t('crud.pleaseEnterRemark')" :maxlength="15" />
     </CModal>
@@ -61,13 +68,13 @@
 </template>
 
 <script setup>
+import { EControlType } from '@/enum'
+import { useSearchCache } from '@/hooks/useSearchCache.js'
+import { isAllFieldEmpty, isNotEmpty } from '@/utils/index.js'
+import { DeleteOutlined, DownOutlined, SearchOutlined, UndoOutlined, UpOutlined } from '@ant-design/icons-vue'
+import { message } from 'ant-design-vue'
 import { h } from 'vue'
 import CComponent from './c-component.js'
-import { SearchOutlined, UndoOutlined, DeleteOutlined } from '@ant-design/icons-vue'
-import { useSearchCache } from '@/hooks/useSearchCache.js'
-import { isNotEmpty, isAllFieldEmpty } from '@/utils/index.js'
-import { EControlType } from '@/enum'
-import { message } from 'ant-design-vue'
 
 const props = defineProps({
   config: {
@@ -89,7 +96,6 @@ const currFields = computed(() => {
     }
   })
 })
-
 const searchForm = ref()
 const loading = inject('c-page.loading', false)
 const formData = reactive({})
@@ -145,6 +151,18 @@ function onResetHandle () {
   emits('search', {})
 }
 
+// --------- 折叠、展开 ------------
+const needFold = computed(() => currFields.value?.length > 3)
+const isFold = ref(false)
+const foldRef = useTemplateRef('foldRef')
+const mouseX = ref(0)
+function toggleFold () {
+  isFold.value = !isFold.value
+}
+function onMouseover (e) {
+  mouseX.value = e.clientX - foldRef.value.getBoundingClientRect().x
+}
+
 // ------- 记住查询 start ----------
 const cacheNameModal = ref()
 const cacheName = ref('')
@@ -180,6 +198,32 @@ function onDeleteCache (id) {
 .c-filter {
   :deep(.ant-form-item) {
     margin-bottom: 10px;
+  }
+  &__fold {
+    height: 7px;
+    margin-top: -1px;
+    box-sizing: border-box;
+    .bar {
+      --x: 0;
+      position: absolute;
+      left: -20px;
+      margin-top: -5px;
+      width: 40px;
+      height: 10px;
+      border-radius: 6px;
+      background-color: var(--ant-colorBorder);
+      color: white;
+      transform: translateX(var(--x)) scaleY(0);
+      transition: all .3s;
+    }
+  }
+  &:hover, &.is-fold {
+    .c-filter__fold {
+      border-top: dotted 1px var(--ant-colorBorder);
+      .bar {
+        transform: translateX(var(--x)) scaleY(1);
+      }
+    }
   }
 }
 </style>

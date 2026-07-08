@@ -8,7 +8,7 @@
     <div class="c-page__page">
       <slot name="header" />
       <!-- 过滤器 -->
-      <CFilter v-if="filterConfig" :config="filterConfig" @search="onSearchHandle" />
+      <CFilter v-if="filterConfig" v-show="showSearch" :config="filterConfig" @search="onSearchHandle" />
       <slot name="filter" :search="onSearchHandle" />
       <!-- 工具栏 -->
       <CTools
@@ -25,6 +25,8 @@
         :permission-config="permission"
         :columns="tableConfig?.columns"
         :pagination="pagination"
+        :show-search="showSearch"
+        @toggleShowSearch="toggleShowSearch"
         @refresh="onRefreshHandle"
         @add="onAddHandle(toolsConfig?.addInitData)"
         @delete="onBatchDeleteHandle"
@@ -144,6 +146,7 @@ const cForm = ref()
 const selectedIds = ref([])
 const selectedObjs = ref([])
 const searchParams = ref({})
+const showSearch = ref(true)
 const checkedFieldNames = ref(props.tableConfig?.columns?.filter(item => item.hidden !== true)?.map(item => item.dataIndex))
 const pagination = ref({
   showSizeChanger: true,
@@ -214,6 +217,9 @@ function onCancelHandle () {
 function onTreeSelectHandle (orgId) {
   searchParams.value[props.treeConfig?.searchField ?? 'orgId'] = orgId
   cTable.value.search()
+}
+function toggleShowSearch () {
+  showSearch.value = !showSearch.value
 }
 
 defineExpose({
