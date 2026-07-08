@@ -47,7 +47,6 @@ const tabsStore = useTabsStore()
 const settingStore = useSettingStore()
 const { token } = useThemeToken()
 const themeStyle = ref()
-const root = document.documentElement
 
 /** 使用动态色彩，跟随 ant-design 主题 */
 watch(
@@ -62,18 +61,20 @@ watch(
       borderColor: token.value.colorBorderSecondary
     }
     // 动态设置css变量，跟随 ant-design 主题，可根据需要扩展
-    root.style.setProperty('--ant-colorText', token.value.colorText)
-    root.style.setProperty('--ant-colorInfo', token.value.colorInfo)
-    root.style.setProperty('--ant-colorPrimary', token.value.colorPrimary)
-    root.style.setProperty('--ant-colorSuccess', token.value.colorSuccess)
-    root.style.setProperty('--ant-colorWarning', token.value.colorWarning)
-    root.style.setProperty('--ant-colorError', token.value.colorError)
-    root.style.setProperty('--ant-colorBorder', token.value.colorBorder)
-    root.style.setProperty('--ant-colorBorderSecondary', token.value.colorBorderSecondary)
-    root.style.setProperty('--ant-colorBgContainer', token.value.colorBgContainer)
-    root.style.setProperty('--ant-colorBgElevated', token.value.colorBgElevated)
-    root.style.setProperty('--ant-colorBgLayout', token.value.colorBgLayout)
-    root.style.setProperty('--ant-borderRadius', token.value.borderRadius + 'px')
+    setRootCssVars('--ant-', {
+      colorText: token.value.colorText,
+      colorInfo: token.value.colorInfo,
+      colorPrimary: token.value.colorPrimary,
+      colorSuccess: token.value.colorSuccess,
+      colorWarning: token.value.colorWarning,
+      colorError: token.value.colorError,
+      colorBorder: token.value.colorBorder,
+      colorBorderSecondary: token.value.colorBorderSecondary,
+      colorBgContainer: token.value.colorBgContainer,
+      colorBgElevated: token.value.colorBgElevated,
+      colorBgLayout: token.value.colorBgLayout,
+      borderRadius: token.value.borderRadius + 'px'
+    })
   },
   { deep: true, immediate: true }
 )

@@ -17,7 +17,7 @@ import { mergeWith } from 'lodash-es'
  * }
  * 三层结构非强制，只要保证最终合并到一起不冲突就行
  * 用法：$t('模块名.业务名.语言Key', { 变量名: 'xxx' })
- * 带变量用法：$t('system.user.pleaseEnter', { text: '用户名' })
+ * 带变量用法：$t('system.user.pleaseEnter', { text: $t('system.user.userName') })
  * 普通用法：$t('system.user.userName')
  */
 

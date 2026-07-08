@@ -62,6 +62,7 @@
 <script setup>
 import CPage from '@/components/crud/c-page.vue'
 import { EControlType, EIsEnabled } from '@/enum/index.js'
+import { message } from 'ant-design-vue'
 
 const cPage = ref()
 defineOptions({
@@ -77,12 +78,12 @@ const treeConfig = {
 }
 /** 查询条件配置 */
 const filterConfig = {
-  // useCache: true, // 使用查询条件暂存
+  // useCache: true, // 使用查询条件暂存，默认 false
   // cacheBtnText: '记住查询', // 暂存按钮文字，默认 '记住查询'
   col: { sm: 8, lg: 6, xxl: 6 }, // 所有表单项栅格设置，默认：{ sm: 8, lg: 6, xxl: 4 }，参照 a-col
-  labelCol: { flex: '80px' }, // 所有表单项文本部分栅格设置，参照 a-col
-  // wrapperCol: { span: 18 }, // 所有表单项控件部分栅格设置，参照 a-col
-  // buttonsCol: { flex: 'auto' }, // 查询重置等按钮栅格设置
+  labelCol: { flex: '80px' }, // 所有表单项文本部分栅格设置，默认：文本宽度，单行时可以不用设置，多行时建议设置统一宽度，参照 a-col
+  // wrapperCol: { span: 18 }, // 所有表单项控件部分栅格设置，默认：控件宽度，参照 a-col
+  // buttonsCol: { flex: 'auto' }, // 查询重置等按钮栅格设置，默认：{ span: 4 },
   // buttonsAlign: 'right', // 查询重置等按钮水平对齐方式，left(默认), center, right
   // 一行显示几列由每个字段的 col 决定，默认自适应列数，一行 24 格，每个字段可以设置占用格数，一行不够时自动换行，注：查询重置按钮固定占 4-6 格(使用记住查询时占用6格，否则4格)
   // 字段配置
@@ -121,12 +122,22 @@ const filterConfig = {
       label: '数字范围',
       fieldName: 'numberRange', // 后端使用数组接收
       type: EControlType.eNumberRange,
+    },
+    {
+      label: '选择部门',
+      fieldName: 'deptId',
+      type: EControlType.eTreeSelect,
+      required: true,
       props: {
+        fieldNames: { value: 'id', label: 'label' },
+        remote: {
+          url: '/system/dept/tree',
+        }
       }
     },
     {
       label: '时间范围',
-      col: { flex: '460px' },
+      // col: { flex: '460px' }, // 宽度不够时，设置更大宽度
       fieldName: 'createTime', // 对应查询数据库中的字段，提交时会删掉，替换成 fieldNames 中设置的两个字段
       type: EControlType.eDateRange,
       props: {
@@ -362,14 +373,15 @@ const tableConfig = computed(() => ({
           //   }
           // }
         ]
-        if (record.type === '3') {
+        if (record.userId !== 1) {
           btns.push({
             name: '动态操作',
             permission: 'system:user:opt',
             confirm: true,
-            confirmContent: `确认xxx${record.name}吗？`,
-            callback ({}) {
-              //console.log(record.name + 'xxx')
+            confirmContent: `确认锁定[${record.name}]吗？`,
+            async callback ({}) {
+              // await axios.post('', { userId: record.userId })
+              message.success(`[${record.name}]已锁定`)
             }
           })
         }
@@ -841,7 +853,7 @@ const modalConfig = computed(() => ({
         type: EControlType.eCustom,
         // singleLine: true,
         props: {
-          // component：对象或返回对象的函数 Object || (formData) => Object
+          // component：vue组件，对象或返回对象的函数 Object || (formData) => Object
           component: {
             render () { return h('span', {}, '自定义组件8888') }
           }

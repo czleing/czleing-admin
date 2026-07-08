@@ -267,3 +267,21 @@ export function listToTree (list, rootParentId = 0, idField = 'id', parentIdFiel
   })
   return tree
 }
+
+/**
+ * 给:root设置css变量，不污染html行内style
+ * @param {Object} vars 键值对 { 'color': '#fff', 'size': '16px' }
+ */
+export function setRootCssVars (prex = '--ant-', vars) {
+  if (!vars) return
+  let styleEl = document.getElementById('dynamic-root-vars');
+  if (!styleEl) {
+    styleEl = document.createElement('style');
+    styleEl.id = 'dynamic-root-vars';
+    document.head.appendChild(styleEl);
+  }
+  // 拼接css文本
+  const cssText = Object.entries(vars).map(([key, val]) => `${prex}${key}: ${val};`).join('\n');
+  styleEl.textContent = `:root { ${cssText} }`;
+  console.log('styleEl', styleEl)
+}
