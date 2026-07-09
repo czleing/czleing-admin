@@ -54,7 +54,7 @@ watch(
   () => {
     // 设置整个网页的默认字体颜色跟随主题变化
     document.body.style.color = token.value.colorText
-    document.body.setAttribute('theme', settingStore.mode)
+    document.documentElement.setAttribute('theme', settingStore.mode)
     themeStyle.value = {
       backgroundColor: token.value.colorBgContainer,
       color: token.value.colorText,

@@ -49,7 +49,7 @@
     </a-space>
     <a-space class="flex-x mt20">
       <span>{{ $t('frame.dark') }}：</span>
-      <a-switch v-model:checked="isDark" checked-children="Dark" un-checked-children="Light" @change="changeMode"></a-switch>
+      <ModeSwitch />
     </a-space>
     <a-space class="flex-x mt20">
       <span>{{ $t('frame.componentSize') }}：</span>
@@ -102,18 +102,13 @@ import { langOptions } from '@/locales/index'
 import Top from './icons/top.vue'
 import TopLeft from './icons/top-left.vue'
 import Left from './icons/left.vue'
+import ModeSwitch from './mode-switch.vue'
 
 const settingStore = useSettingStore()
 const settingModal = ref()
-const isDark = ref(settingStore.isDark)
 const currColors = computed(() => Object.entries(settingStore.theme?.token))
 const { locale } = useI18n()
 
-function changeMode (val) {
-  setTimeout(() => {
-    settingStore.toggleMode()
-  }, 200)
-}
 const openSetting = () => {
   settingModal.value.open()
 }

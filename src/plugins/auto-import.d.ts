@@ -70,6 +70,7 @@ declare global {
   const shallowReactive: typeof import('vue').shallowReactive
   const shallowReadonly: typeof import('vue').shallowReadonly
   const shallowRef: typeof import('vue').shallowRef
+  const sleep: typeof import('../utils/index.js').sleep
   const stringStar: typeof import('../utils/index.js').stringStar
   const toDuration: typeof import('../utils/index.js').toDuration
   const toRaw: typeof import('vue').toRaw

@@ -123,6 +123,15 @@ export function confirmRequest (content, title, loading, func, message, option =
   })
 }
 
+/** 等待 duration 豪秒 */
+export function sleep (duration = 0) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve()
+    }, duration)
+  })
+}
+
 /**
  * 把秒 转为 xx时xx分xx秒
  * @param {number} seconds 秒
@@ -283,5 +292,4 @@ export function setRootCssVars (prex = '--ant-', vars) {
   // 拼接css文本
   const cssText = Object.entries(vars).map(([key, val]) => `${prex}${key}: ${val};`).join('\n');
   styleEl.textContent = `:root { ${cssText} }`;
-  console.log('styleEl', styleEl)
 }

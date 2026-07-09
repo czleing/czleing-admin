@@ -89,8 +89,7 @@ export const useSettingStore = defineStore('setting', () => {
   }
 
   function toggleMode () {
-    if (isDark.value) setLight()
-    else setDark()
+    isDark.value ? setLight() : setDark()
   }
 
   function setLocale (lang) {
