@@ -131,7 +131,7 @@
    */
   const modalConfig = computed(() => ({
     title: '通知公告', // 弹窗标题，会自动根据类型拼上新增、编辑、详情关键字
-    width: 700, // 弹窗宽度，默认 600
+    width: 900, // 弹窗宽度，默认 600
     mode: 'modal', // 弹窗模式, modal 或 drawer
     buttonConfig: ({ isAdd, isEdit, isView }) => ({
       confirmText: isEdit ? '确认修改' : '确认提交', // 默认是确定
@@ -169,6 +169,7 @@
           wrapperCol: { span: 20 },
           required: true,
           props: {
+            height: '300px'
           }
         },
         {

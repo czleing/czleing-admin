@@ -83,6 +83,7 @@ npm run preview
 <img src='./src/doc/light4.jpg' alt="light">
 <img src='./src/doc/light9.jpg' alt="light">
 <img src='./src/doc/light5.jpg' alt="light">
+<img src='./src/doc/notice.jpg' alt="light">
 <img src='./src/doc/dark.jpg' alt="dark">
 <img src='./src/doc/dark2.jpg' alt="dark">
 <img src='./src/doc/light6-1.jpg' alt="light">
