@@ -23,22 +23,26 @@ async function changeMode (val, e) {
   })
   vt.ready.then(() => playEffect(x, y))
 }
-// 亮 -> 暗， 暗色(new)在上，由小到大
-// 暗 -> 亮， 暗色(old)在上，由大到小
 function playEffect(x, y) {
-  // const maxR = parseInt(Math.hypot(innerWidth, innerHeight) + '');
-  // const start = `circle(0px at ${x}px ${y}px)`;
-  // const end = `circle(${maxR}px at ${x}px ${y}px)`;
-  // const frames = [
-  //   { clipPath: isDark.value ? start : end }, // 0%
-  //   { clipPath: isDark.value ? end : start } // 100%
-  // ]
-  const frames = [
-    { filter: isDark.value ? 'blur(10px)' : 'blur(0px)', opacity: isDark.value ? 0 : 1 },
-    { filter: isDark.value ? 'blur(0px)' : 'blur(10px)', opacity: isDark.value ? 1 :0 }
-  ]
-  root.animate(frames, {
-    duration: 700,
+  let frames = null
+  if (settingStore.modeAnimate === 'circle') {
+    // 亮 -> 暗， 暗色(new)在上，由小到大
+    // 暗 -> 亮， 暗色(old)在上，由大到小
+    const maxR = parseInt(Math.hypot(innerWidth, innerHeight) + '');
+    const start = `circle(0px at ${x}px ${y}px)`;
+    const end = `circle(${maxR}px at ${x}px ${y}px)`;
+    frames = [
+      { clipPath: isDark.value ? start : end }, // 0%
+      { clipPath: isDark.value ? end : start } // 100%
+    ]
+  } else {
+    frames = [
+      { filter: isDark.value ? 'blur(10px)' : 'blur(0px)', opacity: isDark.value ? 0 : 1 },
+      { filter: isDark.value ? 'blur(0px)' : 'blur(10px)', opacity: isDark.value ? 1 :0 }
+    ]
+  }
+  frames && root.animate(frames, {
+    duration: 1000,
     easing: 'linear',
     pseudoElement: isDark.value ? '::view-transition-new(root)' : '::view-transition-old(root)'
   });
