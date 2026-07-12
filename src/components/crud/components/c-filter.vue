@@ -1,6 +1,6 @@
 <!-- c-page 条件过滤组件 -->
 <template>
-  <div class="c-filter relative" :class="{ 'overflow-hidden': needFold, 'is-fold': isFold }">
+  <div ref="cFilter" class="c-filter relative" :class="{ 'overflow-hidden': needFold, 'is-fold': isFold }">
     <a-form
       name="searchForm"
       ref="searchForm"
@@ -12,7 +12,7 @@
     >
       <a-row :gutter="10" wrap>
         <!-- 动态字段 -->
-        <a-col v-for="(field, index) in currFields" :key="field.fieldName" v-bind="field.col ?? col" v-show="!isFold || (isFold && index < 3)">
+        <a-col v-for="(field, index) in currFields" :key="field.fieldName" v-bind="field.col ?? col" v-show="!isFold || (isFold && index < rowMaxShowNum)">
           <a-form-item :label="field.label" :name="field.fieldName" :label-col="field.labelCol" :wrapper-col="field.wrapperCol">
             <CComponent v-model:value="formData[field.fieldName]" :field="field" />
           </a-form-item>
@@ -152,12 +152,29 @@ function onResetHandle () {
 }
 
 // --------- 折叠、展开 ------------
-const needFold = computed(() => currFields.value?.length > 3)
+const cFilter = useTemplateRef('cFilter')
+const rowMaxShowNum = ref(4)
+const needFold = computed(() => currFields.value?.length > rowMaxShowNum.value)
 const isFold = ref(false)
 const foldRef = useTemplateRef('foldRef')
 const mouseX = ref(0)
-function toggleFold () {
+const isInited = ref(false)
+async function toggleFold () {
   isFold.value = !isFold.value
+  await nextTick()
+  if (isFold.value && !isInited.value) {
+    const rowMaxHeight = 60;
+    async function initShowNum () {
+      if (cFilter.value.getBoundingClientRect().height > rowMaxHeight && rowMaxShowNum.value > 1) {
+        rowMaxShowNum.value = rowMaxShowNum.value - 1;
+        await nextTick()
+        initShowNum()
+      } else {
+        isInited.value = true
+      }
+    }
+    initShowNum()
+  }
 }
 function onMouseover (e) {
   mouseX.value = e.clientX - foldRef.value.getBoundingClientRect().x

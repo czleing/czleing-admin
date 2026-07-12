@@ -111,6 +111,9 @@ export const useAuthStore = defineStore('auth', {
     },
     /** 登录失效处理，跳转到登录页 或者 弹出登录窗体 */
     authExpiredHandle () {
+      if (import.meta.env.VITE_APP_IGNORE_LOGIN === 'true') {
+        return
+      }
       const currentPath = router.currentRoute.value.fullPath
       if (router.currentRoute.value.name !== 'login') {
         const tabStore = useTabsStore()

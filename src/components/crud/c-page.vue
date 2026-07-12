@@ -1,9 +1,13 @@
 <!-- CRUD 页面组件 -->
 <template>
   <div class="c-page">
-    <div v-if="treeConfig" class="c-page__tree mr10 pr10">
+    <div v-if="treeConfig" class="c-page__tree mr10 pr10" :class="{'is-hide': !isTreeShow}">
       <!-- 树 -->
-      <CTree :config="treeConfig" @selected="onTreeSelectHandle" />
+      <CTree v-show="isTreeShow" class="c-tree" :config="treeConfig" @selected="onTreeSelectHandle" />
+      <div class="c-page__tree__toggle pointer flex-y-center radius6" @click="toggleTree">
+        <LeftOutlined class="em06" v-show="isTreeShow" />
+        <RightOutlined class="em06" v-show="!isTreeShow" />
+      </div>
     </div>
     <div class="c-page__page">
       <slot name="header" />
@@ -90,6 +94,7 @@ import { usePermissionConfig } from './hooks/usePermissionConfig'
 import { useApiMethodConfig } from './hooks/useApiMethodConfig'
 import { useActionHandle } from './hooks/useActionHandle'
 import { isNotEmpty } from '@/utils/index.js'
+import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue'
 
 const props = defineProps({
   /** 没有新增按钮，可选 */
@@ -203,6 +208,10 @@ provide('c-page.sorter', sorter)
 provide('c-page.checkedFieldNames', checkedFieldNames)
 provide('c-page.onRefreshHandle', onRefreshHandle)
 
+const isTreeShow = ref(true)
+function toggleTree () {
+  isTreeShow.value = !isTreeShow.value
+}
 
 function onSearchHandle (params) {
   searchParams.value = params
@@ -246,6 +255,34 @@ defineExpose({
     min-width: 180px;
     max-width: 240px;
     border-right: solid 1px rgba(100, 100, 100, .1);
+    position: relative;
+    transition: all .3s;
+    .c-tree {
+      min-width: 180px;
+    }
+    &__toggle {
+      position: absolute;
+      right: -5px;
+      top: 50%;
+      transform: translateY(-50%) scaleX(0);
+      height: 40px;
+      width: 10px;
+      background-color: var(--ant-colorBorder);
+      color: white;
+      transition: all .3s;
+    }
+    &:hover {
+      .c-page__tree__toggle {
+        transform: translateY(-50%) scaleX(1);
+      }
+    }
+    &.is-hide {
+      min-width: 0px;
+      max-width: 0px;
+      .c-page__tree__toggle {
+        transform: translateY(-50%) scaleX(1);
+      }
+    }
   }
   &__page {
     flex: auto;
