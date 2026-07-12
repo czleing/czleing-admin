@@ -294,7 +294,7 @@ const tableConfig = computed(() => ({
       title: '是否启用',
       dataIndex: 'isEnabled',
       width: 100,
-      type: 'isEnabled' // type 预处理类型，isEnabled，格式化为是否启用
+      type: 'isEnabled' // type 预处理类型，isEnabled、Boolean, 格式化为是否启用
     },
     {
       title: '字符串脱敏',

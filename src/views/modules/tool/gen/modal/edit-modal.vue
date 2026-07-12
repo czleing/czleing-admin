@@ -218,7 +218,7 @@ const genFormConfig = computed(() => ({
     // },
     {
       label: '前端代码生成路径',
-      tooltip: '项目根目录绝对路径，如：/Users/xxx/xxx/base-backend-static',
+      tooltip: '项目根目录绝对路径，如：/Users/xxx/xxx/czleing-admin',
       fieldName: 'genUiPath',
       singleLine: true,
       labelCol: { span: 4 },

@@ -30,7 +30,7 @@ export const useDictStore = defineStore('dict', () => {
     if (!force && cache[type]) {
       return cache[type]
     }
-    cache[type] = axios.post(`/system/dict/data/type/${type}`, { isEnabled: true }).then(result => {
+    cache[type] = axios.post(`/system/dict/data/type/${type}`).then(result => {
       const dicts = result?.map(item => ({
         ...item,
         id: item.dictValue,
