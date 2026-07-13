@@ -104,14 +104,14 @@ function playEffect(x, y) {
       radial-gradient(circle 2px, var(--ant-colorText) 80%, transparent 80%),
       radial-gradient(circle 2px, var(--ant-colorText) 80%, transparent 80%);
     background-position:
-      4px 19px,
-      8px 9px,
+      4px 18px,
+      8px 8px,
       18px 4px,
-      28px 9px,
+      28px 8px,
       32px 18px,
       28px 28px,
-      19px 32px,
-      9px 28px;
+      18px 32px,
+      8px 28px;
     background-size: 4px 4px;
     background-repeat: no-repeat;
     transition: all .2s;

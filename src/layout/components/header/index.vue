@@ -41,11 +41,11 @@
       scrolling="no"
       :style="settingStore.isDark ? 'filter:invert(1);' : ''"
     ></iframe>
-    <div class="flex-x x-middle gap10">
+    <div class="flex-x x-middle gap15">
       <HeaderMessage />
       <HeaderFullscreen />
-      <ModeSwitch />
       <HeaderSetting />
+      <ModeSwitch />
       <HeaderUser />
     </div>
   </div>

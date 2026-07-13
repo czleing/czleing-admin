@@ -1,6 +1,6 @@
 <!-- 待办消息 -->
 <template>
-  <div class="header-message">
+  <div class="header-message pointer" :class="{'pr10': total > 0}">
     <a-popover title="通知消息" placement="bottomRight" trigger="click">
       <a-badge :count="total" :overflow-count="99">
         <BellOutlined class="em14" />
