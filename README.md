@@ -49,7 +49,7 @@
 - 一个CRUD页面只有一个文件，不用到处跳，开发不割裂，代码简短，如：一个部门管理只需几十行代码，一个用户管理也仅200多行，菜单管理300多行
 - ==========================
 - 未来持续更新
-- 接下来实现通知公告、用户的权限角色双向设置等...
+
 
 ## 初始化
 ### 1. 安装依赖
@@ -83,6 +83,7 @@ npm run preview
 <img src='./src/doc/light4.jpg' alt="light">
 <img src='./src/doc/light9.jpg' alt="light">
 <img src='./src/doc/light5.jpg' alt="light">
+<img src='./src/doc/notice.jpg' alt="light">
 <img src='./src/doc/dark.jpg' alt="dark">
 <img src='./src/doc/dark2.jpg' alt="dark">
 <img src='./src/doc/light6-1.jpg' alt="light">

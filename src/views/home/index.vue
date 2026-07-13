@@ -2,7 +2,7 @@
 <template>
   <div class="home-page">
     <div class="ml20 mt20">首页</div>
-    <div class="w30p mt20">
+    <!-- <div class="w30p mt20">
       <div class="bold">文字转语音</div>
       <div class="mt10 flex-x gap10">
         <a-input v-model:value="inputStr" placeholder="文字内容" />
@@ -25,7 +25,7 @@
         <a-button @click="stopRecord" v-if="isRecording">停止录音</a-button>
         <a-button @click="playAudio">试听</a-button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 

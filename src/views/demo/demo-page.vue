@@ -80,7 +80,7 @@ const treeConfig = {
 const filterConfig = {
   // useCache: true, // 使用查询条件暂存，默认 false
   // cacheBtnText: '记住查询', // 暂存按钮文字，默认 '记住查询'
-  col: { sm: 8, lg: 6, xxl: 6 }, // 所有表单项栅格设置，默认：{ sm: 8, lg: 6, xxl: 4 }，参照 a-col
+  // col: { sm: 8, lg: 6, xxl: 4 }, // 所有表单项栅格设置，默认：{ sm: 8, lg: 6, xxl: 4 }，参照 a-col
   labelCol: { flex: '80px' }, // 所有表单项文本部分栅格设置，默认：文本宽度，单行时可以不用设置，多行时建议设置统一宽度，参照 a-col
   // wrapperCol: { span: 18 }, // 所有表单项控件部分栅格设置，默认：控件宽度，参照 a-col
   // buttonsCol: { flex: 'auto' }, // 查询重置等按钮栅格设置，默认：{ span: 4 },
@@ -294,7 +294,7 @@ const tableConfig = computed(() => ({
       title: '是否启用',
       dataIndex: 'isEnabled',
       width: 100,
-      type: 'isEnabled' // type 预处理类型，isEnabled，格式化为是否启用
+      type: 'isEnabled' // type 预处理类型，isEnabled、Boolean, 格式化为是否启用
     },
     {
       title: '字符串脱敏',

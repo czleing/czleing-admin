@@ -48,6 +48,9 @@
           <template v-if="column.type === 'isEnabled'">
             <span :class="EIsEnabled._classOf(text ? 1 : 0)">{{ EIsEnabled._of(text ? 1 : 0) }}</span>
           </template>
+          <template v-if="column.type === 'Boolean'">
+            <span :class="EYesNo._classOf(text ? 1 : 0)">{{ EYesNo._of(text ? 1 : 0) }}</span>
+          </template>
         </template>
         <!-- 带单位、带默认值、字符串脱敏 -->
         <template v-else-if="column.hideChar || column.default || column.unit">
@@ -86,7 +89,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons-vue'
 import axios from '@/api/index.js'
 import dayjs from 'dayjs'
 import CTableAction from './c-table-action.vue'
-import { EIsEnabled } from '@/enum'
+import { EIsEnabled, EYesNo } from '@/enum'
 import { stringStar, isEmpty } from '@/utils/index.js'
 
 const props = defineProps({

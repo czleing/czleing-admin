@@ -69,8 +69,9 @@
         dataIndex: 'cronExpression',
       },
       {
-        title: '计划执行错误策略',
+        title: '失火策略',
         dataIndex: 'misfirePolicy',
+        customRender: ({ text }) => EMisfirePolicy._of(text)
       },
       {
         title: '是否并发执行',

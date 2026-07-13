@@ -221,14 +221,19 @@ function formItemProps (field) {
 
 /** 通过字段动态配置，生成组件静态属性 */
 function staticField (field) {
+  const placeholder = getFnValue(field.props?.placeholder, formData)
+  const disabled = getFnValue(field.disabled, formData)
+  const props = getFnValue(field.props, formData) ?? {}
+  if (disabled !== undefined) {
+    props.disabled = disabled
+  }
+  if (placeholder !== undefined) {
+    props.placeholder = placeholder
+  }
   return {
     ...field,
     label: getFnValue(field.label, formData),
-    props: {
-      ...getFnValue(field.props, formData),
-      disabled: getFnValue(field.disabled, formData),
-      placeholder: getFnValue(field.props?.placeholder, formData),
-    }
+    props
   }
 }
 

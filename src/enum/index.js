@@ -36,7 +36,7 @@ export const EControlType = {
   eFileUpload: Enum('FileUpload', '文件上传', { htmlType: 'eFileUpload' }),
   eImageUpload: Enum('ImageUpload', '图片上传', { htmlType: 'eImageUpload' }),
   eEditor: Enum('WangEditor', '富文本', { htmlType: 'eEditor' }),
-  eTreeSelect: Enum('a-tree-select', '树形选择', { htmlType: 'eTreeSelect', defaultProps: { treeDefaultExpandAll: true } }),
+  eTreeSelect: Enum('a-tree-select', '树形选择', { htmlType: 'eTreeSelect', defaultProps: { treeDefaultExpandAll: true, dropdownMatchSelectWidth: false } }),
   eUserSelect: Enum('UserSelect', '用户选择', { htmlType: 'eUserSelect' }),
   eTable: Enum('DynamicTable', '动态表格', { htmlType: 'eTable', defaultProps: { bordered: true, size: 'small' } }),
   eCustom: Enum('Custom', '自定义', { htmlType: 'eCustom' })

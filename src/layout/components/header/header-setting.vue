@@ -52,6 +52,13 @@
       <ModeSwitch />
     </a-space>
     <a-space class="flex-x mt20">
+      <span>{{ $t('frame.modeAnimate') }}：</span>
+      <a-radio-group v-model:value="settingStore.modeAnimate" button-style="solid">
+        <a-radio-button value="fade">{{ $t('frame.modeAnimateFade') }}</a-radio-button>
+        <a-radio-button value="circle">{{ $t('frame.modeAnimateCircle') }}</a-radio-button>
+      </a-radio-group>
+    </a-space>
+    <a-space class="flex-x mt20">
       <span>{{ $t('frame.componentSize') }}：</span>
       <a-select v-model:value="settingStore.componentSize" style="width: 150px;">
         <a-select-option value="small">{{ $t('frame.small') }}</a-select-option>
