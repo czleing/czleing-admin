@@ -16,10 +16,10 @@
             <Tabs />
           </div>
           <!-- 右侧工作区 -->
-          <div class="view-main flex-auto pa10" :style="themeStyle">
+          <div class="view-main flex-auto pa10" :style="{ ...themeStyle, 'overflow': isAnimating ? 'hidden' : 'auto' }">
             <!-- {{ tabsStore.cachedViews }} -->
             <router-view v-slot="{ Component, route }">
-              <Transition name="slide-right">
+              <Transition name="slide-right" @before-enter="isAnimating = true" @after-leave="isAnimating = false">
                 <keep-alive :max="20" :include="tabsStore.cachedViews">
                   <component v-if="!tabsStore.refreshing" :is="Component" :key="route.fullPath" />
                 </keep-alive>
@@ -47,6 +47,7 @@ const tabsStore = useTabsStore()
 const settingStore = useSettingStore()
 const { token } = useThemeToken()
 const themeStyle = ref()
+const isAnimating = ref(false)
 
 /** 使用动态色彩，跟随 ant-design 主题 */
 watch(
@@ -106,6 +107,5 @@ useWindowSize((width) => {
   border-radius: 0 0 8px 8px;
   border: solid 1px;
   border-top: none;
-  overflow: auto;
 }
 </style>
