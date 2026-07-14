@@ -150,7 +150,7 @@
 .pl { padding-left: @spacing-y; }
 .pr { padding-right: @spacing-y; }
 
-// 其他间距
+// 其他间距 pa10
 @spaces: {
   p: padding;
   m: margin;
@@ -162,6 +162,7 @@
   l: left;
 }
 @sizes: {
+  0: 0px;
   2: 2px;
   4: 4px;
   5: 5px;
@@ -199,6 +200,7 @@ each(@spaces, .(@sv, @sk, @si) {
 .w80p { width: 80%; }
 .w90p { width: 90%; }
 .w100p { width: 100%; }
+.h100p { height: 100%; }
 
 // flex 布局
 .flex-x { display: flex; }

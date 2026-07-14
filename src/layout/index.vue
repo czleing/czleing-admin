@@ -1,22 +1,22 @@
 <template>
   <a-layout class="layout" style="height:100vh;">
-    <a-layout-header :style="themeStyle" :class="{ 'is-radius mt6 ml6 mr6': settingStore.useRadius }" style="padding:0;">
-      <!-- 右侧头部 -->
+    <a-layout-header :class="{ 'is-radius mt6 ml6 mr6': settingStore.useRadius }" style="padding:0;">
+      <!-- 头部 -->
       <Header />
     </a-layout-header>
     <a-layout>
-      <a-layout-sider v-show="menuStore.leftNavRoutes && menuStore.leftNavRoutes.length > 0" :collapsed="!menuStore.isSidebarOpen" :trigger="null" :theme="settingStore.mode" :class="{ 'is-radius mt6 ml6 mb6': settingStore.useRadius }" :style="themeStyle" collapsible>
+      <a-layout-sider v-show="menuStore.leftNavRoutes && menuStore.leftNavRoutes.length > 0" :collapsed="!menuStore.isSidebarOpen" :trigger="null" :theme="settingStore.mode" :class="{ 'is-radius mt6 ml6 mb6': settingStore.useRadius }" collapsible>
         <!-- 左侧菜单 -->
         <MenuSide />
       </a-layout-sider>
       <a-layout-content>
-        <div class="pa5 flex-y y-stretch" style="height:100%;">
+        <div class="pa5 flex-y y-stretch h100p">
           <!-- 右侧 Tabs 栏 -->
           <div v-if="settingStore.useTabs" class="">
             <Tabs />
           </div>
           <!-- 右侧工作区 -->
-          <div class="view-main flex-auto pa10" :style="{ ...themeStyle, 'overflow': isAnimating ? 'hidden' : 'auto' }">
+          <div class="view-main flex-auto pa10" :style="{ 'overflow': isAnimating ? 'hidden' : 'auto' }">
             <!-- {{ tabsStore.cachedViews }} -->
             <router-view v-slot="{ Component, route }">
               <Transition :name="settingStore.tabAnimate" :css="!!settingStore.tabAnimate" @before-enter="isAnimating = true" @after-leave="isAnimating = false">
@@ -46,7 +46,6 @@ const menuStore = useMenuStore()
 const tabsStore = useTabsStore()
 const settingStore = useSettingStore()
 const { token } = useThemeToken()
-const themeStyle = ref()
 const isAnimating = ref(false)
 
 /** 使用动态色彩，跟随 ant-design 主题 */
@@ -54,14 +53,8 @@ watch(
   () => token.value,
   () => {
     // 设置整个网页的默认字体颜色跟随主题变化
-    document.body.style.color = token.value.colorText
     document.documentElement.setAttribute('theme', settingStore.mode)
-    themeStyle.value = {
-      backgroundColor: token.value.colorBgContainer,
-      color: token.value.colorText,
-      borderColor: token.value.colorBorderSecondary
-    }
-    // 动态设置css变量，跟随 ant-design 主题，可根据需要扩展
+    // 动态设置css变量，跟随 ant-design 主题，可根据需要扩展，参考： https://www.antdv.com/docs/vue/customize-theme-cn#api
     setRootCssVars('--ant-', {
       colorText: token.value.colorText,
       colorInfo: token.value.colorInfo,
@@ -74,7 +67,8 @@ watch(
       colorBgContainer: token.value.colorBgContainer,
       colorBgElevated: token.value.colorBgElevated,
       colorBgLayout: token.value.colorBgLayout,
-      borderRadius: token.value.borderRadius + 'px'
+      borderRadius: token.value.borderRadius + 'px',
+      borderRadiusLG: token.value.borderRadiusLG + 'px',
     })
   },
   { deep: true, immediate: true }
@@ -98,25 +92,27 @@ useWindowSize((width) => {
     transition: all .3s;
   }
   .is-radius {
-    border-radius: 8px;
-    border: solid 1px;
+    border-radius: var(--ant-borderRadiusLG);
+    border: solid 1px var(--ant-colorBorderSecondary);
     overflow: hidden;
   }
 }
 .view-main {
-  border-radius: 0 0 8px 8px;
+  border-radius: 0 0 var(--ant-borderRadiusLG) var(--ant-borderRadiusLG);
   border: solid 1px;
+  border-color: var(--ant-colorBorderSecondary);
+  background-color: var(--ant-colorBgContainer);
   border-top: none;
 }
 
 /** Tab 切换动画 */
-/** 向右滑动动画 */
+/** 向右滑动 */
 .slide-right-enter-active, .slide-right-leave-active { transition: all .2s ease-out; }
 .slide-right-enter-from { opacity: 0; transform: translateX(-20px); }
 .slide-right-enter-active { transition-delay: .2s; }
 .slide-right-leave-to { opacity: 0; transform: translateX(20px); }
 
-// Tab 切换动画，淡入淡出
+/** 淡入淡出 */
 .fade-enter-active, .fade-leave-active { transition: all .25s; }
 .fade-enter-from, .fade-leave-to { opacity: 0; }
 .fade-enter-active { transition-delay: .25s; }
