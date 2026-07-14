@@ -45,7 +45,9 @@
       <HeaderMessage />
       <HeaderFullscreen />
       <HeaderSetting />
-      <ModeSwitch />
+      <div style="transform: scale(0.7);">
+        <ModeSwitch />
+      </div>
       <HeaderUser />
     </div>
   </div>

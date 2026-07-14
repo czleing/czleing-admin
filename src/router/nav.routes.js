@@ -54,6 +54,7 @@ const developerRoutes = [
         component: () => import('@/views/demo/demo-page.vue'),
         meta: {
           title: 'Demo',
+          icon: 'ExperimentOutlined',
           isLeaf: true,
           matchedPaths: ['/developer', '/developer/demo'],
           cache: true
@@ -64,6 +65,7 @@ const developerRoutes = [
         component: () => import('@/views/modules/tool/gen/index.vue'),
         meta: {
           title: '代码生成',
+          icon: 'CodeOutlined',
           isLeaf: true,
           matchedPaths: ['/developer', '/tool/gen'],
           cache: true
@@ -73,6 +75,7 @@ const developerRoutes = [
         path: import.meta.env.VITE_APP_BASE_API + '/swagger-ui/index.html',
         meta: {
           title: '接口文档',
+          icon: 'ApiOutlined',
           target: '_blank',
         }
       }

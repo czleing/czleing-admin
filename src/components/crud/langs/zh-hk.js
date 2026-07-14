@@ -5,6 +5,7 @@ export default {
   // 框架
   frame: {
     themeSetting: '主題設定',
+    themeMode: '明暗模式',
     setting: '設定',
     theme: '主題',
     selectTheme: '選擇主題',
@@ -23,6 +24,11 @@ export default {
     modeAnimateCircle: '圓形擴散',
     radiusLayout: '圓角佈局',
     useTabs: '使用標簽頁',
+    tabAnimate: '標籤頁動畫',
+    tabAnimateNone: '無',
+    tabAnimateSlideRight: '右滑',
+    tabAnimateFade: '淡入',
+    tabAnimateScale: '縮放',
     useDynamicPageTitle: '動態網頁標題',
     lang: '語言',
     selectLang: '選擇語言',

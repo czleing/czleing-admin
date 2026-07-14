@@ -1,10 +1,12 @@
 <!-- 切换明暗色系相关 -->
 <template>
-  <!-- <a-switch v-model:checked="isDark" checked-children="Dark" un-checked-children="Light" @change="changeMode"></a-switch> -->
-  <div class="mode-switch pointer" :class="{'is-dark': isDark}" @click="changeMode">
-    <div class="stars"></div>
-    <div class="sun-moon"></div>
-  </div>
+  <a-tooltip placement="top" :title="$t('frame.themeMode')">
+    <div class="mode-switch pointer" :class="{'is-dark': isDark}" @click="changeMode">
+      <div class="stars"></div>
+      <div class="sun-moon"></div>
+      <div class="cloud"></div>
+    </div>
+  </a-tooltip>
 </template>
 <script setup>
 import { useSettingStore } from '@/stores/setting-store.js'
@@ -86,23 +88,23 @@ function playEffect(x, y) {
 </style>
 <style scoped lang="less">
 .mode-switch {
+  --mode-color: #ffd446;
   width: 40px;
   height: 40px;
-  overflow: visible;
+  overflow: hidden;
   position: relative;
-  transform: scale(0.7);
   .stars {
     position: absolute;
     inset: 0;
     background-image:
-      radial-gradient(circle 2px, var(--ant-colorText) 80%, transparent 80%),
-      radial-gradient(circle 2px, var(--ant-colorText) 80%, transparent 80%),
-      radial-gradient(circle 2px, var(--ant-colorText) 80%, transparent 80%),
-      radial-gradient(circle 2px, var(--ant-colorText) 80%, transparent 80%),
-      radial-gradient(circle 2px, var(--ant-colorText) 80%, transparent 80%),
-      radial-gradient(circle 2px, var(--ant-colorText) 80%, transparent 80%),
-      radial-gradient(circle 2px, var(--ant-colorText) 80%, transparent 80%),
-      radial-gradient(circle 2px, var(--ant-colorText) 80%, transparent 80%);
+      radial-gradient(circle 2px, var(--mode-color) 80%, transparent 80%),
+      radial-gradient(circle 2px, var(--mode-color) 80%, transparent 80%),
+      radial-gradient(circle 2px, var(--mode-color) 80%, transparent 80%),
+      radial-gradient(circle 2px, var(--mode-color) 80%, transparent 80%),
+      radial-gradient(circle 2px, var(--mode-color) 80%, transparent 80%),
+      radial-gradient(circle 2px, var(--mode-color) 80%, transparent 80%),
+      radial-gradient(circle 2px, var(--mode-color) 80%, transparent 80%),
+      radial-gradient(circle 2px, var(--mode-color) 80%, transparent 80%);
     background-position:
       4px 18px,
       8px 8px,
@@ -124,10 +126,36 @@ function playEffect(x, y) {
     top: -20px;
     width: 20px;
     height: 20px;
-    box-shadow: 30px 30px 0 0 var(--ant-colorText);
+    box-shadow: 30px 30px 0 0 var(--mode-color);
     transition: all .2s;
   }
+  .cloud {
+    position: absolute;
+    inset: 0;
+    transition: all .2s;
+    &::before, &::after {
+      content: '';
+      position: absolute;
+      border-radius: 30px;
+      background-color: rgba(255, 219, 208, 0.42);
+      backdrop-filter: blur(3px);
+      border: solid 1px white;
+    }
+    &::before {
+      width: 33px;
+      height: 33px;
+      left: -8px;
+      bottom: -15px;
+    }
+    &::after {
+      width: 24px;
+      height: 24px;
+      right: -5px;
+      bottom: -14px;
+    }
+  }
   &.is-dark {
+    --mode-color: #81fbff;
     .stars {
       background-position:
         2px 15px,
@@ -142,7 +170,10 @@ function playEffect(x, y) {
     }
     .sun-moon {
       transform: translate(22px, 22px);
-      box-shadow: 8px 8px 0 0 var(--ant-colorText);
+      box-shadow: 8px 8px 0 0 var(--mode-color);
+    }
+    .cloud {
+      transform: translateY(100%);
     }
   }
 }

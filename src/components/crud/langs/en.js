@@ -4,6 +4,7 @@
 export default {
   frame: {
     themeSetting: 'Theme Settings',
+    themeMode: 'Light/Dark',
     setting: 'Settings',
     theme: 'Theme',
     selectTheme: 'Select Theme',
@@ -22,6 +23,11 @@ export default {
     modeAnimate: 'Mode Animation',
     radiusLayout: 'Rounded Layout',
     useTabs: 'Use Tabs Page',
+    tabAnimate: 'Tab Page Animation',
+    tabAnimateNone: 'None',
+    tabAnimateSlideRight: 'Slide Right',
+    tabAnimateFade: 'Fade In/Out',
+    tabAnimateScale: 'Scale',
     useDynamicPageTitle: 'Dynamic Page Title',
     lang: 'Language',
     selectLang: 'Select Language',

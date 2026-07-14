@@ -1,11 +1,15 @@
 <!-- 待办消息 -->
 <template>
   <div class="header-message pointer" :class="{'pr10': total > 0}">
-    <a-popover title="通知消息" placement="bottomRight" trigger="click">
+    <a-popover placement="bottomRight" trigger="click">
       <a-badge :count="total" :overflow-count="99">
         <BellOutlined class="em14" />
       </a-badge>
       <template #content>
+        <div class="flex-x-between mb10">
+          <div class="bold">通知消息</div>
+          <div class="text-primary pointer">查看全部</div>
+        </div>
         <div class="list-container flex-y">
           <div class="flex-auto list px10">
             <div class="item flex-x gap10 lh1_5 py10"

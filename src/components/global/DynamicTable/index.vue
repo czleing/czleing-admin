@@ -27,6 +27,8 @@
                 v-model:value="record[column.dataIndex]"
                 :field="getFinalField(column.field, record)"
                 :is-view="column.isView || disabled"
+                :cellInfo="{ text, record, index, column }"
+                class="flex-auto"
                 @update:value="(val) => handleChange(val, record, column.field)"
               />
             </div>
@@ -58,7 +60,7 @@
                   <div class="bold">文本识别：</div>
                   <a-textarea v-model:value="textContent" :rows="8" :placeholder="`请输入内容，如：\n1,2,3\n4,5,6\n`" class="mt10"></a-textarea>
                   <div class="mt10 flex-x-between">
-                    <div>* 每行不同列之间用 <a-tag>|</a-tag><a-tag>,</a-tag><a-tag>，</a-tag> 或制表符间隔，回车结束</div>
+                    <div>* 每行不同列之间用 <a-tag>|</a-tag><a-tag>,</a-tag><a-tag>，</a-tag> 或空格、制表符间隔，回车结束</div>
                     <a-button type="primary" :loading="textOcring" @click="textOcrHandle">识别</a-button>
                   </div>
                 </div>
@@ -132,7 +134,7 @@ const props = defineProps({
 })
 
 const modelValue = ref([])
-const currColumns = ref([
+const currColumns = computed(() => [
   ...props.columns.filter(item => !item.hidden && item.type !== EControlType.eHidden).map(item => {
     return {
       ...item,
@@ -145,21 +147,18 @@ const currColumns = ref([
         fieldName: item.dataIndex,
         type: item.type,
         disabled: item.disabled,
-        props: item.props
+        props: item.props ?? {}
       }
     }
-  })
-])
-if (props.useDelete) {
-  currColumns.value.push(
-    {
-      title: '操作',
-      key: 'action',
-      align: 'center',
-      type: 'action'
-    }
-  )
-}
+  }),
+  props.useDelete && !props.disabled ? {
+    title: '操作',
+    key: 'action',
+    align: 'center',
+    type: 'action'
+  } : null
+].filter(Boolean))
+
 onMounted(() => {
   if (!props.disabled && (!props.value || props.value.length === 0)) {
     props.useAddDefault && addHandle()
@@ -183,15 +182,21 @@ function setData(val) {
 
 // 获取最终的字段配置，将动态的函数形式的值转成具体值
 function getFinalField (field, record) {
-  return {
+  const props = getFnValue(field.props, record, modelValue.value) ?? {}
+  const disabled = getFnValue(field.disabled, record, modelValue.value)
+  const placeholder = getFnValue(props.placeholder, record, modelValue.value)
+  if (disabled !== undefined) {
+    props.disabled = disabled
+  }
+  if (placeholder !== undefined) {
+    props.placeholder = placeholder
+  }
+  const finalField = {
     ...field,
     required: getFnValue(field.required, record, modelValue.value),
-    props: {
-      ...field.props,
-      placeholder: getFnValue(field.placeholder, record, modelValue.value),
-      disabled: getFnValue(field.disabled, record, modelValue.value),
-    }
+    props
   }
+  return finalField
 }
 
 function handleChange (val, record, field) {
@@ -236,7 +241,20 @@ function textOcrHandle () {
     let now = Date.now()
     const newData = lines.map(line => {
       const obj = {[props.primaryKey]: ++now}
-      const values = line.split(/[\|,， \t]+/)
+      let splitChar = '\t'
+      if (!line.includes(splitChar)) {
+        splitChar = '|'
+        if (!line.includes(splitChar)) {
+          splitChar = '，'
+          if (!line.includes(splitChar)) {
+            splitChar = ','
+            if (!line.includes(splitChar)) {
+              splitChar = /\s+/
+            }
+          }
+        }
+      }
+      const values = line.split(splitChar)
       props.columns.filter(item => !item.hidden).forEach((col, index) => {
         obj[col.dataIndex] = values[index] ?? null
       })

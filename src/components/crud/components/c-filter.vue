@@ -153,7 +153,7 @@ function onResetHandle () {
 
 // --------- 折叠、展开 ------------
 const cFilter = useTemplateRef('cFilter')
-const rowMaxShowNum = ref(4)
+const rowMaxShowNum = ref(5)
 const needFold = computed(() => currFields.value?.length > rowMaxShowNum.value)
 const isFold = ref(false)
 const foldRef = useTemplateRef('foldRef')

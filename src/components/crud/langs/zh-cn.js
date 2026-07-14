@@ -5,6 +5,7 @@ export default {
   // 框架
   frame: {
     themeSetting: '主题设置',
+    themeMode: '明暗模式',
     setting: '设置',
     theme: '主题',
     selectTheme: '选择主题',
@@ -23,6 +24,11 @@ export default {
     modeAnimateCircle: '圆形扩散',
     radiusLayout: '圆润布局',
     useTabs: '使用标签页',
+    tabAnimate: '标签页动画',
+    tabAnimateNone: '无',
+    tabAnimateSlideRight: '右滑',
+    tabAnimateFade: '淡入',
+    tabAnimateScale: '缩放',
     useDynamicPageTitle: '动态网页标题',
     lang: '语言',
     selectLang: '选择语言',

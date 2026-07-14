@@ -106,7 +106,7 @@ const emits = defineEmits(['update:value', 'change'])
 }
 </style>
 <style>
-body[theme='dark'] {
+html[theme='dark'] {
   --w-e-toolbar-color: #e0e0e0;
   --w-e-toolbar-bg-color: #1f1f1f;
   --w-e-textarea-bg-color: #141414;

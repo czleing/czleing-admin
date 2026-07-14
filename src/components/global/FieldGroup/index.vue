@@ -47,7 +47,7 @@ function toggle () {
     position: relative;
     padding: 8px 15px;
     padding-left: 20px;
-    border-radius: 5px;
+    border-radius: var(--ant-borderRadius);
     line-height: 1;
     &:hover {
       opacity: .8;
@@ -75,7 +75,7 @@ function toggle () {
     overflow: hidden;
     border-style: solid;
     border-width: 0;
-    border-radius: 0 0 5px 5px;
+    border-radius: 0 0 var(--ant-borderRadius) var(--ant-borderRadius);
     .inner-container {
       min-height: 0;
     }
@@ -86,7 +86,7 @@ function toggle () {
   }
   &.is-expand {
     .field-group__title {
-      border-radius: 5px 5px 0 0;
+      border-radius: var(--ant-borderRadius) var(--ant-borderRadius) 0 0;
     }
   }
 }

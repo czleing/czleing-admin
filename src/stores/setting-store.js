@@ -69,6 +69,7 @@ export const useSettingStore = defineStore('setting', () => {
   const useRadius = ref(false) // 是否使用圆润布局
   const useWeather = ref(false) // 是否使用天气组件
   const useTabs = ref(true) // 是否使用 tabs 栏
+  const tabAnimate = ref('slide-right') // tab 页签动画，'', 'slide-right', 'fade', 'scale'
   const useDynamicPageTitle = ref(true) // 是否动态设置浏览器标签名，设置为路由上的 meta.title
 
   /** 根据主题名称设置主题 */
@@ -111,6 +112,7 @@ export const useSettingStore = defineStore('setting', () => {
     useRadius,
     useWeather,
     useTabs,
+    tabAnimate,
     useDynamicPageTitle,
     isDark,
     themes: themesGetter,

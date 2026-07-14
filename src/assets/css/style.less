@@ -27,19 +27,3 @@
   opacity: 0;
   max-height: 0;
 }
-
-// 向右滑动动画，用于Tab切换，进入时缓慢进入，离开时瞬间结束
-.slide-right-enter-active, .slide-right-leave-active {
-  transition: all .2s ease-out;
-}
-.slide-right-enter-from {
-  opacity: 0;
-  transform: translateX(-20px);
-}
-.slide-right-enter-active {
-  transition-delay: .2s;
-}
-.slide-right-leave-to {
-  opacity: 0;
-  transform: translateX(20px);
-}

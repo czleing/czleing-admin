@@ -1,7 +1,10 @@
 @charset "UTF-8";
-// ===============================
+// =================================
 // 对浏览器默认、第三方UI库等的覆盖样式
-// ===============================
+// =================================
+* {
+  scrollbar-color: rgba(155, 155, 155, .3) transparent;
+}
 // 相邻按钮
 .ant-btn + .ant-btn {
   margin-left: 10px;
@@ -19,6 +22,10 @@ a + a {
 .ant-menu-inline {
   border-inline-end-color: transparent !important;
 }
+// 隐藏顶部菜单栏底部灰色线条
+.ant-menu-horizontal {
+  border-bottom-color: transparent !important;
+}
 // 去除 tabs 栏底部线条
 .ant-tabs-card >.ant-tabs-nav .ant-tabs-tab {
   border-bottom: none;
@@ -33,4 +40,15 @@ div[aria-hidden=true] { display: none !important; }
 .ant-menu-light.ant-menu-horizontal >.ant-menu-item::after {
   left: 5px;
   right: 5px;
+}
+// 菜单项鼠标移入后，图标放大
+.ant-menu-item .anticon svg {
+  transition: transform .3s;
+}
+.ant-menu-item-active {
+  &:hover {
+    .anticon svg {
+      transform: scale(1.2);
+    }
+  }
 }

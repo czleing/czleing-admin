@@ -80,7 +80,7 @@ const treeConfig = {
 const filterConfig = {
   // useCache: true, // 使用查询条件暂存，默认 false
   // cacheBtnText: '记住查询', // 暂存按钮文字，默认 '记住查询'
-  // col: { sm: 8, lg: 6, xxl: 4 }, // 所有表单项栅格设置，默认：{ sm: 8, lg: 6, xxl: 4 }，参照 a-col
+  col: { sm: 8, lg: 6, xxl: 6 }, // 所有表单项栅格设置，默认：{ sm: 8, lg: 6, xxl: 4 }，参照 a-col
   labelCol: { flex: '80px' }, // 所有表单项文本部分栅格设置，默认：文本宽度，单行时可以不用设置，多行时建议设置统一宽度，参照 a-col
   // wrapperCol: { span: 18 }, // 所有表单项控件部分栅格设置，默认：控件宽度，参照 a-col
   // buttonsCol: { flex: 'auto' }, // 查询重置等按钮栅格设置，默认：{ span: 4 },
@@ -796,11 +796,26 @@ const modalConfig = computed(() => ({
           // maxCount: 10,
           columns: [
             {
+              title: '序号',
+              dataIndex: 'sort',
+              type: EControlType.eCustom,
+              width: 50,
+              align: 'center',
+              props: {
+                component: { // table 内的组件拥有单元格相关信息： cellInfo = { text, record, index, column }
+                  render ({ $attrs }) {
+                    return h('span', $attrs.cellInfo.index + 1)
+                  }
+                }
+              },
+            },
+            {
               // 表格列字段参考 DynamicTable 的 props.columns
               title: '字段1',
               tooltip: '字段1描述',
               dataIndex: 'field1',
               type: EControlType.eInput,
+              // isView: true, // 查看模式
               disabled: (record, records) => record.field2 === 2, // Boolean | (record, records) => Boolean
               required: (record, records) => record.field2 === 1, // Boolean | (record, records) => Boolean
               // rules: [], // 不生效，请用 validator
@@ -811,7 +826,8 @@ const modalConfig = computed(() => ({
                 }
                 // 正确时无需返回
               },
-              props: {
+              props: { // 组件属性配置，支持对象和函数，没有可以不配，Object | (record, records) => Object
+                // placeholder: '', // 默认根据 title 生成; 支持字符串和函数，string | (record, records) => string
                 // onChange (val, record, records) {
                 //   console.log(val, record, records)
                 // }
@@ -853,9 +869,12 @@ const modalConfig = computed(() => ({
         type: EControlType.eCustom,
         // singleLine: true,
         props: {
+          diyProp: '自定义属性',
           // component：vue组件，对象或返回对象的函数 Object || (formData) => Object
           component: {
-            render () { return h('span', {}, '自定义组件8888') }
+            render (ctx) {
+              return h('span', {}, ['自定义组件8888', ctx.$attrs.diyProp])
+            }
           }
           // 或者 使用全局组件, import { resolveComponent } from 'vue'
           // component: resolveComponent('DictView'),
