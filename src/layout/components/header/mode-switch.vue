@@ -1,7 +1,7 @@
 <!-- 切换明暗色系相关 -->
 <template>
   <a-tooltip placement="top" :title="$t('frame.themeMode')">
-    <div class="mode-switch pointer" :class="{'is-dark': isDark}" @click="changeMode">
+    <div class="mode-switch pointer" :class="{'is-dark': isBtnDark}" @click="changeMode">
       <div class="stars"></div>
       <div class="sun-moon"></div>
       <div class="cloud"></div>
@@ -11,33 +11,36 @@
 <script setup>
 import { useSettingStore } from '@/stores/setting-store.js'
 const settingStore = useSettingStore()
-const isDark = ref(settingStore.isDark)
+const isBtnDark = ref(settingStore.isDark)
 const root = document.documentElement;
 
 watch(
   () => settingStore.isDark,
   () => {
-    isDark.value = settingStore.isDark
+    isBtnDark.value = settingStore.isDark
   }
 )
 
 async function changeMode (e) {
   const x = e.clientX, y = e.clientY;
   if (!document.startViewTransition) {
-    isDark.value = !isDark.value
+    isBtnDark.value = !isBtnDark.value
+    await sleep(200)
     settingStore.toggleMode()
     return
   }
-  isDark.value = !isDark.value
-  await sleep(200)
+  isBtnDark.value = !isBtnDark.value;
+  await sleep(200);
   const vt = document.startViewTransition(async () => {
-    settingStore.toggleMode()
+    settingStore.toggleMode();
+    await nextTick();
     await nextTick();
   })
   vt.ready.then(() => playEffect(x, y))
 }
 function playEffect(x, y) {
   let frames = null
+  const isToDark = settingStore.isDark
   if (settingStore.modeAnimate === 'circle') {
     // 亮 -> 暗， 暗色(new)在上，由小到大
     // 暗 -> 亮， 暗色(old)在上，由大到小
@@ -45,46 +48,54 @@ function playEffect(x, y) {
     const start = `circle(0px at ${x}px ${y}px)`;
     const end = `circle(${maxR}px at ${x}px ${y}px)`;
     frames = [
-      { clipPath: isDark.value ? start : end }, // 0%
-      { clipPath: isDark.value ? end : start } // 100%
+      { clipPath: isToDark ? start : end }, // 0%
+      { clipPath: isToDark ? end : start } // 100%
     ]
   } else {
     frames = [
-      { filter: isDark.value ? 'blur(10px)' : 'blur(0px)', opacity: isDark.value ? 0 : 1 },
-      { filter: isDark.value ? 'blur(0px)' : 'blur(10px)', opacity: isDark.value ? 1 :0 }
+      { filter: isToDark ? 'blur(10px)' : 'blur(0px)', opacity: isToDark ? 0 : 1 },
+      { filter: isToDark ? 'blur(0px)' : 'blur(10px)', opacity: isToDark ? 1 : 0 }
     ]
   }
+  // fill: 'both' 解决了闪屏问题，但是带来了新问题：上一次old动画结束后，::view-transition-old(root) 永久保持在了最后一帧(消失时的样子)
+  // 导致在下一次动画时，::view-transition-old(root) 一开始就处于消失状态，为了解决这个问题，需要额外开启一个动画将 old 的状态恢复原状
+  isBtnDark.value && root.animate([{ opacity: 1, filter: 'none', clipPath: 'none' }], {
+    duration: 0,
+    pseudoElement: '::view-transition-old(root)',
+    fill: 'both'
+  });
   frames && root.animate(frames, {
     duration: 650,
     easing: 'linear',
-    pseudoElement: isDark.value ? '::view-transition-new(root)' : '::view-transition-old(root)',
-    fill: 'both'
+    pseudoElement: isToDark ? '::view-transition-new(root)' : '::view-transition-old(root)',
+    fill: 'both' // 解决了动画结束后屏幕闪一下的问题
   });
 }
 </script>
-<style lang="less">
+<style>
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none !important;
   mix-blend-mode: normal;
+  /* width: 200px;
+  height: 200px; */
 }
 ::view-transition-old(root) {
-  z-index: 999;
-  // left: 30px;
-  // top: 90px;
+  z-index: 99;
+  /* left: 0px;
+  top: 0px; */
 }
 ::view-transition-new(root) {
   z-index: 1;
-  // left: 90px;
-  // top: 30px;
+  /* left: 200px;
+  top: 0px; */
 }
 [theme='dark']::view-transition-old(root)  {
   z-index: 1;
 }
 [theme='dark']::view-transition-new(root)  {
-  z-index: 999;
+  z-index: 99;
 }
-
 </style>
 <style scoped lang="less">
 .mode-switch {

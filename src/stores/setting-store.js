@@ -52,6 +52,19 @@ const themes = [
         colorInfo: '#f64040'
       }
     }
+  },
+  {
+    name: '自定义',
+    theme: {
+      isDiy: true,
+      token: {
+        colorPrimary: '#0099ff',
+        colorError: '#c84e4e',
+        colorWarning: '#e2b14c',
+        colorSuccess: '#3dbd3e',
+        colorInfo: '#65a6d1',
+      }
+    }
   }
 ]
 
@@ -77,17 +90,19 @@ export const useSettingStore = defineStore('setting', () => {
     if (!name) return
     const t = themes.find(item => item.name === name)?.theme
     if (t) {
-      theme.value = { token: { ...t.token } }
+      theme.value = { ...t, token: { ...t.token } }
       themeName.value = name
     }
   }
 
   function setDark () {
     mode.value = 'dark'
+    document.documentElement.setAttribute('theme', 'dark')
   }
 
   function setLight () {
     mode.value = 'light'
+    document.documentElement.setAttribute('theme', 'light')
   }
 
   function toggleMode () {

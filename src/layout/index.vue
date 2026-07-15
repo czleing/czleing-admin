@@ -52,8 +52,6 @@ const isAnimating = ref(false)
 watch(
   () => token.value,
   () => {
-    // 设置整个网页的默认字体颜色跟随主题变化
-    document.documentElement.setAttribute('theme', settingStore.mode)
     // 动态设置css变量，跟随 ant-design 主题，可根据需要扩展，参考： https://www.antdv.com/docs/vue/customize-theme-cn#api
     setRootCssVars('--ant-', {
       colorText: token.value.colorText,
@@ -64,11 +62,12 @@ watch(
       colorError: token.value.colorError,
       colorBorder: token.value.colorBorder,
       colorBorderSecondary: token.value.colorBorderSecondary,
-      colorBgContainer: token.value.colorBgContainer,
-      colorBgElevated: token.value.colorBgElevated,
-      colorBgLayout: token.value.colorBgLayout,
-      borderRadius: token.value.borderRadius + 'px',
-      borderRadiusLG: token.value.borderRadiusLG + 'px',
+      colorBgContainer: token.value.colorBgContainer, // 组件的容器背景色，例如：默认按钮、输入框等。务必不要将其与 `colorBgElevated` 混淆。
+      colorBgElevated: token.value.colorBgElevated, // 浮层容器背景色，在暗色模式下该 token 的色值会比 `colorBgContainer` 要亮一些。例如：模态框、弹出框、菜单等。
+      colorBgLayout: token.value.colorBgLayout, // 该色用于页面整体布局的背景色，只有需要在页面中处于 B1 的视觉层级时才会使用该 token，其他用法都是错误的
+      controlHeight: token.value.controlHeight, // 基础控件高度
+      borderRadius: token.value.borderRadius + 'px', // 基础控件圆角大小
+      borderRadiusLG: token.value.borderRadiusLG + 'px', // 一般用于容器圆角大小
     })
   },
   { deep: true, immediate: true }

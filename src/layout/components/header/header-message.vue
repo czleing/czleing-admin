@@ -8,7 +8,7 @@
       <template #content>
         <div class="flex-x-between mb10">
           <div class="bold">通知消息</div>
-          <div class="text-primary pointer">查看全部</div>
+          <div class="text-info pointer">查看全部</div>
         </div>
         <div class="list-container flex-y">
           <div class="flex-auto list px10">

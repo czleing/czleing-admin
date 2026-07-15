@@ -18,6 +18,7 @@
               </a-select-option>
             </a-select>
             <a-tooltip
+              v-if="!settingStore.theme.isDiy"
               placement="top"
               v-for="(kv, index) in currColors"
               :key="index"
@@ -28,6 +29,14 @@
               <span class="color-box" :class="{'ml20': index === 0}" :style="{ backgroundColor: kv[1] }" />
             </a-tooltip>
           </a-space>
+        </a-form-item>
+        <a-form-item v-if="settingStore.theme.isDiy" label=" " :colon="false">
+          <div class="theme-diy flex-y">
+            <label v-for="[key, value] in Object.entries(settingStore.theme.token)" class="theme-diy__item flex-x-between gap10">
+              <div class="label">{{ $t(`frame.${key}`) }}</div>
+              <input type="color" :value="settingStore.theme.token[key]" class="value" @change="e => settingStore.theme.token[key] = e.target.value" />
+            </label>
+          </div>
         </a-form-item>
         <a-form-item :label="$t('frame.menuLayout')">
           <a-segmented v-model:value="settingStore.menuLayout" :options="menuLayoutOptions">
@@ -150,6 +159,24 @@ const handleLocalChange = lc => {
   background-color: var(--ant-colorBgContainer);
   &:hover {
     box-shadow: 0 0 0 3px var(--ant-colorPrimary);
+  }
+}
+.theme-diy {
+  &__item {
+    background-color: transparent;
+    padding: 5px;
+    border-radius: var(--ant-borderRadius);
+    transition: all .3s;
+    &:hover {
+      background-color: var(--ant-colorBgLayout);
+    }
+    .label {
+      width: 100px;
+    }
+    .value {
+      border-color: var(--ant-colorBorderSecondary);
+      background-color: var(--ant-colorBgContainer);
+    }
   }
 }
 </style>
