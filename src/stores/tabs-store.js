@@ -104,7 +104,6 @@ export const useTabsStore = defineStore('tabs', {
         return []
       }
       const currTab = this.tabList[this.currentIndex]
-      console.log('currTab', currTab)
       const currComName = currTab?.matched?.at(-1)?.componentName
       const cachedViews = this.tabList.map(tab => {
         const componentName = tab.matched.at(-1)?.componentName
