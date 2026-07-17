@@ -78,7 +78,18 @@ const developerRoutes = [
           icon: 'ApiOutlined',
           target: '_blank',
         }
-      }
+      },
+      {
+        path: '/developer/form',
+        component: () => import('@/views/modules/example/form/index.vue'),
+        meta: {
+          title: '表单示例',
+          icon: 'ExperimentOutlined',
+          isLeaf: true,
+          matchedPaths: ['/developer', '/developer/form'],
+          cache: true
+        }
+      },
     ]
   }
 ]

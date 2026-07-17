@@ -103,7 +103,7 @@ const currFields = computed(() => {
       if (item.type === EControlType.eDate) {
         pushDateFields(item.fieldName)
       } else if (item.type === EControlType.eDateRange) {
-        pushDateRangeFields(item.fieldName, item.props.fieldNames)
+        pushDateRangeFields(item.fieldName, item.props?.fieldNames)
       } else if (item.type === EControlType.eTable) {
         // 表格类型，根据 columns 自动生成 rules
         setTableRules(item)
@@ -183,7 +183,9 @@ function setFormData (data = props.detail, includeFieldNames = fieldNamesArr.val
       } else if (dateRangeFields.includes(fieldName)) {
         const fieldNames = rangeFieldNamesMap[fieldName]
         if (Array.isArray(fieldNames) && fieldNames.length === 2) {
-          if (data[fieldNames[0]] && data[fieldNames[1]]) {
+          if (data[fieldName]) {
+            formData[fieldName] = data[fieldName] ?? defaultObject.value[fieldName]
+          } else if (data[fieldNames[0]] && data[fieldNames[1]]) {
             formData[fieldName] = [dayjs(data[fieldNames[0]]), dayjs(data[fieldNames[1]])]
           }
         } else {

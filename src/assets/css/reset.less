@@ -44,12 +44,12 @@ div[aria-hidden=true] { display: none !important; }
   right: 5px;
 }
 // 菜单项鼠标移入后，图标放大
-.ant-menu-item .anticon svg {
-  transition: transform .3s;
+.ant-menu-item .anticon, .ant-menu-submenu-title .anticon {
+  transition: all .3s !important;
 }
-.ant-menu-item-active {
+.ant-menu-item-active, .ant-menu-submenu-title {
   &:hover {
-    .anticon svg {
+    .anticon {
       transform: scale(1.2);
     }
   }

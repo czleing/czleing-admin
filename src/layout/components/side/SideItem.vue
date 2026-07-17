@@ -1,7 +1,7 @@
 <template>
   <a-sub-menu :key="menuInfo.path">
     <template v-if="menuInfo.meta?.icon" #icon>
-      <a-icon :type="menuInfo.meta.icon" />
+      <a-icon :type="menuInfo.meta.icon" class="pl5" />
     </template>
     <template #title>{{ menuInfo.meta.title }}</template>
     <template v-for="item in menuInfo.children" :key="item.path">
@@ -11,7 +11,7 @@
           @click="handleMenuItem(item)"
         >
           <template #icon>
-            <a-icon v-if="item.meta.icon && item.meta.icon !== '#'" :type="item.meta.icon" />
+            <a-icon v-if="item.meta.icon && item.meta.icon !== '#'" :type="item.meta.icon" class="pl5" />
           </template>
           {{ item.meta.title }}
         </a-menu-item>
