@@ -107,17 +107,49 @@ const emits = defineEmits(['update:value', 'change'])
 </style>
 <style>
 html[theme='dark'] {
-  --w-e-toolbar-color: #e0e0e0;
-  --w-e-toolbar-bg-color: #1f1f1f;
-  --w-e-textarea-bg-color: #141414;
-  --w-e-textarea-color: #e0e0e0;
-  --w-e-textarea-border-color: #434343;
-  --w-e-textarea-slight-border-color: #434343;
-  --w-e-textarea-slight-color: #595959;
-  --w-e-textarea-slight-bg-color: #262626;
-  --w-e-textarea-selected-border-color: #177ddc;
-  --w-e-textarea-handler-bg-color: #177ddc;
-  --w-e-toolbar-active-bg-color: #111b26;
-  --w-e-toolbar-active-color: #177ddc;
+  --w-e-textarea-bg-color: #1d1d1d1d;
+  --w-e-textarea-color: #ffffff;
+  --w-e-textarea-border-color: #f0f0f0;
+  --w-e-textarea-slight-border-color: #3b3b3b;
+  --w-e-textarea-slight-color: #424242;
+  --w-e-textarea-slight-bg-color: #1d1c1c;
+  --w-e-textarea-selected-border-color: #1f252c; /* 选中的元素，如选中了分割线 */
+  --w-e-textarea-handler-bg-color: #152e4e; /* 工具，如图片拖拽按钮 */
+
+  --w-e-toolbar-color: #cccccc;
+  --w-e-toolbar-bg-color: #20202020;
+  --w-e-toolbar-active-color: #ffffff;
+  --w-e-toolbar-active-bg-color: #30303060;
+  --w-e-toolbar-disabled-color: #5e5e5e;
+  --w-e-toolbar-border-color: #303030;
+
+  --w-e-modal-button-bg-color: #414141;
+  --w-e-modal-button-border-color: #555;
 }
+.editor-container .w-e-bar {
+	border-radius: 10px 10px 0 0;
+}
+.editor-container .w-e-text-container {
+	border-radius: 0 0 10px 10px;
+}
+.editor-container .w-e-scroll {
+	scrollbar-color: rgba(155, 155, 155, .3) transparent;
+}
+.editor-container .w-e-modal, .editor-container .w-e-bar-item-menus-container, .editor-container .w-e-drop-panel, .editor-container .w-e-select-list {
+	backdrop-filter: blur(10px);
+}
+.editor-container .w-e-menu-tooltip-v5:before {
+	background-color: var(--w-e-toolbar-active-color);
+	color: var(--w-e-toolbar-border-color);
+}
+html[theme='dark'] .w-e-full-screen-container {
+	background-color: rgba(30, 30, 40, 1);
+}
+.editor-container .w-e-hover-bar { background-color: #242424; }
+.editor-container .w-e-select-list { backdrop-filter: blur(20px); }
+/* 表格默认样式 */
+/* .WangPreview table { border-collapse: collapse; }
+.WangPreview th { background-color: rgba(155, 155, 155, .1); }
+.WangPreview th, .WangPreview td { border: 1px solid rgba(155, 155, 155, .2); padding: 2px 5px; }
+.WangPreview img { max-width: 100% !important; } */
 </style>
