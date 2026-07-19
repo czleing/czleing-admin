@@ -117,7 +117,7 @@ function setData () {
   freeForm.value.setFormData({
     name: '张三',
     sex: '1',
-    dateRange: [dayjs('2026-07-16'), dayjs('2026-07-17')]
+    dateRange: [dayjs('2026-01-01'), dayjs('2026-12-30')]
   })
 }
 async function getData1 () {
