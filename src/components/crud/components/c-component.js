@@ -27,6 +27,7 @@ export default defineComponent({
      * url: '', // 获取动态数据源的地址
      * method: '', // 获取动态数据源的请求方式
      * params: {} // 获取动态数据源的参数，参数有可能是从表单中动态获取
+     * autoRefresh: true, // 是否每次弹窗后自动刷新
      * converter: (res) => res // 数据源数据转换器，在查询到数据后可对数据进行修改
      */
     const dataSource = ref()

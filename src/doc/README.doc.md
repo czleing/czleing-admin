@@ -35,8 +35,8 @@ const goodsList = await api.post('/goods/list', { priceRange: [10, 100] })
 
 ### 3、样式
 - 框架中自带了一套基础样式库(原子样式)：`@/assets/css/base.less`，基本可以覆盖90%的场景，无法覆盖的单独写样式即可
-- less 中可使用 ant-design 的全局静态变量 @colorPrimary 等，但此变量不会跟随主题动态切换而变化，
-需要跟随变化请使用动态方式获取，token 内部的变量名参考[官网](https://www.antdv.com/docs/vue/customize-theme-cn)，如下：
+- less、组件中可使用 ant-design 的全局静态变量 @colorPrimary 等，但此变量不会跟随主题动态切换而变化，
+需要跟随变化请使用动态方式获取或使用全局 css 变量，token 内部的变量名参考[官网](https://www.antdv.com/docs/vue/customize-theme-cn)，如下：
 ```js
 import { useThemeToken } from '@/hooks/useThemeToken.js'
 const { token } = useThemeToken()
@@ -155,12 +155,19 @@ function onConfirm (close, extraData) {
 
 
 ### 8、CRUD快速开发案例(可直接代码生成，菜单：开发中心->代码生成)
-#### 步骤一：先在数据库中设计表结构
-#### 步骤二：然后本地启动进入菜单‘开发中心->代码生成’导入表并编辑相关信息
-#### 步骤三：预览并一键生成菜单及CRUD前后端代码
-#### 步骤四：查看生成结果或对特殊字段、控件的属性进行自定义修改
+- 步骤一：先在数据库中设计表结构
+- 步骤二：然后本地启动进入菜单‘开发中心->代码生成’导入表并编辑相关信息
+- 步骤三：预览并一键生成菜单及CRUD前后端代码
+- 步骤四：查看生成结果或对特殊字段、控件的属性进行自定义修改
 
 #### 8.1、CRUD 简单案例：
+全局组件 CPage 封装了查询、左侧树形筛选、列表、树形列表、新增、修改、详情、删除、导入、导出、启用、禁用等功能，通过配置选择使用，CPage 分为四块区域，查询区、工具栏区、表格区、新增\修改\详情弹窗区，每块区域对应独立配置，可以很快速很简单实现一个增删查改功能，接口地址、权限默认根据当前路由生成，可以不用设置
+
+- filterConfig: 查询区域配置
+- toolsConfig: 工具栏区域配置
+- tableConfig: 表格区域配置
+- modalConfig: 新增\修改\详情弹窗区域配置
+
 ```html
 <!-- xxx管理 -->
 <template>
@@ -221,9 +228,61 @@ function onConfirm (close, extraData) {
 ```
 
 #### 8.2、全配置参考案例：[demo-page](../views/demo/demo-page.vue)
+既是案例也是文档，也可以访问[CPage 使用文档](./README.cpage.md)
 
+#### 8.3、CRUD 里部分组件也可单独使用，如：src/components/crud/components 下的 c-form、c-component、c-import、c-tree、c-table 等，如：
+```html
+<template>
+  <c-form
+    :auto-reset="false"
+    :show-cancel="false"
+    :form-config="formConfig"
+    @submit-handle="onSubmitHandle"
+  />
+</template>
+<script setup>
+import cForm from '@/components/crud/components/c-form.vue';
+const formConfig = {
+  fields: [
+    {
+      label: '姓名',
+      fieldName: 'name',
+      required: true
+    },
+    {
+      label: '性别',
+      fieldName: 'sex',
+      type: EControlType.eRadio,
+      rules: { required: true, message: '请选择性别' },
+      props: {
+        dictType: 'sys_user_sex'
+      }
+    },
+    {
+      label: '职位',
+      fieldName: 'post',
+      type: EControlType.eSelect,
+      props: {
+        remote: {
+          url: '/system/post/select',
+          converter (list) {
+            return list.map(item => ({
+              id: item.postId,
+              name: item.postName
+            }))
+          }
+        }
+      }
+    },
+  ]
+}
+async function onSubmitHandle (submitData) {
+  console.log('校验通过，提交的数据为：', submitData)
+}
+</script>
+```
 
-#### 8.3、与传统开发模式对比：
+#### 8.4、与传统开发模式对比：
 ```html
 <!-- 传统的写法，需要编写大量 Dom 和 js，代码杂乱 -->
 ...
@@ -287,8 +346,8 @@ function onXxxChange (e) {
 ...
 </script>
 ```
-### 9、表单联动方式
-#### 在表单配置中
+### 9、表单联动
+#### 在表单配置中，大部分属性支持函数动态取值，属性从静态到动态只需将值换成函数即可，无需引入新的属性、新的概念、新的配置，即可实现复杂的表单联动，让开发尽可能的简单、轻松、无负担
 ```javascript
 /**
  * 新增、修改、详情弹窗配置

@@ -127,7 +127,6 @@ const filterConfig = {
       label: '选择部门',
       fieldName: 'deptId',
       type: EControlType.eTreeSelect,
-      required: true,
       props: {
         fieldNames: { value: 'id', label: 'label' },
         remote: {
@@ -883,7 +882,7 @@ const modalConfig = computed(() => ({
           // 其他属性在同级设置
           // props1: ''
           // modelProps: 'checkedKeys', // 自定义组件的 v-model:value 字段 默认是 value
-          // modelEvent: 'onCheck', // 自定义组件的 v-model 事件字段，默认是 update:value
+          // modelEvent: 'onCheck', // 自定义组件的 v-model 事件字段，默认是 'onUpdate:value'
           // modelData: 'treeData', // 自定义组件的 dataSource 字段
           // renderNeedDataSource: true // 需要有数据源才渲染
         }

@@ -525,9 +525,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       controlProps[props.modelEvent] = emitUpdate // onChange
     }
     // 自定义数据源字段
-    if (props.modelData) {
-      controlProps[props.modelData] = dataSource
-    }
+    controlProps[props.modelData ?? 'dataSource'] = dataSource
     // 需要有数据源才渲染，解决 ant-design-vue 4 异步数据源导致部分属性失效问题
     if (props.renderNeedDataSource) {
       if (isEmpty(dataSource)) {
