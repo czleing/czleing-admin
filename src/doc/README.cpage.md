@@ -1,4 +1,5 @@
 # CPage 组件使用文档
+AI 基于 [demo-page](../views/demo/demo-page.vue) 总结
 ## 目录
 - 概览（CPage 顶级 Props / Events）
 - treeConfig（左侧筛选树配置）
@@ -9,6 +10,33 @@
 - 其它回调函数（生命周期钩子）
 - 常见属性参考（表格列、表单字段类型枚举说明）
 
+```html
+  <CPage
+    hasImport
+    hasExport
+    hasGoBack
+    primary-key="id"
+    :no-add="false"
+    :no-delete="false"
+    :no-select="false"
+    :no-tools="false"
+    :api-config="{}"
+    :api-option-config="{}"
+    :permission-config="{}"
+    :tree-config="treeConfig"
+    :filter-config="filterConfig"
+    :tools-config="toolsConfig"
+    :table-config="tableConfig"
+    :modal-config="modalConfig"
+    :before-search="beforeSearch"
+    :after-search="afterSearch"
+    :before-submit="beforeSubmit"
+    :after-submit="afterSubmit"
+    :after-open-modal="afterOpenModal"
+    :transform-detail="transformDetail"
+  />
+```
+
 ## 一、CPage 顶级 Props / Events
 | 属性 | 类型 | 说明 | 默认 |
 |---|---:|---|---|
@@ -16,11 +44,11 @@
 | hasImport | Boolean | 是否显示导入按钮 | false |
 | hasExport | Boolean | 是否显示导出按钮 | false |
 | hasGoBack | Boolean | 是否显示返回按钮 | false |
+| primary-key | String | 主键字段名 | "id" |
 | :no-add | Boolean | 禁用新增按钮（true 则隐藏） | false |
 | :no-delete | Boolean | 禁用批量删除（true 则隐藏） | false |
 | :no-select | Boolean | 禁用行选择（true 则不显示选择列） | false |
 | :no-tools | Boolean | 禁用工具栏（true 则隐藏工具区） | false |
-| primary-key | String | 主键字段名 | "id" |
 | :api-config | Object | 预设接口地址配置，支持：list, add, update, detail, delete, toggle, import, importTemplate, export | 根据路由自动生成 |
 | :api-method-config | Object | 请求方式配置 | 默认全部 post |
 | :api-option-config | Object | 请求额外选项（如 headers） | {} |
@@ -33,9 +61,14 @@
 | :before-search | Function | 查询前处理 (searchParams) => searchParams | 返回传入参数 |
 | :after-search | Function | 查询后处理 (list) => list | 返回传入列表 |
 | :before-submit | Function | 提交前处理 (submitData) => submitData | 返回传入数据 |
-| :after-submit | Function | 提交成功后执行 (ctx) => void | — |
-| :after-open-modal | Function | 弹窗打开后 (ctx) => void | — |
-| :transform-detail | Function | 编辑/详情时转换接口返回 detail (detail, ctx) => detail | 返回原 detail |
+| :after-submit | Function | 提交成功后执行 ({...}) => void | — |
+| :after-open-modal | Function | 弹窗打开后 ({...}) => void | — |
+| :transform-detail | Function | 编辑/详情时转换接口返回 detail (detail, {...}) => detail | 返回原 detail |
+| header | slot | 头部插槽 | - |
+| filter | slot | 头部插槽 | - |
+| tools | slot | 头部插槽 | - |
+| table | slot | 头部插槽 | - |
+| table_xxx | slot | 表格单元格动态插槽，插槽参数：{ text, record, index, column } | - |
 | ... | - | 其他属性可以根据需要自由扩展 | - |
 
 ---
@@ -69,7 +102,7 @@ const treeConfig = {
 | labelCol | Object | 全局 label 栅格 { flex: '80px' }（示例） | { span: 6 } |
 | wrapperCol | Object | 全局控件栅格 { flex: 'auto' }（示例） | { span: 18 } |
 | buttonsCol | Object | 按钮列栅格 { flex: 'auto' }（示例） | { span: 4 } |
-| buttonsAlign | String | 按钮对齐 left|center|right | 'left' |
+| buttonsAlign | String | 按钮对齐 left\|center\|right | 'left' |
 | fields | Array | 字段数组，每项为 FieldConfig | 必填（视需求） |
 | ... | - | 其他属性可以根据需要自由扩展 | - |
 
@@ -175,6 +208,8 @@ const toolsConfig = computed(() => ({
 | fixed | String | 固定列 'left'\|'right' |
 | tooltip | String | * 标题提示 |
 | unit | String | * 单位，会拼在值后面（例如 '20 元'） |
+| useTotal | Boolean | * 该列是否使用合计，会在表格底部增加一栏合计，汇总该列的值 |
+| hidden | Boolean | * 该列是否暂时隐藏，可通过列筛选器勾选显示 |
 | dictType | String | * 按字典解析显示 |
 | slot | String | * 插槽名，为避免和其他插槽冲突，建议使用 `table_` + dataIndex 格式命名, 在 CPage 内通过 <template #table_xxx="{ text, record, index, column }"> 使用 |
 | type | String | * 预处理类型，自动解析（可选值：isEnabled、Boolean）其他类型可自行扩展 |
@@ -183,7 +218,7 @@ const toolsConfig = computed(() => ({
 | dateFormat | String | * dayjs日期格式化字符串，日期类型转换为自定义格式 |
 | hideChar | Array | * 脱敏配置 [leftNum,rightNum,replacement] |
 | default | any | * 默认值，如 '-' 或 HTML 字符串 |
-| action | Array \| Function | * 操作列配置或生成配置的函数: (options) => Object |
+| action | Array \| Function | * 操作列配置或生成配置的函数: (options) => Array |
 | actionShowNum | Number | * 操作列显示几个按钮，超出的将收进更多 |
 | actionMoreText | String | * 更多按钮文本，默认"更多" |
 | ... | - | 其他属性可以根据需要自由扩展 | - |
@@ -252,20 +287,37 @@ const toolsConfig = computed(() => ({
 | labelCol | Object | 表单项文本部分栅格设置，参照 a-col，{ flex: '120px' }、{ span: 6 } | - |
 | wrapperCol | Object | 表单项控件部分栅格设置，参照 a-col，{ flex: '1 1 auto' }、{ span: 18 } | - |
 | defaultValue | any | 初始值 | - |
-| rules | Object \| Array \| formData => { return {} \|\| [] } | 校验规则，与 \<a-form-item> 一致 | - |
+| rules | Object \| Array \| formData => { return {} \|\| [] } | 校验规则，与 \<a-form-item> rules 一致 | - |
 | tooltip | String \| Function | 额外浮窗提示 | - |
 | extra | String \| Function | 额外底部提示 | - |
 | props | Object \| formData => Object | 透传给控件的 props（包括 remote 配置） | - |
 | detailConfig | Object | 详情模式覆盖配置 | - |
 | ... | - | 其他属性可以根据需要自由扩展 | - |
 
-**所有表单控件 Field.props 的公共属性**
+**所有表单控件 Field.props 的特殊属性**
 | 属性 | 类型 | 说明 | 默认值 |
 |---|---:|---|---|
 | isView | Boolean | 是否查看模式，是则只展示文本，在表单中会自动根据当前模式设置，正常无需设置 | - |
+| useAll | Boolean | 带数据源的组件(select,radio,checkbox,autoComplete等)是否在前面添加全部，{ label: '全部', value: null } | - |
+| useRefresh | Boolean | 带动态数据源的组件，是否在组件后面添加刷新按钮 | - |
 | dictType | String | 对应字典类型，自动根据该类型查询出字典数据绑定到控件上，仅 select、autoComplete、radio、checkbox 等需要字典数据源的控件支持 | - |
 | remote | Object | 远程数据源配置，仅需要动态数据源的控件支持 | - |
 | onChange | Function | 值改变事件，经过框架重写，回调函数中能拿到表单数据对象进行表单联动，(val, ...args, formData) => {}，注：控件类型不同，入参的个数及顺序会有差异 | - |
+| ... | - | 其他属性可以根据需要自由扩展 | - |
+
+```javascript
+{
+  label: 'xxx',
+  fieldName: 'xxx',
+  type: EControlType.eSelect,
+  props: {
+    useAll: true,
+    useRefresh: false,
+    dictType: 'sys_user_sex',
+    onChange (val, option, formData) {}
+  }
+}
+```
 
 **field.props.remote** 属性说明：
 | 属性 | 类型 | 说明 | 默认值 |
@@ -308,3 +360,5 @@ const toolsConfig = computed(() => ({
 - 操作列 callback 可返回 async 函数并在执行后调用 cPage.value.refresh() 刷新列表。
 
 ---
+
+### 更多参考及全配置使用示例请参考：[demo-page](../views/demo/demo-page.vue)，demo-page 永远是最好最全的文档

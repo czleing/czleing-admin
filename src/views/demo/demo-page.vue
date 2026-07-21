@@ -741,9 +741,16 @@ const modalConfig = computed(() => ({
         type: EControlType.eFileUpload,
         tooltip: '仅支持 zip/rar 文件',
         props: {
+          valueType: 'String', // 值类型，文件对象数组，或图片地址逗号分隔字符串 Array | String
           accept: '.zip,.rar',
-          maxCount: 5, // 最大上传文件数量
-          fileSize: 2 * 1024 // kb
+          // btnText: '上传文件', // 上传按钮文字
+          // maxCount: 5, // 最大上传文件数量
+          // fileSize: 2 * 1024, // kb
+          // disabled: false,
+          // data: { prefix: 'temp' }, // 文件服务根目录下的子文件夹名，不带 '/'，默认 temp
+          // name: 'file', // 定义文件上传字段名，默认 file
+          // multiple: false, // 是否可一次选择多个文件，默认 false
+          // ... 其他继承自 a-upload 的属性
         }
       },
       {
@@ -751,6 +758,16 @@ const modalConfig = computed(() => ({
         fieldName: 'imageUpload',
         type: EControlType.eImageUpload,
         props: {
+          // valueType: 'String', // 值类型，文件对象数组，或图片地址逗号分隔字符串 Array | String
+          // maxCount: 10, // 文件数量限制
+          // fileSize: 1024 * 10, // 文件大小限制，单位KB
+          // btnText: '上传图片', // 上传按钮文字
+          // accept: 'image/*',
+          // disabled: false,
+          // data: { prefix: 'temp' }, // 文件服务根目录下的子文件夹名，不带 '/'，默认 temp
+          // name: 'file', // 定义文件上传字段名，默认 file
+          // multiple: false, // 是否可一次选择多个文件，默认 false
+          // ... 其他继承自 a-upload 的属性
         }
       },
       {
