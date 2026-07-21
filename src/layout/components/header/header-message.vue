@@ -23,7 +23,7 @@
             </div>
             <a-empty v-if="total === 0" description="暂无消息" />
           </div>
-          <div class="tc mt5" v-if="total > 0">
+          <div class="tr mt5" v-if="total > 0">
             <a-pagination
               size="small"
               :current="pageParam.pageNum"

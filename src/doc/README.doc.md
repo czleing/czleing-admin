@@ -1,17 +1,6 @@
 ## 使用文档、手册
-### 1、规范
-- 请保持项目目录/文件干净整洁、风格统一
-- 编写组件或页面文件首行请注明该组件/页面的说明、用途、用法等
-- 使用两个空格代替缩进符，避免不同系统下缩进宽度不一致
-- 避免在模板中写复杂逻辑，应仅包含简单的属性绑定，避免写复杂的表达式或函数调用，保持模板清晰
-- 给组件添加属性时，遵守一定的优先顺序，指令 > 动/静态属性 > 事件，
-  如：`<input v-if="xxx" :maxlength="30" class="xxx" @input="onInputHandle" />`
-- 组件中 style 标签尽可能添加 `scoped`，避免全局样式污染，如：`<style scoped>`
-- 查询区域/表单区域使用日期/时间范围时，字段名设计统一使用'Begin'、'End'后缀，便于代码生成及使用默认值简化配置，如：xxxBegin, xxxEnd
-- 相对独立的小模块，尽可能单独抽离成一个组件，避免一个文件代码过长过杂，同时也要避免过多的组件嵌套
 
-
-### 2、接口请求
+### 1、接口请求
 接口请求摒弃了`restfull`规范及一接口一封装模式，而是采用通用的请求方式，method 统一使用 post，参数统一使用请求体传参，如：
 ```javascript
 import api from '@/api'
@@ -22,18 +11,14 @@ const goodsList = await api.post('/goods/list', { priceRange: [10, 100] })
 - 第一个参数为接口地址，第二个参数为请求参数，第三个参数为其他配置，可选，如 headers, content-type 的设置
 - Content-Type 统一为 application/json，一般情况无需设置
 - method 统一为 post
-- 传参位置：
-- get 请求，请求参数统一通过 params 传递(URL传参)
-- post、put、delete、download 请求，请求参数统一通过 data(request body) 传递(请求体传参)
-- 不存在同时设置两种参数，除非手动拼在URL后面(不推荐)
 - 统一 post 的好处是在对接接口时，只需关注 url 和 参数，不用关注 method、content-type、传参位置等其他内容，以及省去数据来回的类型转换，提高沟通和开发效率
 
 #### 响应
-- 框架对 axios 的二次封装，简化了获取响应数据步骤，对全局异常统一拦截处理，使业务不需要关注全局异常处理，全局异常如：未登录或登录失效、未绑定手机号码、用户状态异常等
-- <font color="orange">【局部异常：需要前端个别地方特殊处理的业务异常】请按正常状态(200)返回，将异常信息放在 data 里，避免被统一拦截<br/>【全局异常：前端统一处理的异常】直接返回4xx,5xx,6xx等状态，在响应拦截器中统一处理，如重新登录、业务异常错误提示</font>
+- 框架对 axios 的二次封装，简化了获取响应数据步骤，对全局异常统一拦截处理，使业务不需要关注全局异常处理
+- <font color="orange">【局部异常：需要前端个别地方特殊处理的业务异常】后端请按正常状态(200)返回，将异常信息放在 data 里，避免被统一拦截<br/>【全局异常：前端统一处理的异常】后端直接返回4xx,5xx,6xx等状态，在响应拦截器中统一处理，如重新登录、业务异常错误提示</font>
 - 返回结果就是业务数据，不用再每次请求都要通过一堆的 `.data` 去获取业务数据
 
-### 3、样式
+### 2、样式
 - 框架中自带了一套基础样式库(原子样式)：`@/assets/css/base.less`，基本可以覆盖90%的场景，无法覆盖的单独写样式即可
 - less、组件中可使用 ant-design 的全局静态变量 @colorPrimary 等，但此变量不会跟随主题动态切换而变化，
 需要跟随变化请使用动态方式获取或使用全局 css 变量，token 内部的变量名参考[官网](https://www.antdv.com/docs/vue/customize-theme-cn)，如下：
@@ -55,17 +40,19 @@ token.value.colorSuccess
 
 
 
-### 4、获取当前登录用户
+### 3、获取当前登录用户
 ```javascript
 import { useAuthStore } from '@/stores/auth-store.js'
 
 const authStore = useAuthStore()
-// 用户信息
+// 是否已登录
+console.log('是否已登录：', authStore.hasLogin)
+// 登录用户信息
 console.log('当前登录用户：', authStore.userInfo)
 ```
 
-### 5、权限控制
-使用自定义指令 `v-hasPermi`、`v-noPermi`
+### 4、权限控制
+使用自定义指令 `v-hasPermi`、`v-noPermi`、`v-hasRole`
 
 ```html
 <a-button v-hasPermi="'system:user:add'">新增</a-button>
@@ -75,13 +62,13 @@ console.log('当前登录用户：', authStore.userInfo)
 使用 hook
 ```javascript
 import usePermission from '@/hooks/usePermission'
-const { hasPermission } = usePermission()
+const { hasPermission, hasRole } = usePermission()
 if (hasPermission('system:user:add')) {
   // 有 system:user:add 权限
 }
 ```
 
-### 6、字典使用
+### 5、字典使用
 - CRUD 配置中使用，系统CRUD各部分组件已经深度集成了字典功能，在首次需要时加载，加载过的字典会缓存在内存中，避免频繁、重复加载，更新策略：刷新页面、手动点击刷新按钮、通过 useDict 第三个参数配置强制加载，dict-store 中提供了手动刷新方法：getDatasByType
 ```javascript
   // 表单组件中使用
@@ -120,7 +107,7 @@ useDict(['audit_status'], dict => {
 ```
 
 
-### 7、弹出模态框（简化版）
+### 6、弹出模态框（简化版）
 全局组件 `/global/CModal` 对 a-modal、a-drawer 进行了合并封装，简化了使用，属性设置支持标签上设置和调用时设置
 ```html
 <template>
@@ -154,13 +141,13 @@ function onConfirm (close, extraData) {
 ```
 
 
-### 8、CRUD快速开发案例(可直接代码生成，菜单：开发中心->代码生成)
+### 7、CRUD快速开发案例(可直接代码生成，菜单：开发中心->代码生成)
 - 步骤一：先在数据库中设计表结构
 - 步骤二：然后本地启动进入菜单‘开发中心->代码生成’导入表并编辑相关信息
 - 步骤三：预览并一键生成菜单及CRUD前后端代码
 - 步骤四：查看生成结果或对特殊字段、控件的属性进行自定义修改
 
-#### 8.1、CRUD 简单案例：
+#### 7.1、CRUD 简单案例：
 全局组件 CPage 封装了查询、左侧树形筛选、列表、树形列表、新增、修改、详情、删除、导入、导出、启用、禁用等功能，通过配置选择使用，CPage 分为四块区域，查询区、工具栏区、表格区、新增\修改\详情弹窗区，每块区域对应独立配置，可以很快速很简单实现一个增删查改功能，接口地址、权限默认根据当前路由生成，可以不用设置
 
 - filterConfig: 查询区域配置
@@ -227,10 +214,10 @@ function onConfirm (close, extraData) {
 </script>
 ```
 
-#### 8.2、全配置参考案例：[demo-page](../views/demo/demo-page.vue)
+#### 7.2、全配置参考案例：[demo-page](../views/demo/demo-page.vue)
 既是案例也是文档，也可以访问[CPage 使用文档](./README.cpage.md)
 
-#### 8.3、CRUD 里部分组件也可单独使用，如：src/components/crud/components 下的 c-form、c-component、c-import、c-tree、c-table 等，如：
+#### 7.3、CRUD 里部分组件也可单独使用，如：src/components/crud/components 下的 c-form、c-component、c-import、c-tree、c-table 等，如：
 ```html
 <template>
   <c-form
@@ -282,7 +269,7 @@ async function onSubmitHandle (submitData) {
 </script>
 ```
 
-#### 8.4、与传统开发模式对比：
+#### 7.4、与传统开发模式对比：
 ```html
 <!-- 传统的写法，需要编写大量 Dom 和 js，代码杂乱 -->
 ...
@@ -346,8 +333,8 @@ function onXxxChange (e) {
 ...
 </script>
 ```
-### 9、表单联动
-#### 在表单配置中，大部分属性支持函数动态取值，属性从静态到动态只需将值换成函数即可，无需引入新的属性、新的概念、新的配置，即可实现复杂的表单联动，让开发尽可能的简单、轻松、无负担
+### 8、表单联动
+#### 在表单配置中，大部分属性支持函数动态取值，属性从静态到动态只需将值换成函数，静态属性立刻动起来，无需引入新的属性、新的概念、新的配置即可实现复杂的表单联动，简洁就是王道
 ```javascript
 /**
  * 新增、修改、详情弹窗配置
@@ -362,14 +349,14 @@ const modalConfig = computed(() => ({
     // 表单字段
     fields: [ // 表单字段数组，可分组
       {
-        label: (formData) => formData.type === 1 ? '商品名称' : '赠品名称', // String | formData => String
+        label: formData => formData.type === 1 ? '商品名称' : '赠品名称', // String | formData => String
         fieldName: 'productName', // 字段名，暂不支持函数
         type: EControlType.eInput, // 控件类型，暂不支持函数，详情时组件会以纯文本渲染
-        required: (formData) => formData.type === 1, // Boolean | (formData) => Boolean
+        required: formData => formData.type === 1, // Boolean | (formData) => Boolean
         disabled: isEdit, // 是否禁用, Boolean | (formData) => Boolean
-        // hidden: isView, // 是否隐藏该字段，数据仍在表单中，Boolean | formData => Boolean
-        // none: isView, // 是否不需要该字段，数据不在表单中，Boolean | formData => Boolean
-        rules: (formData) => [{}], // 通过函数，动态生成校验规则 Object | Array | (formData) => Object | Array
+        hidden: formData => formData.type === 2, // 是否隐藏该字段，数据仍在表单中，Boolean | formData => Boolean
+        none: formData => formData.type === 3, // 是否不需要该字段，数据不在表单中，Boolean | formData => Boolean
+        rules: formData => [{}], // 通过函数，动态生成校验规则 Object | Array | (formData) => Object | Array
         extra: formData => 'xxx', // 字段额外说明， String | formData => String
         tooltip: formData => 'xxx', // 字段提示， String | formData => String
         defaultValue: 'xxx', // 默认值，暂不支持函数
@@ -388,3 +375,14 @@ const modalConfig = computed(() => ({
   })
 }))
 ```
+
+### 9、规范
+- 请保持项目目录/文件干净整洁、风格统一
+- 编写组件或页面文件首行请注明该组件/页面的说明、用途、用法等
+- 使用两个空格代替缩进符，避免不同系统下缩进宽度不一致
+- 避免在模板中写复杂逻辑，应仅包含简单的属性绑定，避免写复杂的表达式或函数调用，保持模板清晰
+- 给组件添加属性时，遵守一定的优先顺序，指令 > 动/静态属性 > 事件，
+  如：`<input v-if="xxx" :maxlength="30" class="xxx" @input="onInputHandle" />`
+- 组件中 style 标签尽可能添加 `scoped`，避免全局样式污染，如：`<style scoped>`
+- 查询区域/表单区域使用日期/时间范围时，字段名设计统一使用'Begin'、'End'后缀，便于代码生成及使用默认值简化配置，如：xxxBegin, xxxEnd
+- 相对独立的小模块，尽可能单独抽离成一个组件，避免一个文件代码过长过杂，同时也要避免过多的组件嵌套

@@ -65,9 +65,9 @@ AI 基于 [demo-page](../views/demo/demo-page.vue) 总结
 | :after-open-modal | Function | 弹窗打开后 ({...}) => void | — |
 | :transform-detail | Function | 编辑/详情时转换接口返回 detail (detail, {...}) => detail | 返回原 detail |
 | header | slot | 头部插槽 | - |
-| filter | slot | 头部插槽 | - |
-| tools | slot | 头部插槽 | - |
-| table | slot | 头部插槽 | - |
+| filter | slot | 查询区插槽 | - |
+| tools | slot | 工具栏插槽 | - |
+| table | slot | 表格区插槽 | - |
 | table_xxx | slot | 表格单元格动态插槽，插槽参数：{ text, record, index, column } | - |
 | ... | - | 其他属性可以根据需要自由扩展 | - |
 
