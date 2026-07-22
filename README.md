@@ -1,6 +1,7 @@
 <div align="center">
   <h1>czleing-admin</h1>
   <h3>中后台管理系统快速开发框架</h3>
+  <h4>主打轻量简洁 + 配置化 + 代码生成</h4>
 </div>
 
 ## 简介
@@ -14,8 +15,8 @@
 
 ## 相关技术及依赖
 - Vue 3.5+ 开发框架
-- Vite 8+ 打包构建，目前最快的构建工具
-- [pinia 3.0](https://pinia.web3doc.top/) 全局状态管理，比 vuex 更简单好用
+- Vite 8+ 打包构建工具
+- [pinia 3.0](https://pinia.web3doc.top/) 全局状态管理
 - ant-design-vue 4+ UI库，ant-design-vue 最新版，体验与颜值并存
 - vue-router 5.1 路由管理
 - [VueUse](https://vueuse.org/) 集成了很多组合式API的库
@@ -23,7 +24,7 @@
 - dayjs 日期处理(moment的简化版, ant-design-vue 4 默认的日期处理工具)
 - pinia-plugin-persist pinia持久化插件，
 - unplugin-auto-import 常用API免导入插件，如使用 ref, reactive 不在需要写 import { ref, reactive } from 'vue'
-- pnpm 包管理工具，目前最优的包管理工具，更快速且体积更小
+- pnpm 包管理工具
 - [后端源码](https://gitee.com/czleing/czleing-admin-api) 轻量化 spring-boot 单体后端服务
 
 ## 框架功能及特点
@@ -50,6 +51,10 @@
 - ==========================
 - 未来持续更新
 
+## 适合场景
+- 大中小型后台管理系统
+- 数据管理、运营、统计分析类业务
+- 追求轻量化、快速落地
 
 ## 初始化
 ### 1. 克隆本项目
