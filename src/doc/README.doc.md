@@ -1,11 +1,22 @@
 ## 使用文档、手册
 
 ### 1、接口请求
-接口请求摒弃了`restfull`规范及一接口一封装模式，而是采用通用的请求方式，method 统一使用 post，参数统一使用请求体传参，如：
+为避免接口龙飞凤舞情况，前后端统一约定，method 统一使用 post，参数统一使用请求体传参，摒弃`restfull`规范及一接口一封装模式，采用通用的请求方式，如：
 ```javascript
 import api from '@/api'
 ...
-const goodsList = await api.post('/goods/list', { priceRange: [10, 100] })
+// 带参数，带分页，带排序示例
+const xxxList = await api.post('/xxx/xxx/list', {
+  priceRange: [10, 100],
+  createTimeBegin: 1784085277690,
+  createTimeEnd: Date.now(),
+  page: {
+    pageSize: 10,
+    pageNum: 1,
+    orderByColumn: 'price',
+    isAsc: 'asc'
+  }
+})
 ```
 #### 请求
 - 第一个参数为接口地址，第二个参数为请求参数，第三个参数为其他配置，可选，如 headers, content-type 的设置
@@ -15,7 +26,8 @@ const goodsList = await api.post('/goods/list', { priceRange: [10, 100] })
 
 #### 响应
 - 框架对 axios 的二次封装，简化了获取响应数据步骤，对全局异常统一拦截处理，使业务不需要关注全局异常处理
-- <font color="orange">【局部异常：需要前端个别地方特殊处理的业务异常】后端请按正常状态(200)返回，将异常信息放在 data 里，避免被统一拦截<br/>【全局异常：前端统一处理的异常】后端直接返回4xx,5xx,6xx等状态，在响应拦截器中统一处理，如重新登录、业务异常错误提示</font>
+- 【局部异常：需要前端个别地方特殊处理的业务异常】后端请按正常状态(200)返回，将异常信息放在 data 里，避免被统一拦截
+- 【全局异常：前端统一处理的异常】后端直接返回4xx,5xx,6xx等状态，在响应拦截器中统一处理，如重新登录、业务异常错误提示
 - 返回结果就是业务数据，不用再每次请求都要通过一堆的 `.data` 去获取业务数据
 
 ### 2、样式
@@ -34,7 +46,7 @@ token.value.colorSuccess
 或者使用全局 css 变量，css 变量根据主题切换动态变化，变量参考 `layout/index.vue`
 ```
 --ant-colorText
---ant-colorInfo
+--ant-borderRadius
 ...
 ```
 
@@ -159,6 +171,7 @@ function onConfirm (close, extraData) {
 <!-- xxx管理 -->
 <template>
   <!-- 预设功能 API、权限 默认根据路由动态生成，可不配 -->
+  <!-- 如：/system/user 页面对应的新增接口及权限：/system/user/add, 权限：system:user:add -->
   <CPage
     :filter-config="filterConfig"
     :table-config="tableConfig"
