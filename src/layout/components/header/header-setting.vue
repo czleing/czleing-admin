@@ -4,92 +4,102 @@
       <SettingOutlined style="font-size: 18px;" @click="openSetting" />
     </a-tooltip>
     <CModal ref="settingModal" :title="$t('frame.setting')" width="500" mode="drawer" :footer="null">
-      <a-form :labelCol="{ flex: '0 0 100px' }">
-        <h4 class="pb10 text-gray2">{{ $t('frame.theme') }}</h4>
-        <a-form-item :label="$t('frame.selectTheme')">
-          <a-space>
-            <a-select v-model:value="settingStore.themeName" style="width: 150px;" @change="handleChange">
-              <a-select-option
-                v-for="(item, index) in settingStore.themes"
-                :key="item.name"
-                :value="item.name"
+      <a-segmented v-model:value="settingTab" :options="settingTabs" block />
+      <a-form class="mt20" :labelCol="{ flex: '0 0 110px' }">
+        <div v-show="settingTab === 'theme'">
+          <a-form-item :label="$t('frame.selectTheme')">
+            <a-space>
+              <a-select v-model:value="settingStore.themeName" style="width: 150px;" @change="handleChange">
+                <a-select-option
+                  v-for="(item, index) in settingStore.themes"
+                  :key="item.name"
+                  :value="item.name"
+                >
+                  {{ item.name }}
+                </a-select-option>
+              </a-select>
+              <a-tooltip
+                v-if="!settingStore.theme.isDiy"
+                placement="top"
+                v-for="(kv, index) in currColors"
+                :key="index"
               >
-                {{ item.name }}
+                <template #title>
+                  <span>{{ kv[0] }}: {{ kv[1] }}</span>
+                </template>
+                <span class="color-box" :class="{'ml20': index === 0}" :style="{ backgroundColor: kv[1] }" />
+              </a-tooltip>
+            </a-space>
+          </a-form-item>
+          <a-form-item v-if="settingStore.theme.isDiy" label=" " :colon="false">
+            <div class="theme-diy flex-y">
+              <label v-for="[key, value] in Object.entries(settingStore.theme.token)" class="theme-diy__item flex-x-between gap10">
+                <div class="label">{{ $t(`frame.${key}`) }}</div>
+                <input type="color" :value="settingStore.theme.token[key]" class="value" @change="e => settingStore.theme.token[key] = e.target.value" />
+              </label>
+            </div>
+          </a-form-item>
+          <a-form-item :label="$t('frame.menuLayout')">
+            <a-segmented v-model:value="settingStore.menuLayout" :options="menuLayoutOptions">
+              <template #label="{ value, payload }">
+                <div class="flex-y-center gap5 pt5">
+                  <component :is="payload.icon" class="menu-layout-icon" width="90" height="60" />
+                  <div>{{ payload.label }}</div>
+                </div>
+              </template>
+            </a-segmented>
+          </a-form-item>
+          <a-form-item v-if="settingStore.menuLayout === 'left'" :label="$t('frame.useBreadcrumbs')">
+            <a-switch v-model:checked="settingStore.useBreadcrumbs" />
+          </a-form-item>
+          <a-form-item :label="$t('frame.dark')">
+            <div class="border radius-ant inline-block">
+              <ModeSwitch />
+            </div>
+          </a-form-item>
+          <a-form-item :label="$t('frame.modeAnimate')">
+            <a-segmented v-model:value="settingStore.modeAnimate" :options="modeAniOptions" />
+          </a-form-item>
+          <a-form-item :label="$t('frame.useTabs')">
+            <a-switch v-model:checked="settingStore.useTabs" />
+          </a-form-item>
+          <a-form-item :label="$t('frame.tabAnimate')">
+            <a-segmented v-model:value="settingStore.tabAnimate" :options="tabAniOptions" />
+          </a-form-item>
+          <a-form-item :label="$t('frame.componentSize')">
+            <a-segmented v-model:value="settingStore.componentSize" :options="sizeOptions" />
+          </a-form-item>
+          <a-form-item :label="$t('frame.radiusLayout')">
+            <a-switch v-model:checked="settingStore.useRadius" />
+          </a-form-item>
+          <a-form-item :label="$t('frame.useTableBorder')">
+            <a-switch v-model:checked="settingStore.useTableBorder" />
+          </a-form-item>
+        </div>
+        <div v-show="settingTab === 'other'">
+          <h4 class="mt20 text-gray2">{{ $t('frame.lang') }}</h4>
+          <a-form-item :label="$t('frame.selectLang')">
+            <a-select v-model:value="settingStore.locale" style="width: 150px;" @change="handleLocalChange">
+              <a-select-option
+                v-for="lang in langOptions"
+                :key="lang.value"
+                :value="lang.value"
+              >
+                <div class="flex-x x-middle">
+                  <img v-if="lang.image" :src="lang.image" class="radius3" style="height: 16px;" >
+                  <span class="ml8">{{ lang.label }}</span>
+                </div>
               </a-select-option>
             </a-select>
-            <a-tooltip
-              v-if="!settingStore.theme.isDiy"
-              placement="top"
-              v-for="(kv, index) in currColors"
-              :key="index"
-            >
-              <template #title>
-                <span>{{ kv[0] }}: {{ kv[1] }}</span>
-              </template>
-              <span class="color-box" :class="{'ml20': index === 0}" :style="{ backgroundColor: kv[1] }" />
-            </a-tooltip>
-          </a-space>
-        </a-form-item>
-        <a-form-item v-if="settingStore.theme.isDiy" label=" " :colon="false">
-          <div class="theme-diy flex-y">
-            <label v-for="[key, value] in Object.entries(settingStore.theme.token)" class="theme-diy__item flex-x-between gap10">
-              <div class="label">{{ $t(`frame.${key}`) }}</div>
-              <input type="color" :value="settingStore.theme.token[key]" class="value" @change="e => settingStore.theme.token[key] = e.target.value" />
-            </label>
-          </div>
-        </a-form-item>
-        <a-form-item :label="$t('frame.menuLayout')">
-          <a-segmented v-model:value="settingStore.menuLayout" :options="menuLayoutOptions">
-            <template #label="{ value, payload }">
-              <div class="flex-y-center gap5 pt5">
-                <component :is="payload.icon" class="menu-layout-icon" width="90" height="60" />
-                <div>{{ payload.label }}</div>
-              </div>
-            </template>
-          </a-segmented>
-        </a-form-item>
-        <a-form-item :label="$t('frame.dark')">
-          <div class="border radius-ant inline-block">
-            <ModeSwitch />
-          </div>
-        </a-form-item>
-        <a-form-item :label="$t('frame.modeAnimate')">
-          <a-segmented v-model:value="settingStore.modeAnimate" :options="modeAniOptions" />
-        </a-form-item>
-        <a-form-item :label="$t('frame.useTabs')">
-          <a-switch v-model:checked="settingStore.useTabs" />
-        </a-form-item>
-        <a-form-item :label="$t('frame.tabAnimate')">
-          <a-segmented v-model:value="settingStore.tabAnimate" :options="tabAniOptions" />
-        </a-form-item>
-        <a-form-item :label="$t('frame.componentSize')">
-          <a-segmented v-model:value="settingStore.componentSize" :options="sizeOptions" />
-        </a-form-item>
-        <a-form-item :label="$t('frame.radiusLayout')">
-          <a-switch v-model:checked="settingStore.useRadius" />
-        </a-form-item>
-        <h4 class="mt20 text-gray2">{{ $t('frame.lang') }}</h4>
-        <a-form-item :label="$t('frame.selectLang')">
-          <a-select v-model:value="settingStore.locale" style="width: 150px;" @change="handleLocalChange">
-            <a-select-option
-              v-for="lang in langOptions"
-              :key="lang.value"
-              :value="lang.value"
-            >
-              <div class="flex-x x-middle">
-                <img v-if="lang.image" :src="lang.image" class="radius3" style="height: 16px;" >
-                <span class="ml8">{{ lang.label }}</span>
-              </div>
-            </a-select-option>
-          </a-select>
-        </a-form-item>
-        <h4 class="mt20 text-gray2">{{ $t('frame.other') }}</h4>
-        <a-form-item :label="$t('frame.showWeather')">
-          <a-switch v-model:checked="settingStore.useWeather" />
-        </a-form-item>
-        <a-form-item :label="$t('frame.useDynamicPageTitle')">
-          <a-switch v-model:checked="settingStore.useDynamicPageTitle" />
-        </a-form-item>
+          </a-form-item>
+          <h4 class="mt20 text-gray2">{{ $t('frame.other') }}</h4>
+          <a-form-item :label="$t('frame.showWeather')">
+            <a-switch v-model:checked="settingStore.useWeather" />
+          </a-form-item>
+          <a-form-item :label="$t('frame.useDynamicPageTitle')">
+            <a-switch v-model:checked="settingStore.useDynamicPageTitle" />
+          </a-form-item>
+        </div>
       </a-form>
     </CModal>
   </div>
@@ -127,6 +137,11 @@ const tabAniOptions = computed(() => [
   { label: t('frame.tabAnimateSlideRight'), value: 'slide-right' },
   { label: t('frame.tabAnimateFade'), value: 'fade' },
   { label: t('frame.tabAnimateScale'), value: 'scale' },
+])
+const settingTab = ref('theme')
+const settingTabs = computed(() => [
+  { label: t('frame.theme'), value: 'theme' },
+  { label: t('frame.other'), value: 'other' },
 ])
 
 const openSetting = () => {

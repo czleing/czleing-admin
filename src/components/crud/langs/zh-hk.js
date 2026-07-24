@@ -50,6 +50,8 @@ export default {
     top: '頂部',
     left: '左側',
     topLeft: '混合',
+    useTableBorder: '表格豎向邊框',
+    useBreadcrumbs: '使用麵包屑',
   },
   // crud
   crud: {

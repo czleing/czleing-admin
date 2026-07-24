@@ -49,6 +49,8 @@ export default {
     top: 'Top',
     left: 'Left',
     topLeft: 'TopLeft',
+    useTableBorder: 'Use Table Border',
+    useBreadcrumbs: 'Use Breadcrumbs',
   },
   // crud
   crud: {

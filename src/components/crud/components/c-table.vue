@@ -11,7 +11,7 @@
       :custom-row="customRow"
       :showSorterTooltip="config?.props?.showSorterTooltip ?? false"
       v-bind="{ ...defaultProps, ...config?.props }"
-      @resizeColumn="(w, col) => col.width = w"
+      @resizeColumn="resizeColumn"
       @change="onPageChangeHandle"
     >
       <template #headerCell="{ column }">
@@ -91,6 +91,7 @@ import dayjs from 'dayjs'
 import CTableAction from './c-table-action.vue'
 import { EIsEnabled, EYesNo } from '@/enum'
 import { stringStar, isEmpty } from '@/utils/index.js'
+import { useSettingStore } from '@/stores/setting-store.js'
 
 const props = defineProps({
   /** 不要选择框 */
@@ -122,13 +123,17 @@ const cPageSorter = inject('c-page.sorter', ref({}))
 const loading = inject('c-page.loading', ref(false))
 const selectedIds = inject('c-page.selectedIds', ref([]))
 const selectedObjs = inject('c-page.selectedObjs', ref([]))
-const currColumns = ref([])
+const useTableBorder = inject('c-page.useTableBorder', ref(0))
 const dataSource = ref([])
+const settingStore = useSettingStore()
 // 表格默认属性
 const defaultProps = computed(() => ({
   size: 'small',
-  bordered: true
+  bordered: useTableBorder.value === 0 ? settingStore.useTableBorder : useTableBorder.value === 1
 }))
+const currColumns = computed(() => props.config?.columns
+  .filter(column => column.action || checkedFieldNames.value.includes(column.dataIndex))
+  .map(column => ({ ...column, align: column.align ?? 'center'})))
 // 表格行选择器定义
 const currentRowSelection = computed(() => {
   const option = Object.assign({ selectedRowKeys: selectedIds.value, onChange: onSelectChangeHandle, getCheckboxProps: rowSelectDisabled }, props.config?.props?.rowSelection)
@@ -161,12 +166,6 @@ const total = computed(() => {
   }
 })
 
-// 伸缩列宽时需要 column 可编辑，所以重新定义了 currColumns
-watchEffect(() => {
-  currColumns.value = props.config?.columns
-  .filter(column => column.action || checkedFieldNames.value.includes(column.dataIndex))
-  .map(column => ({ ...column, align: column.align ?? 'center'}))
-})
 // 初始化后是否查询
 onMounted(() => {
   // 查询器会查我就不查，查询器不查，我就根据配置决定查不查
@@ -207,6 +206,9 @@ function rowSelectDisabled (record) {
 function onSelectChangeHandle (ids, objs) {
   selectedIds.value = ids
   selectedObjs.value = objs
+}
+function resizeColumn (w, col) {
+  emits('resizeColumn', col.dataIndex, w)
 }
 function clearSelect () {
   selectedIds.value = []
@@ -256,7 +258,7 @@ function customRow (record, index) {
   }
 }
 
-const emits = defineEmits(['action'])
+const emits = defineEmits(['action', 'resizeColumn'])
 defineExpose({
   refresh: search,
   reload: search,

@@ -27,9 +27,10 @@
         :api-config="api"
         :api-method-config="apiMethod"
         :permission-config="permission"
-        :columns="tableConfig?.columns"
+        :columns="columns"
         :pagination="pagination"
         :show-search="showSearch"
+        @sortColumn="sortColumn"
         @toggleShowSearch="toggleShowSearch"
         @refresh="onRefreshHandle"
         @add="onAddHandle(toolsConfig?.addInitData)"
@@ -42,7 +43,10 @@
         v-if="tableConfig"
         :primaryKey="primaryKey"
         :no-select="noSelect"
-        :config="tableConfig"
+        :config="{
+          ...tableConfig,
+          columns
+        }"
         :filter-auto-search="filterAutoSearch"
         :api-config="api"
         :api-method-config="apiMethod"
@@ -51,6 +55,7 @@
         :before-search="beforeSearch"
         :after-search="afterSearch"
         @action="onActionHandle"
+        @resize-column="resizeColumn"
       >
         <!-- 自定义插槽 -->
         <template v-for="sl in tableSlots" #[sl.slot]="options">
@@ -95,6 +100,7 @@ import { useApiMethodConfig } from './hooks/useApiMethodConfig'
 import { useActionHandle } from './hooks/useActionHandle'
 import { isNotEmpty } from '@/utils/index.js'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue'
+import { useSettingStore } from '@/stores/setting-store'
 
 const props = defineProps({
   /** 没有新增按钮，可选 */
@@ -148,11 +154,14 @@ const loading = ref(false)
 const cTable = ref()
 const cModal = ref()
 const cForm = ref()
+const columns = ref()
 const selectedIds = ref([])
 const selectedObjs = ref([])
 const searchParams = ref({})
 const showSearch = ref(true)
 const checkedFieldNames = ref(props.tableConfig?.columns?.filter(item => item.hidden !== true)?.map(item => item.dataIndex))
+const settingStore = useSettingStore()
+const useTableBorder = ref(0)
 const pagination = ref({
   showSizeChanger: true,
   showTotal: (total, range) => `共 ${total} 条`,
@@ -167,7 +176,7 @@ const sorter = ref({
 const filterAutoSearch = computed(() => {
   return props.filterConfig?.fields?.some(field => isNotEmpty(field.defaultValue))
 })
-const tableSlots = computed(() => props.tableConfig?.columns?.filter(column => column.slot))
+const tableSlots = computed(() => columns.value?.filter(column => column.slot))
 const { api } = useApiConfig(props.apiConfig) // 接口
 const { permission } = usePermissionConfig(props.permissionConfig) // 权限
 const { apiMethod } = useApiMethodConfig(props.apiMethodConfig) // 接口请求方式
@@ -197,6 +206,9 @@ const {
   afterSubmit: props.afterSubmit,
   emit
 })
+watchSyncEffect(() => {
+  columns.value = [...props.tableConfig?.columns]
+})
 
 /** 与子组件共享变量 */
 provide('c-page.loading', loading)
@@ -207,6 +219,7 @@ provide('c-page.pagination', pagination)
 provide('c-page.sorter', sorter)
 provide('c-page.checkedFieldNames', checkedFieldNames)
 provide('c-page.onRefreshHandle', onRefreshHandle)
+provide('c-page.useTableBorder', useTableBorder)
 
 const isTreeShow = ref(true)
 function toggleTree () {
@@ -229,6 +242,14 @@ function onTreeSelectHandle (orgId) {
 }
 function toggleShowSearch () {
   showSearch.value = !showSearch.value
+}
+function sortColumn (oldIndex, newIndex) {
+  const moveColumn = columns.value.splice(oldIndex, 1)[0]
+  columns.value.splice(newIndex, 0, moveColumn)
+}
+function resizeColumn (dataIndex, width) {
+  const col = columns.value.find(item => item.dataIndex === dataIndex)
+  col && (col.width = width)
 }
 
 defineExpose({

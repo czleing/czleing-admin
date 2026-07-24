@@ -253,24 +253,28 @@ const tableConfig = computed(() => ({
     {
       title: '带单位',
       dataIndex: 'withUnit',
+      resizable: true,
       unit: '元', // 在后面拼上单位
       width: 100
     },
     {
       title: '名称2',
       dataIndex: 'name2',
+      resizable: true,
       width: 100,
       hidden: true // 该列暂时隐藏，可通过列筛选勾选显示
     },
     {
       title: '字典',
       dataIndex: 'dict',
+      resizable: true,
       width: 100,
       dictType: 'dict_type' // 自动按指定的字典类型解析出中文
     },
     {
       title: '自定义',
       dataIndex: 'status',
+      resizable: true,
       width: 100,
       customRender: ({ value, record, index, column }) => { // 自定义渲染函数
         return h('span', {
@@ -312,6 +316,7 @@ const tableConfig = computed(() => ({
     {
       title: '插槽',
       dataIndex: 'slotField',
+      resizable: true,
       width: 100,
       slot: 'table_slotField' // 使用插槽渲染
     },

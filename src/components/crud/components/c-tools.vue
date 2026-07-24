@@ -53,15 +53,23 @@
         <a-button :icon="h(FilterOutlined)" :style="{ fontSize: '0.9em' }" />
         <template #overlay>
           <a-checkbox-group :value="checkedFieldNames" @change="onFieldsFilterChange">
-            <a-menu>
-              <a-menu-item
-                v-for="column in currColumns"
-                :key="column.dataIndex"
-                @click.stop
-              >
-                <a-checkbox :value="column.dataIndex" @click.stop>{{ column.title }}</a-checkbox>
-              </a-menu-item>
-            </a-menu>
+            <div class="c-tools__overlay">
+              <div class="border-bottom flex-x-center pt5 pb10 mb10" @click.stop>
+                <a-segmented v-model:value="useTableBorder" :options="tableBorderOptions" />
+              </div>
+              <div ref="listContainer" class="c-tools__menus">
+                <div v-for="column in currColumns" :key="column.dataIndex" @click.stop>
+                  <div class="c-tools__menus__item">
+                    <div class="flex-x-between">
+                      <a-checkbox :value="column.dataIndex" class="pointer" @click.stop>{{ column.title }}</a-checkbox>
+                      <div @click.stop>
+                        <HolderOutlined class="draggable" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </a-checkbox-group>
         </template>
       </a-dropdown>
@@ -70,12 +78,13 @@
 </template>
 
 <script setup>
-import { PlusOutlined, DeleteOutlined, ExportOutlined, RollbackOutlined, SyncOutlined, FilterOutlined, SearchOutlined } from '@ant-design/icons-vue'
+import { PlusOutlined, DeleteOutlined, ExportOutlined, RollbackOutlined, SyncOutlined, FilterOutlined, SearchOutlined, HolderOutlined, BorderInnerOutlined } from '@ant-design/icons-vue'
 import CImport from './c-import.vue'
 import { Modal } from 'ant-design-vue'
 import { h } from 'vue'
 import { getFnValue } from '@/utils'
 import axios from '@/api/index.js'
+import { useSortable } from '@/hooks/useSortable.js'
 
 const props = defineProps({
   /** 没有新增按钮 */
@@ -111,7 +120,12 @@ const selectedObjs = inject('c-page.selectedObjs', ref([]))
 const searchParams = inject('c-page.searchParams', ref({}))
 const loading = inject('c-page.loading', ref(false))
 const refreshTable = inject('c-page.onRefreshHandle', undefined)
-
+const useTableBorder = inject('c-page.useTableBorder', ref(0))
+const tableBorderOptions = [
+  { label: '?', value: 0, title: '默认' },
+  { label: '田', value: 1, title: '网格' },
+  { label: '☰', value: 2, title: '横边框' },
+]
 const selectNum = computed(() => selectedIds.value.length)
 const callbackParams = computed(() => ({
   selectedIds: selectedIds.value,
@@ -119,6 +133,16 @@ const callbackParams = computed(() => ({
   pagination: props.pagination ?? {}
 }))
 const currColumns = computed(() => props.columns.filter(item => !item.action))
+
+// 拖拽排序
+const listContainer = ref(null)
+const { setEnabled } = useSortable(listContainer, currColumns, {
+  handle: '.draggable',
+  animation: 180,
+  onSortEnd: (evt) => {
+    emits('sortColumn', evt.oldIndex, evt.newIndex)
+  }
+})
 
 function onAddHandle () {
   emits('add')
@@ -160,7 +184,7 @@ function onToolClickHandle (btn) {
   }
 }
 
-const emits = defineEmits(['add', 'delete', 'refresh', 'update:checkedFieldNames', 'toggleShowSearch'])
+const emits = defineEmits(['add', 'delete', 'refresh', 'update:checkedFieldNames', 'toggleShowSearch', 'sortColumn'])
 function onToggleShowSearchHandle () {
   emits('toggleShowSearch')
 }
@@ -172,5 +196,27 @@ function onFieldsFilterChange (values) {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
+.c-tools {
+  &__overlay {
+    background-color: var(--ant-colorBgElevated);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, .1);
+    border-radius: var(--ant-borderRadiusLG);
+    padding: 5px;
+  }
+  &__menus {
+    max-height: 80vh;
+    overflow: auto;
+    &__item {
+      padding: 5px 8px;
+      border-radius: var(--ant-borderRadius);
+      &:hover {
+        background-color: var(--ant-colorFillSecondary);
+      }
+      .draggable {
+        cursor: move;
+      }
+    }
+  }
+}
 </style>
