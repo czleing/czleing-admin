@@ -61,6 +61,7 @@ const subColumns = ref([]) // 通过选择字表关联出来的字表字段，�
 const dictTypeList = ref([]) // 字典类型列表
 const columnOptions = ref([]) // 主表字段列表，用于主子表下拉选择
 const subTableOptions = ref([]) // 字表表名列表，用于主子表下拉选择
+const genUiPathCacheKey = 'CZ_GENUIPATHLIST'
 
 onMounted(() => {
   getDictTypeList()
@@ -227,7 +228,7 @@ const genFormConfig = computed(() => ({
       type: EControlType.eAutoComplete,
       required: true,
       props: {
-        options: JSON.parse(localStorage.getItem('genUiPathList'))
+        options: JSON.parse(localStorage.getItem(genUiPathCacheKey))
       }
     },
     {
@@ -512,7 +513,7 @@ async function beforeConfirm (close) {
     headers: { datasource: props.datasource }
   })
   _this.$message.success('编辑成功')
-  let cacheUiPaths = localStorage.getItem('genUiPathList')
+  let cacheUiPaths = localStorage.getItem(genUiPathCacheKey)
   cacheUiPaths = cacheUiPaths ? JSON.parse(cacheUiPaths) : []
   cacheUiPaths.push({
     id: genData.genUiPath,
@@ -521,7 +522,7 @@ async function beforeConfirm (close) {
   if (cacheUiPaths.length > 3) {
     cacheUiPaths.splice(0, 1)
   }
-  localStorage.setItem('genUiPathList', JSON.stringify(cacheUiPaths))
+  localStorage.setItem(genUiPathCacheKey, JSON.stringify(cacheUiPaths))
   close()
 }
 

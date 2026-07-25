@@ -106,20 +106,5 @@ useWindowSize((width) => {
   border-top: none;
 }
 
-/** Tab 切换动画 */
-/** 向右滑动 */
-.slide-right-enter-active, .slide-right-leave-active { transition: all .2s ease-out; }
-.slide-right-enter-from { opacity: 0; transform: translateX(-20px); }
-.slide-right-enter-active { transition-delay: .3s; }
-.slide-right-leave-to { opacity: 0; transform: translateX(20px); }
-
-/** 淡入淡出 */
-.fade-enter-active, .fade-leave-active { transition: all .3s; }
-.fade-enter-from, .fade-leave-to { opacity: 0; }
-.fade-enter-active { transition-delay: .4s; }
-
-/* 缩放动画 */
-.scale-enter-active, .scale-leave-active { transition: all 0.3s; }
-.scale-enter-from, .scale-leave-to { transform: scale(0.95); opacity: 0; }
-.scale-enter-active { transition-delay: .4s; }
+/** Tab 切换动画相关样式定义在 src/assets/css/base.less */
 </style>

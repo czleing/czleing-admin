@@ -126,7 +126,7 @@ export const useTabsStore = defineStore('tabs', {
     }
   },
   persist: {
-    key: 'USER_TABS',
+    key: 'CZ_USER_TABS',
     pick: ['tabList']
   }
 })

@@ -142,9 +142,9 @@ export const useAuthStore = defineStore('auth', {
             throw e
           }
         }
-        this.userInfo = authInfo.user
-        this.roles = authInfo.roles
-        this.permissions = authInfo.permissions ?? []
+        this.userInfo = authInfo?.user
+        this.roles = authInfo?.roles
+        this.permissions = authInfo?.permissions ?? []
         if (import.meta.env.DEV && import.meta.env.VITE_APP_IGNORE_PERMISSION === 'true') {
           this.permissions.unshift('*:*:*') // 具有所有权限
         }
@@ -162,7 +162,7 @@ export const useAuthStore = defineStore('auth', {
   },
   // 使用插件实现持久化
   persist: {
-    key: 'AUTH_INFO',
+    key: 'CZ_AUTH_INFO',
     // storage: window.sessionStorage, // 使用的持久化方案，默认 localStorage
     // !!! 不能将 userInfo 加入缓存，userInfo 与 permissions 来自同一个接口，只缓存 userInfo 刷新时会导致 permissions 为空，从而页面权限校验错误，必须与 permissions 一起加入缓存
     // !!! permissions 为敏感信息，有手动修改的可能，最好不要加入缓存，所以 userInfo 和 permissoins 每次刷新时重新获取为好

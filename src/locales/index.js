@@ -40,7 +40,7 @@ function getI18nConfig () {
     const lang = path.match(/^.*\/([^\/]*)\.js$/)[1]
     messages[lang] = mergeWith({}, messages[lang], module.default)
   })
-  const USER_SETTINGS = localStorage.getItem('USER_SETTINGS')
+  const USER_SETTINGS = localStorage.getItem('CZ_USER_SETTINGS')
   const settings = USER_SETTINGS && JSON.parse(USER_SETTINGS)
   return {
     legacy: false,

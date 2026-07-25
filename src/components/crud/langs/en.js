@@ -7,6 +7,7 @@ export default {
     themeMode: 'Light/Dark',
     setting: 'Settings',
     theme: 'Theme',
+    message: 'Message',
     selectTheme: 'Select Theme',
     colorPrimary: 'Primary Color',
     colorError: 'Error Color',

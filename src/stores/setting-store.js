@@ -144,6 +144,6 @@ export const useSettingStore = defineStore('setting', () => {
 },
 {
   persist: {
-    key: 'USER_SETTINGS'
+    key: 'CZ_USER_SETTINGS'
   }
 })

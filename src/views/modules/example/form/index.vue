@@ -71,7 +71,7 @@ const formConfig1 = {
         remote: {
           url: '/system/post/select',
           converter (list) {
-            return list.map(item => ({ id: item.postId, name: item.postName }))
+            return list?.map(item => ({ id: item.postId, name: item.postName }))
           }
         }
       }

@@ -5,7 +5,7 @@
 import { encrypt, decrypt } from '@/utils/jsencrypt'
 
 const storage = window.localStorage
-const key = 'REMEMBERED_ACCOUNT'
+const key = 'CZ_REMEMBERED_ACCOUNT'
 
 export function setAccount (account, password, isRemember = false) {
   if (isRemember) {

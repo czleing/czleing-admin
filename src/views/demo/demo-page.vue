@@ -248,7 +248,13 @@ const tableConfig = computed(() => ({
       width: 80,
       minWidth: 40,
       maxWidth: 200,
-      useTotal: true // 使用合计
+    },
+    {
+      title: '金额',
+      dataIndex: 'amount',
+      resizable: true,
+      width: 80,
+      useTotal: true // 使用合计, 会在表格最下面添加合计行，汇总该列的值
     },
     {
       title: '带单位',

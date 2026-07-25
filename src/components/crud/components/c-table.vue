@@ -67,14 +67,15 @@
       <template v-if="useTotal" #summary>
         <a-table-summary fixed>
           <a-table-summary-row>
+            <a-table-summary-cell>
+              <div class="bold nowrap">合计</div>
+            </a-table-summary-cell>
             <a-table-summary-cell
               v-for="(column, index) in currColumns"
               :key="column.fieldName"
-              :col-span="index === 0 && !noSelect ? 2 : 1"
               class="tc"
             >
-              <div v-if="index === 0" class="bold">合计</div>
-              <span v-else-if="column.useTotal">{{ total[column.dataIndex] }}</span>
+              <span v-if="column.useTotal">{{ total[column.dataIndex] ?? 0 }}</span>
               <span v-else>-</span>
             </a-table-summary-cell>
           </a-table-summary-row>
@@ -160,7 +161,7 @@ const total = computed(() => {
         }
       })
       return t
-    }, {})
+    }, {}) ?? {}
   } else {
     return {}
   }

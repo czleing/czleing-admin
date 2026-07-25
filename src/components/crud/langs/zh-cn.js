@@ -8,6 +8,7 @@ export default {
     themeMode: '明暗模式',
     setting: '设置',
     theme: '主题',
+    message: '通知消息',
     selectTheme: '选择主题',
     colorPrimary: '主色调',
     colorError: '危险色',

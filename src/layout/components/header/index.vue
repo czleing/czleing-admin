@@ -6,8 +6,13 @@
       <MenuUnfoldOutlined v-else />
     </span>
     <div class="header__menu flex-auto ml30">
+      <template v-if="settingStore.menuLayout === 'left'">
+        <transition name="slide-right">
+          <HeaderBreadcrumb v-if="settingStore.useBreadcrumbs" />
+        </transition>
+      </template>
       <a-menu
-        v-if="settingStore.menuLayout !== 'left'"
+        v-else
         class="menu-side__list"
         v-model:selectedKeys="selectedKeys"
         v-model:openKeys="openKeys"
@@ -64,6 +69,7 @@ import HeaderFullscreen from './header-fullscreen.vue'
 import HeaderSetting from './header-setting.vue'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'
 import ModeSwitch from './mode-switch.vue'
+import HeaderBreadcrumb from './header-breadcrumb.vue'
 
 const menuStore = useMenuStore()
 const settingStore = useSettingStore()
