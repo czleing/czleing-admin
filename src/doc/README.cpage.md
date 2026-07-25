@@ -267,7 +267,7 @@ const toolsConfig = computed(() => ({
 | cols | Number | 一行显示几列 | 2 |
 | labelCol | Object | 全局表单项文本部分栅格配置，参考 a-form | { span: 6 } |
 | wrapperCol | Object | 全局表单项文本部分栅格配置，参考 a-form | { span: 18 } |
-| fields | Array | 表单项字段配置 | { span: 18 } |
+| fields | Array | 表单项字段配置 | - |
 | ... | - | 其他属性可以根据需要自由扩展 | - |
 
 ---
@@ -280,7 +280,7 @@ const toolsConfig = computed(() => ({
 | type | String | 控件类型，EControlType 指定的类型或全局组件名 | EControlType.eInput |
 | required | Boolean \| formData => Boolean | 是否必填 | false |
 | hidden | Boolean \| formData => Boolean | 是否隐藏该字段，数据仍在表单中 | false |
-| none | Boolean\| formData => Boolean | 是否不需要该字段，数据不在表单中 | false |
+| none | Boolean\ | formData => Boolean | 是否不需要该字段，数据不在表单中 | false |
 | disabled | Boolean \| formData => Boolean | 是否禁用 | false |
 | singleLine | Boolean | 是否单独占一行 | false |
 | col | Object | 表单项(包含文本和控件)栅格设置，固定宽度可以设置为 { flex: '280px' }，参照 a-col 属性 | 默认根据列数计算 |
