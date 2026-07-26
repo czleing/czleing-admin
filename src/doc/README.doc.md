@@ -6,7 +6,7 @@
 import api from '@/api'
 ...
 // 带参数，带分页，带排序示例
-const xxxList = await api.post('/xxx/xxx/list', {
+const xxxPager = await api.post('/xxx/xxx/list', {
   priceRange: [10, 100],
   createTimeBegin: 1784085277690,
   createTimeEnd: Date.now(),
@@ -17,6 +17,17 @@ const xxxList = await api.post('/xxx/xxx/list', {
     isAsc: 'asc'
   }
 })
+xxxPager.total
+xxxPager.list
+
+// 非分页列表情况
+const xxxList = await api.post('/xxx/xxx/list', { xxx: 'xxx' })
+// xxxList => [{...}, {...}]
+
+// 单个对象情况
+const xxxObj = await api.post('/xxx/xxx/getXXX', { xxx: 'xxx' })
+// xxxObj => {...}
+
 ```
 #### 请求
 - 第一个参数为接口地址，第二个参数为请求参数，第三个参数为其他配置，可选，如 headers, content-type 的设置
