@@ -14,7 +14,7 @@
         </div>
         <div class="list-container flex-y">
           <div class="flex-auto list px10">
-            <div class="item flex-x gap10 lh1_5 py10"
+            <div class="item flex-x gap10 lh1_5 pa10 radius10"
               v-for="(item, index) in list"
               :key="item.id"
               :class="{'border-top': index > 0}"

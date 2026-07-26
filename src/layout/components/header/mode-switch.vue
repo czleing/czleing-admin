@@ -13,7 +13,7 @@ import { useSettingStore } from '@/stores/setting-store.js'
 const settingStore = useSettingStore()
 const isBtnDark = ref(settingStore.isDark)
 const root = document.documentElement;
-
+let maxR = 2000
 watch(
   () => settingStore.isDark,
   () => {
@@ -23,6 +23,7 @@ watch(
 
 async function changeMode (e) {
   const x = e.clientX, y = e.clientY;
+  maxR = parseInt(Math.hypot(window.innerWidth, window.innerHeight) + '');
   if (!document.startViewTransition) {
     isBtnDark.value = !isBtnDark.value
     await sleep(200)
@@ -34,7 +35,6 @@ async function changeMode (e) {
   const vt = document.startViewTransition(async () => {
     settingStore.toggleMode();
     await nextTick();
-    await nextTick();
   })
   vt.ready.then(() => playEffect(x, y))
 }
@@ -44,7 +44,6 @@ function playEffect(x, y) {
   if (settingStore.modeAnimate === 'circle') {
     // 亮 -> 暗， 暗色(new)在上，由小到大
     // 暗 -> 亮， 暗色(old)在上，由大到小
-    const maxR = parseInt(Math.hypot(innerWidth, innerHeight) + '');
     const start = `circle(0px at ${x}px ${y}px)`;
     const end = `circle(${maxR}px at ${x}px ${y}px)`;
     frames = [
@@ -68,7 +67,7 @@ function playEffect(x, y) {
     duration: 650,
     easing: 'linear',
     pseudoElement: isToDark ? '::view-transition-new(root)' : '::view-transition-old(root)',
-    fill: 'both' // 解决了动画结束后屏幕闪一下的问题
+    fill: 'both' // 解决动画结束后屏幕闪一下的问题
   });
 }
 </script>
