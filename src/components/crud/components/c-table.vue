@@ -73,6 +73,7 @@
             <a-table-summary-cell
               v-for="(column, index) in currColumns"
               :key="column.fieldName"
+              :col-span="index === 0 && noSelect ? 0 : 1"
               class="tc"
             >
               <span v-if="column.useTotal">{{ total[column.dataIndex] ?? 0 }}</span>
