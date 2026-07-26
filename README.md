@@ -62,7 +62,7 @@
 // gitee
 git clone https://gitee.com/czleing/czleing-admin.git
 
-// github
+// github（可能因为 gitee 镜像同步延迟，版本低于 gitee ）
 git clone https://github.com/czleing/czleing-admin.git
 
 ```
