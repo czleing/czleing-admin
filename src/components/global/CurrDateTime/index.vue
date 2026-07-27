@@ -16,20 +16,17 @@ const time = ref(dayjs())
 const timer = ref()
 
 const hasSecond = computed(() => props.format.includes('ss'))
-const hasMinute = computed(() => props.format.includes('mm'))
-const duration = computed(() => hasSecond.value ? 1000 : 6000)
+const duration = computed(() => hasSecond.value ? 1000 : 60000)
+
+function run () {
+  timer.value = setTimeout(() => {
+    time.value = dayjs()
+    run()
+  }, duration.value)
+}
 
 onMounted(() => {
-  time.value = dayjs()
-  timer.value = setInterval(() => {
-    if (hasSecond.value) {
-      time.value = time.value.subtract(1, 'second')
-    } else if (hasMinute.value) {
-      time.value = time.value.subtract(1, 'minute')
-    } else {
-      time.value = dayjs()
-    }
-  }, duration.value)
+  run()
 })
 onUnmounted(() => {
   clearInterval(timer.value)
