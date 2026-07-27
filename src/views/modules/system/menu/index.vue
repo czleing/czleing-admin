@@ -102,10 +102,7 @@ const tableConfig = computed(() => ({
       action: ({ record }) => {
         const btns = [
           // 预设：edit, detail, delete, toggle
-          {
-            name: '编辑',
-            callback: 'edit'
-          },
+          { name: '编辑', callback: 'edit' },
           record.menuType !== EMenuType.eBtn ? {
             name: '新增',
             permission: 'system:menu:add',
@@ -113,15 +110,8 @@ const tableConfig = computed(() => ({
               addChildren(record)
             }
           } : null,
-          {
-            name: record.isEnabled ? '禁用' : '启用',
-            confirm: true,
-            callback: 'toggle'
-          },
-          {
-            name: '删除',
-            callback: 'delete' // 删除操作默认带确认框
-          }
+          { name: record.isEnabled ? '禁用' : '启用', confirm: true, callback: 'toggle' },
+          { name: '删除', callback: 'delete' }
         ].filter(Boolean)
         return btns
       }

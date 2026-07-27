@@ -44,9 +44,7 @@ const modalConfig = computed(() => ({
   formConfig: ({ isAdd, isEdit, isView, detail }) => ({
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
-    cols: 2, // 一行显示几列
-    // 表单字段
-    fields: [ // 表单字段数组，可分组
+    fields: [
       {
         label: '上级部门',
         fieldName: 'parentId',

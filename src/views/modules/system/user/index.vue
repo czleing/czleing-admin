@@ -49,19 +49,9 @@ const filterConfig = {
 }
 const tableConfig = computed(() => ({
   columns: [
-    {
-      title: '用户编号',
-      dataIndex: 'userId',
-      hidden: true
-    },
-    {
-      title: '登录账号',
-      dataIndex: 'userName'
-    },
-    {
-      title: '用户姓名',
-      dataIndex: 'nickName'
-    },
+    { title: '用户编号', dataIndex: 'userId', hidden: true },
+    { title: '登录账号', dataIndex: 'userName' },
+    { title: '用户姓名', dataIndex: 'nickName' },
     {
       title: '所属部门',
       dataIndex: 'deptName',
@@ -69,55 +59,34 @@ const tableConfig = computed(() => ({
       width: 150,
       customRender: ({ record }) => record.dept?.deptName ?? '-'
     },
-    {
-      title: '手机号码',
-      dataIndex: 'phonenumber',
-      hideChar: [3, 4]
-    },
-    {
-      title: '是否启用',
-      dataIndex: 'isEnabled',
-      type: 'isEnabled'
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'createTime',
-      isDateTime: true
-    },
+    { title: '手机号码', dataIndex: 'phonenumber', hideChar: [3, 4] },
+    { title: '是否启用', dataIndex: 'isEnabled', type: 'isEnabled' },
+    { title: '创建时间', dataIndex: 'createTime', isDateTime: true },
     {
       title: '操作',
       actionShowNum: 2,
       action: ({ record }) => {
         const btns = [
-          {
-            name: '详情',
-            callback: 'detail'
-          },
-          record.userId !== 1 ? {
-            name: '编辑',
-            callback: 'edit'
-          } : null,
-          record.userId !== 1 ? {
-            name: '删除',
-            callback: 'delete'
-          } : null,
-          record.userId !== 1 ? {
-            name: record.isEnabled ? '禁用' : '启用',
-            confirm: true,
-            callback: 'toggle'
-          } : null,
-          record.userId !== 1 ? {
-            name: '重置密码',
-            confirm: true,
-            callback: async () => {
-              const data = await axios.post('/system/user/resetPwd', { userId: record.userId })
-              Modal.success({
-                title: '重置密码成功',
-                content: `${record.nickName}的密码已重置为：${data}`
-              })
+          { name: '详情', callback: 'detail' },
+        ]
+        if (record.userId !== 1) {
+          btns.push(...[
+            { name: '编辑', callback: 'edit' },
+            { name: '删除', callback: 'delete' },
+            { name: record.isEnabled ? '禁用' : '启用', confirm: true, callback: 'toggle' },
+            {
+              name: '重置密码',
+              confirm: true,
+              callback: async () => {
+                const data = await axios.post('/system/user/resetPwd', { userId: record.userId })
+                Modal.success({
+                  title: '重置密码成功',
+                  content: `${record.nickName}的密码已重置为：${data}`
+                })
+              }
             }
-          } : null
-        ].filter(Boolean)
+          ])
+        }
         return btns
       }
     }
@@ -126,9 +95,8 @@ const tableConfig = computed(() => ({
 
 const posts = ref([])
 const roles = ref([])
-/**
- * 新增、修改、详情配置
- */
+
+/** 新增、修改、详情配置 */
 const modalConfig = computed(() => ({
   title: '用户',
   width: 800,
@@ -139,13 +107,8 @@ const modalConfig = computed(() => ({
   formConfig: ({ isAdd, isEdit, isView, detail }) => ({
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
-    cols: 2,
     fields: [
-      {
-        label: '用户姓名',
-        fieldName: 'nickName',
-        required: true,
-      },
+      { label: '用户姓名', fieldName: 'nickName', required: true, },
       {
         label: '所属部门',
         fieldName: 'deptId',
@@ -257,10 +220,6 @@ const modalConfig = computed(() => ({
         singleLine: true,
         labelCol: { span: 4 },
         wrapperCol: { span: 20 },
-        props: {
-          // rows: 5,
-          // maxlength: 100
-        }
       }
     ]
   })
