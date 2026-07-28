@@ -828,6 +828,7 @@ const modalConfig = computed(() => ({
               type: EControlType.eCustom,
               width: 50,
               align: 'center',
+              ocrIgnore: true, // 在 OCR 识别时，忽略这一列
               props: {
                 component: { // table 内的组件拥有单元格相关信息： cellInfo = { text, record, index, column }
                   render ({ $attrs }) {

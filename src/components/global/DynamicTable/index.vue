@@ -255,7 +255,7 @@ function textOcrHandle () {
         }
       }
       const values = line.split(splitChar)
-      props.columns.filter(item => !item.hidden).forEach((col, index) => {
+      props.columns.filter(item => !item.hidden && item.ocrIgnore !== true).forEach((col, index) => {
         obj[col.dataIndex] = values[index] ?? null
       })
       return obj
