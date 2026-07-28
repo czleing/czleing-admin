@@ -32,9 +32,13 @@
 </template>
 
 <script setup>
+import cComponent from '@/components/crud/components/c-component';
 import cForm from '@/components/crud/components/c-form.vue';
 import { Modal } from 'ant-design-vue';
 import dayjs from 'dayjs';
+import { EControlType } from '@/enum'
+import IconSelect from '@/components/common/IconSelect/index.vue'
+
 defineOptions({ name: 'FormExample' })
 
 // 基础使用
@@ -87,6 +91,14 @@ const formConfig2 = {
       label: '姓名',
       fieldName: 'name',
       required: true
+    },
+    {
+      label: '图标',
+      fieldName: 'icon',
+      type: EControlType.eCustom,
+      props: {
+        component: IconSelect
+      }
     },
     {
       label: '性别',

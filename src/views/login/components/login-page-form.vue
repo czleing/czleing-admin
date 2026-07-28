@@ -23,13 +23,13 @@
         </a-form-item>
         <a-form-item name="code">
           <div class="flex-x">
-            <a-input v-model:value="form.code" :max-length="6" placeholder="校验码">
+            <a-input ref="codeRef" v-model:value="form.code" :max-length="6" placeholder="校验码">
               <template #prefix>
                 <a-icon type="SafetyCertificateOutlined" class="text-gray" />
               </template>
             </a-input>
             <a-spin :spinning="spinning">
-              <img :src="codeSrc" class="login-form__code radius5 ml5" @click="getCode">
+              <img :src="codeSrc" class="login-form__code pointer radius5 ml5" @click="getCode">
             </a-spin>
           </div>
         </a-form-item>
@@ -66,6 +66,7 @@ const form = reactive({
   uuid: undefined
 })
 const codeSrc = ref()
+const codeRef = ref()
 const checked = ref(false)
 const rules = {
   account: [{ required: true, message: '请输入用户名' }],
@@ -89,8 +90,9 @@ async function getCode () {
     form.code = undefined
     form.uuid = undefined
     const result = await authStore.getCode()
-    codeSrc.value = 'data:image/gif;base64,' + result?.img
+    result?.img && (codeSrc.value = 'data:image/gif;base64,' + result.img)
     form.uuid = result?.uuid
+    codeRef.value.input.focus()
   } finally {
     spinning.value = false
   }
@@ -122,7 +124,9 @@ async function onSubmitHandle (values) {
   }
   &__code {
     height: 32px;
+    min-height: 32px;
     min-width: 85px;
+    background-color: #a9a9a954;
   }
   &__submit {
     margin-top: 20px;

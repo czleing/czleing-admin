@@ -50,19 +50,23 @@ export default defineConfig(({ command, mode }) => {
     },
     build: {
       outDir: `dist/${mode}`,
-      chunkSizeWarningLimit: 800,
+      chunkSizeWarningLimit: 1500, // KB
       rolldownOptions: {
         output: {
-          codeSplitting: {
-            groups: [
-              {
-                name: 'libs',
-                test: /node_modules/,
-                minSize: 100000, // 100KB
-                maxSize: 500000, // 500KB
-                priority: 10,
-              },
-            ],
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              if (id.includes('ant-design-vue')) {
+                return 'antd-chunk'
+              }
+              if (id.includes('@ant-design/icons-vue')) {
+                return 'ant-icons-chunk'
+              }
+              if (id.includes('vue')) {
+                return 'vue-chunk'
+              }
+              // 其他第三方
+              return 'vendor-chunk'
+            }
           }
         },
         // 为了移除 @vueuse/core 等包中包含特殊注释导致打包告警问题，待他们修复后可删除
