@@ -86,20 +86,21 @@ const handleRequestError = (error) => {
   if (error.response) {
     // 服务器响应错误
     let status = error.response.status
+    const msg = error.response.data.message
     // 在这里可以进行错误处理逻辑，例如弹出错误提示、记录错误日志等
     switch (status) {
       case 400:
-        console.error('参数校验失败:', error.response.data.message)
-        message.error(error.response.data.message || '参数校验失败')
-        return Promise.reject(error.response.data.message ?? '参数json解析失败')
+        // console.error('参数校验失败:', msg)
+        message.error(msg || '参数校验失败')
+        return Promise.reject(msg ?? '参数json解析失败')
       case 404:
-        console.error('404:', error.response.data.message)
-        message.error(error.response.data.message || '资源不存在')
-        return Promise.reject({ error: '接口不存在', message: error.response.data.message })
+        const errorMsg = msg || '资源不存在'
+        message.error({ content: errorMsg, key: errorMsg })
+        return Promise.reject({ error: errorMsg, message: errorMsg })
       case 500:
-        console.error('服务器内部错误:', error.response.data.message)
-        message.error(error.response.data.message || '服务器内部错误')
-        return Promise.reject({ error: '服务器内部错误', message: error.response.data.message })
+        // console.error('服务器内部错误:', msg)
+        message.error(msg || '服务器内部错误')
+        return Promise.reject({ error: '服务器内部错误', message: msg })
       default:
         message.error('服务器响应错误')
         console.error('服务器响应错误:', error.response.data)
