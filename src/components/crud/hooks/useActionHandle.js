@@ -12,6 +12,7 @@ export function useActionHandle ({ cModal, cForm, cTable, modalConfig = {}, api,
   const isEdit = ref(false)
   const isView = ref(false)
   const detail = ref({})
+  const { t } = useI18n()
   const buttonConfig = computed(() => {
     let config = modalConfig.buttonConfig
     if (typeof config === 'function') {
@@ -20,7 +21,7 @@ export function useActionHandle ({ cModal, cForm, cTable, modalConfig = {}, api,
     return {
       ...config,
       showConfirm: config?.showConfirm ?? !isView.value, // 详情默认不展示确认按钮，除非强制设置了展示
-      cancelText: config?.cancelText ?? (isView.value ? '关闭' : undefined) // 详情修改取消按钮为关闭
+      cancelText: config?.cancelText ?? (isView.value ? t('crud.close') : undefined) // 详情修改取消按钮为关闭
     }
   })
   const formConfig = computed(() => {
@@ -66,7 +67,7 @@ export function useActionHandle ({ cModal, cForm, cTable, modalConfig = {}, api,
     setViewType('add')
     detail.value = initData
     openModal({
-      title: modalConfig.fullTitle ?? (modalConfig.title + '-新增')
+      title: modalConfig.fullTitle ?? (modalConfig.title + `-${ t('crud.add') }`)
     })
   }
   async function onEditHandle (record) {
@@ -74,7 +75,7 @@ export function useActionHandle ({ cModal, cForm, cTable, modalConfig = {}, api,
     detail.value = await getDetail(record[primaryKey])
     openModal({
       record,
-      title: modalConfig.fullTitle ?? (modalConfig.title + '-编辑')
+      title: modalConfig.fullTitle ?? (modalConfig.title + `-${ t('crud.edit') }`)
     })
   }
   async function onDetailHandle (record) {
@@ -82,18 +83,18 @@ export function useActionHandle ({ cModal, cForm, cTable, modalConfig = {}, api,
     detail.value = await getDetail(record[primaryKey])
     openModal({
       record,
-      title: modalConfig.fullTitle ?? (modalConfig.title + '-详情')
+      title: modalConfig.fullTitle ?? (modalConfig.title + `-${ t('crud.detail') }`)
     })
   }
   async function onDeleteHandle (ids) {
     await axios[apiMethod['delete']](api.delete.replace(':ids', ids.join(',')), null, apiOptionConfig?.delete)
-    message.success('删除成功')
+    message.success(t('crud.deleteSuccess'))
     emit('deleted')
     cTable.value?.refresh?.()
   }
   async function onToggleHandle (record) {
     await axios[apiMethod['toggle']](api.toggle, { [primaryKey]: record[primaryKey] }, apiOptionConfig?.toggle)
-    message.success('启/禁用成功')
+    message.success(t('crud.toggleSuccess'))
     cTable.value?.refresh?.()
   }
   async function getDetail (id) {
@@ -106,8 +107,8 @@ export function useActionHandle ({ cModal, cForm, cTable, modalConfig = {}, api,
   async function onBatchDeleteHandle (ids) {
     if (ids.length === 0) return
     Modal.confirm({
-      title: '温馨提示',
-      content: `确定要删除选中项(共${ids.length}项)吗？`,
+      title: t('crud.warmTips'),
+      content: t('crud.confirmDeleteBySelected', { value: ids.length}),
       icon: createVNode(ExclamationCircleOutlined),
       onOk: async () => {
         await onDeleteHandle(ids)
@@ -118,11 +119,11 @@ export function useActionHandle ({ cModal, cForm, cTable, modalConfig = {}, api,
   async function onSubmitHandle (submitData) {
     if (isAdd.value) {
       await axios[apiMethod['add']](api.add, submitData, apiOptionConfig?.add)
-      message.success('新增成功')
+      message.success(t('crud.addSuccess'))
       emit('added', submitData)
     } else if (isEdit.value) {
       await axios[apiMethod['update']](api.update, submitData, apiOptionConfig?.update)
-      message.success('修改成功')
+      message.success(t('crud.updateSuccess'))
       emit('updated', submitData)
     }
     if (typeof afterSubmit === 'function') {

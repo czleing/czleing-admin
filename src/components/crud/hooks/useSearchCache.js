@@ -6,7 +6,7 @@ export function useSearchCache () {
   const route = useRoute()
   const storage = window.sessionStorage
   const maxCount = 3 // 每个页面最大缓存几个
-  const key = 'SEARCH_FORM_CHACHE_' + route.path
+  const key = 'CZ_SEARCH_FORM_CHACHE_' + route.path
   const cacheList = ref([])
   /**
    * 通过ID获取当前页面缓存对象

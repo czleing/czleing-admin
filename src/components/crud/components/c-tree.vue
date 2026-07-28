@@ -3,7 +3,7 @@
   <div class="c-tree">
     <a-input-search
       v-model:value="searchValue"
-      placeholder="请输入关键字搜索"
+      :placeholder="$t('crud.pleaseEnterKeywordToSearch')"
       allowClear
       @change="onChangeHandle"
       @search="onSearchHandle"

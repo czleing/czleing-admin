@@ -30,6 +30,7 @@ export default defineComponent({
      * autoRefresh: true, // 是否每次弹窗后自动刷新
      * converter: (res) => res // 数据源数据转换器，在查询到数据后可对数据进行修改
      */
+    const { t } = useI18n()
     const dataSource = ref()
     const dictStore = useDictStore()
     const formData = inject('c-form.formData', {})
@@ -57,7 +58,7 @@ export default defineComponent({
       }
       triggerRemote = async () => {
         await formRemotes[props.field.fieldName]()
-        message.success('刷新成功')
+        message.success(t('crud.refreshSuccess'))
       }
       // 需要每次弹窗时刷新一次
       if (remote.autoRefresh) {
@@ -101,7 +102,7 @@ export default defineComponent({
       })
       triggerRemote = async () => {
         await dictStore.initDictByTypes([dictType], {[dictType]: { force: true }})
-        message.success('刷新成功')
+        message.success(t('crud.refreshSuccess'))
       }
     }
 
@@ -160,6 +161,7 @@ export default defineComponent({
       dataSource: this.dataSource
     })
     const vNode = renderByField(this.field)
+    const { t } = useI18n()
     let useRefresh = true
     // 以下两种控件，默认不显示刷新按钮，手动设置除外
     if ([EControlType.eRadio, EControlType.eCheckbox].includes(this.field.type)) {
@@ -173,7 +175,7 @@ export default defineComponent({
           h(vNode, { style: 'width: calc(100% - 32px)' }),
           h(
             resolveComponent('a-button'),
-            { title: '刷新数据', onClick: this.triggerRemote },
+            { title: t('crud.refreshData'), onClick: this.triggerRemote },
             {
               icon: () => h(SyncOutlined, { class: 'em08 text-gray' })
             }

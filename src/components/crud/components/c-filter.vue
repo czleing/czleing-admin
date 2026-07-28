@@ -69,7 +69,7 @@
 
 <script setup>
 import { EControlType } from '@/enum'
-import { useSearchCache } from '@/hooks/useSearchCache.js'
+import { useSearchCache } from '@/components/crud/hooks/useSearchCache.js'
 import { isAllFieldEmpty, isNotEmpty } from '@/utils/index.js'
 import { DeleteOutlined, DownOutlined, SearchOutlined, UndoOutlined, UpOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'

@@ -12,6 +12,7 @@ import { h, resolveComponent } from 'vue'
  */
 export function useRender ({ ctx, isView, value, dataSource }) {
   const formData = inject('c-form.formData', {})
+  const { t } = useI18n()
   const emitUpdate = async (...args) => {
     ctx.$emit('update:value', ...args) // 统一使用 value 作为双向绑定的 props (为了与 ant-design 一致)
   }
@@ -70,7 +71,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const props = Object.assign(
       {
         type: 'text',
-        placeholder: field.props?.placeholder ?? `请输入${field.label}`,
+        placeholder: field.props?.placeholder ?? t('crud.pleaseEnter', { text: field.label }),
         maxlength: 50
       },
       controlTypeEnum.data.defaultProps ?? {},
@@ -129,7 +130,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
       {
-        placeholder: field.props?.placeholder ?? `请输入或选择${field.label}`
+        placeholder: field.props?.placeholder ?? t('crud.pleaseEnterOrSelect', { text: field.label })
       },
       controlTypeEnum.data.defaultProps ?? {},
       field.props
@@ -158,7 +159,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
       {
-        placeholder: field.props?.placeholder ?? `请输入${field.label}`
+        placeholder: field.props?.placeholder ?? t('crud.pleaseEnter', { text: field.label })
       },
       controlTypeEnum.data.defaultProps ?? {},
       field.props
@@ -185,7 +186,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
       {
-        placeholders: field.props?.placeholder ?? [`${field.label}起`, `${field.label}止`]
+        placeholders: field.props?.placeholder ?? [`${field.label}${t('crud.start')}`, `${field.label}${t('crud.end')}`]
       },
       controlTypeEnum.data.defaultProps ?? {},
       field.props
@@ -244,7 +245,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
       {
-        placeholder: field.props?.placeholder ?? `请输入${field.label}`
+        placeholder: field.props?.placeholder ?? t('crud.pleaseEnter', { text: field.label }),
       },
       controlTypeEnum.data.defaultProps ?? {},
       field.props
@@ -315,7 +316,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
       {
-        placeholder: field.props?.placeholder ?? `请选择${field.label}`
+        placeholder: field.props?.placeholder ?? t('crud.pleaseSelect', { text: field.label })
       },
       controlTypeEnum.data.defaultProps ?? {},
       field.props
@@ -358,7 +359,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
       {
-        placeholder: field.props?.placeholder ?? `请选择${field.label}`,
+        placeholder: field.props?.placeholder ?? t('crud.pleaseSelect', { text: field.label }),
         style: { width: '100%' }
       },
       controlTypeEnum.data.defaultProps ?? {},
@@ -393,7 +394,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
       {
-        placeholder: field.props?.placeholder ?? [`请选择${field.label}起`, `请选择${field.label}止`],
+        placeholder: field.props?.placeholder ?? [`${t('crud.pleaseSelectStart', { text: field.label })}`, `${t('crud.pleaseSelectEnd', { text: field.label })}`],
         style: { width: '100%' }
       },
       controlTypeEnum.data.defaultProps ?? {},
@@ -416,7 +417,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
   function renderSwitch (field) {
     // 查看模式，直接渲染文本
     if (isView) {
-      return h('span', [!!value ? '是' : '否'])
+      return h('span', [!!value ? t('crud.yes') : t('crud.no')])
     }
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
@@ -481,7 +482,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
       {
-        placeholder: field.props?.placeholder ?? `请选择${field.label}`
+        placeholder: field.props?.placeholder ?? t('crud.pleaseSelect', { text: field.label })
       },
       controlTypeEnum.data.defaultProps ?? {},
       field.props
@@ -545,7 +546,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
   function transformOptions (options, useAll = false) {
     const result = options?.map(item => ({ ...item, value: item.id ?? item.value, label: item.name ?? item.label }))
     if (useAll && result) {
-      result.unshift({ value: null, label: '全部' })
+      result.unshift({ value: null, label: t('crud.all') })
     }
     return result
   }

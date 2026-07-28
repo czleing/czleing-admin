@@ -68,7 +68,7 @@
         <a-table-summary fixed>
           <a-table-summary-row>
             <a-table-summary-cell>
-              <div class="bold nowrap">合计</div>
+              <div class="bold nowrap">{{ $t('crud.count') }}</div>
             </a-table-summary-cell>
             <a-table-summary-cell
               v-for="(column, index) in currColumns"
