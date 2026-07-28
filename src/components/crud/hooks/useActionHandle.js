@@ -89,12 +89,12 @@ export function useActionHandle ({ cModal, cForm, cTable, modalConfig = {}, api,
     await axios[apiMethod['delete']](api.delete.replace(':ids', ids.join(',')), null, apiOptionConfig?.delete)
     message.success('删除成功')
     emit('deleted')
-    cTable.value.refresh()
+    cTable.value?.refresh?.()
   }
   async function onToggleHandle (record) {
     await axios[apiMethod['toggle']](api.toggle, { [primaryKey]: record[primaryKey] }, apiOptionConfig?.toggle)
     message.success('启/禁用成功')
-    cTable.value.refresh()
+    cTable.value?.refresh?.()
   }
   async function getDetail (id) {
     const detail = await axios[apiMethod['detail']](api.detail.replace(':id', id), { id }, apiOptionConfig?.detail)
@@ -111,7 +111,7 @@ export function useActionHandle ({ cModal, cForm, cTable, modalConfig = {}, api,
       icon: createVNode(ExclamationCircleOutlined),
       onOk: async () => {
         await onDeleteHandle(ids)
-        cTable.value.clearSelect()
+        cTable.value?.clearSelect?.()
       }
     })
   }
@@ -133,7 +133,7 @@ export function useActionHandle ({ cModal, cForm, cTable, modalConfig = {}, api,
         detail: detail.value
       })
     }
-    cTable.value.refresh()
+    cTable.value?.refresh?.()
   }
 
   return {

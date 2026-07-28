@@ -30,6 +30,7 @@
         :columns="columns"
         :pagination="pagination"
         :show-search="showSearch"
+        :useToggleSearch="!!filterConfig"
         @sortColumn="sortColumn"
         @toggleShowSearch="toggleShowSearch"
         @refresh="onRefreshHandle"

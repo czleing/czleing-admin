@@ -37,7 +37,7 @@
     </div>
     <a-space>
       <!-- 隐藏搜索区 -->
-      <a-button :type="showSearch ? 'default' : 'primary'" @click="onToggleShowSearchHandle">
+      <a-button v-if="useToggleSearch" :type="showSearch ? 'default' : 'primary'" @click="onToggleShowSearchHandle">
         <template v-if="!loading" #icon>
           <SearchOutlined :style="{ fontSize: '0.9em' }" />
         </template>
@@ -112,7 +112,9 @@ const props = defineProps({
   /** 分页信息 */
   pagination: Object,
   /** 选中的要展示的列字段名数组 */
-  checkedFieldNames: Array
+  checkedFieldNames: Array,
+  /** 是否使用查询区切换按钮 */
+  useToggleSearch: { type: Boolean, default: true }
 })
 
 const selectedIds = inject('c-page.selectedIds', ref([]))
