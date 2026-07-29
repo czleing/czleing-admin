@@ -207,7 +207,7 @@ function onConfirm (close, extraData) {
     columns: [
       { title: '编码', dataIndex: 'postCode' },
       { title: '名称', dataIndex: 'postName' },
-      { title: '是否启用', dataIndex: 'isEnabled', type: 'isEnabled' },
+      { title: '是否启用', dataIndex: 'isEnabled', type: 'isEnabled' }, // type 指定预处理类型
       {
         title: '操作',
         actionShowNum: 2, // 展示操作按钮数量，剩余的将收进更多里

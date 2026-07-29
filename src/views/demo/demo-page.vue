@@ -821,6 +821,9 @@ const modalConfig = computed(() => ({
         props: {
           // primaryKey: 'id',
           // maxCount: 10,
+          useAddDefault: true, // 是否在初始化时默认新增一行
+          useTextOCR: true, // 是否使用文本识别
+          // ... 更多属性参考 DynamicTable 的 props
           columns: [
             {
               title: '序号',
@@ -846,6 +849,7 @@ const modalConfig = computed(() => ({
               // isView: true, // 查看模式
               disabled: (record, records) => record.field2 === 2, // Boolean | (record, records) => Boolean
               required: (record, records) => record.field2 === 1, // Boolean | (record, records) => Boolean
+              // defaultValue: 'xxxxxx', // 默认值
               // rules: [], // 不生效，请用 validator
               validator: (index, value, record, records) => { // record: 当前行的数据对象，records: 所有行数据
                 if (value && value.length < 3) {
