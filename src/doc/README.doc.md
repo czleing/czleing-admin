@@ -410,3 +410,6 @@ const modalConfig = computed(() => ({
 - 组件中 style 标签尽可能添加 `scoped`，避免全局样式污染，如：`<style scoped>`
 - 查询区域/表单区域使用日期/时间范围时，字段名设计统一使用'Begin'、'End'后缀，便于代码生成及使用默认值简化配置，如：xxxBegin, xxxEnd
 - 相对独立的小模块，尽可能单独抽离成一个组件，避免一个文件代码过长过杂，同时也要避免过多的组件嵌套
+
+#### 10、全配置参考案例：[demo-page](../views/demo/demo-page.vue)
+既是案例也是文档，也可以访问[CPage 组件使用文档](./README.cpage.md)

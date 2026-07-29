@@ -54,6 +54,7 @@
 ## 适合场景
 - 大中小型后台管理系统
 - 数据管理、运营、统计分析类业务
+- 学习、项目交付
 - 追求轻量化、快速落地
 
 ## 初始化
@@ -107,7 +108,7 @@ npm run preview
 <img src='./src/doc/light8.jpg' alt="light">
 
 ## 文档
-[点击进入](./src/doc/README.doc.md)
+[点击进入](./src/doc/README.doc.md)，快速了解
 
 ## 贡献者
 

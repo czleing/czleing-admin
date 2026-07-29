@@ -161,8 +161,8 @@ const toolsConfig = computed(() => ({
         //   async onOk () {
         //     await axios.post(`/xx/xx`, {...})
         //     message.success('xx成功！')
-        //     cPage.value.refresh()
-        //     cPage.value.clearSelect()
+        //     cPage.value.refresh() // 刷新列表
+        //     cPage.value.clearSelect() // 清空选中
         //   }
         // })
       }
@@ -173,7 +173,7 @@ const toolsConfig = computed(() => ({
 
 ---
 
-## 五、tableConfig（表格）
+## 五、tableConfig（表格区配置）
 表格顶层：
 | 属性 | 类型 | 说明 |
 |---|---:|---|
@@ -267,16 +267,21 @@ const toolsConfig = computed(() => ({
 | cols | Number | 一行显示几列 | 2 |
 | labelCol | Object | 全局表单项文本部分栅格配置，参考 a-form | { span: 6 } |
 | wrapperCol | Object | 全局表单项文本部分栅格配置，参考 a-form | { span: 18 } |
-| fields | Array | 表单项字段配置 | - |
+| fields | Array\<Field> | 表单项字段数组配置 | - |
 | ... | - | 其他属性可以根据需要自由扩展 | - |
 
 ---
 
-**modalConfig.formConfig.fields** 表单字段配置数据项属性：
+**modalConfig.formConfig.fields** 表单字段数组每项属性：
+- 功能比 filterConfig.fields 更强大
+
 | 属性 | 类型 | 说明 | 默认值 |
 |---|---:|---|---|
 | label | String \| formData => String | 字段标签 | - |
 | fieldName | String | 字段名，必填 | - |
+| title | String | 分组时组名 | - |
+| subTitle | String | 分组时副组名 | - |
+| fields | Array\<Field> | 分组时该组的字段数组 | - |
 | type | String | 控件类型，EControlType 指定的类型或全局组件名 | EControlType.eInput |
 | required | Boolean \| formData => Boolean | 是否必填 | false |
 | hidden | Boolean \| formData => Boolean | 是否隐藏该字段，数据仍在表单中 | false |
@@ -293,6 +298,23 @@ const toolsConfig = computed(() => ({
 | props | Object \| formData => Object | 透传给控件的 props（包括 remote 配置） | - |
 | detailConfig | Object | 详情模式覆盖配置 | - |
 | ... | - | 其他属性可以根据需要自由扩展 | - |
+
+**分组用法** 只支持嵌套一层
+```js
+fields: [
+  {
+    label: '名称',
+    fieldName: 'name',
+  },
+  {
+    title: '组1',
+    subTitle: '副标题',
+    hidden: formData => formData.type === 1, // type = 1 时，隐藏该组
+    none: formData => formData.type === 2, // type = 2 时，移除该组
+    fields: [...] // 该组字段数组
+  }
+]
+```
 
 **所有表单控件 Field.props 的特殊属性**
 | 属性 | 类型 | 说明 | 默认值 |
@@ -327,6 +349,30 @@ const toolsConfig = computed(() => ({
 | params | Object | 接口参数 | - |
 | autoRefresh | Boolean | 是否每次弹窗后自动请求一次 | - |
 | converter | Function | 数据源数据转换器 (res) => res | - |
+
+示例：
+```js
+{
+  label: '动态下拉',
+  fieldName: 'dmSelect',
+  type: EControlType.eSelect,
+  props: {
+    // useRefresh: false,
+    remote: {
+      url: '/system/user/selectUser',
+      // method: 'get', // 默认 post
+      params: {
+        // type: 1,
+        // type: '{formData.radio1:required}'
+      },
+      // autoRefresh: true,
+      converter (result) {
+        return result.list?.map(item => ({ id: item.userId, name: item.nickName }))
+      }
+    }
+  }
+},
+```
 
 
 自定义组件特有属性（type: EControlType.eCustom）：
