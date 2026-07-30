@@ -99,6 +99,9 @@
           <a-form-item :label="$t('frame.useDynamicPageTitle')">
             <a-switch v-model:checked="settingStore.useDynamicPageTitle" />
           </a-form-item>
+          <a-form-item :label="$t('frame.useWatermark')">
+            <a-switch v-model:checked="settingStore.useWatermark" />
+          </a-form-item>
         </div>
       </a-form>
     </CModal>

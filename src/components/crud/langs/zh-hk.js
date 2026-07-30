@@ -53,6 +53,7 @@ export default {
     topLeft: '混合',
     useTableBorder: '表格豎向邊框',
     useBreadcrumbs: '使用麵包屑',
+    useWatermark: '使用水印',
   },
   // crud
   crud: {

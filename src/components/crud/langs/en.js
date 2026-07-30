@@ -52,6 +52,7 @@ export default {
     topLeft: 'TopLeft',
     useTableBorder: 'Use Table Border',
     useBreadcrumbs: 'Use Breadcrumbs',
+    useWatermark: 'Use Watermark',
   },
   // crud
   crud: {

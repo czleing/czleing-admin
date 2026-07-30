@@ -1,35 +1,37 @@
 <template>
-  <a-layout class="layout" style="height:100vh;">
-    <a-layout-header :class="{ 'is-radius mt6 ml6 mr6': settingStore.useRadius }" style="padding:0;">
-      <!-- 头部 -->
-      <Header />
-    </a-layout-header>
-    <a-layout>
-      <a-layout-sider v-show="menuStore.leftNavRoutes && menuStore.leftNavRoutes.length > 0" :collapsed="!menuStore.isSidebarOpen" :trigger="null" :theme="settingStore.mode" :class="{ 'is-radius mt6 ml6 mb6': settingStore.useRadius }" collapsible>
-        <!-- 左侧菜单 -->
-        <MenuSide />
-      </a-layout-sider>
-      <a-layout-content>
-        <div class="pa5 flex-y y-stretch h100p">
-          <!-- 右侧 Tabs 栏 -->
-          <div v-if="settingStore.useTabs" class="">
-            <Tabs />
+  <a-watermark :content="settingStore.useWatermark ? watermark : ''" :rotate="-35" :zIndex="9000">
+    <a-layout class="layout" style="height:100vh;">
+      <a-layout-header :class="{ 'is-radius mt6 ml6 mr6': settingStore.useRadius }" style="padding:0;">
+        <!-- 头部 -->
+        <Header />
+      </a-layout-header>
+      <a-layout>
+        <a-layout-sider v-show="menuStore.leftNavRoutes && menuStore.leftNavRoutes.length > 0" :collapsed="!menuStore.isSidebarOpen" :trigger="null" :theme="settingStore.mode" :class="{ 'is-radius mt6 ml6 mb6': settingStore.useRadius }" collapsible>
+          <!-- 左侧菜单 -->
+          <MenuSide />
+        </a-layout-sider>
+        <a-layout-content>
+          <div class="pa5 flex-y y-stretch h100p">
+            <!-- 右侧 Tabs 栏 -->
+            <div v-if="settingStore.useTabs" class="">
+              <Tabs />
+            </div>
+            <!-- 右侧工作区 -->
+            <div class="view-main flex-auto pa10" :style="{ 'overflow': isAnimating ? 'hidden' : 'auto' }">
+              <!-- {{ tabsStore.cachedViews }} -->
+              <router-view v-slot="{ Component, route }">
+                <Transition :name="settingStore.tabAnimate" :css="!!settingStore.tabAnimate" @before-enter="isAnimating = true" @after-leave="isAnimating = false">
+                  <keep-alive :max="20" :include="tabsStore.cachedViews">
+                    <component v-if="!tabsStore.refreshing" :is="Component" :key="route.fullPath" />
+                  </keep-alive>
+                </Transition>
+              </router-view>
+            </div>
           </div>
-          <!-- 右侧工作区 -->
-          <div class="view-main flex-auto pa10" :style="{ 'overflow': isAnimating ? 'hidden' : 'auto' }">
-            <!-- {{ tabsStore.cachedViews }} -->
-            <router-view v-slot="{ Component, route }">
-              <Transition :name="settingStore.tabAnimate" :css="!!settingStore.tabAnimate" @before-enter="isAnimating = true" @after-leave="isAnimating = false">
-                <keep-alive :max="20" :include="tabsStore.cachedViews">
-                  <component v-if="!tabsStore.refreshing" :is="Component" :key="route.fullPath" />
-                </keep-alive>
-              </Transition>
-            </router-view>
-          </div>
-        </div>
-      </a-layout-content>
+        </a-layout-content>
+      </a-layout>
     </a-layout>
-  </a-layout>
+  </a-watermark>
 </template>
 
 <script setup>
@@ -39,14 +41,22 @@ import Tabs from './components/tabs/index.vue'
 import { useMenuStore } from '@/stores/menu-store.js'
 import { useTabsStore } from '@/stores/tabs-store.js'
 import { useSettingStore } from '@/stores/setting-store.js'
+import { useAuthStore } from '@/stores/auth-store.js'
 import { useWindowSize } from '../hooks/useWindowSize'
 import { useThemeToken } from '../hooks/useThemeToken'
 
 const menuStore = useMenuStore()
 const tabsStore = useTabsStore()
 const settingStore = useSettingStore()
+const authStore = useAuthStore()
 const { token } = useThemeToken()
 const isAnimating = ref(false)
+const watermark = computed(() => {
+  if (authStore.userInfo?.userName) {
+    return authStore.userInfo.nickName + ' ' + authStore.userInfo.userName
+  }
+  return '演示用户'
+})
 
 /** 使用动态色彩，跟随 ant-design 主题 */
 watch(

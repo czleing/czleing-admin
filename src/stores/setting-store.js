@@ -86,6 +86,7 @@ export const useSettingStore = defineStore('setting', () => {
   const useDynamicPageTitle = ref(true) // 是否动态设置浏览器标签名，设置为路由上的 meta.title
   const useTableBorder = ref(true) // 表格是否使用竖向边框
   const useBreadcrumbs = ref(true) // 是否使用面包屑目录层级
+  const useWatermark = ref(false) // 是否使用水印
 
   /** 根据主题名称设置主题 */
   function setThemeByName (name) {
@@ -135,6 +136,7 @@ export const useSettingStore = defineStore('setting', () => {
     themes: themesGetter,
     useTableBorder,
     useBreadcrumbs,
+    useWatermark,
     setThemeByName,
     setDark,
     setLight,
