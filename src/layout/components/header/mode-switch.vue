@@ -56,8 +56,6 @@ function playEffect(x, y) {
       { filter: isToDark ? 'blur(0px)' : 'blur(10px)', opacity: isToDark ? 1 : 0 }
     ]
   }
-  // fill: 'both' 解决了闪屏问题，但是带来了新问题：上一次old动画结束后，::view-transition-old(root) 永久保持在了最后一帧(消失时的样子)
-  // 导致在下一次动画时，::view-transition-old(root) 一开始就处于消失状态，为了解决这个问题，需要额外开启一个动画将 old 的状态恢复原状
   isBtnDark.value && root.animate([{ opacity: 1, filter: 'none', clipPath: 'none' }], {
     duration: 0,
     pseudoElement: '::view-transition-old(root)',
@@ -67,7 +65,7 @@ function playEffect(x, y) {
     duration: 650,
     easing: 'linear',
     pseudoElement: isToDark ? '::view-transition-new(root)' : '::view-transition-old(root)',
-    fill: 'both' // 解决动画结束后屏幕闪一下的问题
+    fill: 'both'
   });
 }
 </script>
@@ -76,18 +74,12 @@ function playEffect(x, y) {
 ::view-transition-new(root) {
   animation: none !important;
   mix-blend-mode: normal;
-  /* width: 200px;
-  height: 200px; */
 }
 ::view-transition-old(root) {
   z-index: 99;
-  /* left: 0px;
-  top: 0px; */
 }
 ::view-transition-new(root) {
   z-index: 1;
-  /* left: 200px;
-  top: 0px; */
 }
 [theme='dark']::view-transition-old(root)  {
   z-index: 1;
