@@ -120,7 +120,7 @@ import ModeSwitch from './mode-switch.vue'
 const settingStore = useSettingStore()
 const settingModal = ref()
 const currColors = computed(() => Object.entries(settingStore.theme?.token))
-const { locale, t } = useI18n()
+const { t } = useI18n()
 const menuLayoutOptions = computed(() => [
   { value: 'top', payload: { label: t('frame.top'), icon: Top } },
   { value: 'left', payload: { label: t('frame.left'), icon: Left } },
@@ -159,7 +159,6 @@ const handleChange = name => {
 }
 const handleLocalChange = lc => {
   settingStore.setLocale(lc)
-  locale.value = lc
 }
 </script>
 

@@ -50,9 +50,10 @@
       <HeaderMessage />
       <HeaderFullscreen />
       <HeaderSetting />
-      <div style="transform: scale(0.7);">
+      <div style="transform: scale(0.7);transform-origin: 50% 20%;margin: 0 -8px;">
         <ModeSwitch />
       </div>
+      <HeaderLang />
       <HeaderUser />
     </div>
   </div>
@@ -70,6 +71,7 @@ import HeaderSetting from './header-setting.vue'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'
 import ModeSwitch from './mode-switch.vue'
 import HeaderBreadcrumb from './header-breadcrumb.vue'
+import HeaderLang from './header-lang.vue'
 
 const menuStore = useMenuStore()
 const settingStore = useSettingStore()

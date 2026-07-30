@@ -88,6 +88,8 @@ export const useSettingStore = defineStore('setting', () => {
   const useBreadcrumbs = ref(true) // 是否使用面包屑目录层级
   const useWatermark = ref(false) // 是否使用水印
 
+  const { locale: l } = useI18n()
+
   /** 根据主题名称设置主题 */
   function setThemeByName (name) {
     if (!name) return
@@ -114,6 +116,7 @@ export const useSettingStore = defineStore('setting', () => {
 
   function setLocale (lang) {
     locale.value = lang
+    l.value = lang
   }
 
   const isDark = computed(() => mode.value === 'dark')
