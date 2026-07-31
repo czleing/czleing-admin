@@ -65,6 +65,7 @@ import { EControlType, EIsEnabled } from '@/enum/index.js'
 import { message } from 'ant-design-vue'
 
 const cPage = ref()
+const { t } = useI18n()
 defineOptions({
   name: 'DemoPage'
 })
@@ -77,7 +78,7 @@ const treeConfig = {
   searchField: 'deptId', // 将选中节点的id作为列表的查询参数的参数名，默认orgId
 }
 /** 查询条件配置 */
-const filterConfig = {
+const filterConfig = computed(() => ({
   // useCache: true, // 使用查询条件暂存，默认 false
   // cacheBtnText: '记住查询', // 暂存按钮文字，默认 '记住查询'
   col: { sm: 8, lg: 6, xxl: 6 }, // 所有表单项栅格设置，默认：{ sm: 8, lg: 6, xxl: 4 }，参照 a-col
@@ -89,7 +90,7 @@ const filterConfig = {
   // 字段配置
   fields: [
     {
-      label: '关键字',
+      label: t('demo.keyword'), // '关键字',
       fieldName: 'key',
       // type: EControlType.eInput, // 默认 eInput 可以不设置
       // col: { flex: '280px' }, // 表单项(包含文本和控件)栅格设置，默认响应式分配：{ sm: 8, lg: 6, xxl: 4 }
@@ -97,11 +98,11 @@ const filterConfig = {
       // labelCol: { span: 7 }, // 表单项文本部分栅格设置，参照 a-col
       // wrapperCol: { span: 17 }, // 表单项控件部分栅格设置，参照 a-col
       props: {
-        placeholder: '请输入姓名/手机号/账号'
+        placeholder: t('demo.pleaseEnterKeyword'), // '请输入姓名/手机号/账号'
       }
     },
     {
-      label: '是否启用',
+      label: t('demo.isEnabled'), // '是否启用',
       fieldName: 'isEnabled',
       type: EControlType.eSelect,
       defaultValue: 1, // 给一个默认值，注：设置了默认值后，页面初始化时 c-filter 组件会自动提交一次查询，tableConfig.initSearch 将会默认关闭
@@ -110,7 +111,7 @@ const filterConfig = {
       }
     },
     {
-      label: '字典下拉',
+      label: t('demo.dictSelect'), // '字典下拉',
       fieldName: 'xxxStatus',
       type: EControlType.eSelect,
       props: {
@@ -119,12 +120,12 @@ const filterConfig = {
       }
     },
     {
-      label: '数字范围',
+      label: t('demo.numRange'), // '数字范围',
       fieldName: 'numberRange', // 后端使用数组接收
       type: EControlType.eNumberRange,
     },
     {
-      label: '选择部门',
+      label: t('demo.selectDept'), // '选择部门',
       fieldName: 'deptId',
       type: EControlType.eTreeSelect,
       props: {
@@ -135,7 +136,7 @@ const filterConfig = {
       }
     },
     {
-      label: '时间范围',
+      label: t('demo.timeRange'), // 时间范围
       // col: { flex: '460px' }, // 宽度不够时，设置更大宽度
       fieldName: 'createTime', // 对应查询数据库中的字段，提交时会删掉，替换成 fieldNames 中设置的两个字段
       type: EControlType.eDateRange,
@@ -145,7 +146,7 @@ const filterConfig = {
       }
     }
   ]
-}
+}))
 const uploadFile = ref()
 /** 自定义工具栏按钮配置 object | computed(() => object) */
 const toolsConfig = computed(() => ({
@@ -154,7 +155,7 @@ const toolsConfig = computed(() => ({
   // backBtnText: '返回',
   otherTools: [
     {
-      name: '自定义按钮', // String | ({ selectedIds, selectedObjs, pagination }) => String
+      name: t('demo.diyBtn'), // 自定义按钮 String | ({ selectedIds, selectedObjs, pagination }) => String
       permission: 'system:user:diy',
       props: {
         type: 'link',
@@ -232,8 +233,8 @@ const tableConfig = computed(() => ({
   // initSearch: true, // 默认 true，初始化时查询
   columns: [
     {
-      title: '姓名',
-      tooltip: '用户真实姓名',
+      title: t('demo.name'), // 姓名
+      tooltip: t('demo.userRealName'), // '用户真实姓名',
       dataIndex: 'nickName',
       resizable: true,
       width: 100,
@@ -242,7 +243,7 @@ const tableConfig = computed(() => ({
       // sorter: (a, b) => a.totalCount - b.totalCount, // 本地排序，非中文排序
     },
     {
-      title: '年龄',
+      title: t('demo.age'), // 年龄
       dataIndex: 'age',
       resizable: true,
       width: 80,
@@ -250,7 +251,7 @@ const tableConfig = computed(() => ({
       maxWidth: 200,
     },
     {
-      title: '金额',
+      title: t('demo.amount'), // 金额
       dataIndex: 'amount',
       resizable: true,
       width: 80,

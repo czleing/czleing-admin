@@ -17,16 +17,16 @@
             <CComponent v-model:value="formData[field.fieldName]" :field="field" />
           </a-form-item>
         </a-col>
-        <a-col v-bind="config.buttonsCol ?? { span: config.useCache && fields?.length > 0 ? 6 : 4 }" class="flex-x" :class="{
+        <a-col v-bind="config.buttonsCol ?? { span: config.useCache && currFields.length > 0 ? 6 : 4 }" class="flex-x" :class="{
           'x-center': config.buttonsAlign === 'center',
           'x-end': config.buttonsAlign === 'right',
         }">
           <a-form-item>
             <a-space>
               <a-button type="primary" :loading="loading" :disabled="loading" :icon="h(SearchOutlined)" html-type="submit">{{ $t('crud.search') }}</a-button>
-              <a-button v-if="fields?.length > 0" :icon="h(UndoOutlined)" @click="onResetHandle">{{ $t('crud.reset') }}</a-button>
+              <a-button v-if="currFields.length > 0" :icon="h(UndoOutlined)" @click="onResetHandle">{{ $t('crud.reset') }}</a-button>
               <!-- 记住查询 及 历史查询 -->
-              <a-dropdown-button v-if="config.useCache && fields?.length > 0" placement="bottomLeft" @click="onRememberHandle">
+              <a-dropdown-button v-if="config.useCache && currFields.length > 0" placement="bottomLeft" @click="onRememberHandle">
                 {{ config.cacheBtnText || $t('crud.rememberSearch') }}
                 <template #overlay>
                   <a-menu>
@@ -83,10 +83,10 @@ const props = defineProps({
   }
 })
 const { t } = useI18n()
-const defaultCol = { sm: 8, lg: 6, xxl: 4 }
-const { col = defaultCol, labelCol, wrapperCol, fields } = props.config
+const defaultCol = ref({ sm: 8, lg: 6, xxl: 4 })
+const { col = defaultCol, labelCol, wrapperCol } = toRefs(props.config)
 const currFields = computed(() => {
-  return fields.map(field => {
+  return props.config?.fields?.map(field => {
     return {
       ...field,
       props: {
@@ -94,7 +94,7 @@ const currFields = computed(() => {
         allowClear: field.props?.allowClear ?? true
       }
     }
-  })
+  }) ?? []
 })
 const searchForm = ref()
 const loading = inject('c-page.loading', false)
@@ -112,7 +112,7 @@ provide('c-form.formData', formData)
 
 onMounted(() => {
   let hasDefaultValue = false
-  fields?.forEach(field => {
+  currFields.value.forEach(field => {
     if (isNotEmpty(field.defaultValue)) {
       formData[field.fieldName] = field.defaultValue
       hasDefaultValue = true
@@ -125,11 +125,11 @@ onMounted(() => {
 
 /** 日期范围字段收集 */
 const dateRangeFields = computed(() => {
-  return fields.filter(field => field.type === EControlType.eDateRange)
+  return currFields.value.filter(field => field.type === EControlType.eDateRange)
 })
 /** 日期范围字段自动转换 */
 function transformDateRange (data) {
-  dateRangeFields.value?.forEach(field => {
+  dateRangeFields.value.forEach(field => {
     const value = data[field.fieldName]
     if (isNotEmpty(value)) {
       // 日期范围字段处理
@@ -154,7 +154,7 @@ function onResetHandle () {
 // --------- 折叠、展开 ------------
 const cFilter = useTemplateRef('cFilter')
 const rowMaxShowNum = ref(5)
-const needFold = computed(() => currFields.value?.length > rowMaxShowNum.value)
+const needFold = computed(() => currFields.value.length > rowMaxShowNum.value)
 const isFold = ref(false)
 const foldRef = useTemplateRef('foldRef')
 const mouseX = ref(0)
