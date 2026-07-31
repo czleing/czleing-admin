@@ -49,9 +49,9 @@ AI 基于 [demo-page](../views/demo/demo-page.vue) 总结
 | :no-delete | Boolean | 禁用批量删除（true 则隐藏） | false |
 | :no-select | Boolean | 禁用行选择（true 则不显示选择列） | false |
 | :no-tools | Boolean | 禁用工具栏（true 则隐藏工具区） | false |
-| :api-config | Object | 预设接口地址配置，支持：list, add, update, detail, delete, toggle, import, importTemplate, export | 根据路由自动生成 |
-| :api-method-config | Object | 请求方式配置 | 默认全部 post |
-| :api-option-config | Object | 请求额外选项（如 headers） | {} |
+| :api-config | Object | 预设功能接口地址配置，支持：list, add, update, detail, delete, toggle, import, importTemplate, export | 根据路由自动生成 |
+| :api-method-config | Object | 预设功能请求方式配置 | 默认全部 post |
+| :api-option-config | Object | 预设功能请求额外选项（如 headers） | {} |
 | :permission-config | Object | 预设功能权限配置 | 根据路由生成 |
 | :tree-config | Object | 左侧树配置（不传则不显示树） | undefined |
 | :filter-config | Object | 查询条件配置（表单） | undefined |
@@ -213,6 +213,9 @@ const toolsConfig = computed(() => ({
 | dictType | String | * 按字典解析显示 |
 | slot | String | * 插槽名，为避免和其他插槽冲突，建议使用 `table_` + dataIndex 格式命名, 在 CPage 内通过 <template #table_xxx="{ text, record, index, column }"> 使用 |
 | type | String | * 预处理类型，自动解析（可选值：isEnabled、Boolean）其他类型可自行扩展 |
+| isAmount | Boolean | * 是否金额，格式化为 12,345.00 |
+| isAvatar | Boolean | * 是否头像，格式化为 a-avatar，支持base64(有前缀和无前缀)、http地址、相对路径 |
+| isImage | Boolean | * 是否图片，格式化为 a-image，支持base64(有前缀和无前缀)、http地址、相对路径 |
 | isDate | Boolean | * 日期类型转换为 YYYY-MM-DD |
 | isDateTime | Boolean | * 日期类型转换为 YYYY-MM-DD HH:mm |
 | dateFormat | String | * dayjs日期格式化字符串，日期类型转换为自定义格式 |
