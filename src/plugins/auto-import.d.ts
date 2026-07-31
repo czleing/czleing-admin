@@ -30,6 +30,7 @@ declare global {
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
   const getFnValue: typeof import('../utils/index.js').getFnValue
   const getFullUrl: typeof import('../utils/index.js').getFullUrl
+  const getImageSrcData: typeof import('../utils/index.js').getImageSrcData
   const h: typeof import('vue').h
   const inject: typeof import('vue').inject
   const isAllFieldEmpty: typeof import('../utils/index.js').isAllFieldEmpty

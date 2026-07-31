@@ -39,17 +39,29 @@
         <template v-else-if="column.isDateTime && text">
           <span>{{ dayjs(text).format('YYYY-MM-DD HH:mm') }}</span>
         </template>
+        <!-- 金额格式化 -->
+        <template v-else-if="column.isAmount && text">
+          <span>{{ new Intl.NumberFormat('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(text) }}</span>
+        </template>
         <!-- 字典转换 -->
         <template v-else-if="column.dictType && text">
           <DictView :dict-type="column.dictType" :value="text" />
         </template>
+        <!-- 头像转换 -->
+        <template v-else-if="column.isAvatar && text">
+          <a-avatar :src="getImageSrcData(text)" :size="30" />
+        </template>
+        <!-- 图片转换 -->
+        <template v-else-if="column.isImage && text">
+          <a-image :src="getImageSrcData(text)" :height="30" />
+        </template>
         <!-- 类型转换 -->
         <template v-else-if="column.type">
           <template v-if="column.type === 'isEnabled'">
-            <span :class="EIsEnabled._classOf(text ? 1 : 0)">{{ EIsEnabled._of(text ? 1 : 0) }}</span>
+            <a-tag :color="text ? 'success' : 'error'" :bordered="false">{{ EIsEnabled._of(text ? 1 : 0) }}</a-tag>
           </template>
           <template v-if="column.type === 'Boolean'">
-            <span :class="EYesNo._classOf(text ? 1 : 0)">{{ EYesNo._of(text ? 1 : 0) }}</span>
+            <a-tag :color="text ? 'success' : 'error'" :bordered="false">{{ EIsEnabled._of(text ? 1 : 0) }}</a-tag>
           </template>
         </template>
         <!-- 带单位、带默认值、字符串脱敏 -->
@@ -76,7 +88,9 @@
               :col-span="index === 0 && noSelect ? 0 : 1"
               class="tc"
             >
-              <span v-if="column.useTotal">{{ total[column.dataIndex] ?? 0 }}</span>
+              <span v-if="column.useTotal">
+                {{ new Intl.NumberFormat('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(total[column.dataIndex] ?? 0) }} {{ column.unit ?? '' }}
+              </span>
               <span v-else>-</span>
             </a-table-summary-cell>
           </a-table-summary-row>
@@ -92,7 +106,7 @@ import axios from '@/api/index.js'
 import dayjs from 'dayjs'
 import CTableAction from './c-table-action.vue'
 import { EIsEnabled, EYesNo } from '@/enum'
-import { stringStar, isEmpty } from '@/utils/index.js'
+import { stringStar, isEmpty, getImageSrcData } from '@/utils/index.js'
 import { useSettingStore } from '@/stores/setting-store.js'
 
 const props = defineProps({
@@ -189,7 +203,12 @@ async function getList () {
   }
   try {
     loading.value = true
-    const result = await axios[props.apiMethodConfig['list']](url, params, props.apiOptionConfig?.list)
+    let result = []
+    if (typeof url === 'function') {
+      result = await url(params)
+    } else {
+      result = await axios[props.apiMethodConfig['list']](url, params, props.apiOptionConfig?.list)
+    }
     let list = result?.list ?? result
     if (typeof props.afterSearch === 'function') {
       list = props.afterSearch(list)

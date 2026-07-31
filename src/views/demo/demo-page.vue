@@ -13,11 +13,11 @@
     primary-key="id"
     :api-config="{
       // 预设功能接口地址配置，默认根据当前路由生成，如：/system/user 页面下新增接口 => /system/user/add，配置了可进行覆盖
-      // add: '',
-      // update: '',
+      // add: '/developer/demo/add',
+      // update: '/developer/demo/update',
       // detail: '',
       // delete: '',
-      list: '/system/user/list',
+      list: getMockData, // 列表接口地址配置，list 支持函数, String | async (searchParams) => ({ list: [], total: Number, ... })
       // toggle: '',
       // import: '',
       // importTemplate: '',
@@ -230,7 +230,7 @@ const tableConfig = computed(() => ({
       // }
     // }
   },
-  // initSearch: true, // 默认 true，初始化时查询
+  // initSearch: true, // 默认 true，初始化时查询，如果查询条件中有默认值，则默认 false
   columns: [
     {
       title: t('demo.name'), // 姓名
@@ -255,14 +255,30 @@ const tableConfig = computed(() => ({
       dataIndex: 'amount',
       resizable: true,
       width: 80,
-      useTotal: true // 使用合计, 会在表格最下面添加合计行，汇总该列的值
+      isAmount: true, // 格式化为金额格式，逗号分隔
+      useTotal: true // 使用合计, 只有数字才设置，会在表格最下面添加合计行，汇总该列的值
     },
     {
       title: '带单位',
       dataIndex: 'withUnit',
       resizable: true,
       unit: '元', // 在后面拼上单位
-      width: 100
+      width: 100,
+      useTotal: true // 使用合计, 会在表格最下面添加合计行，汇总该列的值
+    },
+    {
+      title: '头像',
+      dataIndex: 'avatar',
+      resizable: true,
+      width: 80,
+      isAvatar: true, // 格式化为头像，支持base64或地址
+    },
+    {
+      title: '图片',
+      dataIndex: 'image',
+      resizable: true,
+      width: 80,
+      isImage: true, // 格式化为图片，支持base64或地址 带放大预览功能
     },
     {
       title: '名称2',
@@ -285,8 +301,8 @@ const tableConfig = computed(() => ({
       width: 100,
       customRender: ({ value, record, index, column }) => { // 自定义渲染函数
         return h('span', {
-          class: 'text-danger'
-        }, '状态1')
+          class: 'text-success'
+        }, '状态:' + value)
       }
     },
     {
@@ -297,7 +313,9 @@ const tableConfig = computed(() => ({
         return h(resolveComponent('a-tag'), {
           bordered: false,
           color: record.color
-        }, value)
+        }, {
+          default: () => value
+        })
       }
     },
     {
@@ -324,7 +342,7 @@ const tableConfig = computed(() => ({
       title: '插槽',
       dataIndex: 'slotField',
       resizable: true,
-      width: 100,
+      width: 190,
       slot: 'table_slotField' // 使用插槽渲染
     },
     {
@@ -389,10 +407,10 @@ const tableConfig = computed(() => ({
             name: '动态操作',
             permission: 'system:user:opt',
             confirm: true,
-            confirmContent: `确认锁定[${record.name}]吗？`,
+            confirmContent: `确认锁定[${record.nickName}]吗？`,
             async callback ({}) {
               // await axios.post('', { userId: record.userId })
-              message.success(`[${record.name}]已锁定`)
+              message.success(`[${record.nickName}]已锁定`)
             }
           })
         }
@@ -925,6 +943,15 @@ const modalConfig = computed(() => ({
   })
 }))
 
+function getMockData (searchParams) {
+  return {
+    list: [
+      { id: 1, nickName: '张静', age: '24', avatar: 'https://lf-flow-web-cdn.doubao.com/obj/flow-doubao/doubao/web/doubao_avatar_new.png', image: 'https://gips1.baidu.com/it/u=4056832123,214617935&fm=3074&app=3074&f=PNG?w=2560&h=1440', amount: 12345, withUnit: 33, name2: '对对对', dict: '1', status: 1, diy: 'd', color: 'red', isEnabled: true, phonenumber: '13112341234', address: '广州市黄埔区xxx', slotField: 'x', createTime: '2026-08-08 12:12:12' },
+      { id: 2, nickName: '王楠', age: '22', avatar: 'https://lf-flow-web-cdn.doubao.com/obj/flow-doubao/doubao/web/doubao_avatar_new.png', image: 'https://gips1.baidu.com/it/u=4056832123,214617935&fm=3074&app=3074&f=PNG?w=2560&h=1440', amount: 1357.66, withUnit: 22, name2: '是是是', dict: '2', status: 2, diy: 'u', color: 'green', isEnabled: false, phonenumber: '15512341234', address: '广州市黄埔区xxx', slotField: 'x', createTime: '2026-08-08 12:12:12' }
+    ],
+    total: 2
+  }
+}
 /**
  * 查询前修改查询参数
  * @param {object} searchParams 查询参数

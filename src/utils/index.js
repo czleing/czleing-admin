@@ -203,7 +203,6 @@ export function calcPercent (numerator, denominator, digit = 2) {
 
 /**
  * 字符串替换处理
- * 
  * stringStar('13412341234', 3, 4) => 134****1234
  * @param {String} value 需要处理的字符串
  * @param {Number} startLen 字符串左边保留字符长度
@@ -228,6 +227,26 @@ export function getFnValue (value, ...args) {
   } else {
     return value
   }
+}
+
+/**
+ * 处理图片资源，自动补全base64前缀，兼容url，相对路径 / base64字符串
+ * @param {string|null|undefined} text 图片url 或者 base64字符串
+ * @returns {string} 可直接赋值给 img.src 的值，空输入返回 ''
+ */
+export function getImageSrcData (text) {
+  if (!text) return '';
+  if (typeof text !== 'string') return text;
+  const str = String(text).trim();
+  if (!str) return '';
+  if (str.startsWith('data:image/')) {
+    return str;
+  }
+  const isPureBase64 = /^[A-Za-z0-9+/=]+$/.test(str);
+  if (isPureBase64) {
+    return `data:image/png;base64,${str}`;
+  }
+  return getFullUrl(str);
 }
 
 /** 获取资源全地址 */
