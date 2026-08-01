@@ -101,7 +101,7 @@ npm run preview
 <img src='./src/doc/light5.jpg' alt="light">
 <img src='./src/doc/demo-light.png' alt="light">
 <img src='./src/doc/demo-dark.png' alt="light">
-<img src='./src/doc/data-permissionn.png' alt="light">
+<img src='./src/doc/data-permission.png' alt="light">
 <img src='./src/doc/menu-add.png' alt="light">
 <img src='./src/doc/swagger.png' alt="light">
 <img src='./src/doc/notice.jpg' alt="light">
