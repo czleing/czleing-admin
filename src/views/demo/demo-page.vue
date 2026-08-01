@@ -376,7 +376,7 @@ const tableConfig = computed(() => ({
             callback: 'delete' // 删除操作默认带确认框
           },
           {
-            name: record.isEnabled ? '启用' : '禁用',
+            name: record.isEnabled ? '禁用' : '启用',
             confirm: true,
             callback: 'toggle'
           },
