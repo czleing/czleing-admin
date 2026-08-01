@@ -40,7 +40,7 @@
       </a-row>
     </a-form>
     <!-- 提交按钮，单独使用表单组件时使用 -->
-    <div v-if="$attrs.footer !== null && (showConfirm || showCancel)" class="mt20" :class="alignClass">
+    <div v-if="$attrs.footer !== null && !isView && (showConfirm || showCancel)" class="mt20" :class="alignClass">
       <a-button v-if="showCancel" type="default" :disabled="loading" @click="cancel">{{ cancelText || $t('crud.cancel') }}</a-button>
       <a-button v-if="showConfirm" type="primary" :loading="loading" @click="submit">{{ confirmText || $t('crud.submit') }}</a-button>
     </div>
@@ -58,6 +58,17 @@ const props = defineProps({
   isView: Boolean,
   primaryKey: { type: String, default: 'id' }, // 主键字段名
   detail: { type: Object, default: () => ({}) }, // 修改、查看详情时的详情数据
+  /**
+   * formConfig:
+   * layout: 'horizontal', // 表单布局 horizontal | vertical | inline 默认 horizontal
+   * cols: 2, // 一行显示几列，默认 2 列
+   * labelCol: { span: 6 }, // 如果需要固定label宽度，可设为 { flex: '120px' }, 默认 span: 6，参考 ant-design-vue a-col 的属性设置
+   * wrapperCol: { span: 18 }, // 如果需要固定控件宽度，可设为 { flex: '280px' }, 默认 span: 18，参考 ant-design-vue a-col 的属性设置
+   * autoReset: { type: Boolean, default: true }, // 提交之后自动清空表单
+   * autoClose: { type: Boolean, default: true }, // 提交之后自动关闭弹窗(如果有)
+   * removeNoneFields: { type: Boolean, default: true }, // 提交时过滤掉已移除的字段，none = true 的字段
+   * fields: [Object], // 表单字段数组，可分组
+   */
   formConfig: { type: Object, required: true }, // 表单配置信息
   beforeSubmit: Function, // 提交表单前，对数据进行手工处理的函数，submitData => modifiedSubmitData
   onSubmitHandle: Function, // 校验通过之后，对提交的数据进行处理，如请求接口将数据提交到服务器、提交成功提示、刷新列表
@@ -68,8 +79,7 @@ const props = defineProps({
   showCancel: { type: Boolean, default: true },
   cancelText: { type: String },
   confirmAlign: { type: String, default: 'right' }, // 提交、取消按钮对齐方式，left，center，right
-  autoReset: { type: Boolean, default: true }, // 提交之后自动清空表单
-  autoClose: { type: Boolean, default: true } // 提交之后自动关闭弹窗(如果有)
+  
 })
 
 const { t } = useI18n()
@@ -288,6 +298,22 @@ function pushDateRangeFields (fieldName, fieldNames) {
     rangeFieldNamesMap = {}
   }
 }
+// 过滤掉 none = true 字段或组
+function filterNoneFields (submitData) {
+  const removeNone = (fields) => {
+    fields.forEach(field => {
+      if (isFieldGroup(field)) {
+        removeNone(field.fields)
+      } else {
+        let isNone = getFnValue(field.none, submitData)
+        if (isNone) {
+          delete submitData[field.fieldName]
+        }
+      }
+    })
+  }
+  removeNone(currFields.value)
+}
 
 /** 动态表格类型组件，表单校验封装 */
 function setTableRules (field) {
@@ -337,6 +363,9 @@ function setTableRules (field) {
 
 /** 取消 */
 function cancel () {
+  if (props.formConfig.autoReset !== false) {
+    reset()
+  }
   if (closeModal) {
     closeModal()
   }
@@ -361,6 +390,8 @@ async function getSubmitData () {
   if (props.isEdit && props.primaryKey) {
     submitData[props.primaryKey] = props.detail[props.primaryKey]
   }
+  // 过滤掉 none = true 的字段
+  props.formConfig.removeNoneFields !== false && filterNoneFields(submitData)
   if (import.meta.env.VITE_APP_DEBUG_MODE === 'true') {
     console.log('submitData', submitData)
   }
@@ -374,13 +405,13 @@ function submit () {
     if (props.onSubmitHandle) {
       await props.onSubmitHandle(submitData)
     }
-    if (props.autoReset) {
+    if (props.formConfig.autoReset !== false) {
       reset()
     }
     if (typeof props.confirmContinue === 'function') {
       await nextTick()
       props.confirmContinue(formData, submitData)
-    } else if (props.autoClose && closeModal) {
+    } else if (props.formConfig.autoClose !== false && closeModal) {
       !props.confirmContinue && closeModal()
     }
   })

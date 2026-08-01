@@ -34,7 +34,7 @@
         </div>
       </a-card>
       <a-card class="center shadow2 flex-auto" title="修改个人信息">
-        <CForm isEdit :autoReset="false" :detail="userInfo" primaryKey="userId" :formConfig="infoFormConfig" :onSubmitHandle="onInfoSubmitHandle" confirmText="保存" :showCancel="false" confirmAlign="center" />
+        <CForm isEdit :detail="userInfo" primaryKey="userId" :formConfig="infoFormConfig" :onSubmitHandle="onInfoSubmitHandle" confirmText="保存" :showCancel="false" confirmAlign="center" />
       </a-card>
       <a-card class="right shadow2" title="修改密码">
         <CForm isAdd :formConfig="pwdFormConfig" :onSubmitHandle="onPwdSubmitHandle" confirmText="保存" :showCancel="false" confirmAlign="center" />
@@ -60,6 +60,7 @@ const infoFormConfig = computed(() => {
     labelCol: { span: 6 },
     wrapperCol: { span: 18 },
     cols: 1, // 一行显示几列
+    autoReset: false,
     // 表单字段
     fields: [
       {

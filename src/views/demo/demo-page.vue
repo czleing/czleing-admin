@@ -292,7 +292,7 @@ const tableConfig = computed(() => ({
       dataIndex: 'dict',
       resizable: true,
       width: 100,
-      dictType: 'dict_type' // 自动按指定的字典类型解析出中文
+      dictType: 'sys_user_sex' // 自动按指定的字典类型解析出中文
     },
     {
       title: '自定义',

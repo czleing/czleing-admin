@@ -2,16 +2,15 @@
 <template>
   <div class="">
     <h3>基础使用</h3>
-    <div class="w50p border radius10 pa20">
+    <div class="w50p border radius10 pa20 mt10">
       <c-form
-        :auto-reset="false"
         :show-cancel="false"
         :form-config="formConfig1"
         @submit-handle="onSubmitHandle"
       />
     </div>
     <h3 class="mt20">自由控制</h3>
-    <div class="flex-x flex-wrap gap10">
+    <div class="flex-x flex-wrap gap10 mt10">
       <a-button @click="validate">校验</a-button>
       <a-button @click="setData">设置数据</a-button>
       <a-button @click="getData1">获取转换前数据</a-button>
@@ -22,10 +21,44 @@
     <div class="w50p border radius10 pa20 mt10">
       <c-form
         ref="freeForm"
-        :auto-reset="false"
         :footer="null"
         :form-config="formConfig2"
         :onSubmitHandle="onSubmitHandle"
+      />
+    </div>
+    <h3 class="mt20">弹窗表单</h3>
+    <div class="flex-x gap10 mt10">
+      <a-button @click="openModal">居中弹出</a-button>
+      <a-button @click="openDrawer">右侧抽屉弹出</a-button>
+    </div>
+    <div class="mt50"></div>
+    <CModal ref="modal1" title="弹窗+表单" :footer="null">
+      <c-form
+        :form-config="{ ...formConfig1, autoReset: true }"
+        @submit-handle="onSubmitHandle"
+      />
+    </CModal>
+    <CModal ref="modal2" title="抽屉+自由控制表单">
+      <c-form
+        ref="cForm2"
+        :form-config="{ ...formConfig1, autoReset: true }"
+        :footer="null"
+      />
+    </CModal>
+    <h3 class="mt20">分组表单</h3>
+    <div class="w60p border radius10 pa20 mt10">
+      <c-form
+        :show-cancel="false"
+        :form-config="formConfigGroup"
+        @submit-handle="onSubmitHandle"
+      />
+    </div>
+    <h3 class="mt20">联动表单</h3>
+    <div class="w60p border radius10 pa20 mt10">
+      <c-form
+        :show-cancel="false"
+        :form-config="formConfig3"
+        @submit-handle="onSubmitHandle"
       />
     </div>
   </div>
@@ -43,6 +76,7 @@ defineOptions({ name: 'FormExample' })
 
 // 基础使用
 const formConfig1 = {
+  autoReset: false,
   fields: [
     {
       label: '姓名',
@@ -86,6 +120,7 @@ const formConfig1 = {
 // 自由控制
 const formConfig2 = {
   cols: 1,
+  autoReset: false,
   fields: [
     {
       label: '姓名',
@@ -146,7 +181,7 @@ async function getData2 () {
     content: JSON.stringify(data),
   })
 }
-async function onSubmitHandle (submitData) {
+function onSubmitHandle (submitData) {
   Modal.success({
     title: '提交的数据',
     content: JSON.stringify(submitData),
@@ -158,6 +193,168 @@ function submit () {
 function reset () {
   freeForm.value.reset()
 }
+
+// 弹出表单
+const modal1 = useTemplateRef('modal1')
+function openModal () {
+  modal1.value.open({
+    mode: 'modal',
+    width: 600,
+  })
+}
+
+const modal2 = useTemplateRef('modal2')
+const form2 = useTemplateRef('cForm2')
+function openDrawer () {
+  modal2.value.open({
+    mode: 'drawer',
+    width: 600,
+    onConfirm: async (close) => {
+      const submitData = await form2.value.getSubmitData()
+      Modal.success({
+        title: '提交的数据',
+        content: JSON.stringify(submitData),
+        onOk: () => {
+          form2.value.reset()
+          close()
+        }
+      })
+    },
+    onCancel: () => {
+      form2.value.reset()
+    }
+  })
+}
+
+// 分组
+const formConfigGroup = {
+  cols: 2,
+  labelCol: { flex: '120px' },
+  autoReset: false,
+  fields: [
+    {
+      label: '姓名',
+      fieldName: 'name',
+      required: true
+    },
+    {
+      label: '性别',
+      fieldName: 'sex',
+      type: EControlType.eRadio,
+      rules: { required: true, message: '请选择性别' },
+      props: {
+        dictType: 'sys_user_sex'
+      }
+    },
+    {
+      title: '学历信息',
+      subTitle: '第一个分组',
+      fields: [
+        {
+          label: '学历',
+          fieldName: 'level',
+        },
+        {
+          label: '专业',
+          fieldName: 'major',
+        },
+        {
+          label: '毕业学校',
+          fieldName: 'school',
+        },
+      ]
+    },
+    {
+      title: '家庭信息',
+      subTitle: '第二个分组',
+      fields: [
+        {
+          label: '详细地址',
+          fieldName: 'address',
+        },
+        {
+          label: '家庭联系电话',
+          fieldName: 'homeTel',
+        },
+      ]
+    },
+  ]
+}
+
+// 联动
+const formConfig3 = computed(() => ({
+  labelCol: { flex: '120px' },
+  autoReset: false,
+  fields: [
+    {
+      label: '菜单类型',
+      fieldName: 'menuType',
+      type: EControlType.eRadio,
+      required: true,
+      singleLine: true,
+      defaultValue: EMenuType.eDir,
+      props: {
+        options: EMenuType._list,
+        optionType: 'button', // option 类型， default | button
+        buttonStyle: 'solid', // optionType 为 button 时，button 的风格样式, outline | solid
+        onChange (val, option, formData) {
+          if (formData.menuType == EMenuType.eDir) {
+            formData.path = formData.path?.replace('http://', '')
+            formData.isFrame = false
+          }
+        }
+      }
+    },
+    {
+      label: formData => EMenuType._of(formData.menuType) + '名称',
+      fieldName: 'menuName',
+      type: EControlType.eInput,
+      required: true,
+      props: {
+      }
+    },
+    {
+      label: formData => EMenuType._of(formData.menuType) + '图标',
+      none: formData => formData.menuType === EMenuType.eBtn,
+      fieldName: 'icon',
+      type: EControlType.eCustom,
+      props: {
+        component: IconSelect
+      }
+    },
+    {
+      label: '是否外链',
+      fieldName: 'isFrame',
+      type: EControlType.eSwitch,
+      singleLine: true,
+      tooltip: '是外链则路由地址需要以`http(s)://`开头',
+      defaultValue: false,
+      none: formData => formData.menuType !== EMenuType.eMenu,
+      props: {
+        onChange (val, formData) {
+          formData.path = formData.path ?? ''
+          if (val) {
+            if (!formData.path.includes('http')) {
+              formData.path = 'http://' + formData.path
+            }
+          } else {
+            formData.path = formData.path.replace('http://', '')
+          }
+        }
+      }
+    },
+    {
+      label: f => f.isFrame && f.menuType === EMenuType.eMenu ? '外链地址' : '路由地址',
+      fieldName: 'path',
+      none: formData => formData.menuType === EMenuType.eBtn,
+      type: EControlType.eInput,
+      tooltip: '访问的路由地址，如：`user`，如外网地址需内链访问则以`http(s)://`开头',
+      required: true,
+      props: {
+      }
+    },
+  ]
+}))
 </script>
 
 <style lang="scss" scoped>

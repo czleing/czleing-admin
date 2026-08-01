@@ -245,7 +245,6 @@ function onConfirm (close, extraData) {
 ```html
 <template>
   <c-form
-    :auto-reset="false"
     :show-cancel="false"
     :form-config="formConfig"
     @submit-handle="onSubmitHandle"
@@ -254,6 +253,7 @@ function onConfirm (close, extraData) {
 <script setup>
 import cForm from '@/components/crud/components/c-form.vue';
 const formConfig = {
+  autoReset: false, // 点击取消或提交表单后是否自动重置表单
   fields: [
     {
       label: '姓名',
