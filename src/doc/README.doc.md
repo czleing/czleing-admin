@@ -241,7 +241,8 @@ function onConfirm (close, extraData) {
 #### 7.2、全配置参考案例：[demo-page](../views/demo/demo-page.vue)
 既是案例也是文档，也可以访问[CPage 使用文档](./README.cpage.md)
 
-#### 7.3、CRUD 里部分组件也可单独使用，如：src/components/crud/components 下的 c-form、c-component、c-import、c-tree、c-table 等，如：
+#### 7.3、CRUD 里部分组件也可单独使用
+如：src/components/crud/components 下的 c-form、c-component、c-import、c-tree、c-table 等，如：
 ```html
 <template>
   <c-form
