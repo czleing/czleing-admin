@@ -229,6 +229,7 @@ function toggleTree () {
 
 function onSearchHandle (params) {
   searchParams.value = params
+  pagination.value.current = 1
   cTable.value.search()
 }
 function onRefreshHandle () {
