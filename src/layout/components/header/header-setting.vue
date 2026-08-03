@@ -102,6 +102,9 @@
           <a-form-item :label="$t('frame.useWatermark')">
             <a-switch v-model:checked="settingStore.useWatermark" />
           </a-form-item>
+          <a-form-item v-if="settingStore.isCn" :label="$t('frame.useSplit4')">
+            <a-switch v-model:checked="settingStore.useSplit4" />
+          </a-form-item>
         </div>
       </a-form>
     </CModal>

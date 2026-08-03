@@ -202,6 +202,62 @@ export function calcPercent (numerator, denominator, digit = 2) {
 }
 
 /**
+ * 数值格式化（千分位/万分位）
+ * @param {number|string} value - 原始数值
+ * @param {Object} options 配置项
+ * @param {number} [options.splitDigits=3] 分隔位数：3=千分位，4=万分位, 默认 3
+ * @param {number|null} [options.digit=null] 保留小数位数，默认：null=保留原始小数不截断
+ * @param {boolean} [options.fillZero=true] 小数不足时是否补0，默认true
+ * @returns {string}
+ */
+export function numFormat (value, options = {}) {
+  const { splitDigits = 3, digit = null, fillZero = true } = options;
+  // 1. 异常值兜底
+  if (value === null || value === undefined || value === '') {
+    return '';
+  }
+  // 转为数字
+  let num = Number(value);
+  if (isNaN(num)) {
+    return '';
+  }
+  // 处理正负
+  const isNegative = num < 0;
+  num = Math.abs(num);
+  // 2. 处理小数位
+  let integerStr, decimalStr = '';
+  if (digit !== null && typeof digit === 'number') {
+    // 指定小数位数
+    num = num.toFixed(digit);
+    [integerStr, decimalStr = ''] = num.split('.');
+    if (fillZero && decimalStr.length < digit) {
+      decimalStr = decimalStr.padEnd(digit, '0');
+    }
+  } else {
+    // 保留原始小数
+    const str = num.toString();
+    [integerStr, decimalStr = ''] = str.split('.');
+  }
+  // 3. 整数部分 千分位 / 万分位 分隔
+  // 从右往左按 splitDigits 切割
+  integerStr = integerStr.split('').reverse().join('');
+  const chunks = [];
+  for (let i = 0; i < integerStr.length; i += splitDigits) {
+    chunks.push(integerStr.slice(i, i + splitDigits));
+  }
+  integerStr = chunks.join(',').split('').reverse().join('');
+  // 4. 拼接结果
+  let result = integerStr;
+  if (decimalStr) {
+    result += `.${decimalStr}`;
+  }
+  if (isNegative) {
+    result = `-${result}`;
+  }
+  return result;
+}
+
+/**
  * 字符串替换处理
  * stringStar('13412341234', 3, 4) => 134****1234
  * @param {String} value 需要处理的字符串

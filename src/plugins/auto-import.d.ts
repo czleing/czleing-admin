@@ -46,6 +46,7 @@ declare global {
   const loadingRequest: typeof import('../utils/index.js').loadingRequest
   const markRaw: typeof import('vue').markRaw
   const nextTick: typeof import('vue').nextTick
+  const numFormat: typeof import('../utils/index.js').numFormat
   const onActivated: typeof import('vue').onActivated
   const onBeforeMount: typeof import('vue').onBeforeMount
   const onBeforeRouteLeave: typeof import('vue-router').onBeforeRouteLeave
