@@ -18,7 +18,7 @@
         <slot :visible="visible" />
       </div>
       <!-- a-drawer 默认没有按钮 -->
-      <template v-if="$attrs.footer !== null" #footer>
+      <template v-if="$attrs.footer !== null && (currShowCancel || currShowConfirm)" #footer>
         <slot name="footer">
           <div class="tr">
             <a-button v-if="currShowCancel" :loading="closeLoading" @click="close">{{ currCancelText }}</a-button>

@@ -277,7 +277,13 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       options,
       value,
       onChange: undefined,
-      'onUpdate:value': emitUpdate
+      'onUpdate:value': (val) => {
+        const option = options?.find(item => item.id === val)
+        if (import.meta.env.VITE_APP_DEBUG_MODE === 'true') {
+          console.log('selected: ', val, option)
+        }
+        emitUpdate(val, option)
+      }
     }
     return h(resolveComponent(field.type), controlProps)
   }
@@ -302,7 +308,13 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       options,
       value,
       onChange: undefined,
-      'onUpdate:value': emitUpdate
+      'onUpdate:value': (val) => {
+        const option = options?.find(item => item.id === val)
+        if (import.meta.env.VITE_APP_DEBUG_MODE === 'true') {
+          console.log('selected: ', val, option)
+        }
+        emitUpdate(val, option)
+      }
     }
     return h(resolveComponent(field.type), controlProps)
   }
@@ -337,7 +349,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       'onUpdate:value': (val) => {
         const option = options?.find(item => item.id === val)
         if (import.meta.env.VITE_APP_DEBUG_MODE === 'true') {
-          console.log('selected', val, option)
+          console.log('selected: ', val, option)
         }
         emitUpdate(val, option)
       }

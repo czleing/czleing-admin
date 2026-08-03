@@ -171,7 +171,7 @@ function playEffect(x, y) {
       background-size: 1px 1px;
     }
     .sun-moon {
-      transform: translate(22px, 22px);
+      transform: translate(22px, 25px);
       box-shadow: 8px 8px 0 0 var(--mode-color);
     }
     .cloud {

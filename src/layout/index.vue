@@ -17,7 +17,7 @@
               <Tabs />
             </div>
             <!-- 右侧工作区 -->
-            <div class="view-main flex-auto pa10" :style="{ 'overflow': isAnimating ? 'hidden' : 'auto' }">
+            <div class="view-main flex-auto pa10" :style="{ 'overflow-x': isAnimating ? 'hidden' : 'auto' }">
               <!-- {{ tabsStore.cachedViews }} -->
               <router-view v-slot="{ Component, route }">
                 <Transition :name="settingStore.tabAnimate" :css="!!settingStore.tabAnimate" @before-enter="isAnimating = true" @after-leave="isAnimating = false">
