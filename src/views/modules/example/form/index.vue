@@ -71,6 +71,7 @@ import { Modal } from 'ant-design-vue';
 import dayjs from 'dayjs';
 import { EControlType } from '@/enum'
 import IconSelect from '@/components/common/IconSelect/index.vue'
+import ProvinceCityAreaSelect from '@/components/common/ProvinceCityAreaSelector/index.vue'
 
 defineOptions({ name: 'FormExample' })
 
@@ -87,6 +88,7 @@ const formConfig1 = {
       label: '性别',
       fieldName: 'sex',
       type: EControlType.eRadio,
+      defaultValue: '1',
       rules: { required: true, message: '请选择性别' },
       props: {
         dictType: 'sys_user_sex'
@@ -99,6 +101,16 @@ const formConfig1 = {
       props: {
         min: 1,
         max: 150
+      }
+    },
+    {
+      label: '省市区',
+      fieldName: 'area',
+      type: EControlType.eCustom,
+      defaultValue: '810011',
+      props: {
+        component: ProvinceCityAreaSelect,
+        multiple: false,
       }
     },
     {

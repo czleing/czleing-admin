@@ -5,23 +5,22 @@
 <!-- 多选 -->
 <!-- 省市区用法：<ProvinceCityArea v-model:value="area" multiple /> -->
 <template>
-  <a-spin :spinning="loading">
-    <a-cascader
-      v-if="!props.isView"
-      v-model:value="selectedValue"
-      :options="options"
-      :placeholder="currPlaceholder"
-      :change-on-select="true"
-      :expand-trigger="'hover'"
-      v-bind="$attrs"
-      @change="handleChange"
-    />
-    <span v-else>{{ selectedNames }}</span>
-  </a-spin>
+  <a-cascader
+    v-if="!props.isView"
+    v-model:value="selectedValue"
+    :options="options"
+    :fieldNames="{ label: 'n', value: 'c', children: 'd' }"
+    :placeholder="currPlaceholder"
+    :change-on-select="true"
+    :expand-trigger="'hover'"
+    v-bind="$attrs"
+    @change="handleChange"
+  />
+  <span v-else>{{ selectedNames }}</span>
 </template>
 
 <script setup>
-import { province, city, area } from 'province-city-china/data'
+import options from 'province-city-china/dist/level.min.json'
 const props = defineProps({
   // 省市(区)编码逗号分隔字符串, 只存放最后一级，单选：'101010'，多选：'101010,101109'
   value: String,
@@ -34,24 +33,43 @@ const props = defineProps({
   onChange: { type: Function }
 })
 const selectedValue = ref([])
-const options = ref([])
-const loading = ref(true)
 const currPlaceholder = computed(() => {
   if (props.placeholder) return props.placeholder
   return `请选择${'省市区'.substring(0, props.levelNum)}`
 })
 const selectedNames = computed(() => {
-  if (selectedValue.value && options.value.length) {
+  if (selectedValue.value && options.length) {
     const nameArr = []
     let currItem = null
-    for (let code of selectedValue.value) {
-      if (!currItem) {
-        currItem = options.value.find(o => o.value === code)
+    // selectedValue.value: [100000,101100,101102] || [[100000,101100,101102], [220000,221100,221103]]
+    const findName = (code) => {
+      let name = ''
+      if (Array.isArray(code)) {
+        currItem = null
+        const names = []
+        for (let c of code) {
+          name = findName(c)
+          if (name) {
+            names.push(name)
+          }
+        }
+        name = names.join('/')
       } else {
-        currItem = currItem.children?.find(o => o.value === code)
+        if (!currItem) {
+          currItem = options.find(o => o.c === code)
+        } else {
+          currItem = currItem.d?.find(o => o.c === code)
+        }
+        if (currItem?.n) {
+          name = currItem.n
+        }
       }
-      if (currItem?.label) {
-        nameArr.push(currItem.label)
+      return name
+    }
+    for (let code of selectedValue.value) {
+      const name = findName(code)
+      if (name) {
+        nameArr.push(name)
       }
     }
     return nameArr.join(',')
@@ -63,8 +81,6 @@ const selectedNames = computed(() => {
 const specialCodes = ['110000', '120000', '310000', '500000', '810000', '820000']
 // 还原层级时需要排除的 codes
 const excludeCodes = specialCodes.map(code => code.substring(0, 2) + '0100')
-
-initData()
 
 watch(
   () => props.value,
@@ -98,37 +114,6 @@ function setValue (val) {
     selectedValue.value = backValues[0]
   } else {
     selectedValue.value = backValues
-  }
-}
-
-async function initData () {
-  // console.log('===province==', province)
-  // console.log('===city==', city)
-  // console.log('===area==', area)
-  try {
-    loading.value = true
-    await nextTick()
-    const getArea = (province, city) => {
-      return props.levelNum >= 3 ? area.filter(a => a.province === province && a.city === city).map(a => ({
-        value: a.code,
-        label: a.name
-      })) : undefined
-    }
-  
-    const getCity = (province) => {
-      return props.levelNum >= 2 ? city.filter(c => c.province === province).map(c => ({
-        value: c.code,
-        label: c.name,
-        children: getArea(c.province, c.city)
-      })) : undefined
-    }
-    options.value = province.map(p => ({
-      value: p.code,
-      label: p.name,
-      children: specialCodes.includes(p.code) ? getArea(p.province, '01') : getCity(p.province)
-    }))
-  } finally {
-    loading.value = false
   }
 }
 
