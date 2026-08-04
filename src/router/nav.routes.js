@@ -90,6 +90,17 @@ const developerRoutes = [
           cache: true
         }
       },
+      {
+        path: '/developer/chart',
+        component: () => import('@/views/modules/example/chart/index.vue'),
+        meta: {
+          title: '图表示例',
+          icon: 'ExperimentOutlined',
+          isLeaf: true,
+          matchedPaths: ['/developer', '/developer/chart'],
+          cache: true
+        }
+      },
     ]
   }
 ]
