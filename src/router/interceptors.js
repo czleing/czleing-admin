@@ -34,6 +34,7 @@ export async function beforeInterceptor (to, from) {
       return to.fullPath
     }
   }
+  return true
 }
 
 /**

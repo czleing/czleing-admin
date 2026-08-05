@@ -27,5 +27,7 @@ export default {
     tips: 'Reminder',
     more: 'More',
     pleaseEnter: 'Please enter {text}',
+    showLabel: 'Show Value',
+    refresh: 'Refresh',
   },
 }

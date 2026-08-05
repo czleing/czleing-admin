@@ -28,5 +28,7 @@ export default {
     tips: '温馨提示',
     more: '更多',
     pleaseEnter: '请输入{text}',
+    showLabel: '显示数值',
+    refresh: '刷新',
   }
 }

@@ -1,6 +1,10 @@
 <!-- 表单使用示例 -->
 <template>
   <div class="">
+    <div class="mb20 lh2">
+      <div class="">表单可以使用 c-form 组件，通过传入配置自动渲染表单项，也可以使用 ant-design-vue 原生的 a-form，按传统方式编写表单</div>
+      <div class="">c-form 内置确认取消按钮，可以隐藏，组件向外暴露了表单操作相关方法</div>
+    </div>
     <h3>基础使用</h3>
     <div class="w50p border radius10 pa20 mt10">
       <c-form

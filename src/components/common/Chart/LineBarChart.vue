@@ -1,7 +1,15 @@
 <!-- 线、柱图组件 -->
 <template>
-  <div class="lineBarChart" :style="`width: 100%; height: ${height}`">
-    <VChart v-show="data?.length" :loading="loading" :option="currOption" autoresize />
+  <div class="lineBarChart overflow-hidden flex-y gap5" :style="`width: 100%; height: ${height}`">
+    <VChart v-show="data?.length" :loading="loading" :option="currOption" class="flex-auto" autoresize @chart-ready="onChartReady" />
+    <!-- 工具箱 -->
+    <div class='tools flex-x x-middle gap10 em09'>
+      <span v-if="onRefresh" class="pointer" @click="onRefresh"><ReloadOutlined /> {{ $t('common.refresh') }}</span>
+      <a-checkbox v-if="!isEmpty && useShowLabel" v-model:checked="showLabel" size="small">{{ $t('common.showLabel') }}</a-checkbox>
+    </div>
+    <!-- 点击提示 -->
+    <div v-if="!isEmpty && !!onItemClick && clickTips" class="text-gray em09"><InfoCircleFilled /> { clickTips }</div>
+    <!-- 空数据提示 -->
     <div v-show="!data?.length" class="flex-y y-center h100p">
       <div class="mt10 bold em12 tc" style="margin-bottom: -10px;">{{ props.title }}</div>
       <div class="flex-auto flex-y-center">
@@ -22,6 +30,7 @@
   import VChart, { THEME_KEY } from 'vue-echarts';
   import { Empty } from 'ant-design-vue'
   import { useSettingStore } from '@/stores/setting-store';
+  import { InfoCircleFilled, ReloadOutlined } from '@ant-design/icons-vue';
 
   use([LineChart, BarChart, CanvasRenderer, GridComponent, TooltipComponent, TitleComponent, LegendComponent, ToolboxComponent, DataZoomComponent, MarkLineComponent])
 
@@ -52,20 +61,20 @@
     yFields: { type: Array, default: ['y'] },
     /** y轴字段对应的坐标轴索引 */
     yAxisIndexs: { type: Array, default: [0] },
-    /** y轴类型数组，取值范围：'value', 'percent'，最多2个，配合 yAxisIndexs 指定索引 */
-    yAxis: { type: Array, default: ['value'] },
+    /** y轴类型数组，取值范围：'value', 'percent'，最多2个，配合 yAxisTypesIndexs 指定索引 */
+    yAxisTypes: { type: Array, default: ['value'] },
     /** y轴保留小数位数 */
     yAxisDigits: { type: Array, default: [0, 0] },
     /** 系列类型，多个系列时，分别指定类型 */
     types: { type: Array, default: ['bar'] },
     /** y轴名称或名称数组 */
-    yName: { type: [String, Array], default: '' },
+    yNames: { type: [String, Array], default: '' },
     /** 系列名称或名称数组，根据索引一一对应 */
     seriesNames: { type: Array, default: [] },
     /** 柱子颜色，多个系列时循环使用，不传则使用默认的 */
     colors: { type: Array, default: ['#3f62c9', '#ee6666', '#61bd5e', '#fac858', '#adc6ff', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'] },
     /** y轴单位, 或单位数组，根据索引一一对应 */
-    unit: { type: [String, Array], default: '' },
+    units: { type: [String, Array], default: '' },
     /** 增量配置，可对默认配置进行覆盖 */
     option: Object,
     /** 设置最大值，大于该值显示红色 */
@@ -91,13 +100,19 @@
     /** 默认是否显示label */
     defaultShowLabel: { type: Boolean, default: true },
     /** 是否显示下载按钮 */
-    showDownload: { type: Boolean, default: false },
+    showDownload: { type: Boolean, default: true },
     /** 图表高度 */
     height: { type: String, default: '100%' },
     /** 错误颜色 */
     errorColor: { type: String, default: '#f00' },
     /** 数据为空展示的文本 */
     emptyText: { type: String, default: 'No data' },
+    /** 可点击的提示 */
+    clickTips: String,
+    /** 柱子点击事件 */
+    onItemClick: Function,
+    /** 点击刷新按钮执行 */
+    onRefresh: Function,
   });
 
   const getDataZoomDef = (length) => [
@@ -114,10 +129,24 @@
   ];
 
   const showLabel = ref(props.defaultShowLabel);
-  const currOption = ref()
+  const currOption = shallowRef()
   const settingStore = useSettingStore();
   provide(THEME_KEY, settingStore.mode);
   const isLight = computed(() => settingStore.mode === 'light');
+  const isEmpty = computed(() => !props.data?.length);
+  
+  let myChart = null
+  const onChartReady = (instance) => {
+    myChart = instance
+    if (props.onItemClick) {
+      myChart.on('click', (params) => {
+        if (import.meta.env.VITE_APP_DEBUG_MODE === 'true') {
+          console.log('点击参数', params)
+        }
+        props.onItemClick(params)
+      })
+    }
+  }
 
   /** 多个Y轴配置，value|percent */
   const getYAxis = (type, yName, digit) => {
@@ -209,25 +238,25 @@
     // 生成 series
     const series = props.yFields.map((yField, index) => {
       const type = props.types?.[index] ?? 'bar';
-      const yAxisIndex = props.yAxisIndexs?.[index] ?? (props.yAxis?.length === 2 ? index % 2 : 0);
-      const isRate = props.yAxis[yAxisIndex] === 'percent';
+      const yAxisIndex = props.yAxisIndexs?.[index] ?? (props.yAxisTypes?.length === 2 ? index % 2 : 0);
+      const isRate = props.yAxisTypes[yAxisIndex] === 'percent';
       return {
         name: props.seriesNames?.[index],
         type,
         smooth: props.useSmooth,
-        cursor: 'default',
+        cursor: props.onItemClick ? 'pointer' : 'default',
         yAxisIndex,
         label: {
-          show: showLabel,
+          show: showLabel.value,
           position: 'top',
           color: isLight.value ? 'black' : 'white',
           rotate: xData?.length > 10 ? 35 : 0,
-          // formatter: `{c}${Array.isArray(unit) ? unit[index] : unit}`,
+          // formatter: `{c}${Array.isArray(units) ? units[index] : units}`,
           overflow: 'breakAll',
         },
         tooltip: {
           valueFormatter: (value) =>
-            value + (Array.isArray(props.unit) ? props.unit[index] : props.unit),
+            value + (Array.isArray(props.units) ? props.units[index] : props.units),
         },
         barMaxWidth: 40,
         itemStyle: {
@@ -250,10 +279,10 @@
             position: 'insideEndTop',
             distance: [25, 5],
           },
-          symbolOffset: [
-            [0, 0],
-            [0, 10],
-          ],
+          // symbolOffset: [
+          //   [0, 0],
+          //   [0, 0],
+          // ],
           data: [
             props.targetValue
               ? {
@@ -314,6 +343,8 @@
       title: props.title
         ? {
             text: props.title,
+            top: 'top',
+            left: 'left',
             textStyle: {
               color: isLight.value ? 'black' : 'white',
             },
@@ -321,6 +352,7 @@
         : undefined,
       legend: {
         show: series.length > 1,
+        top: props.title ? 20 : 0,
         textStyle: {
           color: isLight.value ? 'black' : 'white',
         },
@@ -342,8 +374,10 @@
             return '<div>' + param.title + '</div>';
           },
         },
+        top: -10,
+        right: -10,
         feature: {
-          saveAsImage: { show: props.showDownload, title: '保存为图片', backgroundColor: 'black' },
+          saveAsImage: { show: props.showDownload, title: '保存为图片', backgroundColor: isLight.value ? 'white' : 'black' },
           // magicType: { show: true, type: ['line', 'bar'], title: { line: '切换为线形图', bar: '切换为柱形图'} },
           // restore: { show: true, title: '还原' },
         },
@@ -351,6 +385,7 @@
       grid: {
         left: 10,
         right: 10,
+        top: props.title ? 60 : 20,
         bottom: props.useDataZoom ? 60 : 10,
         outerBoundsContain: 'axisLabel',
       },
@@ -378,10 +413,10 @@
       },
       dataZoom: props.useDataZoom ? getDataZoomDef(props.data?.length) : undefined,
       color: props.colors,
-      yAxis: props.yAxis?.map((ya, index) =>
+      yAxis: props.yAxisTypes?.map((ya, index) =>
         getYAxis(
           ya,
-          Array.isArray(props.yName) ? props.yName[index] : props.yName,
+          Array.isArray(props.yNames) ? props.yNames[index] : props.yNames,
           props.yAxisDigits?.[index] ?? 0,
         ),
       ),
@@ -391,3 +426,14 @@
     currOption.value = mergeOptoin
   });
 </script>
+<style lang="less" scoped>
+.lineBarChart {
+  position: relative;
+  .tools {
+    position: absolute;
+    right: 20px;
+    top: 5px;
+    z-index: 10;
+  }
+}
+</style>

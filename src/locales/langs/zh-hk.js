@@ -25,5 +25,7 @@ export default {
     tips: '溫馨提示',
     more: '更多',
     pleaseEnter: '請輸入{text}',
+    showLabel: '顯示數值',
+    refresh: '刷新',
   },
 }
