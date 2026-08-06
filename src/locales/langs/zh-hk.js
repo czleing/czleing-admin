@@ -27,5 +27,8 @@ export default {
     pleaseEnter: '請輸入{text}',
     showLabel: '顯示數值',
     refresh: '刷新',
+    total: '總計',
+    noData: '暫無數據',
+    clickTips: '點擊圖表可查看明細',
   },
 }

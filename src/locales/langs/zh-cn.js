@@ -30,5 +30,8 @@ export default {
     pleaseEnter: '请输入{text}',
     showLabel: '显示数值',
     refresh: '刷新',
+    total: '总计',
+    noData: '暂无数据',
+    clickTips: '点击图表可查看明细',
   }
 }

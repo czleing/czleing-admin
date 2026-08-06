@@ -29,5 +29,8 @@ export default {
     pleaseEnter: 'Please enter {text}',
     showLabel: 'Show Value',
     refresh: 'Refresh',
+    total: 'Total',
+    noData: 'No Data',
+    clickTips: 'Click on the chart to view details',
   },
 }

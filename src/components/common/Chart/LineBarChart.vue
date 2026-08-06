@@ -1,14 +1,17 @@
 <!-- 线、柱图组件 -->
 <template>
   <div class="lineBarChart overflow-hidden flex-y gap5" :style="`width: 100%; height: ${height}`">
-    <VChart v-show="data?.length" :loading="loading" :option="currOption" class="flex-auto" autoresize @chart-ready="onChartReady" />
+    <VChart v-show="data?.length" :loading="loading" :option="currOption" class="flex-auto" autoresize @click="onChartClick" />
     <!-- 工具箱 -->
     <div class='tools flex-x x-middle gap10 em09'>
       <span v-if="onRefresh" class="pointer" @click="onRefresh"><ReloadOutlined /> {{ $t('common.refresh') }}</span>
       <a-checkbox v-if="!isEmpty && useShowLabel" v-model:checked="showLabel" size="small">{{ $t('common.showLabel') }}</a-checkbox>
     </div>
     <!-- 点击提示 -->
-    <div v-if="!isEmpty && !!onItemClick && clickTips" class="text-gray em09"><InfoCircleFilled /> { clickTips }</div>
+    <div v-if="!isEmpty && !!onItemClick" class="text-gray em09">
+      <InfoCircleFilled />
+      {{ clickTips ?? $t('common.clickTips') }}
+    </div>
     <!-- 空数据提示 -->
     <div v-show="!data?.length" class="flex-y y-center h100p">
       <div class="mt10 bold em12 tc" style="margin-bottom: -10px;">{{ props.title }}</div>
@@ -135,16 +138,9 @@
   const isLight = computed(() => settingStore.mode === 'light');
   const isEmpty = computed(() => !props.data?.length);
   
-  let myChart = null
-  const onChartReady = (instance) => {
-    myChart = instance
+  function onChartClick (params) {
     if (props.onItemClick) {
-      myChart.on('click', (params) => {
-        if (import.meta.env.VITE_APP_DEBUG_MODE === 'true') {
-          console.log('点击参数', params)
-        }
-        props.onItemClick(params)
-      })
+      props.onItemClick(params)
     }
   }
 
@@ -346,6 +342,8 @@
             top: 'top',
             left: 'left',
             textStyle: {
+              fontSize: 15,
+              fontWeight: 'bold',
               color: isLight.value ? 'black' : 'white',
             },
           }
