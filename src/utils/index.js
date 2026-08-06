@@ -267,9 +267,11 @@ export function numFormat (value, options = {}) {
  * @param {*} markLen 被替换成的字符长度
  * @returns 处理后的字符串
  */
-export function stringStar (value, startLen, endLen, mark = '*', markLen = 6) {
+export function stringStar (value, startLen, endLen, mark = '*', markLen) {
   if (typeof value === 'number') value = value.toString()
   if (typeof value !== 'string') return value
+  if (value.length < startLen + endLen) return value
+  markLen = markLen ?? value.length - startLen - endLen
   var star = new Array(markLen).fill(mark).join('')
   var startStr = value.slice(0, startLen)
   var endStr = value.slice(-Math.abs(endLen))
