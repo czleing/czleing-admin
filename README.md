@@ -99,9 +99,10 @@ npm run preview
 <img src='./src/doc/light4.jpg' alt="light">
 <img src='./src/doc/light9.jpg' alt="light">
 <img src='./src/doc/light5.jpg' alt="light">
-<img src='./src/doc/demo-light.png' alt="light">
-<img src='./src/doc/demo-dark.png' alt="light">
-<img src='./src/doc/data-permission.png' alt="light">
+<img src='./src/doc/demo-light.jpg' alt="light">
+<img src='./src/doc/demo-dark.jpg' alt="light">
+<img src='./src/doc/chart.png' alt="chart-demo">
+<img src='./src/doc/data-permission.jpg' alt="light">
 <img src='./src/doc/menu-add.png' alt="light">
 <img src='./src/doc/swagger.png' alt="light">
 <img src='./src/doc/notice.jpg' alt="light">
