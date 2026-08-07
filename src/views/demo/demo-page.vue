@@ -239,7 +239,7 @@ const tableConfig = computed(() => ({
       resizable: true,
       width: 100,
       // sorter: true, // 服务端排序
-      sorter: (a, b) => (a.nickName ?? '').localeCompare(b.nickName ?? '', 'zh-Hans-CN') // 本地排序，中文排序
+      sorter: (a, b) => (a.nickName ?? '').localeCompare(b.nickName ?? '', 'zh-CN') // 本地排序，中文排序
       // sorter: (a, b) => a.totalCount - b.totalCount, // 本地排序，非中文排序
     },
     {
@@ -328,7 +328,7 @@ const tableConfig = computed(() => ({
       title: '字符串脱敏',
       dataIndex: 'phonenumber',
       width: 100,
-      hideChar: [3, 4, '*'] // 字符串脱敏，第一个值为左边显示字符数，第二个参数为右边显示字符数，剩下的使用第三个参数代替，默认'*'可不传
+      hideChar: [3, 4] // 字符串脱敏，第一个值为左边显示字符数，第二个值为右边显示字符数，剩下的使用第三个值代替，默认'*'可不传，第四个值为替换符显示长度，默认为实际替换字符数
     },
     {
       title: '地址',
