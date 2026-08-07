@@ -85,6 +85,8 @@ export default {
     close: '關閉',
     delete: '刪除',
     deleteSuccess: '刪除成功',
+    disabled: '停用',
+    enabled: '啟用',
     toggleSuccess: '啟用/停用成功',
     warmTips: '溫馨提示',
     confirmDeleteBySelected: '確定要刪除選取項目(共 {value} 項)嗎？',
@@ -105,5 +107,6 @@ export default {
     more: '更多',
     count: '合計',
     pleaseEnterKeywordToSearch: '請輸入關鍵字搜尋',
+    totalPage: '共 {value} 條',
   }
 }

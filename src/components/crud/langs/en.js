@@ -84,6 +84,8 @@ export default {
     close: 'Close',
     delete: 'Delete',
     deleteSuccess: 'Deleted successfully',
+    disabled: 'Disabled',
+    enabled: 'Enabled',
     toggleSuccess: 'Status toggled successfully',
     warmTips: 'Tips',
     confirmDeleteBySelected: 'Are you sure you want to delete selected items ({value} items)?',
@@ -104,5 +106,6 @@ export default {
     more: 'More',
     count: 'Total',
     pleaseEnterKeywordToSearch: 'Please enter keyword to search',
+    totalPage: 'total {value} rows',
   }
 }

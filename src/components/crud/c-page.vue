@@ -102,6 +102,7 @@ import { useActionHandle } from './hooks/useActionHandle'
 import { isNotEmpty } from '@/utils/index.js'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue'
 import { useSettingStore } from '@/stores/setting-store'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   /** 没有新增按钮，可选 */
@@ -156,6 +157,7 @@ const cTable = ref()
 const cModal = ref()
 const cForm = ref()
 const columns = ref()
+const { t } = useI18n()
 const selectedIds = ref([])
 const selectedObjs = ref([])
 const searchParams = ref({})
@@ -165,7 +167,7 @@ const settingStore = useSettingStore()
 const useTableBorder = ref(0)
 const pagination = ref({
   showSizeChanger: true,
-  showTotal: (total, range) => `共 ${total} 条`,
+  showTotal: (total, range) => t('crud.totalPage', { value: total }),
   pageSize: props.tableConfig?.props?.pageSize ?? 10,
   current: 1,
   total: 0

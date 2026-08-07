@@ -58,10 +58,10 @@
         <!-- 类型转换 -->
         <template v-else-if="column.type">
           <template v-if="column.type === 'isEnabled'">
-            <a-tag :color="text ? 'success' : 'error'" :bordered="false">{{ EIsEnabled._of(text ? 1 : 0) }}</a-tag>
+            <a-tag :color="text ? 'success' : 'error'" :bordered="false">{{ $t(EIsEnabled._of(text ? 1 : 0)) }}</a-tag>
           </template>
           <template v-if="column.type === 'Boolean'">
-            <a-tag :color="text ? 'success' : 'error'" :bordered="false">{{ EIsEnabled._of(text ? 1 : 0) }}</a-tag>
+            <a-tag :color="text ? 'success' : 'error'" :bordered="false">{{ EYesNo._of(text ? 1 : 0) }}</a-tag>
           </template>
         </template>
         <!-- 带单位、带默认值、字符串脱敏 -->

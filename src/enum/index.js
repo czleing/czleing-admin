@@ -17,7 +17,7 @@ init(EUserType)
  * 2、增加的组件建议是全局组件
  * 2.1、如果是自己写的组件，接收和实现 value, disabled, isView 属性，以适配新增、修改、详情场景
  * 2.2、如果是第三方组件，无法实现 isView 属性，则通过自定义渲染函数包一层来实现(可选)，参考第 3 点
- * 2.3、非全局组件建议通过自定义组件 eCustom 使用
+ * 2.3、非全局组件通过自定义组件 eCustom 使用，无需增加类型
  * 3、如果需要自定义渲染，在 src/components/crud/hooks/useRender.js 增加对应自定义渲染函数(可选,为第三方组件实现isView模式)
  */
 export const EControlType = {
@@ -47,8 +47,8 @@ init(EControlType)
  * 是否启用
  */
 export const EIsEnabled = {
-  eEnabled: Enum(1, '启用', 'text-success'),
-  eDisabled: Enum(0, '禁用', 'text-danger')
+  eEnabled: Enum(1, 'crud.enabled', 'text-success'),
+  eDisabled: Enum(0, 'crud.disabled', 'text-danger')
 }
 init(EIsEnabled)
 
@@ -56,8 +56,8 @@ init(EIsEnabled)
  * 是否
  */
 export const EYesNo = {
-  eYes: Enum(1, '是', 'text-success'),
-  eNo: Enum(0, '否', 'text-danger')
+  eYes: Enum(1, 'crud.yes', 'text-success'),
+  eNo: Enum(0, 'crud.no', 'text-danger')
 }
 init(EYesNo)
 

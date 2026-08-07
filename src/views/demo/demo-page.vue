@@ -355,7 +355,7 @@ const tableConfig = computed(() => ({
     },
     {
       title: '操作',
-      width: 140,
+      width: 150,
       fixed: 'right',
       actionShowNum: 2, // 展示操作按钮数量，剩余的将收进更多里
       actionMoreText: '更多', // 更多按钮名称，默认"更多"
@@ -364,19 +364,19 @@ const tableConfig = computed(() => ({
         const btns = [
           // 预设：edit, detail, delete, toggle
           {
-            name: '详情',
+            name: t('crud.detail'),
             callback: 'detail'
           },
           {
-            name: '编辑',
+            name: t('crud.edit'),
             callback: 'edit'
           },
           {
-            name: '删除',
+            name: t('crud.delete'),
             callback: 'delete' // 删除操作默认带确认框
           },
           {
-            name: record.isEnabled ? '禁用' : '启用',
+            name: record.isEnabled ? t('crud.disabled') : t('crud.enabled'),
             confirm: true,
             callback: 'toggle'
           },

@@ -86,6 +86,8 @@ export default {
     close: '关闭',
     delete: '删除',
     deleteSuccess: '删除成功',
+    disabled: '禁用',
+    enabled: '启用',
     toggleSuccess: '启/禁用成功',
     warmTips: '温馨提示',
     confirmDeleteBySelected: '确定要删除选中项(共 {value} 项)吗？',
@@ -106,5 +108,6 @@ export default {
     more: '更多',
     count: '合计',
     pleaseEnterKeywordToSearch: '请输入关键字搜索',
+    totalPage: '共 {value} 条',
   },
 }
