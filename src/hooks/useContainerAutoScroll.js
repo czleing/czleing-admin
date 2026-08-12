@@ -109,7 +109,7 @@ export function useContainerAutoScroll(container, list, pause,
         isPause.value ? turnAroundDelay : scrollDelay,
       ); // 连续滚动，相邻两次滚动设置间隔(如果有设置)，到达边界等待 turnAroundDelay 毫秒
     };
-    setTimeout(() => {
+    timer.value = setTimeout(() => {
       animationRef.value = requestAnimationFrame(scrollStep);
     }, scrollDelay)
   }
