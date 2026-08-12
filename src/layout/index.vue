@@ -44,6 +44,7 @@ import { useSettingStore } from '@/stores/setting-store.js'
 import { useAuthStore } from '@/stores/auth-store.js'
 import { useWindowSize } from '../hooks/useWindowSize'
 import { useThemeToken } from '../hooks/useThemeToken'
+import { watchEffect } from 'vue'
 
 const menuStore = useMenuStore()
 const tabsStore = useTabsStore()
@@ -58,31 +59,31 @@ const watermark = computed(() => {
   return '演示用户'
 })
 
+watchEffect(() => {
+  document.documentElement.setAttribute('theme', settingStore.mode)
+})
+
 /** 使用动态色彩，跟随 ant-design 主题 */
-watch(
-  () => token.value,
-  () => {
-    // 动态设置css变量，跟随 ant-design 主题，可根据需要扩展，参考： https://www.antdv.com/docs/vue/customize-theme-cn#api
-    setRootCssVars('--ant-', {
-      colorText: token.value.colorText,
-      colorInfo: token.value.colorInfo,
-      colorPrimary: token.value.colorPrimary,
-      colorSuccess: token.value.colorSuccess,
-      colorWarning: token.value.colorWarning,
-      colorError: token.value.colorError,
-      colorBorder: token.value.colorBorder, // 边框颜色
-      colorBorderSecondary: token.value.colorBorderSecondary, // 更淡的边框颜色
-      colorBgContainer: token.value.colorBgContainer, // 组件的容器背景色，例如：默认按钮、输入框等。务必不要将其与 `colorBgElevated` 混淆。
-      colorBgElevated: token.value.colorBgElevated, // 浮层容器背景色，在暗色模式下该 token 的色值会比 `colorBgContainer` 要亮一些。例如：模态框、弹出框、菜单等。
-      colorBgLayout: token.value.colorBgLayout, // 该色用于页面整体布局的背景色，只有需要在页面中处于 B1 的视觉层级时才会使用该 token，其他用法都是错误的
-      colorFillSecondary: token.value.colorFillSecondary, // 二级填充色可以较为明显地勾勒出元素形体，如 Rate、Skeleton 等。也可以作为三级填充色的 Hover 状态，如：menu-item hover 状态。
-      controlHeight: token.value.controlHeight, // 基础控件高度
-      borderRadius: token.value.borderRadius + 'px', // 基础控件圆角大小
-      borderRadiusLG: token.value.borderRadiusLG + 'px', // 一般用于容器圆角大小
-    })
-  },
-  { deep: true, immediate: true }
-)
+watchEffect(() => {
+  // 动态设置css变量，跟随 ant-design 主题，可根据需要扩展，参考： https://www.antdv.com/docs/vue/customize-theme-cn#api
+  setRootCssVars('--ant-', {
+    colorText: token.value.colorText,
+    colorInfo: token.value.colorInfo,
+    colorPrimary: token.value.colorPrimary,
+    colorSuccess: token.value.colorSuccess,
+    colorWarning: token.value.colorWarning,
+    colorError: token.value.colorError,
+    colorBorder: token.value.colorBorder, // 边框颜色
+    colorBorderSecondary: token.value.colorBorderSecondary, // 更淡的边框颜色
+    colorBgContainer: token.value.colorBgContainer, // 组件的容器背景色，例如：默认按钮、输入框等。务必不要将其与 `colorBgElevated` 混淆。
+    colorBgElevated: token.value.colorBgElevated, // 浮层容器背景色，在暗色模式下该 token 的色值会比 `colorBgContainer` 要亮一些。例如：模态框、弹出框、菜单等。
+    colorBgLayout: token.value.colorBgLayout, // 该色用于页面整体布局的背景色，只有需要在页面中处于 B1 的视觉层级时才会使用该 token，其他用法都是错误的
+    colorFillSecondary: token.value.colorFillSecondary, // 二级填充色可以较为明显地勾勒出元素形体，如 Rate、Skeleton 等。也可以作为三级填充色的 Hover 状态，如：menu-item hover 状态。
+    controlHeight: token.value.controlHeight, // 基础控件高度
+    borderRadius: token.value.borderRadius + 'px', // 基础控件圆角大小
+    borderRadiusLG: token.value.borderRadiusLG + 'px', // 一般用于容器圆角大小
+  })
+})
 
 /**
  * 监听窗体大小变化，自动展开收起左侧菜单栏
