@@ -66,9 +66,8 @@ import { message } from 'ant-design-vue'
 
 const cPage = ref()
 const { t } = useI18n()
-defineOptions({
-  name: 'DemoPage'
-})
+defineOptions({ name: 'DemoPage' })
+
 /** 左侧树形配置，不配置则不使用树 */
 const treeConfig = {
   url: '/system/user/deptTree',
@@ -77,6 +76,7 @@ const treeConfig = {
   replaceField: { key: 'id', children: 'children', title: 'label' },
   searchField: 'deptId', // 将选中节点的id作为列表的查询参数的参数名，默认orgId
 }
+
 /** 查询条件配置 */
 const filterConfig = computed(() => ({
   // useCache: true, // 使用查询条件暂存，默认 false
@@ -84,8 +84,8 @@ const filterConfig = computed(() => ({
   col: { sm: 8, lg: 6, xxl: 6 }, // 所有表单项栅格设置，默认：{ sm: 8, lg: 6, xxl: 4 }，参照 a-col
   labelCol: { flex: '80px' }, // 所有表单项文本部分栅格设置，默认：文本宽度，单行时可以不用设置，多行时建议设置统一宽度，参照 a-col
   // wrapperCol: { span: 18 }, // 所有表单项控件部分栅格设置，默认：控件宽度，参照 a-col
-  // buttonsCol: { flex: 'auto' }, // 查询重置等按钮栅格设置，默认：{ span: 4 },
-  // buttonsAlign: 'right', // 查询重置等按钮水平对齐方式，left(默认), center, right
+  // buttonsCol: { flex: 'auto' }, // 查询重置等按钮栅格设置，默认：{ flex: '1 1 auto' },
+  // buttonsAlign: 'right', // 查询重置等按钮水平对齐方式，left(默认), center, right, 可以配合 buttonsCol 使用
   // 一行显示几列由每个字段的 col 决定，默认自适应列数，一行 24 格，每个字段可以设置占用格数，一行不够时自动换行，注：查询重置按钮固定占 4-6 格(使用记住查询时占用6格，否则4格)
   // 字段配置
   fields: [

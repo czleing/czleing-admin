@@ -17,6 +17,7 @@
     <div class="flex-x flex-wrap gap10 mt10">
       <a-button @click="validate">校验</a-button>
       <a-button @click="setData">设置数据</a-button>
+      <a-button @click="setIsView">{{ isView ? '编辑模式' : '查看模式' }}</a-button>
       <a-button @click="getData1">获取转换前数据</a-button>
       <a-button @click="getData2">获取转换后数据</a-button>
       <a-button @click="submit">提交表单</a-button>
@@ -26,7 +27,9 @@
       <c-form
         ref="freeForm"
         :footer="null"
+        :isView="isView"
         :form-config="formConfig2"
+        :detail="initData"
         :onSubmitHandle="onSubmitHandle"
       />
     </div>
@@ -65,6 +68,7 @@
         @submit-handle="onSubmitHandle"
       />
     </div>
+    <h3 class="mt20">更多用法请查看：demo-page.vue</h3>
   </div>
 </template>
 
@@ -147,6 +151,7 @@ const formConfig2 = {
       label: '图标',
       fieldName: 'icon',
       type: EControlType.eCustom,
+      defaultValue: 'HeartFilled',
       props: {
         component: IconSelect
       }
@@ -172,6 +177,7 @@ const formConfig2 = {
     }
   ]
 }
+const initData = { birthday: '2020-02-02' } // 表单默认填充数据
 const freeForm = useTemplateRef('freeForm')
 function validate () {
   freeForm.value.validate()
@@ -182,6 +188,10 @@ function setData () {
     sex: '1',
     dateRange: [dayjs('2026-01-01'), dayjs('2026-12-30')]
   })
+}
+const isView = ref(false)
+function setIsView () {
+  isView.value = !isView.value
 }
 async function getData1 () {
   const data = await freeForm.value.validate()
