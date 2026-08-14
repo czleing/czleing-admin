@@ -57,6 +57,7 @@
 .radius20 { border-radius: 20px; }
 .radius-circle { border-radius: 5000px; }
 .radius-ant { border-radius: var(--ant-borderRadius); }
+.radius-ant-lg { border-radius: var(--ant-borderRadiusLG); }
 // 边界
 .overflow-auto { overflow: auto; }
 .overflow-hidden { overflow: hidden; }
@@ -130,11 +131,21 @@
 .bg-success { background-color: var(--ant-colorSuccess) !important; }
 .bg-success-20 { background-color: color-mix(in oklch, var(--ant-colorSuccess) 20%, transparent) !important; }
 .bg-success-50 { background-color: color-mix(in oklch, var(--ant-colorSuccess) 50%, transparent) !important; }
-.bg-gray { background-color: gray !important; }
-.bg-gray2 { background-color: #ccc !important; }
-.bg-gray3 { background-color: #eee !important; }
+.bg-gray { background-color: rgba(128, 128, 128, 0.8) !important; }
+.bg-gray1 { background-color: rgba(128, 128, 128, 0.6) !important; }
+.bg-gray2 { background-color: rgba(128, 128, 128, 0.4) !important; }
+.bg-gray3 { background-color: rgba(128, 128, 128, 0.2) !important; }
+.bg-gray4 { background-color: rgba(128, 128, 128, 0.1) !important; }
 .bg-white { background-color: white !important; }
 .bg-black { background-color: black !important; }
+// 组件背景色，黑或白
+.bg-control { background-color: var(--ant-colorBgContainer) !important; }
+// 浮层背景色，比黑或白稍微偏向灰
+.bg-overlay { background-color: var(--ant-colorBgElevated) !important; }
+// 页面元素后面的背景色，底色
+.bg-layout { background-color: var(--ant-colorBgLayout) !important; }
+// 用于鼠标移入突出显示的背景色
+.bg-hover { background-color: var(--ant-colorFillSecondary) !important; }
 
 // 默认间距
 @spacing-x: 14px;

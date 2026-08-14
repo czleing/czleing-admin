@@ -41,7 +41,7 @@
         </template>
         <!-- 金额格式化 -->
         <template v-else-if="column.isAmount && text">
-          <span>{{ numFormat(text, { digit: 2, splitDigits: settingStore.isCn && settingStore.useSplit4 ? 4 : 3 }) }}</span>
+          <span>{{ numFormat(text, { digit: 2, splitDigits: settingStore.isCn && settingStore.useWanSplit ? 4 : 3 }) }}</span>
         </template>
         <!-- 字典转换 -->
         <template v-else-if="column.dictType && text">
@@ -89,7 +89,7 @@
               class="tc"
             >
               <span v-if="column.useTotal">
-                {{ numFormat(total[column.dataIndex] ?? 0, { digit: 2, splitDigits: settingStore.isCn && settingStore.useSplit4 ? 4 : 3 }) }} {{ column.unit ?? '' }}
+                {{ numFormat(total[column.dataIndex] ?? 0, { digit: 2, splitDigits: settingStore.isCn && settingStore.useWanSplit ? 4 : 3 }) }} {{ column.unit ?? '' }}
               </span>
               <span v-else>-</span>
             </a-table-summary-cell>

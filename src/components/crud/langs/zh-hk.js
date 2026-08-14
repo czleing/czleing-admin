@@ -54,6 +54,9 @@ export default {
     useTableBorder: '表格豎向邊框',
     useBreadcrumbs: '使用麵包屑',
     useWatermark: '使用水印',
+    useWanSplit: '數字萬分位',
+    search: '搜索',
+    searchRecord: '搜索歷史',
   },
   // crud
   crud: {

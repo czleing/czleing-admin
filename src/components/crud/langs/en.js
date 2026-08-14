@@ -53,6 +53,8 @@ export default {
     useTableBorder: 'Use Table Border',
     useBreadcrumbs: 'Use Breadcrumbs',
     useWatermark: 'Use Watermark',
+    search: 'Search',
+    searchRecord: 'Search History',
   },
   // crud
   crud: {

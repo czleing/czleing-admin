@@ -88,7 +88,7 @@ const totalValue = computed(() => {
   return props.data.reduce((sum, item) => sum + Number(item[props.valueField] || 0), 0)
 })
 
-const formatTotalValue = (val) => `${numFormat(val, { splitDigits: settingStore.isCn && settingStore.useSplit4 ? 4 : 3, digit: props.digit })}${props.unit}`
+const formatTotalValue = (val) => `${numFormat(val, { splitDigits: settingStore.isCn && settingStore.useWanSplit ? 4 : 3, digit: props.digit })}${props.unit}`
 
 const pieSeriesData = computed(() => {
   return props.data.map(item => ({

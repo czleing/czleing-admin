@@ -35,16 +35,16 @@
 </template>
 
 <script setup>
-import MenuSide from './components/side/index.vue'
-import Header from './components/header/index.vue'
-import Tabs from './components/tabs/index.vue'
-import { useMenuStore } from '@/stores/menu-store.js'
-import { useTabsStore } from '@/stores/tabs-store.js'
-import { useSettingStore } from '@/stores/setting-store.js'
 import { useAuthStore } from '@/stores/auth-store.js'
-import { useWindowSize } from '../hooks/useWindowSize'
-import { useThemeToken } from '../hooks/useThemeToken'
+import { useMenuStore } from '@/stores/menu-store.js'
+import { useSettingStore } from '@/stores/setting-store.js'
+import { useTabsStore } from '@/stores/tabs-store.js'
 import { watchEffect } from 'vue'
+import { useThemeToken } from '../hooks/useThemeToken'
+import { useWindowSize } from '../hooks/useWindowSize'
+import Header from './components/header/index.vue'
+import MenuSide from './components/side/index.vue'
+import Tabs from './components/tabs/index.vue'
 
 const menuStore = useMenuStore()
 const tabsStore = useTabsStore()
@@ -61,10 +61,6 @@ const watermark = computed(() => {
 
 watchEffect(() => {
   document.documentElement.setAttribute('theme', settingStore.mode)
-})
-
-/** 使用动态色彩，跟随 ant-design 主题 */
-watchEffect(() => {
   // 动态设置css变量，跟随 ant-design 主题，可根据需要扩展，参考： https://www.antdv.com/docs/vue/customize-theme-cn#api
   setRootCssVars('--ant-', {
     colorText: token.value.colorText,

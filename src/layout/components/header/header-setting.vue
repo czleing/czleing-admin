@@ -1,7 +1,7 @@
 <template>
   <div class="header-setting">
     <a-tooltip placement="top" :title="$t('frame.themeSetting')">
-      <SettingOutlined style="font-size: 18px;" @click="openSetting" />
+      <SettingOutlined class="font18" @click="openSetting" />
     </a-tooltip>
     <CModal ref="settingModal" :title="$t('frame.setting')" width="500" mode="drawer" :footer="null">
       <a-segmented v-model:value="settingTab" :options="settingTabs" block />
@@ -102,8 +102,8 @@
           <a-form-item :label="$t('frame.useWatermark')">
             <a-switch v-model:checked="settingStore.useWatermark" />
           </a-form-item>
-          <a-form-item v-if="settingStore.isCn" :label="$t('frame.useSplit4')">
-            <a-switch v-model:checked="settingStore.useSplit4" />
+          <a-form-item v-if="settingStore.isCn" :label="$t('frame.useWanSplit')">
+            <a-switch v-model:checked="settingStore.useWanSplit" />
           </a-form-item>
         </div>
       </a-form>

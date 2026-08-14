@@ -87,7 +87,7 @@ export const useSettingStore = defineStore('setting', () => {
   const useTableBorder = ref(true) // 表格是否使用竖向边框
   const useBreadcrumbs = ref(true) // 是否使用面包屑目录层级
   const useWatermark = ref(false) // 是否使用水印
-  const useSplit4 = ref(false) // 是否使用万分位分隔(中文简体下数字)
+  const useWanSplit = ref(false) // 是否使用万分位分隔(中文简体下数字)
 
   const { locale: l } = useI18n()
 
@@ -143,7 +143,7 @@ export const useSettingStore = defineStore('setting', () => {
     useTableBorder,
     useBreadcrumbs,
     useWatermark,
-    useSplit4,
+    useWanSplit,
     setThemeByName,
     setDark,
     setLight,
