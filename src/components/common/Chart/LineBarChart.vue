@@ -100,8 +100,10 @@
     useCalcPercent: { type: Boolean, default: true },
     /** 是否使用切换显示数值 */
     useShowLabel: { type: Boolean, default: false },
-    /** 默认是否显示label */
+    /** 默认是否显示数值 */
     defaultShowLabel: { type: Boolean, default: true },
+    /** 是否只显示最大最小数据的数值 */
+    showMinMaxLabel: { type: Boolean, default: false },
     /** 是否显示下载按钮 */
     showDownload: { type: Boolean, default: true },
     /** 图表高度 */
@@ -236,6 +238,12 @@
       const type = props.types?.[index] ?? 'bar';
       const yAxisIndex = props.yAxisIndexs?.[index] ?? (props.yAxisTypes?.length === 2 ? index % 2 : 0);
       const isRate = props.yAxisTypes[yAxisIndex] === 'percent';
+      const yDatas = props.data?.map(item => item[yField]) ?? []
+      let min, max;
+      if (yDatas.length && showLabel.value && props.showMinMaxLabel) {
+        min = Math.min(...yDatas)
+        max = Math.max(...yDatas)
+      }
       return {
         name: props.seriesNames?.[index],
         type,
@@ -324,13 +332,17 @@
               : null,
           ].filter(Boolean),
         },
-        data:
-          props.data?.map((d) => {
-            const value = Number(d[yField] ?? 0);
-            return isRate && props.useCalcPercent
+        data: yDatas.map(d => {
+          const value = Number(d ?? 0);
+          return {
+            value: isRate && props.useCalcPercent
               ? Number((value * 100).toFixed(2).replace(/(\.\d*?[1-9])0+$|\.0+$/, '$1'))
-              : value;
-          }) ?? [],
+              : value,
+            label: {
+              show: (min || max) ? (d == min || d == max) : showLabel.value
+            }
+          }
+        }) ?? [],
       };
     });
 
