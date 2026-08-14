@@ -51,6 +51,5 @@ function onMenuItemClick (item) {
   width: 100%;
   height: 100%;
   overflow: auto;
-  box-shadow: 0 0 10px rgba(0, 0, 0, .05);
 }
 </style>

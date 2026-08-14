@@ -75,7 +75,7 @@ import { Modal } from 'ant-design-vue';
 import dayjs from 'dayjs';
 import { EControlType } from '@/enum'
 import IconSelect from '@/components/common/IconSelect/index.vue'
-import ProvinceCityAreaSelect from '@/components/common/ProvinceCityAreaSelector/index.vue'
+import ProvinceCityAreaSelect from '@/components/common/ProvinceCityAreaSelect/index.vue'
 
 defineOptions({ name: 'FormExample' })
 

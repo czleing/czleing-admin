@@ -1,12 +1,10 @@
 <!-- 搜索菜单按钮，点击弹出搜索框 -->
  <template>
-  <a-tooltip placement="bottom" :title="$t('frame.search')">
-    <div @click="open">
-      <slot>
-        <SearchOutlined class="font18 pointer" />
-      </slot>
-    </div>
-  </a-tooltip>
+  <div @click="open">
+    <a-tooltip placement="bottom" :title="$t('frame.search')">
+      <SearchOutlined class="font18 pointer" />
+    </a-tooltip>
+  </div>
   <div v-if="isShow" :class="`search-modal ${ isOpen ? 'is-open' : ''}`" @click="close">
     <div class="search-container c-overlay pa10" @click.stop>
       <a-input-search

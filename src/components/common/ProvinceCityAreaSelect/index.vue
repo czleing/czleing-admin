@@ -8,7 +8,7 @@
   <a-cascader
     v-if="!props.isView"
     v-model:value="selectedValue"
-    :options="options"
+    :options="currOptions"
     :fieldNames="{ label: 'n', value: 'c', children: 'd' }"
     :placeholder="currPlaceholder"
     :change-on-select="true"
@@ -32,13 +32,31 @@ const props = defineProps({
   // 不可删除！为了从 $attrs 中剔除 onChange，避免 field.props 的 onChange 监听到 a-cascader 的 change 事件而冲突
   onChange: { type: Function }
 })
+
 const selectedValue = ref([])
+const currOptions = computed(() => {
+  const filterAreaTree = (tree, levelNum, currentDepth = 1) => {
+    if (![1, 2, 3].includes(levelNum)) throw new Error('levelNum 仅支持 1 / 2 / 3');
+    if (!Array.isArray(tree)) return [];
+    return tree.map(item => {
+      const newItem = { ...item };
+      const nextDepth = currentDepth + 1;
+      if (nextDepth <= levelNum && Array.isArray(newItem.d)) {
+        newItem.d = filterAreaTree(newItem.d, levelNum, nextDepth);
+      } else {
+        newItem.d = undefined;
+      }
+      return newItem;
+    });
+  }
+  return filterAreaTree(options, props.levelNum)
+})
 const currPlaceholder = computed(() => {
   if (props.placeholder) return props.placeholder
   return `请选择${'省市区'.substring(0, props.levelNum)}`
 })
 const selectedNames = computed(() => {
-  if (selectedValue.value && options.length) {
+  if (selectedValue.value && currOptions.value.length) {
     const nameArr = []
     let currItem = null
     // selectedValue.value: [100000,101100,101102] || [[100000,101100,101102], [220000,221100,221103]]
@@ -56,7 +74,7 @@ const selectedNames = computed(() => {
         name = names.join('/')
       } else {
         if (!currItem) {
-          currItem = options.find(o => o.c === code)
+          currItem = currOptions.value.find(o => o.c === code)
         } else {
           currItem = currItem.d?.find(o => o.c === code)
         }
