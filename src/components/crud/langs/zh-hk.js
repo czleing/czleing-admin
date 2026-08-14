@@ -57,6 +57,7 @@ export default {
     useWanSplit: '數字萬分位',
     search: '搜索',
     searchRecord: '搜索歷史',
+    noSearchResult: '未搜索到相關結果',
   },
   // crud
   crud: {

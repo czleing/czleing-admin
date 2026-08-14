@@ -15,6 +15,7 @@
         :placeholder="$t('crud.pleaseEnterKeywordToSearch')"
         allowClear
         class="search-input"
+        :maxLength="30"
       />
       <div class="search-result mt10" @click.stop>
         <a-tree
@@ -36,6 +37,7 @@
           </template>
         </a-tree>
         <div v-else-if="cacheStore.searchedMenus.length" class="cache">
+          <div v-if="searchValue" class="tc em09 py10 text-gray">{{ $t('frame.noSearchResult') }} "<span class="bold">{{ searchValue }}</span>"</div>
           <div class="em08 text-gray">{{ $t('frame.searchRecord') }}</div>
           <div class="cache-list mt10">
             <div v-for="(cache, index) in cacheStore.searchedMenus" :key="cache.path" class="cache-item radius-ant pa10 flex-x-between gap10 pointer" @click="toPath(cache.path)">

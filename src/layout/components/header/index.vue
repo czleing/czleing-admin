@@ -47,7 +47,7 @@
       :style="settingStore.isDark ? 'filter:invert(1);' : ''"
     ></iframe>
     <div class="flex-x x-middle gap15">
-      <SearchModal />
+      <HeaderSearch />
       <HeaderMessage />
       <HeaderFullscreen />
       <HeaderSetting />
@@ -73,7 +73,7 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue'
 import ModeSwitch from './mode-switch.vue'
 import HeaderBreadcrumb from './header-breadcrumb.vue'
 import HeaderLang from './header-lang.vue'
-import SearchModal from './search-modal.vue'
+import HeaderSearch from './header-search.vue'
 
 const menuStore = useMenuStore()
 const settingStore = useSettingStore()

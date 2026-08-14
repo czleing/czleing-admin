@@ -55,6 +55,7 @@ export default {
     useWatermark: 'Use Watermark',
     search: 'Search',
     searchRecord: 'Search History',
+    noSearchResult: 'No results found',
   },
   // crud
   crud: {
