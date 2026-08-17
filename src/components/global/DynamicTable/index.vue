@@ -277,7 +277,7 @@ async function emitChange() {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .dynamic-table{
   .add-row {
     border: solid 1px var(--ant-colorBorderSecondary);

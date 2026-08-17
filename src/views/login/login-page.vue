@@ -2,8 +2,8 @@
   <div class="login_page flex-y-center">
     <div class="login_page__modal flex-x-center">
       <div class="login_page__modal__logo flex-y-center">
-        <img class="img" :src="setting.logoWhite">
-        <div class="title text-white bold my10 em15">
+        <img class="img" :src="setting.logo">
+        <div class="title text-black bold my10 em15">
           {{ setting.systemName }}
         </div>
         <div class="sub-title">
@@ -52,6 +52,7 @@ const setting = settings.websiteInfo
       // height: 400px;
       flex: 1;
       min-width: 380px;
+      background: #a7d2ff66;
       .img {
         width: 80px;
         height: 80px;
@@ -61,7 +62,7 @@ const setting = settings.websiteInfo
       .title {
       }
       .sub-title {
-        color: #ddd;
+        color: #3f3f3f;
       }
     }
     &__form {
@@ -79,8 +80,8 @@ const setting = settings.websiteInfo
     font-size: 12px;
     line-height: 1.5;
     a {
-      color: rgba(255, 255, 255, .9);
-      text-shadow: 0 0 1px rgba(0, 0, 0, 1);
+      color: rgba(58, 58, 58, 0.9);
+      text-shadow: 0 0 1px rgb(255, 255, 255);
     }
   }
 }

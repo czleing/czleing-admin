@@ -186,7 +186,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
       {
-        placeholders: field.props?.placeholder ?? [`${field.label}${t('crud.start')}`, `${field.label}${t('crud.end')}`]
+        placeholders: field.props?.placeholders ?? [`${field.label}${t('crud.start')}`, `${field.label}${t('crud.end')}`]
       },
       controlTypeEnum.data.defaultProps ?? {},
       field.props
@@ -212,13 +212,11 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       value: values[1],
       'onUpdate:value': val => updateValue(val, 1)
     }
-    for (const entry in Object.entries(props)) {
-      const key = entry[0]
-      const value = entry[1]
+    for (const [key, value] of Object.entries(props)) {
       const prop = key.substring(0, key.length - 1)
       if (Array.isArray(value)) {
-        props1[prop] = value?.[0]
-        props2[prop] = value?.[1]
+        props1[prop] = value[0]
+        props2[prop] = value[1]
       }
     }
     return h(resolveComponent('a-form-item-rest'), null, {
@@ -558,7 +556,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
   function transformOptions (options, useAll = false) {
     const result = options?.map(item => {
       let label = item.name ?? item.label
-      if (/^\w+(\.\w+)$/.test(label)) {
+      if (/^\w+(\.\w+)*$/.test(label)) {
         label = t(label) // 国际化转换
       }
       return { ...item, value: item.id ?? item.value, label }

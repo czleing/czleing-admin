@@ -123,6 +123,12 @@ const filterConfig = computed(() => ({
       label: t('demo.numRange'), // '数字范围',
       fieldName: 'numberRange', // 后端使用数组接收
       type: EControlType.eNumberRange,
+      props: {
+        // placeholders: ['范围起', '范围止'],
+        // maxs: [100, 200],
+        // mins: [1, 2],
+        // 其他属性在 a-input-number 的属性名基础上加上s，并且以数组的方式设置
+      }
     },
     {
       label: t('demo.selectDept'), // '选择部门',

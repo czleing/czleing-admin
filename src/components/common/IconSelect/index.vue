@@ -69,7 +69,7 @@ async function emitChange () {
     border-radius: 5px;
     font-size: 22px;
     padding: 5px 12px;
-    transition: all .3s;
+    transition: box-shadow .3s, transform .3s;
     cursor: pointer;
     &:hover {
       box-shadow: 0 0 10px rgba(155, 155, 155, .2);

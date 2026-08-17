@@ -16,6 +16,7 @@ export default defineConfig(({ command, mode }) => {
   return {
     plugins: [
       vue(),
+      // 自动导入api：ref/reactive 无需 import
       AutoImport({
         imports: ['vue', 'vue-router', 'vue-i18n'],
         dirs: ['src/utils/index.js', 'src/enum', 'src/api/index.js'], // 将自定义的API也加入到自动导入
@@ -26,11 +27,13 @@ export default defineConfig(({ command, mode }) => {
         //   globalsPropValue: true
         // }
       }),
+      // 自动导入template组件 <a-button> <a-table>
       Components({
         resolvers: [
-          // ant-design-vue 4.x 的自动按需引入
+          // ant-design-vue 4.x 的自动按需引入,
           AntDesignVueResolver({
-            importStyle: false // css in js
+            importStyle: false, // css in js, 4.x 不需要
+            resolveIcons: true, // ant 图标也自动导入，<SettingOutlined /> 直接用
           })
         ]
       })
@@ -63,6 +66,9 @@ export default defineConfig(({ command, mode }) => {
               }
               if (id.includes('vue')) {
                 return 'vue-chunk'
+              }
+              if (id.includes('echarts')) {
+                return 'echarts-chunk'
               }
               // 其他第三方
               return 'vendor-chunk'

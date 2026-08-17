@@ -38,7 +38,7 @@
           <div v-if="searchValue" class="tc em09 py10 text-gray">{{ $t('frame.noSearchResult') }} "<span class="bold">{{ searchValue }}</span>"</div>
           <div class="em08 text-gray">{{ $t('frame.searchRecord') }}</div>
           <div class="cache-list mt10">
-            <div v-for="(cache, index) in cacheStore.searchedMenus" :key="cache.path" class="cache-item radius-ant pa10 flex-x-between gap10 pointer" @click="toPath(cache.path)">
+            <div v-for="(cache, index) in cacheStore.searchedMenus" :key="cache.path" class="cache-item radius-ant pa10 flex-x-between gap10 pointer" @click="toPath(cache)">
               <div class="flex-x x-middle gap8">
                 <a-icon v-if="cache.icon" :type="cache.icon" />
                 <span>{{ cache.title }}</span>
@@ -106,9 +106,14 @@
   }
 
   function onSelectHandle (selectedKeys, { node }) {
-    if (node.path && node.meta?.isLeaf) {
-      router.push(node.path)
-      addCache({ path: node.path, title: node.title, icon: node.meta?.icon })
+    console.log('node', node)
+    if (node.path) {
+      if (node.meta?.target) {
+        window.open(node.path, node.meta?.target)
+      } else if (node.meta?.isLeaf) {
+        router.push(node.path)
+      }
+      addCache({ path: node.path, title: node.title, icon: node.meta?.icon, target: node.meta?.target })
       searchValue.value = ''
       close()
     }
@@ -126,8 +131,12 @@
   function removeCache (index) {
     cacheStore.searchedMenus.splice(index, 1)
   }
-  function toPath (path) {
-    router.push(path)
+  function toPath (cache) {
+    if (cache.target) {
+      window.open(cache.path, cache.target)
+    } else {
+      router.push(cache.path)
+    }
     close()
   }
 
@@ -179,13 +188,13 @@
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 10px;
             .cache-item {
-              background-color: var(--ant-colorBgLayout);
+              background-color: rgba(133, 133, 133, .1);
               transition: background-color .3s;
               .close {
                 visibility: hidden;
               }
               &:hover {
-                background-color: var(--ant-colorFillSecondary);
+                background-color: rgba(188, 188, 188, .1);
                 .close {
                   visibility: visible;
                 }

@@ -1,6 +1,13 @@
 ## 使用文档、手册
 
-### 1、接口请求
+### 1、基础底座说明
+- 框架使用了自动导入插件，vue、vue-router、vue-i18n、utils、Enum 内部 API 在开发中无需 import, 可直接用
+- ant-design-vue 组件及图标在 vue template 中会自动导入，无需 import，在 script setup 中则需要手动导入，如：Modal, message...
+- ant-design-vue 内部的 less 变量已注入到全局 less 环境，.less文件、《style lang="less" scoped》 中可直接使用
+- antdv 的 less 变量为编译时变量，不会因页面上主题切换而变化，因主题而变化的变量需要换为 css 变量(运行时变量)，变量参考: src/layout/index.vue
+- CPage 组件只为简化 CRUD 开发，本项目基础模块都是通过该组件实现，但非必选，不适用时使用传统模式开发即可
+
+### 2、接口请求
 为避免接口龙飞凤舞情况，前后端统一约定，method 统一使用 post，参数统一使用请求体传参，摒弃`restfull`规范及一接口一封装模式，采用通用的请求方式，如：
 ```javascript
 import api from '@/api'
@@ -41,7 +48,7 @@ const xxxObj = await api.post('/xxx/xxx/getXXX', { xxx: 'xxx' })
 - 【全局异常：前端统一处理的异常】后端直接返回4xx,5xx,6xx等状态，在响应拦截器中统一处理，如重新登录、业务异常错误提示
 - 返回结果就是业务数据，不用再每次请求都要通过一堆的 `.data` 去获取业务数据
 
-### 2、样式
+### 3、样式
 - 框架中自带了一套基础样式库(原子样式)：`@/assets/css/base.less`，基本可以覆盖90%的场景，无法覆盖的单独写样式即可
 - less、组件中可使用 ant-design 的全局静态变量 @colorPrimary 等，但此变量不会跟随主题动态切换而变化，
 需要跟随变化请使用动态方式获取或使用全局 css 变量，token 内部的变量名参考[官网](https://www.antdv.com/docs/vue/customize-theme-cn)，如下：
@@ -63,7 +70,7 @@ token.value.colorSuccess
 
 
 
-### 3、获取当前登录用户
+### 4、获取当前登录用户
 ```javascript
 import { useAuthStore } from '@/stores/auth-store.js'
 
@@ -74,7 +81,7 @@ console.log('是否已登录：', authStore.hasLogin)
 console.log('当前登录用户：', authStore.userInfo)
 ```
 
-### 4、权限控制
+### 5、权限控制
 使用自定义指令 `v-hasPermi`、`v-noPermi`、`v-hasRole`
 
 ```html
@@ -91,7 +98,7 @@ if (hasPermission('system:user:add')) {
 }
 ```
 
-### 5、字典使用
+### 6、字典使用
 - CRUD 配置中使用，系统CRUD各部分组件已经深度集成了字典功能，在首次需要时加载，加载过的字典会缓存在内存中，避免频繁、重复加载，更新策略：刷新页面、手动点击刷新按钮、通过 useDict 第三个参数配置强制加载，dict-store 中提供了手动刷新方法：getDatasByType
 ```javascript
   // 表单组件中使用
@@ -130,7 +137,7 @@ useDict(['audit_status'], dict => {
 ```
 
 
-### 6、弹出模态框（简化版）
+### 7、弹出模态框（简化版）
 全局组件 `/global/CModal` 对 a-modal、a-drawer 进行了合并封装，简化了使用，属性设置支持标签上设置和调用时设置
 ```html
 <template>
@@ -164,13 +171,13 @@ function onConfirm (close, extraData) {
 ```
 
 
-### 7、CRUD快速开发案例(可直接代码生成，菜单：开发中心->代码生成)
+### 8、CRUD快速开发案例(可直接代码生成，菜单：开发中心->代码生成)
 - 步骤一：先在数据库中设计表结构
 - 步骤二：然后本地启动进入菜单‘开发中心->代码生成’导入表并编辑相关信息
 - 步骤三：预览并一键生成菜单及CRUD前后端代码
 - 步骤四：查看生成结果或对特殊字段、控件的属性进行自定义修改
 
-#### 7.1、CRUD 简单案例：
+#### 8.1、CRUD 简单案例：
 组件 CPage 封装了查询、左侧树形筛选、列表、树形列表、新增、修改、详情、删除、导入、导出、启用、禁用等功能，通过配置选择使用，CPage 分为四块区域，查询区、工具栏区、表格区、新增\修改\详情弹窗区，每块区域对应独立配置，可以很快速很简单实现一个增删查改功能，也可以不传入配置，通过对应插槽自定义实现各个区域部分，接口地址、权限默认根据当前路由生成，可以不用设置
 
 - filterConfig: 查询区域配置
@@ -238,11 +245,11 @@ function onConfirm (close, extraData) {
 </script>
 ```
 
-#### 7.2、全配置参考案例：[demo-page](../views/demo/demo-page.vue)
+#### 8.2、全配置参考案例：[demo-page](../views/demo/demo-page.vue)
 既是案例也是文档，也可以访问[CPage 使用文档](./README.cpage.md)
 
-#### 7.3、CRUD 里部分组件也可单独使用
-如：src/components/crud/components 下的 c-form、c-component、c-import、c-tree、c-table 等，如：
+#### 8.3、CRUD 里部分组件也可单独使用
+如：src/components/crud/components 下的 c-form、c-component、c-import、c-tree、c-table、c-filter 等，如：
 ```html
 <template>
   <c-form
@@ -294,7 +301,7 @@ async function onSubmitHandle (submitData) {
 </script>
 ```
 
-#### 7.4、与传统开发模式对比：
+#### 8.4、与传统开发模式对比：
 ```html
 <!-- 传统的写法，需要编写大量 Dom 和 js，代码杂乱 -->
 ...
@@ -358,7 +365,7 @@ function onXxxChange (e) {
 ...
 </script>
 ```
-### 8、表单联动
+### 9、表单联动
 #### 在表单配置中，大部分属性支持函数动态取值，属性从静态到动态只需将值换成函数，静态属性立刻动起来，无需引入新的属性、新的概念、新的配置即可实现复杂的表单联动，简洁就是王道
 ```javascript
 /**
@@ -401,7 +408,7 @@ const modalConfig = computed(() => ({
 }))
 ```
 
-### 9、规范
+### 10、规范
 - 请保持项目目录/文件干净整洁、风格统一
 - 编写组件或页面文件首行请注明该组件/页面的说明、用途、用法等
 - 使用两个空格代替缩进符，避免不同系统下缩进宽度不一致
@@ -412,5 +419,5 @@ const modalConfig = computed(() => ({
 - 查询区域/表单区域使用日期/时间范围时，字段名设计统一使用'Begin'、'End'后缀，便于代码生成及使用默认值简化配置，如：xxxBegin, xxxEnd
 - 相对独立的小模块，尽可能单独抽离成一个组件，避免一个文件代码过长过杂，同时也要避免过多的组件嵌套
 
-#### 10、全配置参考案例：[demo-page](../views/demo/demo-page.vue)
+#### 11、全配置参考案例：[demo-page](../views/demo/demo-page.vue)
 既是案例也是文档，也可以访问[CPage 组件使用文档](./README.cpage.md)

@@ -273,7 +273,7 @@ defineExpose({
 })
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .c-page {
   display: flex;
   &__tree {

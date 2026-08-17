@@ -153,8 +153,8 @@ export const useMenuStore = defineStore('menu', {
       this.isSidebarOpen = !this.isSidebarOpen
     },
     handleMenuClick (router, menu) {
-      if (menu.meta?.target === '_blank') {
-        window.open(menu.path, '_blank')
+      if (menu.meta?.target) {
+        window.open(menu.path, menu.meta.target)
         return
       }
       if (menu.meta?.isLeaf || menu.meta?.menuType === EMenuType.eMenu) { // 是菜单，直接打开
