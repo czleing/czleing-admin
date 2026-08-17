@@ -163,11 +163,11 @@
         scale: true, // true：刻度范围根据数据自动缩放，false：默认从 0 到最大，很难看出变化趋势
         min: function (value) {
           const min = Math.min(
-            ...[props.minValue, props.maxValue, value.min, props.targetValue].filter(Boolean),
+            ...[props.minValue, props.maxValue, value.min, props.targetValue].filter(n => n || n === 0),
           );
           let minNum = min >= 0 ? min * 0.9 : min * 1.1
           minNum = minNum >= 0 && minNum < 10 ? 0 : minNum
-          return Number(minNum.toFixed(digit));
+          return Number(minNum).toFixed(digit);
         },
         // max: function (value: any) { // 不再统一设置，改为通过 option 自定义，通过手动计算设置最大值还存在一些兼容问题，如：双Y轴时，另外一个Y轴被影响
         //   const max = Math.max(...[maxValue, value.max, targetValue].filter(v => v !== undefined))
