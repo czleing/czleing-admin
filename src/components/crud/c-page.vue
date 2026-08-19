@@ -1,6 +1,6 @@
 <!-- CRUD 页面组件 -->
 <template>
-  <div class="c-page">
+  <div ref="cPage" class="c-page">
     <div v-if="treeConfig" class="c-page__tree mr10 pr10" :class="{'is-hide': !isTreeShow}">
       <!-- 树 -->
       <CTree v-show="isTreeShow" class="c-tree" :config="treeConfig" @selected="onTreeSelectHandle" />
@@ -31,8 +31,10 @@
         :pagination="pagination"
         :show-search="showSearch"
         :useToggleSearch="!!filterConfig"
+        :isFullscreen="isFullscreen"
         @sortColumn="sortColumn"
         @toggleShowSearch="toggleShowSearch"
+        @toggleFullScreen="toggleFullScreen"
         @refresh="onRefreshHandle"
         @add="onAddHandle(toolsConfig?.addInitData)"
         @delete="onBatchDeleteHandle"
@@ -103,6 +105,8 @@ import { isNotEmpty } from '@/utils/index.js'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue'
 import { useSettingStore } from '@/stores/setting-store'
 import { useI18n } from 'vue-i18n'
+import { useFullscreen } from '@vueuse/core'
+import { useTemplateRef } from 'vue'
 
 const props = defineProps({
   /** 没有新增按钮，可选 */
@@ -246,6 +250,10 @@ function onTreeSelectHandle (orgId) {
 }
 function toggleShowSearch () {
   showSearch.value = !showSearch.value
+}
+const { isFullscreen, toggle } = useFullscreen(document.getElementsByClassName('view-main')[0])
+function toggleFullScreen () {
+  toggle()
 }
 function sortColumn (oldIndex, newIndex) {
   const moveColumn = columns.value.splice(oldIndex, 1)[0]

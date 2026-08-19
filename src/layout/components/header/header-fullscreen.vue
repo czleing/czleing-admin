@@ -13,7 +13,7 @@
 import { useFullscreen } from '@vueuse/core'
 import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons-vue'
 
-const { isFullscreen, toggle } = useFullscreen(document.body)
+const { isFullscreen, toggle } = useFullscreen()
 
 </script>
 

@@ -37,20 +37,27 @@
     </div>
     <a-space>
       <!-- 隐藏搜索区 -->
-      <a-button v-if="useToggleSearch" :type="showSearch ? 'default' : 'primary'" @click="onToggleShowSearchHandle">
-        <template v-if="!loading" #icon>
+      <a-button title="隐藏/展开搜索区" v-if="useToggleSearch" :type="showSearch ? 'default' : 'primary'" @click="onToggleShowSearchHandle">
+        <template #icon>
           <SearchOutlined :style="{ fontSize: '0.9em' }" />
         </template>
       </a-button>
       <!-- 刷新 -->
-      <a-button :loading="loading" @click="onRefreshHandle">
+      <a-button title="刷新列表" :loading="loading" @click="onRefreshHandle">
         <template v-if="!loading" #icon>
           <SyncOutlined :style="{ fontSize: '0.9em' }" />
         </template>
       </a-button>
+      <!-- CRUD全屏 -->
+      <a-button title="全屏" @click="onToggleFullScreenHandle">
+        <template #icon>
+          <FullscreenExitOutlined v-if="isFullscreen" :style="{ fontSize: '0.9em' }" />
+          <FullscreenOutlined v-else :style="{ fontSize: '0.9em' }" />
+        </template>
+      </a-button>
       <!-- 筛选列 -->
       <a-dropdown placement="bottomLeft">
-        <a-button :icon="h(FilterOutlined)" :style="{ fontSize: '0.9em' }" />
+        <a-button title="列设置" :icon="h(FilterOutlined)" :style="{ fontSize: '0.9em' }" />
         <template #overlay>
           <a-checkbox-group :value="checkedFieldNames" @change="onFieldsFilterChange">
             <div class="c-tools__overlay">
@@ -78,7 +85,7 @@
 </template>
 
 <script setup>
-import { PlusOutlined, DeleteOutlined, ExportOutlined, RollbackOutlined, SyncOutlined, FilterOutlined, SearchOutlined, HolderOutlined, BorderInnerOutlined } from '@ant-design/icons-vue'
+import { PlusOutlined, DeleteOutlined, ExportOutlined, RollbackOutlined, SyncOutlined, FilterOutlined, SearchOutlined, HolderOutlined, BorderInnerOutlined, FullscreenOutlined, FullscreenExitOutlined } from '@ant-design/icons-vue'
 import CImport from './c-import.vue'
 import { Modal } from 'ant-design-vue'
 import { h } from 'vue'
@@ -114,7 +121,9 @@ const props = defineProps({
   /** 选中的要展示的列字段名数组 */
   checkedFieldNames: Array,
   /** 是否使用查询区切换按钮 */
-  useToggleSearch: { type: Boolean, default: true }
+  useToggleSearch: { type: Boolean, default: true },
+  /** 是否全屏 */
+  isFullscreen: { type: Boolean, default: false }
 })
 
 const selectedIds = inject('c-page.selectedIds', ref([]))
@@ -186,9 +195,12 @@ function onToolClickHandle (btn) {
   }
 }
 
-const emits = defineEmits(['add', 'delete', 'refresh', 'update:checkedFieldNames', 'toggleShowSearch', 'sortColumn'])
+const emits = defineEmits(['add', 'delete', 'refresh', 'update:checkedFieldNames', 'toggleShowSearch', 'sortColumn', 'toggleFullScreen'])
 function onToggleShowSearchHandle () {
   emits('toggleShowSearch')
+}
+function onToggleFullScreenHandle () {
+  emits('toggleFullScreen')
 }
 function onRefreshHandle () {
   emits('refresh')
