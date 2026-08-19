@@ -210,6 +210,11 @@ async function getList () {
       result = await axios[props.apiMethodConfig['list']](url, params, props.apiOptionConfig?.list)
     }
     let list = result?.list ?? result
+    if (list?.length === 0 && usePage.value && page.value.pageNum > 1) {
+      pagination.value.current = 1
+      await getList()
+      return
+    }
     if (typeof props.afterSearch === 'function') {
       list = props.afterSearch(list)
     }
