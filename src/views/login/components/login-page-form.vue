@@ -54,8 +54,9 @@
 
 <script setup>
 import { useAuthStore } from '@/stores/auth-store.js'
+import { useCacheStore } from '@/stores/cache-store.js'
 import { message } from 'ant-design-vue'
-import { getAccount } from '@/storage/account.js'
+
 
 const loading = ref(false)
 const spinning = ref(false)
@@ -74,10 +75,11 @@ const rules = {
   code: [{ required: true, message: '请输入校验码' }]
 }
 const authStore = useAuthStore()
+const cacheStore = useCacheStore()
 
 onMounted(() => {
   getCode()
-  const accountInfo = getAccount()
+  const accountInfo = cacheStore.getLoginAccount()
   if (accountInfo) {
     form.account = accountInfo.account,
     form.password = accountInfo.password

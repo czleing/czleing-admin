@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia'
 import router from '@/router'
 import axios from '@/api/index'
-import { setAccount } from '@/storage/account'
 import { Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 import { useMenuStore } from '@/stores/menu-store'
 import { createVNode } from 'vue'
-import { useTabsStore } from '@/stores/tabs-store.js'
+import { useTabsStore } from '@/stores/tabs-store'
+import { useCacheStore } from '@/stores/cache-store'
 
 /**
  * 登录、授权、用户信息相关 store
@@ -50,7 +50,12 @@ export const useAuthStore = defineStore('auth', {
       // 保存登录令牌，会自动持久化
       this.token = result.token
       // 加密持久化需要记住的账号
-      setAccount(account, password, remember)
+      const cacheStore = useCacheStore()
+      if (remember) {
+        cacheStore.setLoginAccount({ account, password })
+      } else {
+        cacheStore.setLoginAccount()
+      }
       // 登录成功后处理
       await this.loginSuccessHandle()
     },
@@ -93,16 +98,18 @@ export const useAuthStore = defineStore('auth', {
     async loginSuccessHandle () {
       const menuStore = useMenuStore()
       // 获取菜单生成动态路由
-      await menuStore.loadMenuToRoute(true)
       // 获取最新的登录用户信息
-      await this.getUserInfo(true)
+      await Promise.all([
+        menuStore.loadMenuToRoute(true),
+        this.getUserInfo(true)
+      ])
       // 跳转
       const redirect = router.currentRoute.value.query.redirect
       if (redirect) {
         if (redirect.startsWith('http')) {
-          window.location.href = redirect
+          window.location.href = redirect // 支持同域名其他系统授权登录跳回
         } else {
-          router.replace(redirect)
+          router.replace(redirect) // 本系统登录跳回
         }
       } else {
         // 跳转到首页
