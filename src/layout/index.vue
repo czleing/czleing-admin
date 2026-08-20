@@ -111,6 +111,9 @@ useWindowSize((width) => {
   border-color: var(--ant-colorBorderSecondary);
   background-color: var(--ant-colorBgContainer);
   border-top: none;
+  &:fullscreen {
+    border-radius: 0;
+  }
 }
 
 /** Tab 切换动画相关样式定义在 src/assets/css/base.less */
