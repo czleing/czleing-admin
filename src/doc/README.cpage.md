@@ -112,9 +112,9 @@ const treeConfig = {
 | label | String \| Function | 标签文本 | - |
 | fieldName | String | 字段名（提交 key） | - |
 | type | Enum(EControlType) | 控件类型（不填为输入框 eInput） | EControlType.eInput |
-| col | Object | 单项栅格配置 | 2 |
-| labelCol | Object | 单项布局覆盖，参考 a-form-item | { span: 6 } |
-| wrapperCol | Object | 单项布局覆盖，参考 a-form-item | { span: 18 } |
+| col | Object | 单项栅格配置 | - |
+| labelCol | Object | 单项布局覆盖，参考 a-form-item | - |
+| wrapperCol | Object | 单项布局覆盖，参考 a-form-item | - |
 | props | Object | 传给控件的属性（如 placeholder、options、remote、dictType 等） | - |
 | defaultValue | any | 默认值（设置则会触发初始化查询） | - |
 | ... | - | 其他属性可以根据需要自由扩展 | - |
@@ -276,7 +276,7 @@ const toolsConfig = computed(() => ({
 ---
 
 **modalConfig.formConfig.fields** 表单字段数组每项属性：
-- 功能比 filterConfig.fields 更强大
+- 功能比 filterConfig.fields 强大
 
 | 属性 | 类型 | 说明 | 默认值 |
 |---|---:|---|---|

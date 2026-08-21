@@ -420,4 +420,4 @@ const modalConfig = computed(() => ({
 - 相对独立的小模块，尽可能单独抽离成一个组件，避免一个文件代码过长过杂，同时也要避免过多的组件嵌套
 
 #### 11、全配置参考案例：[demo-page](../views/demo/demo-page.vue)
-既是案例也是文档，也可以访问[CPage 组件使用文档](./README.cpage.md)
+既是案例也是文档，也可以访问 [CPage 组件使用文档](./README.cpage.md)
