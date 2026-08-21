@@ -106,7 +106,7 @@ import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue'
 import { useSettingStore } from '@/stores/setting-store'
 import { useI18n } from 'vue-i18n'
 import { useFullscreen } from '@vueuse/core'
-import { useTemplateRef } from 'vue'
+import { onMounted, shallowRef, useTemplateRef } from 'vue'
 
 const props = defineProps({
   /** 没有新增按钮，可选 */
@@ -251,7 +251,12 @@ function onTreeSelectHandle (orgId) {
 function toggleShowSearch () {
   showSearch.value = !showSearch.value
 }
-const { isFullscreen, toggle } = useFullscreen(document.getElementsByClassName('view-main')[0])
+
+const viewMain = shallowRef()
+onMounted(() => {
+  viewMain.value = document.getElementsByClassName('view-main')[0]
+})
+const { isFullscreen, toggle } = useFullscreen(viewMain)
 function toggleFullScreen () {
   toggle()
 }
