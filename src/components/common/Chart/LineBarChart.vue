@@ -1,7 +1,7 @@
 <!-- 线、柱图组件 -->
 <template>
   <div class="lineBarChart overflow-hidden flex-y gap5" :style="`width: 100%; height: ${height}`">
-    <VChart v-show="data?.length" :loading="loading" :option="currOption" class="flex-auto" autoresize @click="onChartClick" />
+    <VChart v-show="data?.length" :loading="loading" :option="currOption" :loading-options="loadingOptions" class="flex-auto" autoresize @click="onChartClick" />
     <!-- 工具箱 -->
     <div class='tools flex-x x-middle gap10 em09'>
       <span v-if="onRefresh" class="pointer" @click="onRefresh"><ReloadOutlined /> {{ $t('common.refresh') }}</span>
@@ -112,6 +112,8 @@
     errorColor: { type: String, default: '#f00' },
     /** 数据为空展示的文本 */
     emptyText: { type: String, default: 'No data' },
+    /** 加载中相关配置，参考：https://echarts.apache.org/en/api.html#echartsInstance.showLoading opts */
+    loadingOptions: { type: Object, default: () => ({ maskColor: 'rgba(0, 0, 0, .2)' }) },
     /** 可点击的提示 */
     clickTips: String,
     /** 柱子点击事件 */
