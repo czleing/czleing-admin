@@ -118,7 +118,7 @@ function playEffect(x, y) {
       8px 28px;
     background-size: 4px 4px;
     background-repeat: no-repeat;
-    transition: all .2s;
+    transition: background-position .2s, background-size .2s;
   }
   .sun-moon {
     position: absolute;
@@ -129,12 +129,12 @@ function playEffect(x, y) {
     width: 20px;
     height: 20px;
     box-shadow: 30px 30px 0 0 var(--mode-color);
-    transition: all .2s;
+    transition: transform .2s, box-shadow .2s;
   }
   .cloud {
     position: absolute;
     inset: 0;
-    transition: all .2s;
+    transition: transform .2s;
     &::before, &::after {
       content: '';
       position: absolute;
