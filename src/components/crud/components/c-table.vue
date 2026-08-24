@@ -192,8 +192,11 @@ onMounted(() => {
 })
 
 /** 获取数据 */
-async function getList () {
+async function getList (reload = false) {
   const url = props.apiConfig?.list
+  if (reload) {
+    pagination.value.current = 1
+  }
   let params = {
     ...searchParams.value,
     page: page.value
@@ -210,11 +213,6 @@ async function getList () {
       result = await axios[props.apiMethodConfig['list']](url, params, props.apiOptionConfig?.list)
     }
     let list = result?.list ?? result
-    if (list?.length === 0 && usePage.value && page.value.pageNum > 1) {
-      pagination.value.current = 1
-      await getList()
-      return
-    }
     if (typeof props.afterSearch === 'function') {
       list = props.afterSearch(list)
     }
@@ -258,7 +256,13 @@ function onPageChangeHandle (page, filter, sorter) {
 }
 
 function search () {
-  getList()
+  getList(true)
+}
+function refresh () {
+  getList(false)
+}
+function reload () {
+  getList(true)
 }
 
 function onActionHandle (data) {
@@ -286,10 +290,10 @@ function customRow (record, index) {
 
 const emits = defineEmits(['action', 'resizeColumn'])
 defineExpose({
-  refresh: search,
-  reload: search,
+  search, // 查询，分页重置
+  refresh, // 查询，分页不重置
+  reload, // 查询，分页重置
   clearSelect,
-  search,
   dataSource
 })
 </script>

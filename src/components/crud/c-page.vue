@@ -226,6 +226,7 @@ provide('c-page.pagination', pagination)
 provide('c-page.sorter', sorter)
 provide('c-page.checkedFieldNames', checkedFieldNames)
 provide('c-page.onRefreshHandle', onRefreshHandle)
+provide('c-page.onReloadHandle', onReloadHandle)
 provide('c-page.useTableBorder', useTableBorder)
 
 const isTreeShow = ref(true)
@@ -240,6 +241,9 @@ function onSearchHandle (params) {
 }
 function onRefreshHandle () {
   cTable.value.refresh()
+}
+function onReloadHandle () {
+  cTable.value.reload()
 }
 function onCancelHandle () {
   cForm.value?.reset()
@@ -275,7 +279,8 @@ defineExpose({
   detail,
   selectedIds,
   selectedObjs,
-  refresh: () => cTable.value?.refresh(),
+  refresh: onRefreshHandle,
+  reload: onReloadHandle,
   onAddHandle,
   onActionHandle,
   clearSelect: () => {
