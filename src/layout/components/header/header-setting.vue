@@ -75,6 +75,9 @@
           <a-form-item :label="$t('frame.useTableBorder')">
             <a-switch v-model:checked="settingStore.useTableBorder" />
           </a-form-item>
+          <a-form-item :label="$t('frame.useThinLine')" :extra="$t('frame.useThinLineExtra')">
+            <a-switch v-model:checked="settingStore.useThinLine" />
+          </a-form-item>
         </div>
         <div v-show="settingTab === 'other'">
           <h4 class="mt20 text-gray2">{{ $t('frame.lang') }}</h4>

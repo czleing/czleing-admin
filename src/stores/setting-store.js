@@ -12,7 +12,7 @@ const themes = [
         colorError: '#c84e4e',
         colorWarning: '#e2b14c',
         colorSuccess: '#3dbd3e',
-        colorInfo: '#d2b48c'
+        colorInfo: '#d2b48c',
         // 可以自定义更多变量值
       }
     }
@@ -25,7 +25,7 @@ const themes = [
         colorError: '#e88f78',
         colorWarning: '#f0c175',
         colorSuccess: '#85b17e',
-        colorInfo: '#88c7b1'
+        colorInfo: '#88c7b1',
       }
     }
   },
@@ -85,6 +85,7 @@ export const useSettingStore = defineStore('setting', () => {
   const tabAnimate = ref('slide-right') // tab 页签动画，'', 'slide-right', 'fade', 'scale'
   const useDynamicPageTitle = ref(true) // 是否动态设置浏览器标签名，设置为路由上的 meta.title
   const useTableBorder = ref(true) // 表格是否使用竖向边框
+  const useThinLine = ref(false) // 是否使用细线边框，需显示器、浏览器支持，由用户决定
   const useBreadcrumbs = ref(true) // 是否使用面包屑目录层级
   const useWatermark = ref(false) // 是否使用水印
   const useWanSplit = ref(false) // 是否使用万分位分隔(中文简体下数字)
@@ -141,6 +142,7 @@ export const useSettingStore = defineStore('setting', () => {
     themes: themesGetter,
     isCn,
     useTableBorder,
+    useThinLine,
     useBreadcrumbs,
     useWatermark,
     useWanSplit,

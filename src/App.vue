@@ -33,7 +33,10 @@ const locale = computed(() => localeMap[settingStore.locale] ?? zhCN)
 // 动态主题
 const currTheme = computed(() => {
   return {
-    ...settingStore.theme,
+    token: {
+      ...settingStore.theme.token,
+      lineWidth: settingStore.useThinLine ? 0.55 : 1,
+    },
     algorithm: settingStore.isDark ? theme.darkAlgorithm : theme.defaultAlgorithm
   }
 })

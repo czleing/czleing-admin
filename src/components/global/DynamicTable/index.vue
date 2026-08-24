@@ -52,7 +52,8 @@
         </a>
         <!-- 文本OCR -->
         <template v-if="useTextOCR">
-          <span class="text-gray2 mx20">|</span>
+          <!-- <span class="text-gray2 mx20">|</span> -->
+          <a-divider type="vertical" />
           <span class="flex-x x-middle gap10">
             <a-popover v-model:open="textOcrOpen">
               <template #content>
@@ -77,7 +78,7 @@
             title="确认要清空所有数据？"
             @confirm="clearHandle"
           >
-            <span class="text-gray2 mx20">|</span>
+            <a-divider type="vertical" />
             <span class="text-danger pointer"><ClearOutlined /> 清空</span>
           </a-popconfirm>
         </template>
@@ -280,7 +281,7 @@ async function emitChange() {
 <style lang="less" scoped>
 .dynamic-table{
   .add-row {
-    border: solid 1px var(--ant-colorBorderSecondary);
+    border: solid var(--ant-lineWidth) var(--ant-colorBorderSecondary);
     border-top: none;
     border-radius: 0 0 var(--ant-borderRadius) var(--ant-borderRadius);
   }

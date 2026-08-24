@@ -2,7 +2,7 @@
 <template>
   <div class="field-group" :class="{ 'is-expand': showContainer }">
     <div v-if="title" class="field-group__title pointer flex-x-between"
-      :style="{ backgroundColor: token.colorFillQuaternary, border: `solid 1px ${token.colorBorderSecondary}` }"
+      :style="{ backgroundColor: token.colorFillQuaternary, border: `solid ${token.lineWidth}px ${token.colorBorderSecondary}` }"
       @click="toggle"
     >
       <div>
@@ -81,7 +81,7 @@ function toggle () {
     }
     &.is-open {
       grid-template-rows: 1fr;
-      border-width: 0 1px 1px 1px;
+      border-width: 0 var(--ant-lineWidth) var(--ant-lineWidth) var(--ant-lineWidth);
     }
   }
   &.is-expand {

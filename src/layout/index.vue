@@ -78,6 +78,7 @@ watchEffect(() => {
     controlHeight: token.value.controlHeight, // 基础控件高度
     borderRadius: token.value.borderRadius + 'px', // 基础控件圆角大小
     borderRadiusLG: token.value.borderRadiusLG + 'px', // 一般用于容器圆角大小
+    lineWidth: token.value.lineWidth + 'px', // 边框线条宽度，1px or 0.55px
   })
 })
 
@@ -101,13 +102,13 @@ useWindowSize((width) => {
   }
   .is-radius {
     border-radius: var(--ant-borderRadiusLG);
-    border: solid 1px var(--ant-colorBorderSecondary);
+    border: solid var(--ant-lineWidth) var(--ant-colorBorderSecondary);
     overflow: hidden;
   }
 }
 .view-main {
   border-radius: 0 0 var(--ant-borderRadiusLG) var(--ant-borderRadiusLG);
-  border: solid 1px;
+  border: solid var(--ant-lineWidth);
   border-color: var(--ant-colorBorderSecondary);
   background-color: var(--ant-colorBgContainer);
   border-top: none;

@@ -155,7 +155,7 @@ const modalConfig = computed(() => ({
         wrapperCol: { span: 21 },
         props: {
           useRefresh: false,
-          style: { maxHeight: '400px', overflow: 'auto', border: 'solid 1px rgba(128, 128, 128, .2)', padding: '6px', borderRadius: '6px' },
+          style: { maxHeight: '400px', overflow: 'auto', border: 'solid var(--ant-lineWidth) rgba(128, 128, 128, .2)', padding: '6px', borderRadius: '6px' },
           component: 'a-tree',
           checkable: true,
           remote: {
@@ -264,7 +264,7 @@ const formConfig = computed(() => ({
       none: (formData) => formData.dataScope !== '2',
       props: {
         useRefresh: false,
-        style: { maxHeight: '400px', overflow: 'auto', border: 'solid 1px rgba(128, 128, 128, .2)', padding: '6px', borderRadius: '6px' },
+        style: { maxHeight: '400px', overflow: 'auto', border: 'solid var(--ant-lineWidth) rgba(128, 128, 128, .2)', padding: '6px', borderRadius: '6px' },
         component: 'a-tree',
         checkable: true,
         remote: {

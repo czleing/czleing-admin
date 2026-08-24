@@ -42,7 +42,7 @@ const setting = settings.websiteInfo
   &__modal {
     background-color: rgba(255, 255, 255, .1) !important;
     backdrop-filter: saturate(110%) blur(10px);
-    border: solid 1px rgba(255, 255, 255, .1);
+    border: solid var(--ant-lineWidth) rgba(255, 255, 255, .1);
     border-radius: 5px;
     overflow: hidden;
     align-items: stretch;

@@ -158,19 +158,17 @@ const needFold = computed(() => currFields.value.length > rowMaxShowNum.value)
 const isFold = ref(false)
 const foldRef = useTemplateRef('foldRef')
 const mouseX = ref(0)
-const isInited = ref(false)
 async function toggleFold () {
   isFold.value = !isFold.value
+  rowMaxShowNum.value = 5
   await nextTick()
-  if (isFold.value && !isInited.value) {
+  if (isFold.value) {
     const rowMaxHeight = 60;
     async function initShowNum () {
-      if (cFilter.value.getBoundingClientRect().height > rowMaxHeight && rowMaxShowNum.value > 1) {
+      if (cFilter.value.clientHeight > rowMaxHeight && rowMaxShowNum.value > 1) {
         rowMaxShowNum.value = rowMaxShowNum.value - 1;
         await nextTick()
         initShowNum()
-      } else {
-        isInited.value = true
       }
     }
     initShowNum()
@@ -236,7 +234,7 @@ function onDeleteCache (id) {
   }
   &:hover, &.is-fold {
     .c-filter__fold {
-      border-top: dotted 1px var(--ant-colorBorder);
+      border-top: dotted var(--ant-lineWidth) var(--ant-colorBorder);
       .bar {
         transform: translateX(var(--x)) scaleY(1);
       }

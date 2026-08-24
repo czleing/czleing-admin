@@ -25,7 +25,9 @@
 <script setup>
 import '@wangeditor/editor/dist/css/style.css'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import { i18nChangeLanguage } from '@wangeditor/editor'
 import { useAuthStore } from '@/stores/auth-store'
+import { useSettingStore } from '@/stores/setting-store'
 
 const props = defineProps({
   value: String,
@@ -37,6 +39,7 @@ const mode = 'default'
 const editor = shallowRef()
 const editorContent = ref('')
 const authStore = useAuthStore()
+const settingStore = useSettingStore()
 const token = authStore.token
 // 工具栏配置，会覆盖默认配置，只控制顺序和是否显示
 const toolbarConfig = {
@@ -73,6 +76,15 @@ watch(
   },
   { immediate: true }
 )
+
+watch(
+  () => settingStore.locale,
+  (val) => {
+    i18nChangeLanguage(val === 'en' ? 'en' : 'zh-cn')
+  },
+  { immediate: true }
+)
+
 onUnmounted(() => {
   if (!editor.value) return
   editor.value.destroy() // 组件销毁时，及时销毁编辑器
@@ -92,12 +104,12 @@ const emits = defineEmits(['update:value', 'change'])
 
 <style scoped lang="less">
 .editor-container {
-  border: 1px solid var(--ant-colorBorder);
+  border: var(--ant-lineWidth) solid var(--ant-colorBorder);
   border-radius: var(--ant-borderRadius);
   z-index: 1;
   overflow: hidden;
   &__toolbar {
-    border-bottom: 1px solid var(--ant-colorBorder);
+    border-bottom: var(--ant-lineWidth) solid var(--ant-colorBorder);
   }
   &__editor {
     height: v-bind(height) !important;
@@ -150,6 +162,6 @@ html[theme='dark'] .w-e-full-screen-container {
 /* 表格默认样式 */
 /* .WangPreview table { border-collapse: collapse; }
 .WangPreview th { background-color: rgba(155, 155, 155, .1); }
-.WangPreview th, .WangPreview td { border: 1px solid rgba(155, 155, 155, .2); padding: 2px 5px; }
+.WangPreview th, .WangPreview td { border: var(--ant-lineWidth) solid rgba(155, 155, 155, .2); padding: 2px 5px; }
 .WangPreview img { max-width: 100% !important; } */
 </style>

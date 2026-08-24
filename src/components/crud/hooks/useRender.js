@@ -12,7 +12,7 @@ import { h, resolveComponent } from 'vue'
  */
 export function useRender ({ ctx, isView, value, dataSource }) {
   const formData = inject('c-form.formData', {})
-  const { t } = useI18n()
+  const { t, te } = useI18n()
   const emitUpdate = async (...args) => {
     ctx.$emit('update:value', ...args) // 统一使用 value 作为双向绑定的 props (为了与 ant-design 一致)
   }
@@ -556,7 +556,7 @@ export function useRender ({ ctx, isView, value, dataSource }) {
   function transformOptions (options, useAll = false) {
     const result = options?.map(item => {
       let label = item.name ?? item.label
-      if (/^\w+(\.\w+)*$/.test(label)) {
+      if (te(label)) {
         label = t(label) // 国际化转换
       }
       return { ...item, value: item.id ?? item.value, label }

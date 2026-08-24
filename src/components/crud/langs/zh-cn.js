@@ -52,6 +52,8 @@ export default {
     left: '左侧',
     topLeft: '混合',
     useTableBorder: '表格竖向边框',
+    useThinLine: '使用细线边框',
+    useThinLineExtra: '需显示器、浏览器支持',
     useBreadcrumbs: '使用面包屑',
     useWatermark: '使用水印',
     useWanSplit: '数字万分位',

@@ -51,6 +51,8 @@ export default {
     left: 'Left',
     topLeft: 'TopLeft',
     useTableBorder: 'Use Table Border',
+    useThinLine: 'Use Thin Border',
+    useThinLineExtra: 'Requires support from monitor and browser',
     useBreadcrumbs: 'Use Breadcrumbs',
     useWatermark: 'Use Watermark',
     search: 'Search',

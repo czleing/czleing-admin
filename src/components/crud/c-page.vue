@@ -292,7 +292,7 @@ defineExpose({
   &__tree {
     min-width: 180px;
     max-width: 240px;
-    border-right: solid 1px rgba(100, 100, 100, .1);
+    border-right: solid var(--ant-lineWidth) rgba(100, 100, 100, .1);
     position: relative;
     transition: all .3s;
     .c-tree {
