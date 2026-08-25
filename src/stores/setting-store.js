@@ -5,7 +5,6 @@ import { ref, computed } from 'vue'
 const themes = [
   {
     name: '金色沙滩',
-    inUse: true,
     theme: {
       token: {
         colorPrimary: '#d2b48c',
@@ -19,6 +18,7 @@ const themes = [
   },
   {
     name: '薄荷清新',
+    inUse: true,
     theme: {
       token: {
         colorPrimary: '#88c7b1',
@@ -33,23 +33,23 @@ const themes = [
     name: '海岸微风',
     theme: {
       token: {
-        colorPrimary: '#8db6d2',
-        colorError: '#d98f83',
-        colorWarning: '#e7c687',
-        colorSuccess: '#a3cc9c',
-        colorInfo: '#8db6d2'
+        colorPrimary: '#56a0d2',
+        colorError: '#cf7b6e',
+        colorWarning: '#e1bf7f',
+        colorSuccess: '#8cca81',
+        colorInfo: '#56a0d2'
       }
     }
   },
   {
-    name: '热情红火',
+    name: '轻胭落砚',
     theme: {
       token: {
-        colorPrimary: '#f64040',
-        colorError: '#aa2705',
+        colorPrimary: '#e48390',
+        colorError: '#bd2e0a',
         colorWarning: '#ff9209',
-        colorSuccess: '#a1d267',
-        colorInfo: '#f64040'
+        colorSuccess: '#6dd747',
+        colorInfo: '#e48390'
       }
     }
   },
@@ -62,7 +62,7 @@ const themes = [
         colorError: '#c84e4e',
         colorWarning: '#e2b14c',
         colorSuccess: '#3dbd3e',
-        colorInfo: '#65a6d1',
+        colorInfo: '#0099ff',
       }
     }
   }
@@ -78,7 +78,7 @@ export const useSettingStore = defineStore('setting', () => {
   const modeAnimate = ref('fade') // 切换昼夜模式的动画 fade, circle
   const locale = ref('zh-cn') // 当前语言 zh-cn, zh-hk, en
   const componentSize = ref('middle') // 当前组件尺寸
-  const menuLayout = ref('top') // 菜单布局方式，top: 全部显示在顶部，left: 全部显示在左侧，top-left: 顶部一级菜单，左侧子菜单
+  const menuLayout = ref('top-left') // 菜单布局方式，top: 全部显示在顶部，left: 全部显示在左侧，top-left: 顶部一级菜单，左侧子菜单
   const useRadius = ref(false) // 是否使用圆润布局
   const useWeather = ref(false) // 是否使用天气组件
   const useTabs = ref(true) // 是否使用 tabs 栏
@@ -99,7 +99,7 @@ export const useSettingStore = defineStore('setting', () => {
     if (!name) return
     const t = themes.find(item => item.name === name)?.theme
     if (t) {
-      theme.value = { ...t, token: { ...t.token } }
+      theme.value = t // { ...t, token: { ...t.token } }
       themeName.value = name
     }
   }

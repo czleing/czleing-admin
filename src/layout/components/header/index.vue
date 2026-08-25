@@ -111,9 +111,10 @@ function onMenuItemClick (item) {
       height: calc(var(--ant-controlHeight) * 1px + 5px);
       line-height: calc(var(--ant-controlHeight) * 1px + 5px);
       background-color: rgba(155, 155, 155, .1);
-      margin: 0 5px;
+      margin: 0 4px;
       padding-inline: 12px;
       transition: background-color .3s, color .3s;
+      // transform: skewX(-8deg);
       &:hover {
         color: var(--ant-colorPrimary);
         background-color: var(--ant-colorPrimaryBgHover);
@@ -125,6 +126,10 @@ function onMenuItemClick (item) {
       &::after {
         display: none !important;
       }
+      // .ant-menu-title-content {
+      //   display: inline-block;
+      //   transform: skewX(8deg);
+      // }
     }
     & > .ant-menu-item-selected, & > .ant-menu-submenu-selected {
       background-image: linear-gradient(135deg, var(--ant-colorPrimary), var(--ant-colorPrimaryActive));
