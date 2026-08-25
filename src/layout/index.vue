@@ -66,6 +66,10 @@ watchEffect(() => {
     colorText: token.value.colorText,
     colorInfo: token.value.colorInfo,
     colorPrimary: token.value.colorPrimary,
+    colorPrimaryHover: token.value.colorPrimaryHover, // 主色梯度下的悬浮态，使用频率很高。
+    colorPrimaryBg: token.value.colorPrimaryBg, // 主色浅色背景颜色，一般用于视觉层级较弱的选中状态。
+    colorPrimaryBgHover: token.value.colorPrimaryBgHover, // 与主色浅色背景颜色相对应的悬浮态颜色。
+    colorPrimaryActive: token.value.colorPrimaryActive, // 主色梯度下的深色激活态
     colorSuccess: token.value.colorSuccess,
     colorWarning: token.value.colorWarning,
     colorError: token.value.colorError,

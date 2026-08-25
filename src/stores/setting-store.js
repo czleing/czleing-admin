@@ -89,6 +89,8 @@ export const useSettingStore = defineStore('setting', () => {
   const useBreadcrumbs = ref(true) // 是否使用面包屑目录层级
   const useWatermark = ref(false) // 是否使用水印
   const useWanSplit = ref(false) // 是否使用万分位分隔(中文简体下数字)
+  const firstMenuMode = ref('button') // 顶部菜单模式，button, default
+  const firstMenuAlign = ref('start') // 顶部菜单位置，start, center, end
 
   const { locale: l } = useI18n()
 
@@ -146,6 +148,8 @@ export const useSettingStore = defineStore('setting', () => {
     useBreadcrumbs,
     useWatermark,
     useWanSplit,
+    firstMenuMode,
+    firstMenuAlign,
     setThemeByName,
     setDark,
     setLight,

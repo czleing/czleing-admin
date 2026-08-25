@@ -60,6 +60,13 @@ export default {
     search: '搜索',
     searchRecord: '搜索历史',
     noSearchResult: '未搜索到相关结果',
+    firstMenuMode: '顶部菜单样式',
+    firstMenuModeMenu: '菜单',
+    firstMenuModeButton: '按钮',
+    firstMenuAlign: '顶部菜单位置',
+    firstMenuAlignLeft: '左对齐',
+    firstMenuAlignCenter: '居中',
+    firstMenuAlignRight: '右对齐',
   },
   // crud
   crud: {

@@ -102,6 +102,29 @@ const developerRoutes = [
         }
       },
     ]
+  },
+  {
+    path: '/test',
+    redirect: '/test/demo',
+    meta: {
+      isFirst: true,
+      icon: 'CodeOutlined',
+      hidden: !import.meta.env.DEV,
+      title: 'Test'
+    },
+    children: [
+      {
+        path: '/test/demo',
+        component: () => import('@/views/demo/demo-page.vue'),
+        meta: {
+          title: 'Demo',
+          icon: 'ExperimentOutlined',
+          isLeaf: true,
+          matchedPaths: ['/test', '/test/demo'],
+          cache: true
+        }
+      },
+    ]
   }
 ]
 

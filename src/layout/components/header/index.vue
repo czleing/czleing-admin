@@ -5,7 +5,7 @@
       <MenuFoldOutlined v-if="menuStore.isSidebarOpen" />
       <MenuUnfoldOutlined v-else />
     </span>
-    <div class="header__menu flex-auto ml30">
+    <div class="header__menu flex-auto mx20" :class="{ 'btn-mode': settingStore.firstMenuMode === 'button' }">
       <template v-if="settingStore.menuLayout === 'left'">
         <transition name="slide-right">
           <HeaderBreadcrumb v-if="settingStore.useBreadcrumbs" />
@@ -17,6 +17,7 @@
         v-model:selectedKeys="selectedKeys"
         v-model:openKeys="openKeys"
         mode="horizontal"
+        :style="`justify-content:${settingStore.firstMenuAlign}`"
       >
         <template v-for="item in menuStore.headerNavRoutes">
           <template v-if="item.meta?.hidden !== true && !item.children">
@@ -99,6 +100,39 @@ function onMenuItemClick (item) {
   height: 100%;
   &__menu {
     overflow: auto;
+  }
+}
+</style>
+<style lang="less">
+.header__menu.btn-mode {
+  .ant-menu {
+    & > .ant-menu-item, & > .ant-menu-submenu {
+      border-radius: var(--ant-borderRadius);
+      height: calc(var(--ant-controlHeight) * 1px + 5px);
+      line-height: calc(var(--ant-controlHeight) * 1px + 5px);
+      background-color: rgba(155, 155, 155, .1);
+      margin: 0 5px;
+      padding-inline: 12px;
+      transition: background-color .3s, color .3s;
+      &:hover {
+        color: var(--ant-colorPrimary);
+        background-color: var(--ant-colorPrimaryBgHover);
+      }
+      &:active {
+        color: white;
+        background-color: var(--ant-colorPrimaryActive);
+      }
+      &::after {
+        display: none !important;
+      }
+    }
+    & > .ant-menu-item-selected, & > .ant-menu-submenu-selected {
+      background-image: linear-gradient(135deg, var(--ant-colorPrimary), var(--ant-colorPrimaryActive));
+      color: white !important;
+      .ant-menu-submenu-title {
+        color: inherit;
+      }
+    }
   }
 }
 </style>

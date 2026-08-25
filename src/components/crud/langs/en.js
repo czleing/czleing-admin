@@ -58,6 +58,13 @@ export default {
     search: 'Search',
     searchRecord: 'Search History',
     noSearchResult: 'No results found',
+    firstMenuMode: 'Top Menu Style',
+    firstMenuModeMenu: 'Menu',
+    firstMenuModeButton: 'Button',
+    firstMenuAlign: 'Top Menu Position',
+    firstMenuAlignLeft: 'Left',
+    firstMenuAlignCenter: 'Center',
+    firstMenuAlignRight: 'Right',
   },
   // crud
   crud: {

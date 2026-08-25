@@ -52,6 +52,14 @@
           <a-form-item v-if="settingStore.menuLayout === 'left'" :label="$t('frame.useBreadcrumbs')">
             <a-switch v-model:checked="settingStore.useBreadcrumbs" />
           </a-form-item>
+          <template v-else>
+            <a-form-item :label="$t('frame.firstMenuMode')">
+              <a-segmented v-model:value="settingStore.firstMenuMode" :options="firstMenuModeOptions" />
+            </a-form-item>
+            <a-form-item :label="$t('frame.firstMenuAlign')">
+              <a-segmented v-model:value="settingStore.firstMenuAlign" :options="firstMenuAlignOptions" />
+            </a-form-item>
+          </template>
           <a-form-item :label="$t('frame.dark')">
             <div class="border radius-ant inline-block">
               <ModeSwitch />
@@ -131,6 +139,15 @@ const menuLayoutOptions = computed(() => [
   { value: 'top', payload: { label: t('frame.top'), icon: Top } },
   { value: 'left', payload: { label: t('frame.left'), icon: Left } },
   { value: 'top-left', payload: { label: t('frame.topLeft'), icon: TopLeft } },
+])
+const firstMenuModeOptions = computed(() => [
+  { label: t('frame.firstMenuModeMenu'), value: 'menu' },
+  { label: t('frame.firstMenuModeButton'), value: 'button' },
+])
+const firstMenuAlignOptions = computed(() => [
+  { label: t('frame.firstMenuAlignLeft'), value: 'start' },
+  { label: t('frame.firstMenuAlignCenter'), value: 'center' },
+  { label: t('frame.firstMenuAlignRight'), value: 'end' },
 ])
 const modeAniOptions = computed(() => [
   { label: t('frame.modeAnimateFade'), value: 'fade' },
