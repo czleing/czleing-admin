@@ -116,8 +116,10 @@ useWindowSize((width) => {
   border-color: var(--ant-colorBorderSecondary);
   background-color: var(--ant-colorBgContainer);
   border-top: none;
-  &:fullscreen {
+  &.is-fullscreen { /** 实现局部全屏 */
     border-radius: 0;
+    position: fixed;
+    inset: 0;
   }
 }
 

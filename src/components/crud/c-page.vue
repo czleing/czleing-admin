@@ -31,7 +31,7 @@
         :pagination="pagination"
         :show-search="showSearch"
         :useToggleSearch="!!filterConfig"
-        :isFullscreen="isFullscreen"
+        :isFullscreen="isFullScreen"
         @sortColumn="sortColumn"
         @toggleShowSearch="toggleShowSearch"
         @toggleFullScreen="toggleFullScreen"
@@ -93,20 +93,18 @@
 
 <script setup>
 import CFilter from '@/components/crud/components/c-filter.vue'
-import CTools from '@/components/crud/components/c-tools.vue'
-import CTable from '@/components/crud/components/c-table.vue'
 import CForm from '@/components/crud/components/c-form.vue'
+import CTable from '@/components/crud/components/c-table.vue'
+import CTools from '@/components/crud/components/c-tools.vue'
 import CTree from '@/components/crud/components/c-tree.vue'
-import { useApiConfig } from './hooks/useApiConfig'
-import { usePermissionConfig } from './hooks/usePermissionConfig'
-import { useApiMethodConfig } from './hooks/useApiMethodConfig'
-import { useActionHandle } from './hooks/useActionHandle'
+import { useSettingStore } from '@/stores/setting-store'
 import { isNotEmpty } from '@/utils/index.js'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue'
-import { useSettingStore } from '@/stores/setting-store'
 import { useI18n } from 'vue-i18n'
-import { useFullscreen } from '@vueuse/core'
-import { onMounted, shallowRef, useTemplateRef } from 'vue'
+import { useActionHandle } from './hooks/useActionHandle'
+import { useApiConfig } from './hooks/useApiConfig'
+import { useApiMethodConfig } from './hooks/useApiMethodConfig'
+import { usePermissionConfig } from './hooks/usePermissionConfig'
 
 const props = defineProps({
   /** 没有新增按钮，可选 */
@@ -243,6 +241,7 @@ function onRefreshHandle () {
   cTable.value.refresh()
 }
 function onReloadHandle () {
+  clearSelect()
   cTable.value.reload()
 }
 function onCancelHandle () {
@@ -255,14 +254,22 @@ function onTreeSelectHandle (orgId) {
 function toggleShowSearch () {
   showSearch.value = !showSearch.value
 }
+function clearSelect () {
+  selectedIds.value = []
+  selectedObjs.value = []
+}
 
-const viewMain = shallowRef()
-onMounted(() => {
-  viewMain.value = document.getElementsByClassName('view-main')[0]
-})
-const { isFullscreen, toggle } = useFullscreen(viewMain)
+const isFullScreen = ref(false)
 function toggleFullScreen () {
-  toggle()
+  const viewMain = document.getElementsByClassName('view-main')?.[0]
+  if (!viewMain) return
+  if (isFullScreen.value) {
+    isFullScreen.value = false
+    viewMain.classList.remove('is-fullscreen')
+  } else {
+    isFullScreen.value = true
+    viewMain.classList.add('is-fullscreen')
+  }
 }
 function sortColumn (oldIndex, newIndex) {
   const moveColumn = columns.value.splice(oldIndex, 1)[0]
@@ -283,10 +290,7 @@ defineExpose({
   reload: onReloadHandle,
   onAddHandle,
   onActionHandle,
-  clearSelect: () => {
-    selectedIds.value = []
-    selectedObjs.value = []
-  },
+  clearSelect,
   dataSource: computed(() => cTable.value?.dataSource)
 })
 </script>
