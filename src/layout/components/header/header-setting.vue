@@ -34,8 +34,13 @@
           <a-form-item v-if="settingStore.theme.isDiy" label=" " :colon="false">
             <div class="theme-diy flex-y">
               <label v-for="[key, value] in Object.entries(settingStore.theme.token)" class="theme-diy__item flex-x-between gap10">
-                <div class="label">{{ $t(`frame.${key}`) }}</div>
-                <input type="color" :value="settingStore.theme.token[key]" class="value" @change="e => settingStore.theme.token[key] = e.target.value" />
+                <div class="label">
+                  <span>{{ $t(`frame.${key}`) }}</span>
+                  <span v-if="key === 'colorInfo'" class="em09 ml text-primary pointer" @click.prevent="settingStore.theme.token[key] = settingStore.theme.token.colorPrimary">
+                    {{ $t('frame.usePrimaryColor') }}
+                  </span>
+                </div>
+                <input type="color" :value="settingStore.theme.token[key]" class="value" @input="e => handleColorInput(e, key)" />
               </label>
             </div>
           </a-form-item>
@@ -183,6 +188,13 @@ const handleChange = name => {
 const handleLocalChange = lc => {
   settingStore.setLocale(lc)
 }
+const timer = null
+const handleColorInput = (e, key) => {
+  clearTimeout(timer)
+  setTimeout(() => {
+    settingStore.theme.token[key] = e.target.value
+  }, 2000)
+}
 </script>
 
 <style lang="less" scoped>
@@ -209,9 +221,6 @@ const handleLocalChange = lc => {
     transition: all .3s;
     &:hover {
       background-color: var(--ant-colorBgLayout);
-    }
-    .label {
-      width: 100px;
     }
     .value {
       border-color: var(--ant-colorBorderSecondary);

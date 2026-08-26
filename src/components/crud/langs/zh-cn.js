@@ -10,7 +10,7 @@ export default {
     theme: '主题',
     message: '通知消息',
     selectTheme: '选择主题',
-    colorPrimary: '主色调',
+    colorPrimary: '主题色',
     colorError: '危险色',
     colorWarning: '警告色',
     colorSuccess: '成功色',
@@ -67,6 +67,7 @@ export default {
     firstMenuAlignLeft: '左对齐',
     firstMenuAlignCenter: '居中',
     firstMenuAlignRight: '右对齐',
+    usePrimaryColor: '使用主题色',
   },
   // crud
   crud: {

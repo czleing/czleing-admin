@@ -33,7 +33,7 @@ const themes = [
     name: '海岸微风',
     theme: {
       token: {
-        colorPrimary: '#56a0d2',
+        colorPrimary: '#78b2d8',
         colorError: '#cf7b6e',
         colorWarning: '#e1bf7f',
         colorSuccess: '#8cca81',
@@ -45,11 +45,11 @@ const themes = [
     name: '轻胭落砚',
     theme: {
       token: {
-        colorPrimary: '#e48390',
+        colorPrimary: '#ee9da7',
         colorError: '#bd2e0a',
         colorWarning: '#ff9209',
         colorSuccess: '#6dd747',
-        colorInfo: '#e48390'
+        colorInfo: '#ee9da7'
       }
     }
   },

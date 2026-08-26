@@ -65,6 +65,7 @@ export default {
     firstMenuAlignLeft: 'Left',
     firstMenuAlignCenter: 'Center',
     firstMenuAlignRight: 'Right',
+    usePrimaryColor: 'Use Primary Color',
   },
   // crud
   crud: {
