@@ -49,7 +49,7 @@ const themes = [
         colorError: '#bd2e0a',
         colorWarning: '#ff9209',
         colorSuccess: '#6dd747',
-        colorInfo: '#ee9da7'
+        colorInfo: '#ee9da7',
       }
     }
   },

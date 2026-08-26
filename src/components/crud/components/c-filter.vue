@@ -5,8 +5,8 @@
       name="searchForm"
       ref="searchForm"
       :model="formData"
-      :label-col="labelCol"
-      :wrapper-col="wrapperCol"
+      :label-col="config?.labelCol"
+      :wrapper-col="config?.wrapperCol"
       autocomplete="off"
       @finish="onSubmitHandle"
     >
@@ -68,8 +68,8 @@
 </template>
 
 <script setup>
-import { EControlType } from '@/enum'
 import { useSearchCache } from '@/components/crud/hooks/useSearchCache.js'
+import { EControlType } from '@/enum'
 import { isAllFieldEmpty, isNotEmpty } from '@/utils/index.js'
 import { DeleteOutlined, DownOutlined, SearchOutlined, UndoOutlined, UpOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
@@ -83,8 +83,8 @@ const props = defineProps({
   }
 })
 const { t } = useI18n()
-const defaultCol = ref({ sm: 8, lg: 6, xxl: 4 })
-const { col = defaultCol, labelCol, wrapperCol } = toRefs(props.config)
+const defaultCol = { sm: 8, lg: 6, xxl: 4 }
+const col = computed(() => props.config?.col ?? defaultCol)
 const currFields = computed(() => {
   return props.config?.fields?.map(field => {
     return {

@@ -300,9 +300,9 @@ defineExpose({
 
 <style lang="less">
 [theme='light'] .striped-row:nth-child(even) {
-  background-color: #fcfcfd;
+  background-color: #c5c5c522;
 }
 [theme='dark'] .striped-row:nth-child(even) {
-  background-color: #0a0a0a;
+  background-color: #46464622;
 }
 </style>

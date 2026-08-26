@@ -10,7 +10,7 @@
           <!-- 左侧菜单 -->
           <MenuSide />
         </a-layout-sider>
-        <a-layout-content>
+        <a-layout-content :class="{'no-radius': !settingStore.useRadius}">
           <div class="pa5 flex-y y-stretch h100p">
             <!-- 右侧 Tabs 栏 -->
             <div v-if="settingStore.useTabs" class="">
@@ -97,8 +97,10 @@ useWindowSize((width) => {
   }
 })
 </script>
-
 <style scoped lang="less">
+::v-deep(.ant-layout-content.no-radius) {
+  background: var(--ant-colorBgContainer) !important;
+}
 .layout {
   .ant-layout-header, .ant-layout-sider {
     transition: all .3s;
