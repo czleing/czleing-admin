@@ -37,7 +37,7 @@
 import { PlusOutlined } from '@ant-design/icons-vue'
 import { useAuthStore } from '@/stores/auth-store.js'
 import { byteFormat, getFullUrl } from '@/utils/index.js'
-import { Upload } from 'ant-design-vue'
+import { message, Upload } from 'ant-design-vue'
 
 /**
  * 其他属性：
@@ -77,7 +77,6 @@ const props = defineProps({
     default: false
   }
 })
-const _this = getCurrentInstance().proxy
 const authStore = useAuthStore()
 // 文件上传地址
 const uploadUrl = import.meta.env.VITE_APP_BASE_API + '/oss/upload'
@@ -128,7 +127,7 @@ async function setValue (value) {
  */
 function beforeUploadHandle (file, files) {
   if (file.size >> 10 > props.fileSize) {
-    _this.$message.warning(`图片大小不能超过${maxFileSize.value}`)
+    message.warning(`图片大小不能超过${maxFileSize.value}`)
     return Upload.LIST_IGNORE
   }
 }

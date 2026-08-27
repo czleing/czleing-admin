@@ -34,8 +34,8 @@
             </div>
           </template>
         </a-tree>
-        <div v-else-if="cacheStore.searchedMenus.length" class="cache">
-          <div v-if="searchValue" class="tc em09 py10 text-gray">{{ $t('frame.noSearchResult') }} "<span class="bold">{{ searchValue }}</span>"</div>
+        <div v-else-if="searchValue" class="tc em09 py10 text-gray">{{ $t('frame.noSearchResult') }} "<span class="bold">{{ searchValue }}</span>"</div>
+        <div v-if="!currTreeData.length && cacheStore.searchedMenus.length" class="cache">
           <div class="em08 text-gray">{{ $t('frame.searchRecord') }}</div>
           <div class="cache-list mt10">
             <div v-for="(cache, index) in cacheStore.searchedMenus" :key="cache.path" class="cache-item radius-ant pa10 flex-x-between gap10 pointer" @click="toPath(cache)">
@@ -47,7 +47,7 @@
             </div>
           </div>
         </div>
-        <a-empty v-else :description="$t('crud.pleaseEnterKeywordToSearch')" />
+        <a-empty v-if="!currTreeData.length && !cacheStore.searchedMenus.length && !searchValue" :description="$t('crud.pleaseEnterKeywordToSearch')" />
       </div>
     </div>
   </div>
@@ -106,12 +106,13 @@
   }
 
   function onSelectHandle (selectedKeys, { node }) {
-    console.log('node', node)
     if (node.path) {
       if (node.meta?.target) {
         window.open(node.path, node.meta?.target)
       } else if (node.meta?.isLeaf) {
         router.push(node.path)
+      } else {
+        return
       }
       addCache({ path: node.path, title: node.title, icon: node.meta?.icon, target: node.meta?.target })
       searchValue.value = ''

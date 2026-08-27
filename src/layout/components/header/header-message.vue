@@ -14,7 +14,7 @@
         </div>
         <div class="list-container flex-y">
           <div class="flex-auto list px10">
-            <div class="item flex-x gap10 lh1_5 pa10 radius10"
+            <div class="item flex-x gap10 lh1_5 pa10"
               v-for="(item, index) in list"
               :key="item.id"
               :class="{'border-top': index > 0}"
@@ -166,6 +166,10 @@ function toDo (item) {
   min-height: 440px;
   .item:hover {
     background-color: rgba(155, 155, 155, .1);
+    border-radius: var(--ant-borderRadiusLG);
+    &, & + .item {
+      border-color: transparent;
+    }
   }
 }
 </style>

@@ -109,10 +109,10 @@
             </a-select>
           </a-form-item>
           <h4 class="mt20 text-gray2">{{ $t('frame.other') }}</h4>
-          <a-form-item :label="$t('frame.showWeather')">
+          <a-form-item class="w50p" :label="$t('frame.showWeather')">
             <a-switch v-model:checked="settingStore.useWeather" />
           </a-form-item>
-          <a-form-item :label="$t('frame.useDynamicPageTitle')">
+          <a-form-item class="w50p" :label="$t('frame.useDynamicPageTitle')">
             <a-switch v-model:checked="settingStore.useDynamicPageTitle" />
           </a-form-item>
           <a-form-item :label="$t('frame.useWatermark')">

@@ -119,7 +119,7 @@ const emits = defineEmits(['update:value', 'change'])
 </style>
 <style>
 html[theme='dark'] {
-  --w-e-textarea-bg-color: #1d1d1d1d;
+  --w-e-textarea-bg-color: var(--ant-colorBgContainer, #1d1d1d1d);
   --w-e-textarea-color: #ffffff;
   --w-e-textarea-border-color: #f0f0f0;
   --w-e-textarea-slight-border-color: #3b3b3b;

@@ -9,7 +9,7 @@
       <template v-for="item in menuStore.leftNavRoutes">
         <template v-if="item.meta?.hidden !== true && !item.children">
           <a-menu-item :key="item.path" @click="onMenuItemClick(item)">
-            <a-icon v-if="item.meta?.icon" :type="item.meta.icon" class="pl5" />
+            <a-icon v-if="item.meta?.icon" :type="item.meta.icon" class="ml5" />
             <span>{{ item.meta?.title ?? item.path }}</span>
           </a-menu-item>
         </template>

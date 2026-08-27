@@ -1,7 +1,7 @@
 <template>
   <div class="header flex-x-between px20 nowrap">
     <Logo />
-    <span class="pointer ml20" @click="menuStore.toggleSidebar">
+    <span v-if="settingStore.menuLayout !== 'top'" class="pointer ml20" @click="menuStore.toggleSidebar">
       <MenuFoldOutlined v-if="menuStore.isSidebarOpen" />
       <MenuUnfoldOutlined v-else />
     </span>
