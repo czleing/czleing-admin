@@ -50,6 +50,8 @@ const themes = [
         colorWarning: '#ff9209',
         colorSuccess: '#6dd747',
         colorInfo: '#ee9da7',
+        colorBorder: '#ec889241',
+        colorBorderSecondary: '#ec88922a',
       }
     }
   },

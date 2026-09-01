@@ -108,8 +108,8 @@ function onMenuItemClick (item) {
   .ant-menu {
     & > .ant-menu-item, & > .ant-menu-submenu {
       border-radius: var(--ant-borderRadius);
-      height: calc(var(--ant-controlHeight) * 1px + 5px);
-      line-height: calc(var(--ant-controlHeight) * 1px + 5px);
+      height: calc(var(--ant-controlHeight) + 5px);
+      line-height: calc(var(--ant-controlHeight) + 5px);
       background-color: rgba(155, 155, 155, .1);
       margin: 0 4px;
       padding-inline: 12px;

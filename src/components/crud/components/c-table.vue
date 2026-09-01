@@ -299,10 +299,7 @@ defineExpose({
 </script>
 
 <style lang="less">
-[theme='light'] .striped-row:nth-child(even) {
-  background-color: #c5c5c522;
-}
-[theme='dark'] .striped-row:nth-child(even) {
-  background-color: #46464622;
+.striped-row:nth-child(even) {
+  background-color: color-mix(in srgb, var(--ant-colorPrimary) 8%, transparent);
 }
 </style>

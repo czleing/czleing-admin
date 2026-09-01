@@ -2,11 +2,10 @@
 <template>
   <div class="field-group" :class="{ 'is-expand': showContainer }">
     <div v-if="title" class="field-group__title pointer flex-x-between"
-      :style="{ backgroundColor: token.colorFillQuaternary, border: `solid ${token.lineWidth}px ${token.colorBorderSecondary}` }"
       @click="toggle"
     >
       <div>
-        <span class="flag" :style="{ backgroundColor: token.colorPrimary }"></span>
+        <span class="flag"></span>
         <span class="bold">{{ title }}</span>
         <span class="ml10">{{ subTitle }}</span>
       </div>
@@ -14,7 +13,7 @@
         <RightCircleOutlined class="icon em12 text-gray" :class="{ 'is-show': showContainer}" />
       </span>
     </div>
-    <div v-if="$slots.default" class="field-group__container" :class="{ 'is-open': showContainer }" :style="{ borderColor: token.colorBorderSecondary }">
+    <div v-if="$slots.default" class="field-group__container" :class="{ 'is-open': showContainer }">
       <div class="inner-container">
         <div class="px10 pt15 pb2">
           <slot />
@@ -49,6 +48,8 @@ function toggle () {
     padding-left: 20px;
     border-radius: var(--ant-borderRadius);
     line-height: 1;
+    background-color: color-mix(in srgb, var(--ant-colorPrimary) 8%, transparent);
+    border: solid var(--ant-lineWidth) var(--ant-colorBorderSecondary);
     &:hover {
       opacity: .8;
     }
@@ -60,6 +61,7 @@ function toggle () {
       bottom: 6px;
       width: 5px;
       border-radius: 3px;
+      background-color: var(--ant-colorPrimary);
     }
     & .icon {
       transition: transform .2s;
@@ -76,6 +78,7 @@ function toggle () {
     border-style: solid;
     border-width: 0;
     border-radius: 0 0 var(--ant-borderRadius) var(--ant-borderRadius);
+    border-color: var(--ant-colorBorderSecondary);
     .inner-container {
       min-height: 0;
     }

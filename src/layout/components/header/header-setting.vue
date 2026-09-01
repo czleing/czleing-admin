@@ -3,12 +3,12 @@
     <a-tooltip placement="top" :title="$t('frame.themeSetting')">
       <SettingOutlined class="font18" @click="openSetting" />
     </a-tooltip>
-    <CModal ref="settingModal" :title="$t('frame.setting')" width="500" mode="drawer" :footer="null">
+    <CModal ref="settingModal" :title="$t('frame.setting')" width="420" mode="drawer" :footer="null">
       <a-segmented v-model:value="settingTab" :options="settingTabs" block />
-      <a-form class="mt20" :labelCol="{ flex: '0 0 110px' }">
+      <div class="mt20">
         <div v-show="settingTab === 'theme'">
-          <a-form-item :label="$t('frame.selectTheme')">
-            <a-space>
+          <Field :title="$t('frame.selectTheme')" :colon="false" layout="vertical">
+            <div class="flex-x x-middle gap10 flex-wrap">
               <a-select v-model:value="settingStore.themeName" style="width: 150px;" @change="handleChange">
                 <a-select-option
                   v-for="(item, index) in settingStore.themes"
@@ -18,21 +18,23 @@
                   {{ item.name }}
                 </a-select-option>
               </a-select>
-              <a-tooltip
-                v-if="!settingStore.theme.isDiy"
-                placement="top"
-                v-for="(kv, index) in currColors"
-                :key="index"
-              >
-                <template #title>
-                  <span>{{ kv[0] }}: {{ kv[1] }}</span>
-                </template>
-                <span class="color-box" :class="{'ml20': index === 0}" :style="{ backgroundColor: kv[1] }" />
-              </a-tooltip>
-            </a-space>
-          </a-form-item>
-          <a-form-item v-if="settingStore.theme.isDiy" label=" " :colon="false">
-            <div class="theme-diy flex-y">
+              <div class="flex-x x-middle gap10">
+                <a-tooltip
+                  v-if="!settingStore.theme.isDiy"
+                  placement="top"
+                  v-for="(kv, index) in currColors"
+                  :key="index"
+                >
+                  <template #title>
+                    <span>{{ kv[0] }}: {{ kv[1] }}</span>
+                  </template>
+                  <span class="color-box" :style="{ backgroundColor: kv[1] }" />
+                </a-tooltip>
+              </div>
+            </div>
+          </Field>
+          <div v-if="settingStore.theme.isDiy">
+            <div class="theme-diy flex-y pl15">
               <label v-for="[key, value] in Object.entries(settingStore.theme.token)" class="theme-diy__item flex-x-between gap10">
                 <div class="label">
                   <span>{{ $t(`frame.${key}`) }}</span>
@@ -43,58 +45,56 @@
                 <input type="color" :value="settingStore.theme.token[key]" class="value" @input="e => handleColorInput(e, key)" />
               </label>
             </div>
-          </a-form-item>
-          <a-form-item :label="$t('frame.menuLayout')">
-            <a-segmented v-model:value="settingStore.menuLayout" :options="menuLayoutOptions">
-              <template #label="{ value, payload }">
-                <div class="flex-y-center gap5 pt5">
-                  <component :is="payload.icon" class="menu-layout-icon" width="90" height="60" />
-                  <div>{{ payload.label }}</div>
-                </div>
-              </template>
-            </a-segmented>
-          </a-form-item>
-          <a-form-item v-if="settingStore.menuLayout === 'left'" :label="$t('frame.useBreadcrumbs')">
+          </div>
+          <div>
+            <div class="bold em11 mt10 mb5">{{ $t('frame.menuLayout') }}</div>
+            <div class="flex-x-around gap15 pl10">
+              <div v-for="item in menuLayoutOptions" :key="item.value" class="flex-y-center gap5 pt5 pointer" @click="settingStore.menuLayout = item.value">
+                <component :is="item.icon" class="menu-layout-icon" :class="{'is-checked': settingStore.menuLayout === item.value}" width="90" height="60" />
+                <div>{{ item.label }}</div>
+              </div>
+            </div>
+          </div>
+          <Field v-if="settingStore.menuLayout === 'left'" :label="$t('frame.useBreadcrumbs')">
             <a-switch v-model:checked="settingStore.useBreadcrumbs" />
-          </a-form-item>
+          </Field>
           <template v-else>
-            <a-form-item :label="$t('frame.firstMenuMode')">
+            <Field :label="$t('frame.firstMenuMode')">
               <a-segmented v-model:value="settingStore.firstMenuMode" :options="firstMenuModeOptions" />
-            </a-form-item>
-            <a-form-item :label="$t('frame.firstMenuAlign')">
+            </Field>
+            <Field :label="$t('frame.firstMenuAlign')">
               <a-segmented v-model:value="settingStore.firstMenuAlign" :options="firstMenuAlignOptions" />
-            </a-form-item>
+            </Field>
           </template>
-          <a-form-item :label="$t('frame.dark')">
+          <Field :title="$t('frame.other')" :label="$t('frame.dark')">
             <div class="border radius-ant inline-block">
               <ModeSwitch />
             </div>
-          </a-form-item>
-          <a-form-item :label="$t('frame.modeAnimate')">
+          </Field>
+          <Field :label="$t('frame.modeAnimate')">
             <a-segmented v-model:value="settingStore.modeAnimate" :options="modeAniOptions" />
-          </a-form-item>
-          <a-form-item :label="$t('frame.useTabs')">
+          </Field>
+          <Field :label="$t('frame.useTabs')">
             <a-switch v-model:checked="settingStore.useTabs" />
-          </a-form-item>
-          <a-form-item :label="$t('frame.tabAnimate')">
+          </Field>
+          <Field :label="$t('frame.tabAnimate')">
             <a-segmented v-model:value="settingStore.tabAnimate" :options="tabAniOptions" />
-          </a-form-item>
-          <a-form-item :label="$t('frame.componentSize')">
+          </Field>
+          <Field :label="$t('frame.componentSize')">
             <a-segmented v-model:value="settingStore.componentSize" :options="sizeOptions" />
-          </a-form-item>
-          <a-form-item :label="$t('frame.radiusLayout')">
+          </Field>
+          <Field :label="$t('frame.radiusLayout')">
             <a-switch v-model:checked="settingStore.useRadius" />
-          </a-form-item>
-          <a-form-item :label="$t('frame.useTableBorder')">
+          </Field>
+          <Field :label="$t('frame.useTableBorder')">
             <a-switch v-model:checked="settingStore.useTableBorder" />
-          </a-form-item>
-          <a-form-item :label="$t('frame.useThinLine')" :extra="$t('frame.useThinLineExtra')">
+          </Field>
+          <Field :label="$t('frame.useThinLine')" :extra="$t('frame.useThinLineExtra')">
             <a-switch v-model:checked="settingStore.useThinLine" />
-          </a-form-item>
+          </Field>
         </div>
         <div v-show="settingTab === 'other'">
-          <h4 class="mt20 text-gray2">{{ $t('frame.lang') }}</h4>
-          <a-form-item :label="$t('frame.selectLang')">
+          <Field :title="$t('frame.lang')" :label="$t('frame.selectLang')">
             <a-select v-model:value="settingStore.locale" style="width: 150px;" @change="handleLocalChange">
               <a-select-option
                 v-for="lang in langOptions"
@@ -107,22 +107,21 @@
                 </div>
               </a-select-option>
             </a-select>
-          </a-form-item>
-          <h4 class="mt20 text-gray2">{{ $t('frame.other') }}</h4>
-          <a-form-item class="w50p" :label="$t('frame.showWeather')">
+          </Field>
+          <Field :title="$t('frame.other')" :label="$t('frame.showWeather')">
             <a-switch v-model:checked="settingStore.useWeather" />
-          </a-form-item>
-          <a-form-item class="w50p" :label="$t('frame.useDynamicPageTitle')">
+          </Field>
+          <Field :label="$t('frame.useDynamicPageTitle')">
             <a-switch v-model:checked="settingStore.useDynamicPageTitle" />
-          </a-form-item>
-          <a-form-item :label="$t('frame.useWatermark')">
+          </Field>
+          <Field :label="$t('frame.useWatermark')">
             <a-switch v-model:checked="settingStore.useWatermark" />
-          </a-form-item>
-          <a-form-item v-if="settingStore.isCn" :label="$t('frame.useWanSplit')">
+          </Field>
+          <Field v-if="settingStore.isCn" :label="$t('frame.useWanSplit')">
             <a-switch v-model:checked="settingStore.useWanSplit" />
-          </a-form-item>
+          </Field>
         </div>
-      </a-form>
+      </div>
     </CModal>
   </div>
 </template>
@@ -135,15 +134,16 @@ import Top from './icons/top.vue'
 import TopLeft from './icons/top-left.vue'
 import Left from './icons/left.vue'
 import ModeSwitch from './mode-switch.vue'
+import Field from './field.vue'
 
 const settingStore = useSettingStore()
 const settingModal = ref()
 const currColors = computed(() => Object.entries(settingStore.theme?.token))
 const { t } = useI18n()
 const menuLayoutOptions = computed(() => [
-  { value: 'top', payload: { label: t('frame.top'), icon: Top } },
-  { value: 'left', payload: { label: t('frame.left'), icon: Left } },
-  { value: 'top-left', payload: { label: t('frame.topLeft'), icon: TopLeft } },
+  { value: 'top', label: t('frame.top'), icon: Top },
+  { value: 'left', label: t('frame.left'), icon: Left },
+  { value: 'top-left', label: t('frame.topLeft'), icon: TopLeft },
 ])
 const firstMenuModeOptions = computed(() => [
   { label: t('frame.firstMenuModeMenu'), value: 'menu' },
@@ -209,7 +209,7 @@ const handleColorInput = (e, key) => {
   transition: all 0.3s;
   border-radius: var(--ant-borderRadius);
   background-color: var(--ant-colorBgContainer);
-  &:hover {
+  &.is-checked, &:hover {
     box-shadow: 0 0 0 3px var(--ant-colorPrimary);
   }
 }

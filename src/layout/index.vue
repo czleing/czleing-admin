@@ -79,7 +79,7 @@ watchEffect(() => {
     colorBgElevated: token.value.colorBgElevated, // 浮层容器背景色，在暗色模式下该 token 的色值会比 `colorBgContainer` 要亮一些。例如：模态框、弹出框、菜单等。
     colorBgLayout: token.value.colorBgLayout, // 该色用于页面整体布局的背景色，只有需要在页面中处于 B1 的视觉层级时才会使用该 token，其他用法都是错误的
     colorFillSecondary: token.value.colorFillSecondary, // 二级填充色可以较为明显地勾勒出元素形体，如 Rate、Skeleton 等。也可以作为三级填充色的 Hover 状态，如：menu-item hover 状态。
-    controlHeight: token.value.controlHeight, // 基础控件高度
+    controlHeight: token.value.controlHeight + 'px', // 基础控件高度
     borderRadius: token.value.borderRadius + 'px', // 基础控件圆角大小
     borderRadiusLG: token.value.borderRadiusLG + 'px', // 一般用于容器圆角大小
     lineWidth: token.value.lineWidth + 'px', // 边框线条宽度，1px or 0.55px

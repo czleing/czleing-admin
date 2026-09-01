@@ -9,8 +9,8 @@
     <h2 class="mt10">一个组件 LineBarChart 搞定各类线柱图</h2>
     <h3 class="mt20">基础柱图</h3>
     <div class="border radius10 pa10 flex-x gap10">
-      <LineBarChart title="最大最小值" :data="mockData" :colors="[token.colorPrimary]" :min-value="200" :max-value="1000" height="200px" />
-      <LineBarChart title="目标值" :data="mockData" :colors="[token.colorPrimary]" :y-fields="['sales']" :target-value="3000" units="万" height="200px" />
+      <LineBarChart title="最大最小值" :data="mockData" :min-value="200" :max-value="1000" height="200px" :colors="[token.colorPrimary]" :error-color="token.colorError" />
+      <LineBarChart title="目标值" :data="mockData" :y-fields="['sales']" :target-value="3000" units="万" height="200px" :colors="[token.colorPrimary]" :error-color="token.colorError" />
     </div>
     <h3 class="mt20">混合线柱图</h3>
     <div class="border radius10 pa10 flex-x gap10">
@@ -38,21 +38,14 @@
         :units="['台', '', '%']"
         :series-names="['库存', '值1', '占比']"
         :defaultShowLabel="false"
+        :colors="[token.colorPrimary, token.colorWarning, token.colorSuccess]"
         :onRefresh="() => { console.log('刷新') }"
         :onItemClick="(params) => { console.log('点击', params) }"
         :option="{
           /**增量覆盖默认配置 */
           yAxis: [
-            {
-              splitLine: {
-                show: false,
-              },
-            },
-            {
-              splitLine: {
-                show: false,
-              },
-            }
+            { splitLine: { show: false } },
+            { splitLine: { show: false } }
           ],
           series: [
             {
@@ -63,9 +56,7 @@
                 color: 'rgba(180, 180, 180, 0.2)',
                 borderRadius: 30
               },
-              itemStyle: {
-                borderRadius: 30
-              }
+              itemStyle: { borderRadius: 30 }
             }
           ]
         }"

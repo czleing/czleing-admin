@@ -34,9 +34,11 @@
   import { Empty } from 'ant-design-vue'
   import { useSettingStore } from '@/stores/setting-store';
   import { InfoCircleFilled, ReloadOutlined } from '@ant-design/icons-vue';
+  import useThemeToken from '@/hooks/useThemeToken';
 
   use([LineChart, BarChart, CanvasRenderer, GridComponent, TooltipComponent, TitleComponent, LegendComponent, ToolboxComponent, DataZoomComponent, MarkLineComponent])
 
+  const { token } = useThemeToken()
   /**
    * 线形、柱形图通用组件
    * 全局统一默认配置，支持自定义配置增量覆盖
@@ -109,7 +111,7 @@
     /** 图表高度 */
     height: { type: String, default: '100%' },
     /** 错误颜色 */
-    errorColor: { type: String, default: '#f00' },
+    errorColor: { type: String, default: '#fa5050' },
     /** 数据为空展示的文本 */
     emptyText: { type: String, default: 'No data' },
     /** 加载中相关配置，参考：https://echarts.apache.org/en/api.html#echartsInstance.showLoading opts */
