@@ -114,8 +114,7 @@ useWindowSize((width) => {
 }
 .view-main {
   border-radius: 0 0 var(--ant-borderRadiusLG) var(--ant-borderRadiusLG);
-  border: solid var(--ant-lineWidth);
-  border-color: var(--ant-colorBorderSecondary);
+  border: solid var(--ant-lineWidth) var(--ant-colorBorderSecondary);
   background-color: var(--ant-colorBgContainer);
   border-top: none;
   &.is-fullscreen { /** 实现局部全屏 */
