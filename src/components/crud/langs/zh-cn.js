@@ -28,6 +28,7 @@ export default {
     modeAnimate: '明暗动画',
     modeAnimateFade: '淡入淡出',
     modeAnimateCircle: '圆形扩散',
+    modeAnimateLine: '线性扩散',
     radiusLayout: '圆润布局',
     useTabs: '使用标签页',
     tabAnimate: '标签页动画',

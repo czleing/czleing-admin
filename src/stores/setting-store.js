@@ -4,19 +4,6 @@ import { ref, computed } from 'vue'
 // ant-design-vue4.x 主题定义
 const themes = [
   {
-    name: '金色沙滩',
-    theme: {
-      token: {
-        colorPrimary: '#d2b48c',
-        colorError: '#c84e4e',
-        colorWarning: '#e2b14c',
-        colorSuccess: '#3dbd3e',
-        colorInfo: '#d2b48c',
-        // 可以自定义更多变量值
-      }
-    }
-  },
-  {
     name: '薄荷清新',
     inUse: true,
     theme: {
@@ -26,6 +13,19 @@ const themes = [
         colorWarning: '#f0c175',
         colorSuccess: '#85b17e',
         colorInfo: '#88c7b1',
+      }
+    }
+  },
+  {
+    name: '金色沙滩',
+    theme: {
+      token: {
+        colorPrimary: '#d2b48c',
+        colorError: '#c84e4e',
+        colorWarning: '#e2b14c',
+        colorSuccess: '#3dbd3e',
+        colorInfo: '#d2b48c',
+        // 可以自定义更多变量值
       }
     }
   },
@@ -50,8 +50,8 @@ const themes = [
         colorWarning: '#ff9209',
         colorSuccess: '#6dd747',
         colorInfo: '#ee9da7',
-        colorBorder: '#ec889241',
-        colorBorderSecondary: '#ec88922a',
+        colorBorder: '#ec889240',
+        colorBorderSecondary: '#ec889220',
       }
     }
   },
@@ -77,7 +77,7 @@ export const useSettingStore = defineStore('setting', () => {
   const theme = ref({ token: { ...themes.find(item => item.inUse)?.theme?.token } }) // 当前主题色系
   const themeName = ref(themes.find(item => item.inUse)?.name) // 当前主题名称
   const mode = ref('light') // 昼夜模式 light or dark
-  const modeAnimate = ref('fade') // 切换昼夜模式的动画 fade, circle
+  const modeAnimate = ref('fade') // 切换昼夜模式的动画 fade, circle, line
   const locale = ref('zh-cn') // 当前语言 zh-cn, zh-hk, en
   const componentSize = ref('middle') // 当前组件尺寸
   const menuLayout = ref('top-left') // 菜单布局方式，top: 全部显示在顶部，left: 全部显示在左侧，top-left: 顶部一级菜单，左侧子菜单

@@ -18,7 +18,7 @@
                   {{ item.name }}
                 </a-select-option>
               </a-select>
-              <div class="flex-x x-middle gap10">
+              <div class="flex-x x-middle gap5">
                 <a-tooltip
                   v-if="!settingStore.theme.isDiy"
                   placement="top"
@@ -156,7 +156,8 @@ const firstMenuAlignOptions = computed(() => [
 ])
 const modeAniOptions = computed(() => [
   { label: t('frame.modeAnimateFade'), value: 'fade' },
-  { label: t('frame.modeAnimateCircle'), value: 'circle' }
+  { label: t('frame.modeAnimateCircle'), value: 'circle' },
+  { label: t('frame.modeAnimateLine'), value: 'line' },
 ])
 const sizeOptions = computed(() => [
   { label: t('frame.small'), value: 'small' },

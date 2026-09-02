@@ -26,6 +26,7 @@ export default {
     dark: 'Dark Mode',
     modeAnimateFade: 'Fade In/Out',
     modeAnimateCircle: 'Circle Clip',
+    modeAnimateLine: 'Line Clip',
     modeAnimate: 'Mode Animation',
     radiusLayout: 'Rounded Layout',
     useTabs: 'Use Tabs Page',

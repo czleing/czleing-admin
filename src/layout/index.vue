@@ -39,7 +39,7 @@ import { useAuthStore } from '@/stores/auth-store.js'
 import { useMenuStore } from '@/stores/menu-store.js'
 import { useSettingStore } from '@/stores/setting-store.js'
 import { useTabsStore } from '@/stores/tabs-store.js'
-import { watchEffect } from 'vue'
+import { onMounted, watchEffect } from 'vue'
 import { useThemeToken } from '../hooks/useThemeToken'
 import { useWindowSize } from '../hooks/useWindowSize'
 import Header from './components/header/index.vue'
@@ -59,8 +59,11 @@ const watermark = computed(() => {
   return '演示用户'
 })
 
-watchEffect(() => {
+onMounted(() => {
   document.documentElement.setAttribute('theme', settingStore.mode)
+})
+
+watchSyncEffect(() => {
   // 动态设置css变量，跟随 ant-design 主题，可根据需要扩展，参考： https://www.antdv.com/docs/vue/customize-theme-cn#api
   setRootCssVars('--ant-', {
     colorText: token.value.colorText,

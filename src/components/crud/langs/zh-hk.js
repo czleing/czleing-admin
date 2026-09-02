@@ -28,6 +28,7 @@ export default {
     modeAnimate: '明暗動畫',
     modeAnimateFade: '淡入淡出',
     modeAnimateCircle: '圓形擴散',
+    modeAnimateLine: '線性擴散',
     radiusLayout: '圓角佈局',
     useTabs: '使用標簽頁',
     tabAnimate: '標籤頁動畫',

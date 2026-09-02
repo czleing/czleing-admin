@@ -1,7 +1,7 @@
 <!-- 切换明暗色系相关 -->
 <template>
   <a-tooltip placement="top" :title="$t('frame.themeMode')">
-    <div class="mode-switch pointer" :class="{'is-dark': isBtnDark}" @click="changeMode">
+    <div class="mode-switch pointer" @click="changeMode">
       <div class="stars"></div>
       <div class="sun-moon"></div>
       <div class="cloud"></div>
@@ -11,44 +11,38 @@
 <script setup>
 import { useSettingStore } from '@/stores/setting-store.js'
 const settingStore = useSettingStore()
-const isBtnDark = ref(settingStore.isDark)
 const root = document.documentElement;
 let maxR = 2000
-watch(
-  () => settingStore.isDark,
-  () => {
-    isBtnDark.value = settingStore.isDark
-  }
-)
 
 async function changeMode (e) {
   const x = e.clientX, y = e.clientY;
   maxR = parseInt(Math.hypot(window.innerWidth, window.innerHeight) + '');
   if (!document.startViewTransition) {
-    isBtnDark.value = !isBtnDark.value
-    await sleep(200)
     settingStore.toggleMode()
     return
   }
-  isBtnDark.value = !isBtnDark.value;
-  await sleep(200);
   const vt = document.startViewTransition(async () => {
     settingStore.toggleMode();
     await nextTick();
   })
-  vt.ready.then(() => playEffect(x, y))
+  vt.ready.then(() => playEffect(x, y, vt))
 }
-function playEffect(x, y) {
+function playEffect(x, y, vt) {
   let frames = null
   const isToDark = settingStore.isDark
   if (settingStore.modeAnimate === 'circle') {
-    // 亮 -> 暗， 暗色(new)在上，由小到大
-    // 暗 -> 亮， 暗色(old)在上，由大到小
     const start = `circle(0px at ${x}px ${y}px)`;
     const end = `circle(${maxR}px at ${x}px ${y}px)`;
     frames = [
-      { clipPath: isToDark ? start : end }, // 0%
-      { clipPath: isToDark ? end : start } // 100%
+      { clipPath: isToDark ? start : end },
+      { clipPath: isToDark ? end : start }
+    ]
+  } else if (settingStore.modeAnimate === 'line') {
+    const start = 'polygon(100% 0, 233% 0, 266% 100%, 133% 100%)'
+    const end = 'polygon(-33% 0, 100% 0, 133% 100%, 0 100%)'
+    frames = [
+      { clipPath: isToDark ? start : end },
+      { clipPath: isToDark ? end : start },
     ]
   } else {
     frames = [
@@ -56,17 +50,14 @@ function playEffect(x, y) {
       { filter: isToDark ? 'blur(0px)' : 'blur(10px)', opacity: isToDark ? 1 : 0 }
     ]
   }
-  isBtnDark.value && root.animate([{ opacity: 1, filter: 'none', clipPath: 'none' }], {
-    duration: 0,
-    pseudoElement: '::view-transition-old(root)',
-    fill: 'both'
-  });
-  frames && root.animate(frames, {
+  const animate = root.animate(frames, {
     duration: 650,
-    easing: 'linear',
+    easing: 'linear', // 'cubic-bezier(0.89, 0.00, 0.43, 1.00)',
     pseudoElement: isToDark ? '::view-transition-new(root)' : '::view-transition-old(root)',
-    fill: 'both'
   });
+  animate.onfinish = () => {
+    vt.skipTransition();
+  };
 }
 </script>
 <style>
@@ -91,6 +82,8 @@ function playEffect(x, y) {
 <style scoped lang="less">
 .mode-switch {
   --mode-color: #ffd446;
+  --duration: .3s;
+  --delay: .65s;
   width: 40px;
   height: 40px;
   overflow: hidden;
@@ -118,7 +111,7 @@ function playEffect(x, y) {
       8px 28px;
     background-size: 4px 4px;
     background-repeat: no-repeat;
-    transition: background-position .2s, background-size .2s;
+    transition: background-position var(--duration) var(--delay), background-size var(--duration) var(--delay);
   }
   .sun-moon {
     position: absolute;
@@ -129,12 +122,12 @@ function playEffect(x, y) {
     width: 20px;
     height: 20px;
     box-shadow: 30px 30px 0 0 var(--mode-color);
-    transition: transform .2s, box-shadow .2s;
+    transition: transform var(--duration) var(--delay), box-shadow var(--duration) var(--delay);
   }
   .cloud {
     position: absolute;
     inset: 0;
-    transition: transform .2s;
+    transition: transform var(--duration) var(--delay);
     &::before, &::after {
       content: '';
       position: absolute;
@@ -156,7 +149,7 @@ function playEffect(x, y) {
       bottom: -14px;
     }
   }
-  &.is-dark {
+  [theme='dark'] & {
     --mode-color: #81fbff;
     .stars {
       background-position:
