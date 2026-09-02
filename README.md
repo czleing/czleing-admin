@@ -59,13 +59,14 @@
 
 ## 初始化
 ### 1. 克隆本项目
-```
 // gitee
+```
 git clone https://gitee.com/czleing/czleing-admin.git
+```
 
 // github（可能因为 gitee 镜像同步延迟，版本低于 gitee ）
+```
 git clone https://github.com/czleing/czleing-admin.git
-
 ```
 ### 2. 进入本项目根目录安装依赖
 ```
