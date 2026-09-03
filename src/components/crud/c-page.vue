@@ -1,13 +1,14 @@
 <!-- CRUD 页面组件 -->
 <template>
   <div ref="cPage" class="c-page">
-    <div v-if="treeConfig" class="c-page__tree mr10 pr10" :class="{'is-hide': !isTreeShow}">
+    <div v-if="treeConfig" ref="treeBox" class="c-page__tree mr10 pr10" :class="{'is-hide': !isTreeShow}">
       <!-- 树 -->
       <CTree v-show="isTreeShow" class="c-tree" :config="treeConfig" @selected="onTreeSelectHandle" />
       <div class="c-page__tree__toggle pointer flex-y-center radius6" @click="toggleTree">
         <LeftOutlined class="em06" v-show="isTreeShow" />
         <RightOutlined class="em06" v-show="!isTreeShow" />
       </div>
+      <div v-show="isTreeShow" ref="resizerRef" class="c-page__tree__dragger"></div>
     </div>
     <div class="c-page__page">
       <slot name="header" />
@@ -105,6 +106,8 @@ import { useActionHandle } from './hooks/useActionHandle'
 import { useApiConfig } from './hooks/useApiConfig'
 import { useApiMethodConfig } from './hooks/useApiMethodConfig'
 import { usePermissionConfig } from './hooks/usePermissionConfig'
+import { useTemplateRef } from 'vue'
+import { useResizableRight } from '@/hooks/useResizableRight'
 
 const props = defineProps({
   /** 没有新增按钮，可选 */
@@ -259,6 +262,14 @@ function clearSelect () {
   selectedObjs.value = []
 }
 
+/** 拖拽调整左侧树宽度 */
+let treeBoxRef = useTemplateRef('treeBox')
+let resizerRef = useTemplateRef('resizerRef')
+const treeMinWidth = 180
+const treeMaxWidth = 320
+useResizableRight(treeBoxRef, resizerRef, treeMinWidth, treeMaxWidth)
+
+/** CRUD 区域局部全屏 */
 const isFullScreen = ref(false)
 function toggleFullScreen () {
   const viewMain = document.getElementsByClassName('view-main')?.[0]
@@ -299,13 +310,25 @@ defineExpose({
 .c-page {
   display: flex;
   &__tree {
-    min-width: 180px;
-    max-width: 240px;
+    min-width: calc(v-bind(treeMinWidth) * 1px);
+    width: 240px;
+    max-width: calc(v-bind(treeMaxWidth) * 1px);
     border-right: solid var(--ant-lineWidth) rgba(100, 100, 100, .1);
     position: relative;
-    transition: all .3s;
+    transition: min-width .3s, max-width .3s;
     .c-tree {
       min-width: 180px;
+    }
+    &__dragger {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: -1px;
+      width: 5px;
+      cursor: ew-resize;
+      &:hover {
+        border-right: solid 2px var(--ant-colorPrimary);
+      }
     }
     &__toggle {
       position: absolute;
@@ -316,7 +339,8 @@ defineExpose({
       width: 10px;
       background-color: var(--ant-colorBorder);
       color: white;
-      transition: all .3s;
+      transition: transform .3s;
+      z-index: 2;
     }
     &:hover {
       .c-page__tree__toggle {
