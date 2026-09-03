@@ -22,6 +22,7 @@ export default {
     colorInfo: '超链接文字色',
     componentSize: '组件大小',
     menuLayout: '菜单布局',
+    leftMenuWidth: '左侧菜单宽度',
     formLayout: '表单布局',
     horizontal: 'horizontal',
     vertical: 'vertical',

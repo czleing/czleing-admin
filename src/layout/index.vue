@@ -6,7 +6,7 @@
         <Header />
       </a-layout-header>
       <a-layout>
-        <a-layout-sider v-show="menuStore.leftNavRoutes && menuStore.leftNavRoutes.length > 0" :collapsed="!menuStore.isSidebarOpen" :trigger="null" :theme="settingStore.mode" :class="{ 'is-radius mt6 ml6 mb6': settingStore.useRadius }" collapsible>
+        <a-layout-sider v-show="menuStore.leftNavRoutes && menuStore.leftNavRoutes.length > 0" :collapsed="!menuStore.isSidebarOpen" :trigger="null" :theme="settingStore.mode" :width="settingStore.leftMenuWidth" :class="{ 'is-radius mt6 ml6 mb6': settingStore.useRadius }" collapsible>
           <!-- 左侧菜单 -->
           <MenuSide />
         </a-layout-sider>

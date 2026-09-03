@@ -66,6 +66,9 @@
               <a-segmented v-model:value="settingStore.firstMenuAlign" :options="firstMenuAlignOptions" />
             </Field>
           </template>
+          <Field v-if="settingStore.menuLayout !== 'top'" :label="$t('frame.leftMenuWidth')">
+            <a-input-number v-model:value="settingStore.leftMenuWidth" :step="20" :min="200" :max="380" style="width:120px;" addon-after="px" />
+          </Field>
           <Field :title="$t('frame.other')" :label="$t('frame.themeMode')">
             <a-segmented :value="mode" :options="modeOptions">
               <template #label="{ value, payload = {} }">

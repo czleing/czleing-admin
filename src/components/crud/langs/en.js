@@ -21,6 +21,7 @@ export default {
     colorInfo: 'Link Color',
     componentSize: 'Component Size',
     menuLayout: 'Menu Layout',
+    leftMenuWidth: 'Left Menu Width',
     formLayout: 'Form Layout',
     horizontal: 'horizontal',
     vertical: 'vertical',

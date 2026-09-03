@@ -42,9 +42,7 @@ const props = defineProps({
 })
 
 const searchValue = ref()
-const treeData = ref([
-  { id: 1, label: '佛监考老师解放路上看到就发生的框架舒', children: [{ id: 11, label: 'fdsfs发来看待拉斯柯达交付历史课对接' }] }
-])
+const treeData = ref([])
 const currTreeData = ref(treeData.value)
 const childrenField = props.config.replaceField?.children ?? 'children'
 const titleField = props.config.replaceField?.title ?? 'title'

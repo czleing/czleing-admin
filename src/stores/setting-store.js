@@ -82,6 +82,7 @@ export const useSettingStore = defineStore('setting', () => {
   const locale = ref('zh-cn') // 当前语言 zh-cn, zh-hk, en
   const componentSize = ref('middle') // 当前组件尺寸
   const menuLayout = ref('top-left') // 菜单布局方式，top: 全部显示在顶部，left: 全部显示在左侧，top-left: 顶部一级菜单，左侧子菜单
+  const leftMenuWidth = ref(200) // 左侧菜单宽度 px
   const useRadius = ref(false) // 是否使用圆润布局
   const useWeather = ref(false) // 是否使用天气组件
   const useTabs = ref(true) // 是否使用 tabs 栏
@@ -185,6 +186,7 @@ export const useSettingStore = defineStore('setting', () => {
     locale,
     componentSize,
     menuLayout,
+    leftMenuWidth,
     useRadius,
     useWeather,
     useTabs,
