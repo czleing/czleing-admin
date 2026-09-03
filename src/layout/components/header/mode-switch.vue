@@ -9,55 +9,21 @@
   </a-tooltip>
 </template>
 <script setup>
+import useViewTransition from '@/hooks/useViewTransition';
 import { useSettingStore } from '@/stores/setting-store.js'
 const settingStore = useSettingStore()
-const root = document.documentElement;
-let maxR = 2000
+
+const { startViewTransition } = useViewTransition()
 
 async function changeMode (e) {
   const x = e.clientX, y = e.clientY;
-  maxR = parseInt(Math.hypot(window.innerWidth, window.innerHeight) + '');
-  if (!document.startViewTransition) {
-    settingStore.toggleMode()
-    return
-  }
-  const vt = document.startViewTransition(async () => {
-    settingStore.toggleMode();
-    await nextTick();
+  startViewTransition({
+    changeFn: settingStore.toggleMode,
+    x, y,
+    animateName: settingStore.modeAnimate,
+    positive: settingStore.isLight,
+    duration: 650
   })
-  vt.ready.then(() => playEffect(x, y, vt))
-}
-function playEffect(x, y, vt) {
-  let frames = null
-  const isToDark = settingStore.isDark
-  if (settingStore.modeAnimate === 'circle') {
-    const start = `circle(0px at ${x}px ${y}px)`;
-    const end = `circle(${maxR}px at ${x}px ${y}px)`;
-    frames = [
-      { clipPath: isToDark ? start : end },
-      { clipPath: isToDark ? end : start }
-    ]
-  } else if (settingStore.modeAnimate === 'line') {
-    const start = 'polygon(100% 0, 233% 0, 266% 100%, 133% 100%)'
-    const end = 'polygon(-33% 0, 100% 0, 133% 100%, 0 100%)'
-    frames = [
-      { clipPath: isToDark ? start : end },
-      { clipPath: isToDark ? end : start },
-    ]
-  } else {
-    frames = [
-      { filter: isToDark ? 'blur(10px)' : 'blur(0px)', opacity: isToDark ? 0 : 1 },
-      { filter: isToDark ? 'blur(0px)' : 'blur(10px)', opacity: isToDark ? 1 : 0 }
-    ]
-  }
-  const animate = root.animate(frames, {
-    duration: 650,
-    easing: 'linear', // 'cubic-bezier(0.89, 0.00, 0.43, 1.00)',
-    pseudoElement: isToDark ? '::view-transition-new(root)' : '::view-transition-old(root)',
-  });
-  animate.onfinish = () => {
-    vt.skipTransition();
-  };
 }
 </script>
 <style>
@@ -83,7 +49,7 @@ function playEffect(x, y, vt) {
 .mode-switch {
   --mode-color: #ffd446;
   --duration: .3s;
-  --delay: .65s;
+  --delay: .65s; // 与 viewTransition 动画时长保持一致
   width: 40px;
   height: 40px;
   overflow: hidden;

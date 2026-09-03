@@ -4,7 +4,7 @@ import { ref, computed } from 'vue'
 // ant-design-vue4.x 主题定义
 const themes = [
   {
-    name: '薄荷清新',
+    name: 'frame.themeGreen', // 薄荷清新
     inUse: true,
     theme: {
       token: {
@@ -17,7 +17,7 @@ const themes = [
     }
   },
   {
-    name: '金色沙滩',
+    name: 'frame.themeGolden', // 金色沙滩
     theme: {
       token: {
         colorPrimary: '#d2b48c',
@@ -30,7 +30,7 @@ const themes = [
     }
   },
   {
-    name: '海岸微风',
+    name: 'frame.themeBlue', // 海岸微风
     theme: {
       token: {
         colorPrimary: '#78b2d8',
@@ -42,7 +42,7 @@ const themes = [
     }
   },
   {
-    name: '轻胭落砚',
+    name: 'frame.themePink', // 轻胭落砚
     theme: {
       token: {
         colorPrimary: '#ee9da7',
@@ -56,7 +56,7 @@ const themes = [
     }
   },
   {
-    name: '自定义',
+    name: 'frame.themeDiy', // 自定义
     theme: {
       isDiy: true,
       token: {
@@ -76,8 +76,9 @@ const themes = [
 export const useSettingStore = defineStore('setting', () => {
   const theme = ref({ token: { ...themes.find(item => item.inUse)?.theme?.token } }) // 当前主题色系
   const themeName = ref(themes.find(item => item.inUse)?.name) // 当前主题名称
-  const mode = ref('light') // 昼夜模式 light or dark
-  const modeAnimate = ref('fade') // 切换昼夜模式的动画 fade, circle, line
+  const mode = ref('light') // 明暗模式 light or dark
+  const useAutoMode = ref(false) // 明暗是否跟随系统，是则开启监听，自动根据系统设置明暗模式
+  const modeAnimate = ref('fade') // 切换明暗模式的动画 fade, circle, line
   const locale = ref('zh-cn') // 当前语言 zh-cn, zh-hk, en
   const componentSize = ref('middle') // 当前组件尺寸
   const menuLayout = ref('top-left') // 菜单布局方式，top: 全部显示在顶部，left: 全部显示在左侧，top-left: 顶部一级菜单，左侧子菜单
@@ -93,6 +94,8 @@ export const useSettingStore = defineStore('setting', () => {
   const useWanSplit = ref(false) // 是否使用万分位分隔(中文简体下数字)
   const firstMenuMode = ref('button') // 顶部菜单模式，button, default
   const firstMenuAlign = ref('start') // 顶部菜单位置，start, center, end
+  const matchMediaInstance = window.matchMedia('(prefers-color-scheme: dark)') // 监听系统明暗主题实例
+  let isWatchSysMode = false // 当前是否已经监听
 
   const { locale: l } = useI18n()
 
@@ -106,25 +109,69 @@ export const useSettingStore = defineStore('setting', () => {
     }
   }
 
+  /** 获取系统明暗色 */
+  function getSystemMode () {
+    return matchMediaInstance.matches ? 'dark' : 'light'
+  }
+
+  /** 明暗模式：选择暗色 */
   function setDark () {
-    mode.value = 'dark'
-    document.documentElement.setAttribute('theme', 'dark')
+    if (mode.value !== 'dark') {
+      mode.value = 'dark'
+      document.documentElement.setAttribute('theme', 'dark')
+    }
   }
 
+  /** 明暗模式：选择亮色 */
   function setLight () {
-    mode.value = 'light'
-    document.documentElement.setAttribute('theme', 'light')
+    if (mode.value !== 'light') {
+      mode.value = 'light'
+      document.documentElement.setAttribute('theme', 'light')
+    }
   }
 
+  /** 明暗模式：选择跟随系统，将系统明暗色设置为当前明暗模式 */
+  function setModeAuto () {
+    const sysMode = getSystemMode()
+    if (mode.value !== sysMode) {
+      mode.value = sysMode
+      document.documentElement.setAttribute('theme', sysMode)
+    }
+  }
+
+  /** 开启系统明暗主题监听 */
+  function watchSysMode () {
+    if (isWatchSysMode || !useAutoMode.value) return;
+    if (import.meta.env.VITE_APP_DEBUG_MODE === 'true') {
+      console.log('开启监听系统明暗模式')
+    }
+    isWatchSysMode = true
+    matchMediaInstance.addEventListener('change', setModeAuto)
+  } 
+  
+  /** 取消系统明暗主题监听 */
+  function destroyWatchSysMode () {
+    if (isWatchSysMode) {
+      if (import.meta.env.VITE_APP_DEBUG_MODE === 'true') {
+        console.log('关闭监听系统明暗模式')
+      }
+      matchMediaInstance.removeEventListener('change', setModeAuto)
+      isWatchSysMode = false
+    }
+  }
+
+  /** 从当前模式切换到另一种模式，非黑即白，不会切到跟随系统 */
   function toggleMode () {
     isDark.value ? setLight() : setDark()
   }
 
+  /** 设置语言 */
   function setLocale (lang) {
     locale.value = lang
     l.value = lang
   }
 
+  const isLight = computed(() => mode.value === 'light')
   const isDark = computed(() => mode.value === 'dark')
   const themesGetter = computed(() => themes)
   const isCn = computed(() => locale.value === 'zh-cn')
@@ -133,6 +180,7 @@ export const useSettingStore = defineStore('setting', () => {
     theme,
     themeName,
     mode,
+    useAutoMode,
     modeAnimate,
     locale,
     componentSize,
@@ -143,6 +191,7 @@ export const useSettingStore = defineStore('setting', () => {
     tabAnimate,
     useDynamicPageTitle,
     isDark,
+    isLight,
     themes: themesGetter,
     isCn,
     useTableBorder,
@@ -152,11 +201,16 @@ export const useSettingStore = defineStore('setting', () => {
     useWanSplit,
     firstMenuMode,
     firstMenuAlign,
+    matchMediaInstance,
+    getSystemMode,
     setThemeByName,
     setDark,
     setLight,
+    setModeAuto,
     toggleMode,
     setLocale,
+    watchSysMode,
+    destroyWatchSysMode
   }
 },
 {
