@@ -227,6 +227,7 @@ function onDeleteCache (id) {
       height: 10px;
       border-radius: 6px;
       background-color: var(--ant-colorBorder);
+      backdrop-filter: blur(10px);
       color: white;
       transform: translateX(var(--x)) scaleY(0);
       transition: all .3s;

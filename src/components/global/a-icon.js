@@ -53,7 +53,7 @@ import {
   GiftFilled, GoldFilled, HeartFilled, HomeFilled, IdcardFilled, InsuranceFilled, PayCircleFilled,
   PhoneFilled, PictureFilled, PrinterFilled, ProfileFilled, PropertySafetyFilled,
   SafetyCertificateFilled, SettingFilled, ShopFilled, ShoppingFilled, SignalFilled, SkinFilled,
-  SoundFilled, StarFilled, TagFilled, TagsFilled, WalletFilled
+  SoundFilled, StarFilled, TagFilled, TagsFilled, WalletFilled, DeleteOutlined
 } from '@ant-design/icons-vue'
 
 export const icons = {
@@ -106,7 +106,7 @@ export const icons = {
   GiftFilled, GoldFilled, HeartFilled, HomeFilled, IdcardFilled, InsuranceFilled, PayCircleFilled,
   PhoneFilled, PictureFilled, PrinterFilled, ProfileFilled, PropertySafetyFilled,
   SafetyCertificateFilled, SettingFilled, ShopFilled, ShoppingFilled, SignalFilled, SkinFilled,
-  SoundFilled, StarFilled, TagFilled, TagsFilled, WalletFilled
+  SoundFilled, StarFilled, TagFilled, TagsFilled, WalletFilled, DeleteOutlined
 }
 
 const AIcon = function ({ type }) {

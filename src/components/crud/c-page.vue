@@ -323,11 +323,19 @@ defineExpose({
       position: absolute;
       top: 0;
       bottom: 0;
-      right: -1px;
-      width: 5px;
-      cursor: ew-resize;
+      right: -5px;
+      width: 10px;
+      cursor: col-resize;
       &:hover {
-        border-right: solid 2px var(--ant-colorPrimary);
+        &:after {
+          content: '';
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          width: 2px;
+          right: 4px;
+          background-color: var(--ant-colorPrimary);
+        }
       }
     }
     &__toggle {
@@ -338,6 +346,7 @@ defineExpose({
       height: 40px;
       width: 10px;
       background-color: var(--ant-colorBorder);
+      backdrop-filter: blur(10px);
       color: white;
       transition: transform .3s;
       z-index: 2;

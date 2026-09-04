@@ -381,6 +381,8 @@ const tableConfig = computed(() => ({
           },
           {
             name: t('crud.delete'),
+            icon: 'DeleteOutlined', // 图标，仅限 /src/components/global/a-icon.js 中已导入的 ant-design 图标
+            class: 'text-danger', // 按钮class样式名
             callback: 'delete' // 删除操作默认带确认框
           },
           {
