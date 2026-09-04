@@ -32,7 +32,7 @@
         :pagination="pagination"
         :show-search="showSearch"
         :useToggleSearch="!!filterConfig"
-        :useFullscreen="toolsConfig?.hasFullscreen"
+        :useFullscreen="noFullscreen !== true"
         :isFullscreen="isFullScreen"
         @sortColumn="sortColumn"
         @toggleShowSearch="toggleShowSearch"
@@ -119,6 +119,8 @@ const props = defineProps({
   noSelect: Boolean,
   /** 没有操作栏，可选 */
   noTools: Boolean,
+  /** 没有全屏按钮，可选 */
+  noFullscreen: Boolean,
   /** 有返回按钮，可选 */
   hasGoBack: Boolean,
   /** 有导入按钮，可选 */

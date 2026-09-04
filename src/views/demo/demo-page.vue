@@ -6,6 +6,7 @@
     hasImport
     hasExport
     hasGoBack
+    :has-fullscreen="true"
     :no-add="false"
     :no-delete="false"
     :no-select="false"

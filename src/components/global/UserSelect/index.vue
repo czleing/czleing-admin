@@ -40,6 +40,7 @@
             noAdd
             noDelete
             noSelect
+            noFullscreen
             primary-key="userId"
             :api-config="{
               list: '/system/user/selectUser'
@@ -232,7 +233,6 @@ const filterConfig = {
 }
 
 const toolsConfig = {
-  hasFullscreen: false,
   otherTools: [
     {
       name: '清空',
