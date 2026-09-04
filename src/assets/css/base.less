@@ -142,7 +142,7 @@
 .bg-control { background-color: var(--ant-colorBgContainer) !important; }
 // 浮层背景色，比黑或白稍微偏向灰
 .bg-overlay { background-color: var(--ant-colorBgElevated) !important; }
-// 页面元素后面的背景色，底色
+// 网页最底层背景色，底色
 .bg-layout { background-color: var(--ant-colorBgLayout) !important; }
 // 用于鼠标移入突出显示的背景色
 .bg-hover:hover { background-color: var(--ant-colorFillSecondary) !important; }
@@ -214,6 +214,10 @@ each(@spaces, .(@sv, @sk, @si) {
 .w90p { width: 90%; }
 .w100p { width: 100%; }
 .h100p { height: 100%; }
+
+each(range(0, 600, 2), {
+  .w@{value} { width: ~"@{value}px"; }
+})
 
 // flex 布局
 .flex-x { display: flex; }

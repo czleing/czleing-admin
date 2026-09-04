@@ -1,23 +1,51 @@
 <template>
   <a-watermark :content="settingStore.useWatermark ? watermark : ''" :rotate="-35" :zIndex="9000">
     <a-layout class="layout" style="height:100vh;">
-      <a-layout-header :class="{ 'is-radius mt6 ml6 mr6': settingStore.useRadius }" style="padding:0;">
+      <a-layout-header
+        class="layout-header"
+        :class="{
+          'is-line': settingStore.layoutDivide === 'line',
+          'is-shadow': settingStore.layoutDivide === 'shadow',
+          'is-radius mt6 ml6 mr6': settingStore.layoutDivide === 'round',
+        }"
+        :style="`height:${settingStore.topHeaderHeight}px;line-height:${settingStore.topHeaderHeight}px;`"
+      >
         <!-- 头部 -->
         <Header />
       </a-layout-header>
       <a-layout>
-        <a-layout-sider v-show="menuStore.leftNavRoutes && menuStore.leftNavRoutes.length > 0" :collapsed="!menuStore.isSidebarOpen" :trigger="null" :theme="settingStore.mode" :width="settingStore.leftMenuWidth" :class="{ 'is-radius mt6 ml6 mb6': settingStore.useRadius }" collapsible>
+        <a-layout-sider
+          v-show="showLeft"
+          :collapsed="!menuStore.isSidebarOpen"
+          :trigger="null"
+          :theme="settingStore.mode"
+          :width="settingStore.leftMenuWidth"
+          class="layout-sider"
+          :class="{
+            'is-line': settingStore.layoutDivide === 'line',
+            'is-shadow': settingStore.layoutDivide === 'shadow',
+            'is-radius mt6 ml6 mb6': settingStore.layoutDivide === 'round',
+          }"
+          collapsible
+        >
           <!-- 左侧菜单 -->
           <MenuSide />
         </a-layout-sider>
-        <a-layout-content :class="{'no-radius': !settingStore.useRadius}">
+        <a-layout-content class="layout-content" :class="{'is-radius': settingStore.layoutDivide === 'round'}">
           <div class="pa5 flex-y y-stretch h100p">
             <!-- 右侧 Tabs 栏 -->
-            <div v-if="settingStore.useTabs" class="">
+            <div
+              v-if="settingStore.useTabs"
+              class="view-tabs"
+              :class="{
+                'is-tab-line': settingStore.layoutDivide !== 'round' && settingStore.tabType === 'line',
+                'is-radius-line': settingStore.layoutDivide === 'round' && settingStore.tabType === 'line',
+              }"
+            >
               <Tabs />
             </div>
             <!-- 右侧工作区 -->
-            <div class="view-main flex-auto pa10" :style="{ 'overflow-x': isAnimating ? 'hidden' : 'auto' }">
+            <div class="view-main flex-auto pa10" :class="{'is-radius': settingStore.layoutDivide === 'round'}" :style="{ 'overflow': isAnimating ? 'hidden' : 'auto' }">
               <!-- {{ tabsStore.cachedViews }} -->
               <router-view v-slot="{ Component, route }">
                 <Transition :name="settingStore.tabAnimate" :css="!!settingStore.tabAnimate" @before-enter="isAnimating = true" @after-leave="isAnimating = false">
@@ -39,7 +67,7 @@ import { useAuthStore } from '@/stores/auth-store.js'
 import { useMenuStore } from '@/stores/menu-store.js'
 import { useSettingStore } from '@/stores/setting-store.js'
 import { useTabsStore } from '@/stores/tabs-store.js'
-import { onMounted, watchEffect } from 'vue'
+import { computed, onMounted, watchEffect } from 'vue'
 import { useThemeToken } from '../hooks/useThemeToken'
 import { useWindowSize } from '../hooks/useWindowSize'
 import Header from './components/header/index.vue'
@@ -58,6 +86,7 @@ const watermark = computed(() => {
   }
   return '演示用户'
 })
+const showLeft = computed(() => menuStore.leftNavRoutes && menuStore.leftNavRoutes.length > 0)
 
 onMounted(() => {
   document.documentElement.setAttribute('theme', settingStore.mode)
@@ -105,25 +134,63 @@ useWindowSize((width) => {
   background: var(--ant-colorBgContainer) !important;
 }
 .layout {
-  .ant-layout-header, .ant-layout-sider {
-    transition: all .3s;
-    border-color: transparent;
+  background: none;
+  .layout-header, .layout-sider {
+    &.is-radius {
+      border-radius: var(--ant-borderRadiusLG);
+      border: solid var(--ant-lineWidth) var(--ant-colorBorderSecondary);
+      overflow: hidden;
+    }
   }
-  .is-radius {
-    border-radius: var(--ant-borderRadiusLG);
-    border: solid var(--ant-lineWidth) var(--ant-colorBorderSecondary);
-    overflow: hidden;
+  .layout-header {
+    transition: margin .3s;
+    padding: 0;
+    height: 50px;
+    line-height: revert;
+    background: var(--ant-colorBgContainer);
+    &.is-line {
+      border-bottom: var(--ant-lineWidth) solid var(--ant-colorBorderSecondary);
+    }
+    &.is-shadow {
+      z-index: 2;
+      box-shadow: 0 0 10px rgba(155, 155, 155, .2);
+    }
   }
-}
-.view-main {
-  border-radius: 0 0 var(--ant-borderRadiusLG) var(--ant-borderRadiusLG);
-  border: solid var(--ant-lineWidth) var(--ant-colorBorderSecondary);
-  background-color: var(--ant-colorBgContainer);
-  border-top: none;
-  &.is-fullscreen { /** 实现局部全屏 */
-    border-radius: 0;
-    position: fixed;
-    inset: 0;
+  .layout-sider {
+    background: var(--ant-colorBgContainer);
+    transition: background .2s, min-width .3s, max-width .3s, margin .3s;
+    &.is-line {
+      border-right: var(--ant-lineWidth) solid var(--ant-colorBorderSecondary);
+    }
+    &.is-shadow {
+      z-index: 1;
+      box-shadow: 0 0 10px rgba(155, 155, 155, .2);
+    }
+  }
+  .layout-content {
+    background: var(--ant-colorBgContainer);
+    &.is-radius {
+      background: none;
+    }
+    .view-tabs {
+      &.is-tab-line {
+        margin: -5px -5px 0 -5px;
+      }
+      &.is-radius-line {
+        background: var(--ant-colorBgContainer);
+        border: var(--ant-lineWidth) solid var(--ant-colorBorderSecondary);
+        border-bottom: none;
+        border-radius: var(--ant-borderRadiusLG) var(--ant-borderRadiusLG) 0 0;
+      }
+    }
+    .view-main {
+      background-color: var(--ant-colorBgContainer);
+      border-top: none !important;
+      &.is-radius {
+        border-radius: 0 0 var(--ant-borderRadiusLG) var(--ant-borderRadiusLG);
+        border: solid var(--ant-lineWidth) var(--ant-colorBorderSecondary);
+      }
+    }
   }
 }
 

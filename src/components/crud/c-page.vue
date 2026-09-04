@@ -1,6 +1,6 @@
 <!-- CRUD 页面组件 -->
 <template>
-  <div ref="cPage" class="c-page">
+  <div ref="cPage" class="c-page" :class="{'is-fullscreen': isFullScreen}">
     <div v-if="treeConfig" ref="treeBox" class="c-page__tree mr10 pr10" :class="{'is-hide': !isTreeShow}">
       <!-- 树 -->
       <CTree v-show="isTreeShow" class="c-tree" :config="treeConfig" @selected="onTreeSelectHandle" />
@@ -32,6 +32,7 @@
         :pagination="pagination"
         :show-search="showSearch"
         :useToggleSearch="!!filterConfig"
+        :useFullscreen="toolsConfig?.hasFullscreen"
         :isFullscreen="isFullScreen"
         @sortColumn="sortColumn"
         @toggleShowSearch="toggleShowSearch"
@@ -272,14 +273,10 @@ useResizableRight(treeBoxRef, resizerRef, treeMinWidth, treeMaxWidth)
 /** CRUD 区域局部全屏 */
 const isFullScreen = ref(false)
 function toggleFullScreen () {
-  const viewMain = document.getElementsByClassName('view-main')?.[0]
-  if (!viewMain) return
   if (isFullScreen.value) {
     isFullScreen.value = false
-    viewMain.classList.remove('is-fullscreen')
   } else {
     isFullScreen.value = true
-    viewMain.classList.add('is-fullscreen')
   }
 }
 function sortColumn (oldIndex, newIndex) {
@@ -309,6 +306,13 @@ defineExpose({
 <style lang="less" scoped>
 .c-page {
   display: flex;
+  &.is-fullscreen {
+    position: fixed;
+    inset: 0;
+    padding: 10px;
+    border-radius: 0;
+    background-color: var(--ant-colorBgContainer);
+  }
   &__tree {
     min-width: calc(v-bind(treeMinWidth) * 1px);
     width: 240px;

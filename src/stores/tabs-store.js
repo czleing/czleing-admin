@@ -40,14 +40,12 @@ export const useTabsStore = defineStore('tabs', {
       }
     },
     // 删除 Tab
-    removeTab (fullPath) {
-      // 要删除的索引
-      const index = this.tabList.findIndex(item => item.fullPath === fullPath)
+    removeTab (index) {
       // 没有找到则忽略
-      if (index === -1) return
+      if (index < 0 || index >= this.tabList.length) return
       // 如果删除的是当前选中的索引
       let newIndex = this.currentIndex
-      if (index === this.currentIndex) {
+      if (index === newIndex) {
         if (this.tabList?.[newIndex + 1]) { // 如果后面有，选中后面一个
           newIndex = newIndex + 1
         } else if (newIndex > 0 && this.tabList?.[newIndex - 1]) { // 否则选中前面一个
@@ -62,17 +60,21 @@ export const useTabsStore = defineStore('tabs', {
         router.push({ name: 'index' })
       }
     },
+    // 关闭当前 Tab
+    closeTab (tabIndex) {
+      this.removeTab(tabIndex)
+    },
     // 清除其他 Tab
-    clearOtherTabs () {
-      this.tabList = this.tabList.filter((item, index) => index === this.currentIndex)
+    clearOtherTabs (tabIndex) {
+      this.tabList = this.tabList.filter((item, index) => index === tabIndex)
     },
     // 清除左边 Tab
-    clearLeftTabs () {
-      this.tabList = this.tabList.filter((item, index) => index >= this.currentIndex)
+    clearLeftTabs (tabIndex) {
+      this.tabList = this.tabList.filter((item, index) => index >= tabIndex)
     },
     // 清除右边 Tab
-    clearRightTabs () {
-      this.tabList = this.tabList.filter((item, index) => index <= this.currentIndex)
+    clearRightTabs (tabIndex) {
+      this.tabList = this.tabList.filter((item, index) => index <= tabIndex)
     },
     // 清除所有 Tab
     clearAllTabs () {

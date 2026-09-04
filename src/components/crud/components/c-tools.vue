@@ -49,7 +49,7 @@
         </template>
       </a-button>
       <!-- CRUD全屏 -->
-      <a-button title="全屏" @click="onToggleFullScreenHandle">
+      <a-button v-if="useFullscreen" title="全屏" @click="onToggleFullScreenHandle">
         <template #icon>
           <FullscreenExitOutlined v-if="isFullscreen" class="em09" />
           <FullscreenOutlined v-else class="em09" />
@@ -122,6 +122,8 @@ const props = defineProps({
   checkedFieldNames: Array,
   /** 是否使用查询区切换按钮 */
   useToggleSearch: { type: Boolean, default: true },
+  /** 是否使用全屏按鈕 */
+  useFullscreen: { type: Boolean, default: true },
   /** 是否全屏 */
   isFullscreen: { type: Boolean, default: false }
 })

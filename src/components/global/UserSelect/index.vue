@@ -232,6 +232,7 @@ const filterConfig = {
 }
 
 const toolsConfig = {
+  hasFullscreen: false,
   otherTools: [
     {
       name: '清空',

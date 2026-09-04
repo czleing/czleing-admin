@@ -1,9 +1,15 @@
 <!-- 设置-单个设置项容器组件 -->
 <template>
   <div class="field">
-    <div v-if="title" class="bold em11 mt10 mb5">{{ title }}</div>
-    <div class="field__item flex-x-between gap10">
-      <div v-if="label" class="label">{{ label }}</div>
+    <div v-if="title" class="bold em11 mt15 mb8">{{ title }}</div>
+    <div class="field__item flex-x-between gap10" :style="`padding: ${itemPadding}`">
+      <div v-if="label" class="label">
+        {{ label }}
+        <span v-if="tips" class="text-gray em09  ml10">
+          <info-circle-filled />
+          {{ tips }}
+        </span>
+      </div>
       <div class="value" :class="{'flex-auto': !label}">
         <slot />
       </div>
@@ -21,6 +27,8 @@ const props = defineProps({
   title: String,
   label: String,
   extra: String,
+  tips: String,
+  itemPadding: String
 })
 </script>
 <style scoped lang="less">

@@ -7,8 +7,9 @@
       <a-segmented v-model:value="settingTab" :options="settingTabs" block />
       <div class="mt20">
         <div v-show="settingTab === 'theme'">
-          <Field :title="$t('frame.selectTheme')" :colon="false" layout="vertical">
-            <div class="flex-x x-middle gap10 flex-wrap">
+          <!-- 选择主题 -->
+          <Field :title="$t('frame.selectTheme')" item-padding="3px 10px">
+            <div class="flex-x-between gap10">
               <a-select v-model:value="settingStore.themeName" style="width: 150px;" @change="handleChange">
                 <a-select-option
                   v-for="(item, index) in settingStore.themes"
@@ -46,8 +47,22 @@
               </label>
             </div>
           </div>
+          <Field :label="$t('frame.themeMode')" item-padding="3px 10px">
+            <a-segmented :value="mode" :options="modeOptions">
+              <template #label="{ value, payload = {} }">
+                <div class="flex-x x-middle gap5" @click="onModeChange($event, value)">
+                  <div v-if="payload.icon" class="flex-y-center" v-html="payload.icon"></div>
+                  <span>{{ payload.label }}</span>
+                </div>
+              </template>
+            </a-segmented>
+          </Field>
+          <Field :label="$t('frame.modeAnimate')" item-padding="3px 10px">
+            <a-segmented v-model:value="settingStore.modeAnimate" :options="modeAniOptions" />
+          </Field>
+          <!-- 菜单布局 -->
           <div>
-            <div class="bold em11 mt10 mb5">{{ $t('frame.menuLayout') }}</div>
+            <div class="bold em11 mt15 mb8">{{ $t('frame.menuLayout') }}</div>
             <div class="flex-x-around gap15 pl10">
               <div v-for="item in menuLayoutOptions" :key="item.value" class="flex-y-center gap5 pt5 pointer" @click="settingStore.menuLayout = item.value">
                 <component :is="item.icon" class="menu-layout-icon" :class="{'is-checked': settingStore.menuLayout === item.value}" width="90" height="60" />
@@ -59,48 +74,40 @@
             <a-switch v-model:checked="settingStore.useBreadcrumbs" />
           </Field>
           <template v-else>
-            <Field :label="$t('frame.firstMenuMode')">
+            <Field :label="$t('frame.firstMenuMode')" item-padding="3px 10px">
               <a-segmented v-model:value="settingStore.firstMenuMode" :options="firstMenuModeOptions" />
             </Field>
-            <Field :label="$t('frame.firstMenuAlign')">
+            <Field :label="$t('frame.firstMenuAlign')" item-padding="3px 10px">
               <a-segmented v-model:value="settingStore.firstMenuAlign" :options="firstMenuAlignOptions" />
             </Field>
           </template>
+          <Field :label="$t('frame.layoutDivide')" item-padding="3px 10px">
+            <a-segmented v-model:value="settingStore.layoutDivide" :options="layoutDivideOptions" />
+          </Field>
           <Field v-if="settingStore.menuLayout !== 'top'" :label="$t('frame.leftMenuWidth')">
-            <a-input-number v-model:value="settingStore.leftMenuWidth" :step="20" :min="200" :max="380" style="width:120px;" addon-after="px" />
+            <div class="flex-x x-middle gap5">
+              <a-slider v-model:value="settingStore.leftMenuWidth" :step="10" :min="200" :max="400" style="width:120px;margin: 5px;" />
+              <div class="w38">{{ settingStore.leftMenuWidth }}px</div>
+            </div>
           </Field>
-          <Field :title="$t('frame.other')" :label="$t('frame.themeMode')">
-            <a-segmented :value="mode" :options="modeOptions">
-              <template #label="{ value, payload = {} }">
-                <div class="flex-x x-middle gap5" @click="onModeChange($event, value)">
-                  <div v-if="payload.icon" class="flex-y-center" v-html="payload.icon"></div>
-                  <span>{{ payload.label }}</span>
-                </div>
-              </template>
-            </a-segmented>
+          <Field :label="$t('frame.topHeaderHeight')">
+            <div class="flex-x x-middle gap5">
+              <a-slider v-model:value="settingStore.topHeaderHeight" :step="1" :min="48" :max="64" style="width:120px;margin: 5px;" />
+              <div class="w38 tr">{{ settingStore.topHeaderHeight }}px</div>
+            </div>
           </Field>
-          <Field :label="$t('frame.modeAnimate')">
-            <a-segmented v-model:value="settingStore.modeAnimate" :options="modeAniOptions" />
-          </Field>
-          <Field :label="$t('frame.useTabs')">
+          <!-- Tabs 标签 -->
+          <Field :title="$t('frame.tabs')" :label="$t('frame.useTabs')">
             <a-switch v-model:checked="settingStore.useTabs" />
           </Field>
-          <Field :label="$t('frame.tabAnimate')">
+          <Field :label="$t('frame.tabType')" item-padding="3px 10px">
+            <a-segmented v-model:value="settingStore.tabType" :options="tabTypeOptions" />
+          </Field>
+          <Field :label="$t('frame.tabAnimate')" item-padding="3px 10px">
             <a-segmented v-model:value="settingStore.tabAnimate" :options="tabAniOptions" />
           </Field>
-          <Field :label="$t('frame.componentSize')">
-            <a-segmented v-model:value="settingStore.componentSize" :options="sizeOptions" />
-          </Field>
-          <Field :label="$t('frame.radiusLayout')">
-            <a-switch v-model:checked="settingStore.useRadius" />
-          </Field>
-          <Field :label="$t('frame.useTableBorder')">
-            <a-switch v-model:checked="settingStore.useTableBorder" />
-          </Field>
-          <Field :label="$t('frame.useThinLine')" :extra="$t('frame.useThinLineExtra')">
-            <a-switch v-model:checked="settingStore.useThinLine" />
-          </Field>
         </div>
+        <!-- 其他 -->
         <div v-show="settingTab === 'other'">
           <Field :title="$t('frame.lang')" :label="$t('frame.selectLang')">
             <a-select v-model:value="settingStore.locale" style="width: 150px;" @change="handleLocalChange">
@@ -116,7 +123,17 @@
               </a-select-option>
             </a-select>
           </Field>
-          <Field :title="$t('frame.other')" :label="$t('frame.showWeather')">
+          <!-- 其他 -->
+          <Field :title="$t('frame.other')" :label="$t('frame.componentSize')">
+            <a-segmented v-model:value="settingStore.componentSize" :options="sizeOptions" />
+          </Field>
+          <Field :label="$t('frame.useTableBorder')">
+            <a-switch v-model:checked="settingStore.useTableBorder" />
+          </Field>
+          <Field :label="$t('frame.useThinLine')" :tips="$t('frame.useThinLineExtra')">
+            <a-switch v-model:checked="settingStore.useThinLine" />
+          </Field>
+          <Field :label="$t('frame.showWeather')">
             <a-switch v-model:checked="settingStore.useWeather" />
           </Field>
           <Field :label="$t('frame.useDynamicPageTitle')">
@@ -125,7 +142,7 @@
           <Field :label="$t('frame.useWatermark')">
             <a-switch v-model:checked="settingStore.useWatermark" />
           </Field>
-          <Field v-if="settingStore.isCn" :label="$t('frame.useWanSplit')">
+          <Field v-if="settingStore.isCn" :label="$t('frame.useWanSplit')" :tips="numFormat(123456.7898, { splitDigits: settingStore.useWanSplit ? 4 : 3 })">
             <a-switch v-model:checked="settingStore.useWanSplit" />
           </Field>
         </div>
@@ -144,6 +161,7 @@ import TopLeft from './icons/top-left.vue'
 import Top from './icons/top.vue'
 import useViewTransition from '@/hooks/useViewTransition.js'
 import { nextTick } from 'vue'
+import { numFormat } from '@/utils/index.js'
 
 const settingStore = useSettingStore()
 settingStore.watchSysMode()
@@ -181,11 +199,21 @@ const sizeOptions = computed(() => [
   { label: t('frame.middle'), value: 'middle' },
   { label: t('frame.large'), value: 'large' },
 ])
+const layoutDivideOptions = computed(() => [
+  { label: t('frame.layoutDivideNone'), value: '' },
+  { label: t('frame.layoutDivideLine'), value: 'line' },
+  { label: t('frame.layoutDivideShadow'), value: 'shadow' },
+  { label: t('frame.layoutDivideRound'), value: 'round' },
+])
 const tabAniOptions = computed(() => [
   { label: t('frame.tabAnimateNone'), value: '' },
   { label: t('frame.tabAnimateSlideRight'), value: 'slide-right' },
   { label: t('frame.tabAnimateFade'), value: 'fade' },
   { label: t('frame.tabAnimateScale'), value: 'scale' },
+])
+const tabTypeOptions = computed(() => [
+  { label: t('frame.tabTypeCard'), value: 'editable-card' },
+  { label: t('frame.tabTypeLine'), value: 'line' },
 ])
 const settingTab = ref('theme')
 const settingTabs = computed(() => [
