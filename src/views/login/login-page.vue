@@ -18,12 +18,12 @@
         </a-config-provider>
       </div>
     </div>
-    <div class="login_page__footer">
+    <footer class="login_page__footer">
       <a :href="setting.copyrightLink" target="_blank">
         <a-icon type="CopyrightOutlined" />
         {{ setting.copyright }}
       </a>
-    </div>
+    </footer>
   </div>
 </template>
 

@@ -84,6 +84,9 @@
           <Field :label="$t('frame.layoutDivide')" item-padding="3px 10px">
             <a-segmented v-model:value="settingStore.layoutDivide" :options="layoutDivideOptions" />
           </Field>
+          <Field :label="$t('frame.useFooter')">
+            <a-switch v-model:checked="settingStore.useFooter" />
+          </Field>
           <Field v-if="settingStore.menuLayout !== 'top'" :label="$t('frame.leftMenuWidth')">
             <div class="flex-x x-middle gap5">
               <a-slider v-model:value="settingStore.leftMenuWidth" :step="10" :min="200" :max="400" style="width:120px;margin: 5px;" />
@@ -100,11 +103,17 @@
           <Field :title="$t('frame.tabs')" :label="$t('frame.useTabs')">
             <a-switch v-model:checked="settingStore.useTabs" />
           </Field>
-          <Field :label="$t('frame.tabType')" item-padding="3px 10px">
+          <Field v-show="settingStore.useTabs" :label="$t('frame.tabType')" item-padding="3px 10px">
             <a-segmented v-model:value="settingStore.tabType" :options="tabTypeOptions" />
           </Field>
           <Field :label="$t('frame.tabAnimate')" item-padding="3px 10px">
             <a-segmented v-model:value="settingStore.tabAnimate" :options="tabAniOptions" />
+          </Field>
+          <Field v-show="settingStore.useTabs" :label="$t('frame.useTabIcon')">
+            <a-switch v-model:checked="settingStore.useTabIcon" />
+          </Field>
+          <Field v-show="settingStore.useTabs" :label="$t('frame.useTabClose')">
+            <a-switch v-model:checked="settingStore.useTabClose" />
           </Field>
         </div>
         <!-- 其他 -->
@@ -175,8 +184,8 @@ const menuLayoutOptions = computed(() => [
   { value: 'top-left', label: t('frame.topLeft'), icon: TopLeft },
 ])
 const firstMenuModeOptions = computed(() => [
-  { label: t('frame.firstMenuModeMenu'), value: 'menu' },
-  { label: t('frame.firstMenuModeButton'), value: 'button' },
+  { label: t('frame.firstMenuModeLine'), value: 'line' },
+  { label: t('frame.firstMenuModeCard'), value: 'card' },
 ])
 const firstMenuAlignOptions = computed(() => [
   { label: t('frame.firstMenuAlignLeft'), value: 'start' },
@@ -212,7 +221,8 @@ const tabAniOptions = computed(() => [
   { label: t('frame.tabAnimateScale'), value: 'scale' },
 ])
 const tabTypeOptions = computed(() => [
-  { label: t('frame.tabTypeCard'), value: 'editable-card' },
+  { label: t('frame.tabTypeTab'), value: 'tab' },
+  { label: t('frame.tabTypeCard'), value: 'card' },
   { label: t('frame.tabTypeLine'), value: 'line' },
 ])
 const settingTab = ref('theme')

@@ -66,15 +66,30 @@ export const useTabsStore = defineStore('tabs', {
     },
     // 清除其他 Tab
     clearOtherTabs (tabIndex) {
+      const tab = this.tabList[tabIndex]
+      const includeThis = tabIndex !== this.currentIndex
       this.tabList = this.tabList.filter((item, index) => index === tabIndex)
+      if (includeThis) {
+        router.push(tab.fullPath)
+      }
     },
     // 清除左边 Tab
     clearLeftTabs (tabIndex) {
+      const tab = this.tabList[tabIndex]
+      const includeThis = this.currentIndex < tabIndex
       this.tabList = this.tabList.filter((item, index) => index >= tabIndex)
+      if (includeThis) {
+        router.push(tab.fullPath)
+      }
     },
     // 清除右边 Tab
     clearRightTabs (tabIndex) {
+      const tab = this.tabList[tabIndex]
+      const includeThis = this.currentIndex > tabIndex
       this.tabList = this.tabList.filter((item, index) => index <= tabIndex)
+      if (includeThis) {
+        router.push(tab.fullPath)
+      }
     },
     // 清除所有 Tab
     clearAllTabs () {
@@ -129,6 +144,7 @@ export const useTabsStore = defineStore('tabs', {
   },
   persist: {
     key: 'CZ_USER_TABS',
+    storage: window.sessionStorage,
     pick: ['tabList']
   }
 })

@@ -38,14 +38,21 @@
               v-if="settingStore.useTabs"
               class="view-tabs"
               :class="{
-                'is-tab-line': settingStore.layoutDivide !== 'round' && settingStore.tabType === 'line',
-                'is-radius-line': settingStore.layoutDivide === 'round' && settingStore.tabType === 'line',
+                'is-tab-line': settingStore.layoutDivide !== 'round' && settingStore.tabType !== 'tab',
+                'is-radius-line': settingStore.layoutDivide === 'round' && settingStore.tabType !== 'tab',
               }"
             >
               <Tabs />
             </div>
             <!-- 右侧工作区 -->
-            <div class="view-main flex-auto pa10" :class="{'is-radius': settingStore.layoutDivide === 'round'}" :style="{ 'overflow': isAnimating ? 'hidden' : 'auto' }">
+            <div
+              class="view-main flex-auto pa10"
+              :class="{
+                'is-radius-bottom': settingStore.layoutDivide === 'round' && settingStore.useTabs,
+                'is-radius-all': settingStore.layoutDivide === 'round' && !settingStore.useTabs,
+              }"
+              :style="{ 'overflow': isAnimating ? 'hidden' : 'auto' }"
+            >
               <!-- {{ tabsStore.cachedViews }} -->
               <router-view v-slot="{ Component, route }">
                 <Transition :name="settingStore.tabAnimate" :css="!!settingStore.tabAnimate" @before-enter="isAnimating = true" @after-leave="isAnimating = false">
@@ -55,6 +62,14 @@
                 </Transition>
               </router-view>
             </div>
+            <footer v-if="settingStore.useFooter" class="py5">
+              <div class="tc">
+                <a :href="setting.copyrightLink" target="_blank">
+                  <CopyrightOutlined />
+                  {{ setting.copyright }}
+                </a>
+              </div>
+            </footer>
           </div>
         </a-layout-content>
       </a-layout>
@@ -73,7 +88,9 @@ import { useWindowSize } from '../hooks/useWindowSize'
 import Header from './components/header/index.vue'
 import MenuSide from './components/side/index.vue'
 import Tabs from './components/tabs/index.vue'
+import settings from '@/config/setting.js'
 
+const setting = settings.websiteInfo
 const menuStore = useMenuStore()
 const tabsStore = useTabsStore()
 const settingStore = useSettingStore()
@@ -186,8 +203,12 @@ useWindowSize((width) => {
     .view-main {
       background-color: var(--ant-colorBgContainer);
       border-top: none !important;
-      &.is-radius {
+      &.is-radius-bottom {
         border-radius: 0 0 var(--ant-borderRadiusLG) var(--ant-borderRadiusLG);
+        border: solid var(--ant-lineWidth) var(--ant-colorBorderSecondary);
+      }
+      &.is-radius-all {
+        border-radius: var(--ant-borderRadiusLG);
         border: solid var(--ant-lineWidth) var(--ant-colorBorderSecondary);
       }
     }

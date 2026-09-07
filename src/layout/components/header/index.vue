@@ -110,18 +110,16 @@ function onMenuItemClick (item) {
       border-radius: var(--ant-borderRadius);
       height: calc(var(--ant-controlHeight) + 5px);
       line-height: calc(var(--ant-controlHeight) + 5px);
-      background-color: rgba(155, 155, 155, .1);
       margin: 0 4px;
       padding-inline: 12px;
-      transition: background-color .3s, color .3s;
+      transition: background-color .3s, color .3s, transform .3s;
       // transform: skewX(-8deg);
       &:hover {
         color: var(--ant-colorPrimary);
-        background-color: var(--ant-colorPrimaryBgHover);
+        background-color: rgba(155, 155, 155, .1);
       }
       &:active {
-        color: white;
-        background-color: var(--ant-colorPrimaryActive);
+        background-color: rgba(155, 155, 155, .2);
       }
       &::after {
         display: none !important;
@@ -130,12 +128,12 @@ function onMenuItemClick (item) {
       //   display: inline-block;
       //   transform: skewX(8deg);
       // }
-    }
-    & > .ant-menu-item-selected, & > .ant-menu-submenu-selected {
-      background-image: linear-gradient(135deg, var(--ant-colorPrimary), var(--ant-colorPrimaryActive));
-      color: white !important;
-      .ant-menu-submenu-title {
-        color: inherit;
+      &.ant-menu-item-selected, &.ant-menu-submenu-selected {
+        background-color: var(--ant-colorPrimaryBgHover);
+        color: var(--ant-colorPrimary);
+        .ant-menu-submenu-title {
+          color: inherit;
+        }
       }
     }
   }

@@ -86,15 +86,18 @@ export const useSettingStore = defineStore('setting', () => {
   const topHeaderHeight = ref(50) // 顶部宽度 px
   const useWeather = ref(false) // 是否使用天气组件
   const useTabs = ref(true) // 是否使用 tabs 栏
+  const useTabIcon = ref(true) // tabs 栏是否使用图标
+  const useTabClose = ref(true) // tabs 栏是否使用关闭按钮
   const tabAnimate = ref('slide-right') // tab 页签动画，'', 'slide-right', 'fade', 'scale'
-  const tabType = ref('editable-card') // tab 页签样式， 'editable-card', 'line'
+  const tabType = ref('line') // tab 页签样式， 'tab', 'card', 'line'
   const useDynamicPageTitle = ref(true) // 是否动态设置浏览器标签名，设置为路由上的 meta.title
   const useTableBorder = ref(true) // 表格是否使用竖向边框
   const useThinLine = ref(false) // 是否使用细线边框，需显示器、浏览器支持，由用户决定
   const useBreadcrumbs = ref(true) // 是否使用面包屑目录层级
   const useWatermark = ref(false) // 是否使用水印
   const useWanSplit = ref(false) // 是否使用万分位分隔(中文简体下数字)
-  const firstMenuMode = ref('button') // 顶部菜单模式，button, default
+  const useFooter = ref(false) // 是否使用页脚
+  const firstMenuMode = ref('card') // 顶部菜单模式，card, line
   const firstMenuAlign = ref('start') // 顶部菜单位置，start, center, end
   const layoutDivide = ref('line') // 布局块边框样式，'', line, shadow, round
   const matchMediaInstance = window.matchMedia('(prefers-color-scheme: dark)') // 监听系统明暗主题实例
@@ -192,6 +195,8 @@ export const useSettingStore = defineStore('setting', () => {
     topHeaderHeight,
     useWeather,
     useTabs,
+    useTabIcon,
+    useTabClose,
     tabAnimate,
     tabType,
     useDynamicPageTitle,
@@ -204,6 +209,7 @@ export const useSettingStore = defineStore('setting', () => {
     useBreadcrumbs,
     useWatermark,
     useWanSplit,
+    useFooter,
     layoutDivide,
     firstMenuMode,
     firstMenuAlign,

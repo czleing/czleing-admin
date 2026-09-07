@@ -107,10 +107,10 @@ const developerRoutes = [
     path: '/test',
     redirect: '/test/demo',
     meta: {
+      title: '测试目录',
       isFirst: true,
       icon: 'CodeOutlined',
       hidden: !import.meta.env.DEV,
-      title: 'Test'
     },
     children: [
       {
@@ -125,6 +125,17 @@ const developerRoutes = [
         }
       },
     ]
+  },
+  {
+    path: '/test2/demo2',
+    component: () => import('@/views/demo/demo-page.vue'),
+    meta: {
+      title: '测试菜单',
+      icon: 'ExperimentOutlined',
+      isLeaf: true,
+      matchedPaths: ['/test2', '/test2/demo2'],
+      cache: true
+    }
   }
 ]
 
