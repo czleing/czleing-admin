@@ -15,7 +15,6 @@
       @edit="onDeleteHandle"
     >
       <a-tab-pane v-for="(tab, index) in tabsStore.tabList" :key="tab.fullPath" :closable="false">
-        <!-- <template #closeIcon></template> -->
         <template #tab>
           <a-dropdown placement="bottom" :trigger="['contextmenu']" arrow>
             <div>
@@ -37,6 +36,16 @@
                 <a-menu-item @click="openInNewWindow(tab.fullPath, tab.path)">
                   <SubnodeOutlined slot='icon' class="text-primary" />
                   <span class="ml6">{{ $t('frame.openInNewWindow') }}</span>
+                </a-menu-item>
+                <a-menu-item @click="tabsStore.toogleFavorite(index)">
+                  <template v-if="tabsStore.favoriteKeys.includes(tab.fullPath)">
+                    <HeartFilled slot='icon' class="text-primary" />
+                    <span class="ml6">{{ $t('frame.removeFavorite') }}</span>
+                  </template>
+                  <template v-else>
+                    <HeartOutlined slot='icon' class="text-primary" />
+                    <span class="ml6">{{ $t('frame.favorite') }}</span>
+                  </template>
                 </a-menu-item>
                 <a-menu-divider />
                 <a-menu-item @click="tabsStore.clearLeftTabs(index)" :disabled="index === 0">
@@ -60,14 +69,55 @@
           </a-dropdown>
         </template>
       </a-tab-pane>
+      <template #rightExtra>
+        <div class="pr8 flex-x x-middle">
+          <template v-if="settingStore.useTabFavorite">
+            <a-divider type="vertical" />
+            <a-dropdown placement="bottomRight" arrow="bottomRight" @click="tabsStore.toogleFavorite()">
+              <div class="pointer">
+                <HeartFilled v-if="tabsStore.favoriteKeys.includes(tabsStore.currTab.fullPath)" class="text-primary" :title="$t('frame.removeFavorite')" style="margin-right:0;" />
+                <HeartOutlined v-else :title="$t('frame.favorite')" style="margin-right:0;" />
+              </div>
+              <template v-if="tabsStore.favoriteTabs.length" #overlay>
+                <a-menu>
+                  <a-menu-item
+                    v-for="(item, index) in tabsStore.favoriteTabs"
+                    :key="item.fullPath"
+                    @click="router.push(item.fullPath)"
+                  >
+                    <div class="flex-x-between">
+                      <span class="flex-auto">
+                        <HeartFilled class="text-primary mr4" />
+                        {{ item.meta.title }}
+                      </span>
+                      <a-divider type="vertical" />
+                      <DeleteFilled class="text-danger" :title="$t('frame.remove')" @click.stop="tabsStore.removeFavorite(index)" />
+                    </div>
+                  </a-menu-item>
+                </a-menu>
+              </template>
+            </a-dropdown>
+          </template>
+          <a-divider type="vertical" />
+          <span class="pointer" @click="toggleFullScreen">
+            <FullscreenExitOutlined v-if="isFullscreen" :title="$t('frame.exitFullscreen')" style="margin:0;" />
+            <FullscreenOutlined v-else :title="$t('frame.fullscreen')" style="margin:0;" />
+          </span>
+        </div>
+      </template>
     </a-tabs>
   </section>
 </template>
 <script setup>
 import { useSettingStore } from '@/stores/setting-store'
 import { useTabsStore } from '@/stores/tabs-store.js'
+import { DownOutlined, DownSquareFilled, FullscreenExitOutlined, FullscreenOutlined, HeartOutlined, StarOutlined } from '@ant-design/icons-vue'
 import { theme } from 'ant-design-vue'
+import { h } from 'vue'
 
+const props = defineProps({
+  isFullscreen: Boolean,
+})
 const router = useRouter()
 const route = useRoute()
 const tabsStore = useTabsStore()
@@ -82,6 +132,7 @@ const tabType = computed(() => {
     'line': 'line',
   }[settingStore.tabType]
 })
+const showHeader = ref(true)
 
 watchEffect(() => {
   currentTab.value = route.fullPath
@@ -96,6 +147,10 @@ function onDeleteHandle(path) {
 }
 function openInNewWindow (fullPath, path) {
   window.open('#' + fullPath, path)
+}
+const emits = defineEmits(['toggleFullScreen'])
+function toggleFullScreen () {
+  emits('toggleFullScreen')
 }
 </script>
 <style lang="less">

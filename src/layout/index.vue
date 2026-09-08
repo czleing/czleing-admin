@@ -2,6 +2,7 @@
   <a-watermark :content="settingStore.useWatermark ? watermark : ''" :rotate="-35" :zIndex="9000">
     <a-layout class="layout" style="height:100vh;">
       <a-layout-header
+        v-show="!isFullScreen"
         class="layout-header"
         :class="{
           'is-line': settingStore.layoutDivide === 'line',
@@ -15,7 +16,7 @@
       </a-layout-header>
       <a-layout>
         <a-layout-sider
-          v-show="showLeft"
+          v-show="showLeft && !isFullScreen"
           :collapsed="!menuStore.isSidebarOpen"
           :trigger="null"
           :theme="settingStore.mode"
@@ -42,7 +43,7 @@
                 'is-radius-line': settingStore.layoutDivide === 'round' && settingStore.tabType !== 'tab',
               }"
             >
-              <Tabs />
+              <Tabs :isFullscreen="isFullScreen" @toggleFullScreen="toggleFullScreen" />
             </div>
             <!-- 右侧工作区 -->
             <div
@@ -62,9 +63,10 @@
                 </Transition>
               </router-view>
             </div>
-            <footer v-if="settingStore.useFooter" class="py5">
+            <!-- footer -->
+            <footer v-if="settingStore.useFooter" v-show="!isFullScreen" class="pt5">
               <div class="tc">
-                <a :href="setting.copyrightLink" target="_blank">
+                <a :href="setting.copyrightLink" target="_blank" class="text-gray">
                   <CopyrightOutlined />
                   {{ setting.copyright }}
                 </a>
@@ -104,6 +106,11 @@ const watermark = computed(() => {
   return '演示用户'
 })
 const showLeft = computed(() => menuStore.leftNavRoutes && menuStore.leftNavRoutes.length > 0)
+
+const isFullScreen = ref(false)
+function toggleFullScreen() {
+  isFullScreen.value = !isFullScreen.value
+}
 
 onMounted(() => {
   document.documentElement.setAttribute('theme', settingStore.mode)

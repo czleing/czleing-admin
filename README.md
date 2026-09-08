@@ -121,9 +121,10 @@ npm run preview
 暂无线上地址，可以只启动前端查看部分静态页面：
 ```
 1、git clone https://gitee.com/czleing/czleing-admin.git
-2、pnpm i
-3、npm run dev
-4、访问 http://localhost:3000/ (无需登录，请忽略接口异常)
+2、cd czleing-admin
+3、pnpm i
+4、npm run dev
+5、访问 http://localhost:3000/ (无需登录，请忽略接口异常)
 ```
 
 ## 贡献者

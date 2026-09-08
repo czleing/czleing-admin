@@ -88,6 +88,7 @@ export const useSettingStore = defineStore('setting', () => {
   const useTabs = ref(true) // 是否使用 tabs 栏
   const useTabIcon = ref(true) // tabs 栏是否使用图标
   const useTabClose = ref(true) // tabs 栏是否使用关闭按钮
+  const useTabFavorite = ref(false) // 是否启用 Tab 收藏功能
   const tabAnimate = ref('slide-right') // tab 页签动画，'', 'slide-right', 'fade', 'scale'
   const tabType = ref('line') // tab 页签样式， 'tab', 'card', 'line'
   const useDynamicPageTitle = ref(true) // 是否动态设置浏览器标签名，设置为路由上的 meta.title
@@ -197,6 +198,7 @@ export const useSettingStore = defineStore('setting', () => {
     useTabs,
     useTabIcon,
     useTabClose,
+    useTabFavorite,
     tabAnimate,
     tabType,
     useDynamicPageTitle,

@@ -95,6 +95,10 @@ export default {
     usePrimaryColor: 'Use Primary Color',
     refreshTab: 'Reload',
     openInNewWindow: 'Open in new Tab',
+    useTabFavorite: 'Use Favorites',
+    remove: 'Remove',
+    favorite: 'Favorite',
+    removeFavorite: 'Cancel Favorite',
   },
   // crud
   crud: {

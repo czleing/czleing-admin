@@ -7,7 +7,8 @@ import router from '@/router'
 export const useTabsStore = defineStore('tabs', {
   state: () => ({
     tabList: [], // 当前已打开过的路由数组，用于渲染 Tab 栏
-    refreshing: false // 当前页是否正在刷新
+    refreshing: false, // 当前页是否正在刷新
+    favoriteTabs: [], // 收藏的Tabs
   }),
   actions: {
     // 打开 Tab，新增并选中 或 已存在则选中，遵循幂等性原则
@@ -60,7 +61,7 @@ export const useTabsStore = defineStore('tabs', {
         router.push({ name: 'index' })
       }
     },
-    // 关闭当前 Tab
+    // 关闭 Tab
     closeTab (tabIndex) {
       this.removeTab(tabIndex)
     },
@@ -107,6 +108,25 @@ export const useTabsStore = defineStore('tabs', {
     setTabName (title, fullPath) {
       const idx = fullPath ? this.tabList.findIndex(item => item.fullPath === fullPath) : this.currentIndex
       this.tabList[idx].meta.title = title
+    },
+    // 收藏/取消收藏
+    toogleFavorite (tabIndex = this.currentIndex) {
+      const tab = this.tabList[tabIndex]
+      if (!tab?.fullPath) return
+      if (this.favoriteKeys.includes(tab.fullPath)) {
+        this.favoriteTabs = this.favoriteTabs.filter(item => item.fullPath !== tab.fullPath)
+      } else {
+        this.favoriteTabs.push({ ...tab, matched: undefined, meta: { ...tab.meta, matchedPaths: undefined } })
+      }
+    },
+    // 删除收藏
+    removeFavorite (index) {
+      this.favoriteTabs.splice(index, 1)
+    },
+    // 删除收藏
+    removeFavoriteByFullPath (fullPath) {
+      if (!fullPath) return
+      this.favoriteTabs = this.favoriteTabs.filter(item => item.fullPath !== fullPath)
     }
   },
   getters: {
@@ -114,14 +134,19 @@ export const useTabsStore = defineStore('tabs', {
     currentIndex () {
       return this.tabList.findIndex(item => item.fullPath === router.currentRoute?.value?.fullPath)
     },
+    currTab () {
+      return this.tabList[this.currentIndex]
+    },
+    favoriteKeys () {
+      return this.favoriteTabs.map(item => item.fullPath)
+    },
     // 当前 tabList 中支持缓存的路由组件名称数组，用于 Tab 缓存
     // 从 tabList 中筛选出需要缓存的页面组件名数组，用于 keepalive 缓存
     cachedViews () {
       if (this.tabList.length === 0) {
         return []
       }
-      const currTab = this.tabList[this.currentIndex]
-      const currComName = currTab?.matched?.at(-1)?.componentName
+      const currComName = this.currTab?.matched?.at(-1)?.componentName
       const cachedViews = this.tabList.map(tab => {
         const componentName = tab.matched.at(-1)?.componentName
         const useCache = tab.meta?.cache
@@ -142,9 +167,15 @@ export const useTabsStore = defineStore('tabs', {
       return cachedViews
     }
   },
-  persist: {
-    key: 'CZ_USER_TABS',
-    storage: window.sessionStorage,
-    pick: ['tabList']
-  }
+  persist: [
+    {
+      key: 'CZ_USER_TABS',
+      storage: window.sessionStorage,
+      pick: ['tabList']
+    },
+    {
+      key: 'CZ_USER_TABS',
+      pick: ['favoriteTabs']
+    }
+  ]
 })

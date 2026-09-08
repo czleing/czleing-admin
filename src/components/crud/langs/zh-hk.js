@@ -46,7 +46,7 @@ export default {
     layoutDivideShadow: '陰影',
     layoutDivideRound: '圓角',
     useFooter: '顯示頁腳',
-    tabs: 'Tab 標簽',
+    tabs: 'Tab 標簽欄',
     useTabs: '使用標簽頁',
     tabAnimate: '標籤頁動畫',
     tabAnimateNone: '無',
@@ -97,6 +97,10 @@ export default {
     usePrimaryColor: '使用主題色',
     refreshTab: '重新載入',
     openInNewWindow: '在新窗口打開',
+    useTabFavorite: '啟用收藏',
+    remove: '移除',
+    favorite: '收藏',
+    removeFavorite: '取消收藏',
   },
   // crud
   crud: {

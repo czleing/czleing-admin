@@ -115,6 +115,9 @@
           <Field v-show="settingStore.useTabs" :label="$t('frame.useTabClose')">
             <a-switch v-model:checked="settingStore.useTabClose" />
           </Field>
+          <Field v-show="settingStore.useTabs" :label="$t('frame.useTabFavorite')">
+            <a-switch v-model:checked="settingStore.useTabFavorite" />
+          </Field>
         </div>
         <!-- 其他 -->
         <div v-show="settingTab === 'other'">

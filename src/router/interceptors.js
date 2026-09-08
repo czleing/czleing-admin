@@ -45,7 +45,7 @@ export async function beforeInterceptor (to, from) {
 export function afterInterceptor (to, from) {
   const settingStore = useSettingStore()
   if (settingStore.useDynamicPageTitle) {
-    window.document.title = to.meta.title || settings.websiteInfo.systemName
+    window.document.title = to.meta.title + ' | ' + settings.websiteInfo.systemName
   } else {
     window.document.title = settings.websiteInfo.systemName
   }
