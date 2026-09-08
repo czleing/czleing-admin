@@ -2,6 +2,7 @@
  * 英文
  */
 export default {
+  // 框架
   frame: {
     themeSetting: 'Theme Settings',
     themeMode: 'Light/Dark',
@@ -23,6 +24,7 @@ export default {
     menuLayout: 'Menu Layout',
     leftMenuWidth: 'Left Menu Width',
     topHeaderHeight: 'Top Header Height',
+    autoOpenFirstMenu: 'Automatically open submenus',
     formLayout: 'Form Layout',
     horizontal: 'horizontal',
     vertical: 'vertical',

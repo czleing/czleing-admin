@@ -81,6 +81,9 @@
               <a-segmented v-model:value="settingStore.firstMenuAlign" :options="firstMenuAlignOptions" />
             </Field>
           </template>
+          <Field v-show="settingStore.menuLayout === 'top-left'" :label="$t('frame.autoOpenFirstMenu')">
+            <a-switch v-model:checked="settingStore.autoOpenFirstMenu" />
+          </Field>
           <Field :label="$t('frame.layoutDivide')" item-padding="3px 10px">
             <a-segmented v-model:value="settingStore.layoutDivide" :options="layoutDivideOptions" />
           </Field>

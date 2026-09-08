@@ -84,6 +84,7 @@ export const useSettingStore = defineStore('setting', () => {
   const menuLayout = ref('top-left') // 菜单布局方式，top: 全部显示在顶部，left: 全部显示在左侧，top-left: 顶部一级菜单，左侧子菜单
   const leftMenuWidth = ref(200) // 左侧菜单宽度 px
   const topHeaderHeight = ref(50) // 顶部宽度 px
+  const autoOpenFirstMenu = ref(false) // 自动打开子菜单(菜单 top-left 布局时，点击一级菜单，自动打开第一个子菜单)
   const useWeather = ref(false) // 是否使用天气组件
   const useTabs = ref(true) // 是否使用 tabs 栏
   const useTabIcon = ref(true) // tabs 栏是否使用图标
@@ -194,6 +195,7 @@ export const useSettingStore = defineStore('setting', () => {
     menuLayout,
     leftMenuWidth,
     topHeaderHeight,
+    autoOpenFirstMenu,
     useWeather,
     useTabs,
     useTabIcon,

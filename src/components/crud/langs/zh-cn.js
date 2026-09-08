@@ -24,6 +24,7 @@ export default {
     menuLayout: '菜单布局',
     leftMenuWidth: '左侧菜单宽度',
     topHeaderHeight: '顶部高度',
+    autoOpenFirstMenu: '自动打开子菜单',
     formLayout: '表单布局',
     horizontal: 'horizontal',
     vertical: 'vertical',

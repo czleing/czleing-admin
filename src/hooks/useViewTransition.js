@@ -8,8 +8,8 @@ export default function useViewTransition () {
   /**
    * 播放动画
    * @param {Function} changeFn 改变UI的函数 async
-   * @param {number} x 动画起始 x 坐标
-   * @param {number} y 动画起始 y 坐标
+   * @param {number} x 动画起始 x 坐标（动画名称为circle时有效）
+   * @param {number} y 动画起始 y 坐标（动画名称为circle时有效）
    * @param {string} animateName 动画名称，fade, circle, line
    * @param {boolean} positive 是否正向播放动画，默认：true
    * @param {number} duration 动画时间，单位毫秒，默认 500

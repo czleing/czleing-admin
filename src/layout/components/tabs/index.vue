@@ -73,9 +73,9 @@
         <div class="pr8 flex-x x-middle">
           <template v-if="settingStore.useTabFavorite">
             <a-divider type="vertical" />
-            <a-dropdown placement="bottomRight" arrow="bottomRight" @click="tabsStore.toogleFavorite()">
+            <a-dropdown placement="bottomRight" arrow @click="tabsStore.toogleFavorite()">
               <div class="pointer">
-                <HeartFilled v-if="tabsStore.favoriteKeys.includes(tabsStore.currTab.fullPath)" class="text-primary" :title="$t('frame.removeFavorite')" style="margin-right:0;" />
+                <HeartFilled v-if="tabsStore.currTab && tabsStore.favoriteKeys.includes(tabsStore.currTab.fullPath)" class="text-primary" :title="$t('frame.removeFavorite')" style="margin-right:0;" />
                 <HeartOutlined v-else :title="$t('frame.favorite')" style="margin-right:0;" />
               </div>
               <template v-if="tabsStore.favoriteTabs.length" #overlay>

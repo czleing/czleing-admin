@@ -150,7 +150,6 @@ export function createNavRoute (routes) {
     // 重定向到首页的第一个页面
     redirect: { name: 'index' },
     component: () => import('@/layout/index.vue'),
-    hidden: true,
     children: [
       ...routes,
       ...developerRoutes,
