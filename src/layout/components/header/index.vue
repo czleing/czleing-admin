@@ -5,7 +5,7 @@
       <MenuFoldOutlined v-if="menuStore.isSidebarOpen" />
       <MenuUnfoldOutlined v-else />
     </span>
-    <div class="header__menu flex-auto mx20" :class="{ 'btn-mode': settingStore.firstMenuMode === 'button' }">
+    <div class="header__menu flex-auto mx20" :class="{ 'btn-mode': settingStore.firstMenuMode === 'card' }">
       <template v-if="settingStore.menuLayout === 'left'">
         <transition name="slide-right">
           <HeaderBreadcrumb v-if="settingStore.useBreadcrumbs" />

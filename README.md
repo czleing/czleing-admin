@@ -117,6 +117,15 @@ npm run preview
 ## 文档
 [点击进入](./src/doc/README.doc.md)，快速了解
 
+## 在线预览
+暂无线上地址，可以只启动前端查看部分静态页面：
+```
+1、git clone https://gitee.com/czleing/czleing-admin.git
+2、pnpm i
+3、npm run dev
+4、访问 http://localhost:3000/ (无需登录，请忽略接口异常)
+```
+
 ## 贡献者
 
 <img src="./src/doc/avatar.png" align="center" />
