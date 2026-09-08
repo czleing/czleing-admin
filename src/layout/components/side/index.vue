@@ -33,12 +33,33 @@ const menuStore = useMenuStore()
 const router = useRouter()
 const route = useRoute()
 const openKeys = ref([route.path])
+const cacheOpenKeys = ref([route.path])
 const selectedKeys = ref([route.path])
 
-watchEffect(() => {
-  openKeys.value = route.meta?.matchedPaths
-  selectedKeys.value = [route.path]
-})
+watch(
+  () => route.path,  
+  () => {
+    if (menuStore.isSidebarOpen) {
+      openKeys.value = route.meta?.matchedPaths
+    } else {
+      cacheOpenKeys.value = route.meta?.matchedPaths
+      openKeys.value = []
+    }
+    selectedKeys.value = [route.path]
+  }
+)
+watch(
+  () => menuStore.isSidebarOpen,
+  (isOpen) => {
+    if (isOpen) {
+      openKeys.value = cacheOpenKeys.value
+    } else {
+      cacheOpenKeys.value = [...openKeys.value]
+      openKeys.value = []
+    }
+  },
+  { flush: 'post' }
+)
 
 // 处理菜单项点击事件
 function onMenuItemClick (item) {
