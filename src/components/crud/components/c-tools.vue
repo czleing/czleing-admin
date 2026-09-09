@@ -151,6 +151,7 @@ const currColumns = computed(() => props.columns.filter(item => !item.action))
 const listContainer = ref(null)
 const { setEnabled } = useSortable(listContainer, null, {
   handle: '.draggable',
+  direction: 'vertical',
   animation: 180,
   onSortEnd: (evt) => {
     emits('sortColumn', evt.oldIndex, evt.newIndex)

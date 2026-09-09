@@ -157,6 +157,7 @@ function openInNewWindow (fullPath, path) {
 const listContainer = ref(null)
 const { setEnabled } = useSortable(listContainer, tabsStore.favoriteTabs, {
   handle: '.draggable',
+  direction: 'vertical',
   animation: 180,
 })
 
