@@ -79,17 +79,20 @@
                 <HeartOutlined v-else :title="$t('frame.favorite')" style="margin-right:0;" />
               </div>
               <template v-if="tabsStore.favoriteTabs.length" #overlay>
-                <a-menu>
+                <a-menu ref="listContainer" class="sortable">
                   <a-menu-item
                     v-for="(item, index) in tabsStore.favoriteTabs"
-                    :key="item.fullPath"
-                    @click="router.push(item.fullPath)"
+                    :key="item.path"
                   >
                     <div class="flex-x-between">
-                      <span class="flex-auto">
+                      <span class="flex-auto" @click="router.push(item.path)">
                         <HeartFilled class="text-primary mr4" />
                         {{ item.meta.title }}
                       </span>
+                      <a-divider type="vertical" />
+                      <div class="draggable" @click.stop>
+                        <HolderOutlined />
+                      </div>
                       <a-divider type="vertical" />
                       <DeleteFilled class="text-danger" :title="$t('frame.remove')" @click.stop="tabsStore.removeFavorite(index)" />
                     </div>
@@ -109,6 +112,7 @@
   </section>
 </template>
 <script setup>
+import { useSortable } from '@/hooks/useSortable'
 import { useSettingStore } from '@/stores/setting-store'
 import { useTabsStore } from '@/stores/tabs-store.js'
 import { DownOutlined, DownSquareFilled, FullscreenExitOutlined, FullscreenOutlined, HeartOutlined, StarOutlined } from '@ant-design/icons-vue'
@@ -148,6 +152,14 @@ function onDeleteHandle(path) {
 function openInNewWindow (fullPath, path) {
   window.open('#' + fullPath, path)
 }
+
+// 拖拽排序
+const listContainer = ref(null)
+const { setEnabled } = useSortable(listContainer, tabsStore.favoriteTabs, {
+  handle: '.draggable',
+  animation: 180,
+})
+
 const emits = defineEmits(['toggleFullScreen'])
 function toggleFullScreen () {
   emits('toggleFullScreen')
@@ -196,5 +208,8 @@ function toggleFullScreen () {
       color: var(--ant-colorPrimary);
     }
   }
+}
+.sortable .draggable {
+  cursor: move;
 }
 </style>
