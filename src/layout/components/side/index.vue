@@ -62,23 +62,6 @@ watch(
   },
   { flush: 'post' }
 )
-watch(
-  () => menuStore.firstRoutePath,
-  (firstPath) => {
-    if (firstPath && settingStore.autoOpenFirstMenu && menuStore.leftNavRoutes.length > 0) {
-      const firstChild = findFirstChild(menuStore.leftNavRoutes[0])
-      firstChild && router.push(firstChild.path)
-    }
-  },
-  { flush: 'post' }
-)
-
-function findFirstChild (route) {
-  if (!route.children || route.children.length === 0) {
-    return route
-  }
-  return findFirstChild(route.children[0])
-}
 
 // 处理菜单项点击事件
 function onMenuItemClick (item) {

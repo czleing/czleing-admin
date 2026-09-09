@@ -17,7 +17,8 @@ export const useMenuStore = defineStore('menu', {
     menuList: [],         // 当前登录用户能看的所有菜单(路由树)
     navRoutes: null,      // 导航页路由(所有动态路由)
     loaded: false,        // 是否已加载菜单，用于路由拦截器中判断是否需要加载路由
-    firstRoutePath: null  // 当前选中的第一级路由，顶部菜单选中项
+    firstRoutePath: null, // 当前选中的第一级路由，顶部菜单选中项
+    latestChildPathMap: {}, // 保存每个一级菜单最后一次打开的子菜单，用于下次自动激活， key: firstMenuPath, value: childMenuPath
   }),
   actions: {
     /**
@@ -162,6 +163,14 @@ export const useMenuStore = defineStore('menu', {
       }
       if (menu.meta?.isFirst) {
         this.firstRoutePath = menu.path
+      }
+    },
+    handleRouteChange (routeFrom, routeTo) {
+      const settingStore = useSettingStore()
+      // 记录每个一级菜单最后一次打开的子菜单，用于下次切换一级菜单时，自动激活该子菜单
+      const firstPathFrom = routeFrom?.meta?.matchedPaths?.[0]
+      if (settingStore.menuLayout === 'top-left' && settingStore.autoOpenChildMenu && firstPathFrom) {
+        this.latestChildPathMap[firstPathFrom] = routeFrom.fullPath
       }
     }
   },

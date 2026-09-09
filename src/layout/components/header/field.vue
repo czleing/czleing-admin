@@ -9,6 +9,9 @@
           <info-circle-filled />
           {{ tips }}
         </span>
+        <a-tooltip v-else-if="tooltip" :title="tooltip">
+          <info-circle-filled class="text-gray ml10" />
+        </a-tooltip>
       </div>
       <div class="value" :class="{'flex-auto': !label}">
         <slot />
@@ -28,6 +31,7 @@ const props = defineProps({
   label: String,
   extra: String,
   tips: String,
+  tooltip: String,
   itemPadding: String
 })
 </script>

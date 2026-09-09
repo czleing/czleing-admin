@@ -81,8 +81,8 @@
               <a-segmented v-model:value="settingStore.firstMenuAlign" :options="firstMenuAlignOptions" />
             </Field>
           </template>
-          <Field v-show="settingStore.menuLayout === 'top-left'" :label="$t('frame.autoOpenFirstMenu')">
-            <a-switch v-model:checked="settingStore.autoOpenFirstMenu" />
+          <Field v-show="settingStore.menuLayout === 'top-left'" :label="$t('frame.autoOpenChildMenu')" :tooltip="$t('frame.autoOpenChildMenuTooltip')">
+            <a-switch v-model:checked="settingStore.autoOpenChildMenu" />
           </Field>
           <Field :label="$t('frame.layoutDivide')" item-padding="3px 10px">
             <a-segmented v-model:value="settingStore.layoutDivide" :options="layoutDivideOptions" />
@@ -124,7 +124,7 @@
         </div>
         <!-- 其他 -->
         <div v-show="settingTab === 'other'">
-          <Field :title="$t('frame.lang')" :label="$t('frame.selectLang')">
+          <Field :title="$t('frame.lang')" :label="$t('frame.selectLang')" item-padding="3px 10px">
             <a-select v-model:value="settingStore.locale" style="width: 150px;" @change="handleLocalChange">
               <a-select-option
                 v-for="lang in langOptions"
@@ -139,7 +139,7 @@
             </a-select>
           </Field>
           <!-- 其他 -->
-          <Field :title="$t('frame.other')" :label="$t('frame.componentSize')">
+          <Field :title="$t('frame.other')" :label="$t('frame.componentSize')" item-padding="3px 10px">
             <a-segmented v-model:value="settingStore.componentSize" :options="sizeOptions" />
           </Field>
           <Field :label="$t('frame.useTableBorder')">

@@ -52,7 +52,7 @@
                 'is-radius-bottom': settingStore.layoutDivide === 'round' && settingStore.useTabs,
                 'is-radius-all': settingStore.layoutDivide === 'round' && !settingStore.useTabs,
               }"
-              :style="{ 'overflow': isAnimating ? 'hidden' : 'auto' }"
+              :style="{ 'overflow': isAnimating && settingStore.tabAnimate ? 'hidden' : 'auto' }"
             >
               <!-- {{ tabsStore.cachedViews }} -->
               <router-view v-slot="{ Component, route }">

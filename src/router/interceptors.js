@@ -16,6 +16,7 @@ export async function beforeInterceptor (to, from) {
   const needLogin = to.meta.needLogin !== false
   const authStore = useAuthStore()
   const menuStore = useMenuStore()
+  const settingStore = useSettingStore()
   if (needLogin) {
     if (import.meta.env.VITE_APP_IGNORE_LOGIN !== 'true' && !authStore.hasLogin) {
       return { name: 'login' }
@@ -34,6 +35,8 @@ export async function beforeInterceptor (to, from) {
       return to.fullPath
     }
   }
+  // 路由变化后的菜单相关处理
+  menuStore.handleRouteChange(from, to)
   return true
 }
 

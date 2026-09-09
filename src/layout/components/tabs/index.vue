@@ -37,7 +37,7 @@
                   <SubnodeOutlined slot='icon' class="text-primary" />
                   <span class="ml6">{{ $t('frame.openInNewWindow') }}</span>
                 </a-menu-item>
-                <a-menu-item @click="tabsStore.toogleFavorite(index)">
+                <a-menu-item v-if="settingStore.useTabFavorite" @click="tabsStore.toogleFavorite(index)">
                   <template v-if="tabsStore.favoriteKeys.includes(tab.fullPath)">
                     <HeartFilled slot='icon' class="text-primary" />
                     <span class="ml6">{{ $t('frame.removeFavorite') }}</span>

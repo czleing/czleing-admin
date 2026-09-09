@@ -23,7 +23,7 @@
         :units="['万', '%']"
         :y-names="['销量', '占比']"
         :series-names="['销量', '占比']"
-        :colors="colorsBarLine"
+        :colors="[token.colorPrimary, token.colorWarning, ...colorsBarLine]"
         showDownload
         height="200px" 
       />

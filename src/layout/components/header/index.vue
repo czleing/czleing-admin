@@ -91,6 +91,18 @@ watchEffect(() => {
 
 function onMenuItemClick (item) {
   menuStore.handleMenuClick(router, item)
+  // 点击一级菜单时，自动激活最后一次打开的子菜单或第一个子菜单
+  if (item.meta?.isFirst && settingStore.menuLayout === 'top-left' && settingStore.autoOpenChildMenu && menuStore.leftNavRoutes.length > 0) {
+    const latestChildPath = menuStore.latestChildPathMap[menuStore.firstRoutePath] ?? findFirstChild(menuStore.leftNavRoutes[0])?.path
+    latestChildPath && router.push(latestChildPath)
+  }
+}
+
+function findFirstChild (route) {
+  if (!route.children || route.children.length === 0) {
+    return route
+  }
+  return findFirstChild(route.children[0])
 }
 
 </script>
