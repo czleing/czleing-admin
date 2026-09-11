@@ -248,6 +248,16 @@ each(range(0, 600, 2), {
 .flex-y-middle { display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .flex-y-around { display: flex; flex-direction: column; align-items: center; justify-content: space-around; }
 .flex-y-between { display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
+.flex0 { min-width: 0; } // 允许flex子元素最小宽度挤压到0(忽略内容宽度)，避免多个子元素内容过宽时从父容器溢出，看情况使用
+.flex1 { flex: 1; }
+.flex2 { flex: 2; }
+.flex3 { flex: 3; }
+.flex4 { flex: 4; }
+.flex5 { flex: 5; }
+.flex6 { flex: 6; }
+.flex7 { flex: 7; }
+.flex8 { flex: 8; }
+.flex9 { flex: 9; }
 .gap2 { gap: 2px; }
 .gap4 { gap: 4px; }
 .gap5 { gap: 5px; }
@@ -257,6 +267,17 @@ each(range(0, 600, 2), {
 .gap15 { gap: 15px; }
 .gap20 { gap: 20px; }
 .gap30 { gap: 30px; }
+// grid 布局
+.grid { display: grid; }
+.grid.cols2 { grid-template-columns: repeat(2, minmax(10px, 1fr)); }
+.grid.cols3 { grid-template-columns: repeat(3, minmax(10px, 1fr)); }
+.grid.cols4 { grid-template-columns: repeat(4, minmax(10px, 1fr)); }
+.grid.cols5 { grid-template-columns: repeat(5, minmax(10px, 1fr)); }
+.grid.cols6 { grid-template-columns: repeat(6, minmax(10px, 1fr)); }
+.grid.size-50-100 { grid-template-columns: repeat(auto-fill, minmax(clamp(50px, 100%, 100px), 1fr)); }
+.grid.size-100-200 { grid-template-columns: repeat(auto-fill, minmax(clamp(100px, 100%, 200px), 1fr)); }
+.grid.size-200-300 { grid-template-columns: repeat(auto-fill, minmax(clamp(200px, 100%, 300px), 1fr)); }
+.grid.size-300-400 { grid-template-columns: repeat(auto-fill, minmax(clamp(300px, 100%, 400px), 1fr)); }
 
 // 背景高斯模糊
 @supports (-webkit-backdrop-filter: saturate(180%) blur(20px)) or (backdrop-filter: saturate(180%) blur(20px)) {
@@ -288,3 +309,17 @@ each(range(0, 600, 2), {
 .scale-enter-active, .scale-leave-active { transition: all 0.3s; }
 .scale-enter-from, .scale-leave-to { transform: scale(0.95); opacity: 0; }
 .scale-enter-active { transition-delay: .4s; }
+
+/* 页面全局背景实现 */
+html::after {
+  position: fixed;
+  content: '';
+  inset: var(--c-bgInset);
+  pointer-events: none;
+  z-index: 9999;
+  background-image: var(--c-bgImage);
+  background-size: 100% 100%;
+  mix-blend-mode: var(--c-bgMixMode);
+  opacity: var(--c-bgOpacity);
+  filter: var(--c-bgBlur);
+}

@@ -354,12 +354,12 @@ export function listToTree (list, rootParentId = 0, idField = 'id', parentIdFiel
  * 给:root设置css变量，不污染html行内style
  * @param {Object} vars 键值对 { 'color': '#fff', 'size': '16px' }
  */
-export function setRootCssVars (prex = '--ant-', vars) {
+export function setRootCssVars (prex = '--ant-', vars, id = 'dynamic-root-vars') {
   if (!vars) return
-  let styleEl = document.getElementById('dynamic-root-vars');
+  let styleEl = document.getElementById(id);
   if (!styleEl) {
     styleEl = document.createElement('style');
-    styleEl.id = 'dynamic-root-vars';
+    styleEl.id = id;
     document.head.appendChild(styleEl);
   }
   // 拼接css文本

@@ -84,6 +84,8 @@ export const useSettingStore = defineStore('setting', () => {
   const menuLayout = ref('top-left') // 菜单布局方式，top: 全部显示在顶部，left: 全部显示在左侧，top-left: 顶部一级菜单，左侧子菜单
   const leftMenuWidth = ref(200) // 左侧菜单宽度 px
   const topHeaderHeight = ref(50) // 顶部宽度 px
+  const firstMenuMode = ref('card') // 顶部菜单模式，card, line
+  const firstMenuAlign = ref('start') // 顶部菜单位置，start, center, end
   const autoOpenChildMenu = ref(false) // 自动打开子菜单(菜单 top-left 布局时，点击一级菜单，自动打开最后一次打开的子菜单或第一个子菜单)
   const useWeather = ref(false) // 是否使用天气组件
   const useTabs = ref(true) // 是否使用 tabs 栏
@@ -99,9 +101,12 @@ export const useSettingStore = defineStore('setting', () => {
   const useWatermark = ref(false) // 是否使用水印
   const useWanSplit = ref(false) // 是否使用万分位分隔(中文简体下数字)
   const useFooter = ref(false) // 是否使用页脚
-  const firstMenuMode = ref('card') // 顶部菜单模式，card, line
-  const firstMenuAlign = ref('start') // 顶部菜单位置，start, center, end
   const layoutDivide = ref('line') // 布局块边框样式，'', line, shadow, round
+  const useBg = ref(true) // 是否使用背景图片
+  const bgImage = ref('/page-bg-4.jpg') // 背景图片，提供预设几张图，和自定义网络地址
+  const bgBlur = ref(0) // 背景模糊大小，0 - 50px
+  const bgOpacity = ref(0.2) // 背景透明度 0 - 1
+
   const matchMediaInstance = window.matchMedia('(prefers-color-scheme: dark)') // 监听系统明暗主题实例
   let isWatchSysMode = false // 当前是否已经监听
 
@@ -183,6 +188,7 @@ export const useSettingStore = defineStore('setting', () => {
   const isDark = computed(() => mode.value === 'dark')
   const themesGetter = computed(() => themes)
   const isCn = computed(() => locale.value === 'zh-cn')
+  const bgMixMode = computed(() => isLight.value ? 'multiply' : 'hard-light') // 背景混合模式：亮色时multiply, 暗色时hard-light
 
   return {
     theme,
@@ -218,6 +224,11 @@ export const useSettingStore = defineStore('setting', () => {
     firstMenuMode,
     firstMenuAlign,
     matchMediaInstance,
+    useBg,
+    bgImage,
+    bgBlur,
+    bgOpacity,
+    bgMixMode,
     getSystemMode,
     setThemeByName,
     setDark,

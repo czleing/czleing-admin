@@ -91,6 +91,7 @@ import Header from './components/header/index.vue'
 import MenuSide from './components/side/index.vue'
 import Tabs from './components/tabs/index.vue'
 import settings from '@/config/setting.js'
+import { setRootCssVars } from '@/utils'
 
 const setting = settings.websiteInfo
 const menuStore = useMenuStore()
@@ -105,7 +106,7 @@ const watermark = computed(() => {
   }
   return '演示用户'
 })
-const showLeft = computed(() => menuStore.leftNavRoutes && menuStore.leftNavRoutes.length > 0)
+const showLeft = computed(() => menuStore.leftNavRoutes?.length > 0)
 
 const isFullScreen = ref(false)
 function toggleFullScreen() {
@@ -139,7 +140,17 @@ watchSyncEffect(() => {
     borderRadius: token.value.borderRadius + 'px', // 基础控件圆角大小
     borderRadiusLG: token.value.borderRadiusLG + 'px', // 一般用于容器圆角大小
     lineWidth: token.value.lineWidth + 'px', // 边框线条宽度，1px or 0.55px
-  })
+  }, 'ant-design-vars')
+})
+
+watchPostEffect(() => {
+  setRootCssVars('--c-', {
+    bgImage: settingStore.useBg ? `url(${settingStore.bgImage})` : 'none',
+    bgBlur: `blur(${settingStore.bgBlur}px)`,
+    bgInset: -settingStore.bgBlur + 'px',
+    bgOpacity: settingStore.bgOpacity,
+    bgMixMode: settingStore.bgMixMode,
+  }, 'custom-vars')
 })
 
 /**

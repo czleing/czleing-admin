@@ -103,6 +103,11 @@ export default {
     remove: '移除',
     favorite: '收藏',
     removeFavorite: '取消收藏',
+    useBg: '使用背景圖',
+    bgImage: '背景圖',
+    bgBlur: '背景圖模糊度',
+    bgOpacity: '背景圖不透明度',
+    bgDiy: '自定義',
   },
   // crud
   crud: {

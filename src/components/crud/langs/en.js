@@ -102,6 +102,11 @@ export default {
     remove: 'Remove',
     favorite: 'Favorite',
     removeFavorite: 'Cancel Favorite',
+    useBg: 'Use Background Image',
+    bgImage: 'Image',
+    bgBlur: 'Blur',
+    bgOpacity: 'Opacity',
+    bgDiy: 'Customize',
   },
   // crud
   crud: {

@@ -60,12 +60,51 @@
           <Field :label="$t('frame.modeAnimate')" item-padding="3px 10px">
             <a-segmented v-model:value="settingStore.modeAnimate" :options="modeAniOptions" />
           </Field>
+          <Field :label="$t('frame.useBg')">
+            <a-switch v-model:checked="settingStore.useBg" />
+          </Field>
+          <div v-show="settingStore.useBg" class="">
+            <div class="grid cols4 gap10 pl10">
+              <template v-for="item in bgImageOptions" :key="item.src">
+                <img
+                  v-if="item.src"
+                  :src="item.src"
+                  width="100%"
+                  height="50"
+                  draggable="false"
+                  class="check-icon pointer"
+                  :class="{ 'is-checked': settingStore.bgImage === item.src }"
+                  @click="settingStore.bgImage = item.src"
+                />
+                <div v-else class="check-icon border pointer" :class="{'is-checked': bgIsDiy}" @click="settingStore.bgImage = ''">
+                  <div class="flex-y-center" style="height: 50px;">
+                    <span class="text-primary">{{ $t('frame.bgDiy') }}</span>
+                  </div>
+                </div>
+              </template>
+            </div>
+            <Field v-if="bgIsDiy" :label="$t('frame.bgImage')" item-padding="3px 10px">
+              <a-input v-model:value="settingStore.bgImage" placeholder="http://" style="width: 280px;" />
+            </Field>
+            <Field :label="$t('frame.bgBlur')">
+              <div class="flex-x x-middle gap5">
+                <a-slider v-model:value="settingStore.bgBlur" :step="1" :min="0" :max="50" style="width:120px;margin: 5px;" />
+                <div class="w38">{{ settingStore.bgBlur }}px</div>
+              </div>
+            </Field>
+            <Field :label="$t('frame.bgOpacity')">
+              <div class="flex-x x-middle gap5">
+                <a-slider v-model:value="settingStore.bgOpacity" :step="0.01" :min="0" :max="1" style="width:120px;margin: 5px;" />
+                <div class="w38">{{ parseInt(settingStore.bgOpacity * 100) }}%</div>
+              </div>
+            </Field>
+          </div>
           <!-- 菜单布局 -->
           <div>
             <div class="bold em11 mt15 mb8">{{ $t('frame.menuLayout') }}</div>
             <div class="flex-x-around gap15 pl10">
               <div v-for="item in menuLayoutOptions" :key="item.value" class="flex-y-center gap5 pt5 pointer" @click="settingStore.menuLayout = item.value">
-                <component :is="item.icon" class="menu-layout-icon" :class="{'is-checked': settingStore.menuLayout === item.value}" width="90" height="60" />
+                <component :is="item.icon" class="check-icon" :class="{'is-checked': settingStore.menuLayout === item.value}" width="90" height="60" />
                 <div>{{ item.label }}</div>
               </div>
             </div>
@@ -184,6 +223,18 @@ const { startViewTransition } = useViewTransition()
 const settingModal = ref()
 const currColors = computed(() => Object.entries(settingStore.theme?.token))
 const { t } = useI18n()
+
+const bgImageOptions = computed(() => [
+  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'page-bg-1.webp' },
+  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'page-bg-2.jpg' },
+  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'page-bg-3.jpg' },
+  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'page-bg-4.jpg' },
+  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'page-bg-5.jpg' },
+  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'page-bg-6.jpg' },
+  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'page-bg-7.jpg' },
+  { src: '' },
+])
+const bgIsDiy = computed(() => !bgImageOptions.value.map(i => i.src).filter(Boolean).includes(settingStore.bgImage))
 const menuLayoutOptions = computed(() => [
   { value: 'top', label: t('frame.top'), icon: Top },
   { value: 'left', label: t('frame.left'), icon: Left },
@@ -289,6 +340,12 @@ const onModeChange = async (e, newMode) => {
     duration: 650
   })
 }
+watch(
+  () => settingStore.mode,
+  () => {
+    mode.value = settingStore.useAutoMode ? 'auto' : settingStore.mode
+  }
+)
 </script>
 
 <style lang="less" scoped>
@@ -298,8 +355,9 @@ const onModeChange = async (e, newMode) => {
   height: 20px;
   border-radius: 3px;
 }
-.menu-layout-icon {
+.check-icon {
   padding: 2px;
+  object-fit: cover;
   transition: all 0.3s;
   border-radius: var(--ant-borderRadius);
   background-color: var(--ant-colorBgContainer);
