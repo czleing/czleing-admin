@@ -17,7 +17,7 @@
         v-model:selectedKeys="selectedKeys"
         v-model:openKeys="openKeys"
         mode="horizontal"
-        :style="`justify-content:${settingStore.firstMenuAlign}`"
+        :style="`justify-content:${settingStore.firstMenuAlign};line-height:${settingStore.topHeaderHeight - 1}px;`"
       >
         <template v-for="item in menuStore.headerNavRoutes">
           <template v-if="item.meta?.hidden !== true && !item.children">
@@ -141,7 +141,7 @@ function findFirstChild (route) {
       //   transform: skewX(8deg);
       // }
       &.ant-menu-item-selected, &.ant-menu-submenu-selected {
-        background-color: var(--ant-colorPrimaryBgHover);
+        background-color: var(--ant-colorPrimaryBg);
         color: var(--ant-colorPrimary);
         .ant-menu-submenu-title {
           color: inherit;
