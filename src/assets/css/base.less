@@ -309,17 +309,3 @@ each(range(0, 600, 2), {
 .scale-enter-active, .scale-leave-active { transition: all 0.3s; }
 .scale-enter-from, .scale-leave-to { transform: scale(0.95); opacity: 0; }
 .scale-enter-active { transition-delay: .4s; }
-
-/* 页面全局背景实现 */
-html::after {
-  position: fixed;
-  content: '';
-  inset: var(--c-bgInset);
-  pointer-events: none;
-  z-index: 9999;
-  background-image: var(--c-bgImage);
-  background-size: 100% 100%;
-  mix-blend-mode: var(--c-bgMixMode);
-  opacity: var(--c-bgOpacity);
-  filter: var(--c-bgBlur);
-}

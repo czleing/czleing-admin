@@ -1,6 +1,6 @@
 <template>
   <a-watermark :content="settingStore.useWatermark ? watermark : ''" :rotate="-35" :zIndex="9000">
-    <a-layout class="layout" style="height:100vh;">
+    <a-layout class="layout" :style="layoutVars" style="height:100vh;">
       <a-layout-header
         v-show="!isFullScreen"
         class="layout-header"
@@ -143,15 +143,14 @@ watchSyncEffect(() => {
   }, 'ant-design-vars')
 })
 
-watchPostEffect(() => {
-  setRootCssVars('--c-', {
-    bgImage: settingStore.useBg ? `url(${settingStore.bgImage})` : 'none',
-    bgBlur: `blur(${settingStore.bgBlur}px)`,
-    bgInset: -settingStore.bgBlur + 'px',
-    bgOpacity: settingStore.bgOpacity,
-    bgMixMode: settingStore.bgMixMode,
-  }, 'custom-vars')
-})
+const layoutVars = computed(() => {
+  return {
+    '--c-bgImage': settingStore.useBg ? `url(${settingStore.bgImage})` : 'none',
+    '--c-bgBlur': `blur(${settingStore.bgBlur}px)`,
+    '--c-bgInset': -settingStore.bgBlur + 'px',
+    '--c-bgOpacity': settingStore.bgOpacity,
+    '--c-bgMixMode': settingStore.bgMixMode,
+  }})
 
 /**
  * 监听窗体大小变化，自动展开收起左侧菜单栏
@@ -170,6 +169,18 @@ useWindowSize((width) => {
 }
 .layout {
   background: none;
+  &::after {
+    position: fixed;
+    content: '';
+    inset: var(--c-bgInset);
+    pointer-events: none;
+    z-index: 9999;
+    background-image: var(--c-bgImage);
+    background-size: 100% 100%;
+    mix-blend-mode: var(--c-bgMixMode);
+    opacity: var(--c-bgOpacity);
+    filter: var(--c-bgBlur);
+  }
   .layout-header, .layout-sider {
     &.is-radius {
       border-radius: var(--ant-borderRadiusLG);
