@@ -46,7 +46,7 @@ export default {
     layoutDivideNone: '无',
     layoutDivideLine: '线条',
     layoutDivideShadow: '阴影',
-    layoutDivideRound: '圆角',
+    layoutDivideRound: '间隔',
     useFooter: '显示页脚',
     tabs: '标签栏',
     useTabs: '使用标签页',

@@ -46,7 +46,7 @@ export default {
     layoutDivideNone: '無',
     layoutDivideLine: '線條',
     layoutDivideShadow: '陰影',
-    layoutDivideRound: '圓角',
+    layoutDivideRound: '間隔',
     useFooter: '顯示頁腳',
     tabs: '標簽欄',
     useTabs: '使用標簽頁',

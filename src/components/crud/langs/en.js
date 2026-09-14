@@ -46,7 +46,7 @@ export default {
     layoutDivideNone: 'None',
     layoutDivideLine: 'Line',
     layoutDivideShadow: 'Shadow',
-    layoutDivideRound: 'Round',
+    layoutDivideRound: 'Spaced',
     useFooter: 'Show Footer',
     tabs: 'Tabs',
     useTabs: 'Use Tabs Page',
