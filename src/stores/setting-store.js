@@ -131,6 +131,9 @@ export const useSettingStore = defineStore('setting', () => {
   function setDark () {
     if (mode.value !== 'dark') {
       mode.value = 'dark'
+      if (bgOpacity.value > 0.15) {
+        bgOpacity.value = 0.15
+      }
       document.documentElement.setAttribute('theme', 'dark')
     }
   }
@@ -139,6 +142,9 @@ export const useSettingStore = defineStore('setting', () => {
   function setLight () {
     if (mode.value !== 'light') {
       mode.value = 'light'
+      if (bgOpacity.value < 0.15) {
+        bgOpacity.value = 0.15
+      }
       document.documentElement.setAttribute('theme', 'light')
     }
   }
@@ -146,9 +152,10 @@ export const useSettingStore = defineStore('setting', () => {
   /** 明暗模式：选择跟随系统，将系统明暗色设置为当前明暗模式 */
   function setModeAuto () {
     const sysMode = getSystemMode()
-    if (mode.value !== sysMode) {
-      mode.value = sysMode
-      document.documentElement.setAttribute('theme', sysMode)
+    if (sysMode === 'light') {
+      setLight()
+    } else {
+      setDark()
     }
   }
 

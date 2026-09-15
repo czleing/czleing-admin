@@ -105,8 +105,8 @@ export default {
     removeFavorite: '取消收藏',
     useBg: '使用背景圖',
     bgImage: '背景圖',
-    bgBlur: '背景圖模糊度',
-    bgOpacity: '背景圖不透明度',
+    bgBlur: '背景模糊度',
+    bgOpacity: '背景不透明度',
     bgDiy: '自定義',
   },
   // crud

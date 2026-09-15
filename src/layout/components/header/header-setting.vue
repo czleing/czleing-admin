@@ -199,7 +199,7 @@
           <Field :label="$t('frame.useWatermark')">
             <a-switch v-model:checked="settingStore.useWatermark" />
           </Field>
-          <Field v-if="settingStore.isCn" :label="$t('frame.useWanSplit')" :tips="numFormat(123456.7898, { splitDigits: settingStore.useWanSplit ? 4 : 3 })">
+          <Field v-if="settingStore.isCn" :label="$t('frame.useWanSplit')" :tips="numFormat(123456.789, { splitDigits: settingStore.useWanSplit ? 4 : 3 })">
             <a-switch v-model:checked="settingStore.useWanSplit" />
           </Field>
         </div>
