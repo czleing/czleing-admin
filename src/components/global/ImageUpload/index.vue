@@ -162,7 +162,7 @@ function previewHandle (file) {
   previewUrl.value = file.url
   previewModal.value.open({
     title: `${file.name} ${ file.size > 0 ? ('( ' + byteFormat(file.size) + ' )') : ''}`,
-    width: 600
+    width: '80%'
   })
 }
 

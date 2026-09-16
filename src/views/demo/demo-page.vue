@@ -438,7 +438,7 @@ const modalConfig = computed(() => ({
   // fullTitle: '', // 全称，不会自动拼接其他字符串
   width: 800, // 弹窗宽度，默认 600
   mode: 'modal', // 弹窗模式, modal 或 drawer
-  // props: { maskClosable: false }, // 其他参数, 会直接绑定到 a-modal 或 a-drawer
+  props: { centered: true, maskClosable: true }, // 其他参数, 会直接绑定到 a-modal 或 a-drawer
   // 弹窗按钮属性修改 Object | ({ isAdd, isEdit, isView }) => Object
   buttonConfig: ({ isAdd, isEdit, isView }) => ({
     // showConfirm: !isEdit, // 确认按钮是否可见，默认可见
