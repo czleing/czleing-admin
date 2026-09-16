@@ -199,7 +199,7 @@
           <Field :label="$t('frame.useWatermark')">
             <a-switch v-model:checked="settingStore.useWatermark" />
           </Field>
-          <Field v-if="settingStore.isCn" :label="$t('frame.useWanSplit')" :tips="numFormat(123456.789, { splitDigits: settingStore.useWanSplit ? 4 : 3 })">
+          <Field v-if="settingStore.isCn" :label="$t('frame.useWanSplit')" :tips="numFormat(123456.789)">
             <a-switch v-model:checked="settingStore.useWanSplit" />
           </Field>
         </div>
@@ -218,7 +218,8 @@ import TopLeft from './icons/top-left.vue'
 import Top from './icons/top.vue'
 import useViewTransition from '@/hooks/useViewTransition.js'
 import { nextTick } from 'vue'
-import { numFormat } from '@/utils/index.js'
+import { useNumFormat } from '@/hooks/useNumFormat.js'
+
 
 const settingStore = useSettingStore()
 settingStore.watchSysMode()
@@ -226,6 +227,7 @@ const { startViewTransition } = useViewTransition()
 const settingModal = ref()
 const currColors = computed(() => Object.entries(settingStore.theme?.token))
 const { t } = useI18n()
+const { numFormat } = useNumFormat()
 
 const bgImageOptions = computed(() => [
   { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'page-bg-1.webp' },

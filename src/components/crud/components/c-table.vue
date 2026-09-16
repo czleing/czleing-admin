@@ -41,7 +41,7 @@
         </template>
         <!-- 金额格式化 -->
         <template v-else-if="column.isAmount && text">
-          <span>{{ numFormat(text, { digit: 2, splitDigits: settingStore.isCn && settingStore.useWanSplit ? 4 : 3 }) }}</span>
+          <span>{{ numFormat(text, { digit: 2 }) }} {{ column.unit ?? '' }}</span>
         </template>
         <!-- 字典转换 -->
         <template v-else-if="column.dictType && text">
@@ -89,7 +89,7 @@
               class="tc"
             >
               <span v-if="column.useTotal">
-                {{ numFormat(total[column.dataIndex] ?? 0, { digit: 2, splitDigits: settingStore.isCn && settingStore.useWanSplit ? 4 : 3 }) }} {{ column.unit ?? '' }}
+                {{ numFormat(total[column.dataIndex] ?? 0, { digit: 2 }) }} {{ column.unit ?? '' }}
               </span>
               <span v-else>-</span>
             </a-table-summary-cell>
@@ -106,8 +106,9 @@ import axios from '@/api/index.js'
 import dayjs from 'dayjs'
 import CTableAction from './c-table-action.vue'
 import { EIsEnabled, EYesNo } from '@/enum'
-import { stringStar, isEmpty, getImageSrcData, numFormat } from '@/utils/index.js'
+import { stringStar, isEmpty, getImageSrcData } from '@/utils/index.js'
 import { useSettingStore } from '@/stores/setting-store.js'
+import { useNumFormat } from '@/hooks/useNumFormat.js'
 
 const props = defineProps({
   /** 不要选择框 */
@@ -142,6 +143,7 @@ const selectedObjs = inject('c-page.selectedObjs', ref([]))
 const useTableBorder = inject('c-page.useTableBorder', ref(0))
 const dataSource = ref([])
 const settingStore = useSettingStore()
+const { numFormat } = useNumFormat()
 // 表格默认属性
 const defaultProps = computed(() => ({
   size: 'small',

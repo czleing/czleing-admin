@@ -32,7 +32,7 @@ import { merge } from 'lodash-es'
 import { Empty } from 'ant-design-vue'
 import { colorsTypeBar } from '@/utils/color.constants'
 import { useSettingStore } from '@/stores/setting-store';
-import { numFormat } from '@/utils'
+import { useNumFormat } from '@/hooks/useNumFormat'
 import { InfoCircleFilled } from '@ant-design/icons-vue'
 
 use([CanvasRenderer, PieChart, TitleComponent, TooltipComponent, LegendComponent, ToolboxComponent])
@@ -76,6 +76,7 @@ const props = defineProps({
 const chartRef = ref(null)
 let chartInstance = null
 const settingStore = useSettingStore();
+const { numFormat } = useNumFormat();
 provide(THEME_KEY, settingStore.mode);
 const isLight = computed(() => settingStore.mode === 'light');
 const ringMode = computed(() => !!props.innerRadius)
@@ -88,7 +89,7 @@ const totalValue = computed(() => {
   return props.data.reduce((sum, item) => sum + Number(item[props.valueField] || 0), 0)
 })
 
-const formatTotalValue = (val) => `${numFormat(val, { splitDigits: settingStore.isCn && settingStore.useWanSplit ? 4 : 3, digit: props.digit })}${props.unit}`
+const formatTotalValue = (val) => `${numFormat(val, { digit: props.digit })}${props.unit}`
 
 const pieSeriesData = computed(() => {
   return props.data.map(item => ({
