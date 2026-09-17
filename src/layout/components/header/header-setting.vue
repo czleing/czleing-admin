@@ -103,7 +103,7 @@
         <div v-show="settingTab === 'layout'">
           <!-- 菜单布局 -->
           <div>
-            <div class="bold em11 mt15 mb8">{{ $t('frame.menuLayout') }}</div>
+            <div class="bold em11 mt15 mb8">{{ $t('frame.menu') }}</div>
             <div class="flex-x-around gap15 pl10">
               <div v-for="item in menuLayoutOptions" :key="item.value" class="flex-y-center gap5 pt5 pointer" @click="settingStore.menuLayout = item.value">
                 <component :is="item.icon" class="check-icon" :class="{'is-checked': settingStore.menuLayout === item.value}" width="90" height="60" />
@@ -143,24 +143,6 @@
               <div class="w38 tr">{{ settingStore.topHeaderHeight }}px</div>
             </div>
           </Field>
-        </div>
-        <!-- 其他 -->
-        <div v-show="settingTab === 'other'">
-          <!-- 语言 -->
-          <Field :title="$t('frame.lang')" :label="$t('frame.selectLang')" item-padding="3px 10px">
-            <a-select v-model:value="settingStore.locale" style="width: 150px;" @change="handleLocalChange">
-              <a-select-option
-                v-for="lang in langOptions"
-                :key="lang.value"
-                :value="lang.value"
-              >
-                <div class="flex-x x-middle">
-                  <img v-if="lang.image" :src="lang.image" class="radius3" style="height: 16px;" >
-                  <span class="ml8">{{ lang.label }}</span>
-                </div>
-              </a-select-option>
-            </a-select>
-          </Field>
           <!-- Tabs 标签 -->
           <Field :title="$t('frame.tabs')" :label="$t('frame.useTabs')">
             <a-switch v-model:checked="settingStore.useTabs" />
@@ -179,6 +161,24 @@
           </Field>
           <Field v-show="settingStore.useTabs" :label="$t('frame.useTabFavorite')">
             <a-switch v-model:checked="settingStore.useTabFavorite" />
+          </Field>
+        </div>
+        <!-- 其他 -->
+        <div v-show="settingTab === 'other'">
+          <!-- 语言 -->
+          <Field :title="$t('frame.lang')" :label="$t('frame.selectLang')" item-padding="3px 10px">
+            <a-select v-model:value="settingStore.locale" style="width: 150px;" @change="handleLocalChange">
+              <a-select-option
+                v-for="lang in langOptions"
+                :key="lang.value"
+                :value="lang.value"
+              >
+                <div class="flex-x x-middle">
+                  <img v-if="lang.image" :src="lang.image" class="radius3" style="height: 16px;" >
+                  <span class="ml8">{{ lang.label }}</span>
+                </div>
+              </a-select-option>
+            </a-select>
           </Field>
           <!-- 其他 -->
           <Field :title="$t('frame.other')" :label="$t('frame.componentSize')" item-padding="3px 10px">
@@ -230,7 +230,7 @@ const { t } = useI18n()
 const { numFormat } = useNumFormat()
 
 const bgImageOptions = computed(() => [
-  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'page-bg-1.webp' },
+  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'page-bg-1.jpg' },
   { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'page-bg-2.jpg' },
   { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'page-bg-3.jpg' },
   { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'page-bg-4.jpg' },
@@ -290,7 +290,7 @@ const tabTypeOptions = computed(() => [
 const settingTab = ref('theme')
 const settingTabs = computed(() => [
   { label: t('frame.theme'), value: 'theme' },
-  { label: t('frame.menuLayout'), value: 'layout' },
+  { label: t('frame.layout'), value: 'layout' },
   { label: t('frame.other'), value: 'other' },
 ])
 

@@ -21,6 +21,8 @@ export default {
     colorSuccess: '成功色',
     colorInfo: '超鏈接文字色',
     componentSize: '元件大小',
+    layout: '佈局',
+    menu: '菜單',
     menuLayout: '菜單佈局',
     leftMenuWidth: '左側菜單寬度',
     topHeaderHeight: '頂部高度',

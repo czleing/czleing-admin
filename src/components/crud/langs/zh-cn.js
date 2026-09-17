@@ -21,6 +21,8 @@ export default {
     colorSuccess: '成功色',
     colorInfo: '超链接文字色',
     componentSize: '组件大小',
+    layout: '布局',
+    menu: '菜单',
     menuLayout: '菜单布局',
     leftMenuWidth: '左侧菜单宽度',
     topHeaderHeight: '顶部高度',

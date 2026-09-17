@@ -7,6 +7,7 @@ const themes = [
     name: 'frame.themeGreen', // 薄荷清新
     inUse: true,
     theme: {
+      bgImage: 'page-bg-1.jpg',
       token: {
         colorPrimary: '#88c7b1',
         colorError: '#e88f78',
@@ -19,6 +20,7 @@ const themes = [
   {
     name: 'frame.themeGolden', // 金色沙滩
     theme: {
+      bgImage: 'page-bg-2.jpg',
       token: {
         colorPrimary: '#d2b48c',
         colorError: '#c84e4e',
@@ -32,6 +34,7 @@ const themes = [
   {
     name: 'frame.themeBlue', // 海岸微风
     theme: {
+      bgImage: 'page-bg-3.jpg',
       token: {
         colorPrimary: '#78b2d8',
         colorError: '#cf7b6e',
@@ -44,6 +47,7 @@ const themes = [
   {
     name: 'frame.themePink', // 轻胭落砚
     theme: {
+      bgImage: 'page-bg-4.jpg',
       token: {
         colorPrimary: '#ee9da7',
         colorError: '#bd2e0a',
@@ -58,6 +62,7 @@ const themes = [
   {
     name: 'frame.themeDiy', // 自定义
     theme: {
+      bgImage: 'page-bg-5.jpg',
       isDiy: true,
       token: {
         colorPrimary: '#0099ff',
@@ -103,7 +108,7 @@ export const useSettingStore = defineStore('setting', () => {
   const useFooter = ref(false) // 是否使用页脚
   const layoutDivide = ref('line') // 布局块边框样式，'', line, shadow, round
   const useBg = ref(true) // 是否使用背景图片
-  const bgImage = ref('/page-bg-4.jpg') // 背景图片，提供预设几张图，和自定义网络地址
+  const bgImage = ref(import.meta.env.VITE_APP_CONTEXT_PATH + 'page-bg-4.jpg') // 背景图片，提供预设几张图，和自定义网络地址
   const bgBlur = ref(0) // 背景模糊大小，0 - 50px
   const bgOpacity = ref(0.2) // 背景透明度 0 - 1
 
@@ -117,6 +122,7 @@ export const useSettingStore = defineStore('setting', () => {
     if (!name) return
     const t = themes.find(item => item.name === name)?.theme
     if (t) {
+      bgImage.value = import.meta.env.VITE_APP_CONTEXT_PATH + t.bgImage
       theme.value = t // { ...t, token: { ...t.token } }
       themeName.value = name
     }
@@ -142,8 +148,8 @@ export const useSettingStore = defineStore('setting', () => {
   function setLight () {
     if (mode.value !== 'light') {
       mode.value = 'light'
-      if (bgOpacity.value < 0.15) {
-        bgOpacity.value = 0.15
+      if (bgOpacity.value < 0.2) {
+        bgOpacity.value = 0.2
       }
       document.documentElement.setAttribute('theme', 'light')
     }

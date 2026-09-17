@@ -21,6 +21,8 @@ export default {
     colorSuccess: 'Success Color',
     colorInfo: 'Link Color',
     componentSize: 'Component Size',
+    layout: 'Layout',
+    menu: 'Menu',
     menuLayout: 'Menu Layout',
     leftMenuWidth: 'Left Menu Width',
     topHeaderHeight: 'Top Header Height',
