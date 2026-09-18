@@ -168,7 +168,7 @@ const columns = ref()
 const { t } = useI18n()
 const selectedIds = ref([])
 const selectedObjs = ref([])
-const searchParams = ref({})
+const searchParams = ref({}) // 当前查询参数，格式化后的数据，实时同步
 const showSearch = ref(true)
 const checkedFieldNames = ref(props.tableConfig?.columns?.filter(item => item.hidden !== true)?.map(item => item.dataIndex))
 const settingStore = useSettingStore()
@@ -238,8 +238,7 @@ function toggleTree () {
   isTreeShow.value = !isTreeShow.value
 }
 
-function onSearchHandle (params) {
-  searchParams.value = params
+function onSearchHandle () {
   pagination.value.current = 1
   cTable.value.search()
 }

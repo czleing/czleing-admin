@@ -34,7 +34,7 @@ export function useSearchCache () {
     cacheList.value.push({
       id: Date.now(),
       name: cacheName,
-      data: formData
+      data: { ...formData }
     })
     storage.setItem(key, JSON.stringify(cacheList.value))
   }

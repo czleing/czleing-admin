@@ -401,6 +401,21 @@ export function useRender ({ ctx, isView, value, dataSource }) {
       }
       return h('span', '-')
     }
+    if (start && end) {
+      let bol = false
+      if (!dayjs.isDayjs(start)) {
+        start = dayjs(start)
+        bol = true
+      }
+      if (!dayjs.isDayjs(end)) {
+        end = dayjs(end)
+        bol = true
+      }
+      if (bol) {
+        emitUpdate([start, end])
+        return ''
+      }
+    }
     const controlTypeEnum = EControlType._objectOf(field.type)
     const props = Object.assign(
       {

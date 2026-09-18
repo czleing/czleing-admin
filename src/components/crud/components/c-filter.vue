@@ -33,9 +33,10 @@
                     <a-menu-item
                       v-for="cache in cacheList"
                       :key="cache.id"
+                      @click="onSelectCache(cache.id)"
                     >
                       <div class="flex-x-between">
-                        <span class="mr15 flex-auto" @click="onSelectCache(cache.id)">{{ cache.name }}</span>
+                        <span class="mr15 flex-auto">{{ cache.name }}</span>
                         <a-divider type="vertical" />
                         <DeleteOutlined class="text-danger" @click.stop="onDeleteCache(cache.id)" />
                       </div>
@@ -70,7 +71,7 @@
 <script setup>
 import { useSearchCache } from '@/components/crud/hooks/useSearchCache.js'
 import { EControlType } from '@/enum'
-import { isAllFieldEmpty, isNotEmpty } from '@/utils/index.js'
+import { isAllFieldEmpty, isDayjs, isEmpty, isNotEmpty } from '@/utils/index.js'
 import { DeleteOutlined, DownOutlined, SearchOutlined, UndoOutlined, UpOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
 import { h } from 'vue'
@@ -98,7 +99,8 @@ const currFields = computed(() => {
 })
 const searchForm = ref()
 const loading = inject('c-page.loading', false)
-const formData = reactive({})
+const searchParams = inject('c-page.searchParams', ref({})) // 共享的查询参数，格式化后的数据，实时从 formData 同步
+const formData = reactive({}) // 当前查询表单绑定的数据
 const {
   cacheList,
   getCondition,
@@ -111,44 +113,64 @@ const emits = defineEmits(['search'])
 provide('c-form.formData', formData)
 
 onMounted(() => {
-  let hasDefaultValue = false
-  currFields.value.forEach(field => {
-    if (isNotEmpty(field.defaultValue)) {
-      formData[field.fieldName] = field.defaultValue
-      hasDefaultValue = true
-    }
-  })
-  if (hasDefaultValue) {
-    onSubmitHandle(formData)
+  setDefault()
+  if (!isAllFieldEmpty(formData)) {
+    onSubmitHandle()
   }
 })
+
+watch(
+  () => formData,
+  () => {
+    searchParams.value = getTransformedFormData()
+  },
+  { deep: true }
+)
+
+/** 设置默认参数 */
+function setDefault () {
+  currFields.value.forEach(field => {
+    formData[field.fieldName] = undefined
+    if (isNotEmpty(field.defaultValue)) {
+      formData[field.fieldName] = field.defaultValue
+    }
+  })
+}
 
 /** 日期范围字段收集 */
 const dateRangeFields = computed(() => {
   return currFields.value.filter(field => field.type === EControlType.eDateRange)
 })
-/** 日期范围字段自动转换 */
-function transformDateRange (data) {
-  dateRangeFields.value.forEach(field => {
-    const value = data[field.fieldName]
+
+/** 获取转换后的表单数据 */
+function getTransformedFormData () {
+  const transformedFormData = {}
+  for (const key in formData) {
+    const value = formData[key]
     if (isNotEmpty(value)) {
-      // 日期范围字段处理
-      const fieldNames = field.props?.fieldNames ?? [`${field.fieldName}Begin`, `${field.fieldName}End`]
-      data[fieldNames[0]] = value[0].startOf('day').hour(0).valueOf()
-      data[fieldNames[1]] = value[1].endOf('day').valueOf()
+      transformedFormData[key] = value
     }
-    delete data[field.fieldName]
+  }
+  // 日期范围字段处理
+  dateRangeFields.value.forEach(field => {
+    const value = transformedFormData[field.fieldName]
+    if (isNotEmpty(value)) {
+      const fieldNames = field.props?.fieldNames ?? [`${field.fieldName}Begin`, `${field.fieldName}End`]
+      transformedFormData[fieldNames[0]] = isDayjs(value[0]) ? value[0].startOf('day').hour(0).valueOf() : value[0]
+      transformedFormData[fieldNames[1]] = isDayjs(value[1]) ? value[1].endOf('day').valueOf() : value[1]
+      delete transformedFormData[field.fieldName]
+    }
   })
+  return transformedFormData
 }
 
-function onSubmitHandle (values) {
-  // 处理日期范围自动转换
-  transformDateRange(values)
-  emits('search', values)
+function onSubmitHandle () {
+  emits('search')
 }
 function onResetHandle () {
   searchForm.value.resetFields()
-  emits('search', {})
+  setDefault()
+  emits('search')
 }
 
 // --------- 折叠、展开 ------------

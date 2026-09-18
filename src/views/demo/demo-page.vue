@@ -80,7 +80,7 @@ const treeConfig = {
 
 /** 查询条件配置 */
 const filterConfig = computed(() => ({
-  // useCache: true, // 使用查询条件暂存，默认 false
+  useCache: true, // 使用查询条件暂存，默认 false
   // cacheBtnText: '记住查询', // 暂存按钮文字，默认 '记住查询'
   col: { sm: 8, lg: 6, xxl: 6 }, // 所有表单项栅格设置，默认：{ sm: 8, lg: 6, xxl: 4 }，参照 a-col
   labelCol: { flex: '80px' }, // 所有表单项文本部分栅格设置，默认：文本宽度，单行时可以不用设置，多行时建议设置统一宽度，参照 a-col
@@ -955,6 +955,7 @@ const modalConfig = computed(() => ({
 }))
 
 function getMockData (searchParams) {
+  console.log('searchParams', searchParams)
   return {
     list: [
       { id: 1, nickName: '张静', age: '24', avatar: 'https://lf-flow-web-cdn.doubao.com/obj/flow-doubao/doubao/web/doubao_avatar_new.png', image: 'https://gips1.baidu.com/it/u=4056832123,214617935&fm=3074&app=3074&f=PNG?w=2560&h=1440', amount: 12345, withUnit: 33, name2: '对对对', dict: '2', status: 1, diy: 'd', color: 'red', isEnabled: true, phonenumber: '13112341234', address: '广州市黄埔区xxx', slotField: 'x', createTime: '2026-08-08 12:12:12' },
