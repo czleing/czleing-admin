@@ -34,11 +34,7 @@ import IconSelect from '@/components/common/IconSelect/index.vue'
 const cPage = ref()
 const filterConfig = computed(() => ({
   fields: [
-    {
-      label: '菜单名称',
-      fieldName: 'menuName',
-      type: EControlType.eInput
-    },
+    { label: '菜单名称', fieldName: 'menuName' },
     {
       label: '是否启用',
       fieldName: 'isEnabled',
@@ -51,10 +47,7 @@ const filterConfig = computed(() => ({
   ]
 }))
 const tableConfig = computed(() => ({
-  props: {
-    usePage: false,
-    scroll: { x: 1300 }
-  },
+  props: { usePage: false, scroll: { x: 1300 } },
   initSearch: false,
   columns: [
     {
@@ -65,34 +58,11 @@ const tableConfig = computed(() => ({
       align: 'left',
       slot: 'table_menuName'
     },
-    {
-      title: '权限标识',
-      dataIndex: 'permission',
-      customRender: ({ value }) => value || '-'
-    },
-    {
-      title: '路由地址',
-      width: 140,
-      dataIndex: 'path',
-      customRender: ({ value }) => value || '-'
-    },
-    {
-      title: '组件地址',
-      dataIndex: 'component',
-      customRender: ({ value }) => value || '-'
-    },
-    {
-      title: '是否启用',
-      dataIndex: 'isEnabled',
-      width: 90,
-      type: 'isEnabled'
-    },
-    {
-      title: '更新时间',
-      width: 140,
-      dataIndex: 'updateTime',
-      isDateTime: true
-    },
+    { title: '权限标识', dataIndex: 'permission', customRender: ({ value }) => value || '-' },
+    { title: '路由地址', width: 140, dataIndex: 'path', customRender: ({ value }) => value || '-' },
+    { title: '组件地址', dataIndex: 'component', customRender: ({ value }) => value || '-' },
+    { title: '是否启用', dataIndex: 'isEnabled', width: 90, type: 'isEnabled' },
+    { title: '更新时间', width: 140, dataIndex: 'updateTime', isDateTime: true },
     {
       title: '操作',
       width: 180,
@@ -128,15 +98,11 @@ const modalConfig = computed(() => ({
   // 弹窗按钮属性修改 Object || ({ isAdd, isEdit, isView }) => Object
   buttonConfig: ({ isAdd, isEdit, isView }) => ({
     confirmText: isEdit ? '确认修改' : '确认提交', // 默认是确定
-    // cancelText: '关闭', // 默认是关闭
-    // showConfirm: !isEdit // 确认按钮是否可见，默认可见
-    // showCancel: !isEdit // 取消按钮是否可见，默认可见
   }),
   // 表单配置 Object || ({ isAdd, isEdit, isView, detail }) => Object
   formConfig: ({ isAdd, isEdit, isView, detail }) => ({
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
-    cols: 2, // 一行显示几列
     // 表单字段
     fields: [ // 表单字段数组，可分组
       {
@@ -157,14 +123,7 @@ const modalConfig = computed(() => ({
             },
             autoRefresh: true,
             converter (result) {
-              return [
-                {
-                  id: 0,
-                  label: '根目录',
-                  parentId: '',
-                  children: result
-                }
-              ]
+              return [ { id: 0, label: '根目录', parentId: '', children: result } ]
             }
           }
         }
@@ -189,8 +148,6 @@ const modalConfig = computed(() => ({
         fieldName: 'menuName',
         type: EControlType.eInput,
         required: true,
-        props: {
-        }
       },
       {
         label: formData => EMenuType._of(formData.menuType) + '图标',
@@ -208,8 +165,6 @@ const modalConfig = computed(() => ({
         type: EControlType.eInput,
         tooltip: '访问的路由地址，如：`user`，如外网地址需内链访问则以`http(s)://`开头',
         required: true,
-        props: {
-        }
       },
       {
         label: '是否外链',
@@ -218,8 +173,6 @@ const modalConfig = computed(() => ({
         tooltip: '是外链则路由地址需要以`http(s)://`开头',
         defaultValue: false,
         none: formData => formData.menuType !== EMenuType.eMenu,
-        props: {
-        }
       },
       {
         label: '组件路径',
@@ -230,7 +183,6 @@ const modalConfig = computed(() => ({
         labelCol: { span: 4 },
         wrapperCol: { span: 20 },
         tooltip: '访问的组件路径，如：`modules/system/user/index`，默认在`views`目录下',
-        // required: true,
         props: {
           addonBefore: '@/views/',
           placeholder: '输入组件的路径，无需后缀.vue，如：`modules/system/user/index`'
@@ -243,8 +195,6 @@ const modalConfig = computed(() => ({
         type: EControlType.eInput,
         tooltip: '控制器中定义的权限字符，如：@SaCheckPermission(\'system:user:list\')',
         required: true,
-        props: {
-        }
       },
       {
         label: '路由参数',
@@ -252,9 +202,6 @@ const modalConfig = computed(() => ({
         none: formData => formData.menuType !== EMenuType.eMenu || formData.isFrame,
         type: EControlType.eInput,
         tooltip: '访问路由的默认传递参数，如：`{"id": 1, "name": "ry"}`',
-        // required: true,
-        props: {
-        }
       },
       {
         label: '排序',
@@ -262,11 +209,7 @@ const modalConfig = computed(() => ({
         type: EControlType.eNumber,
         required: true,
         defaultValue: 1,
-        props: {
-          precision: 0,
-          min: 1,
-          max: 10000
-        }
+        props: { precision: 0, min: 1, max: 10000 }
       },
       {
         label: '是否隐藏',
@@ -317,9 +260,7 @@ function getButtonType (type) {
 
 /** 新增子菜单 */
 function addChildren (record) {
-  cPage.value.onAddHandle({
-    parentId: record.menuId
-  })
+  cPage.value.onAddHandle({ parentId: record.menuId })
 }
 
 /**
@@ -354,6 +295,3 @@ function beforeSubmit (submitData, { isAdd, isEdit, isView, detail }) {
   return submitData
 }
 </script>
-
-<style lang="scss" scoped>
-</style>

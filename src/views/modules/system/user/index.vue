@@ -27,24 +27,10 @@ const treeConfig = {
 }
 
 const filterConfig = {
-  useCache: false,
   col: { sm: 8, lg: 7, xxl: 5 },
   fields: [
-    {
-      label: '用户',
-      fieldName: 'userName',
-      props: {
-        placeholder: '请输入姓名/账号'
-      }
-    },
-    {
-      label: '是否启用',
-      fieldName: 'isEnabled',
-      type: EControlType.eSelect,
-      props: {
-        options: EIsEnabled._list
-      }
-    }
+    { label: '用户', fieldName: 'userName', props: { placeholder: '请输入姓名/账号' } },
+    { label: '是否启用', fieldName: 'isEnabled', type: EControlType.eSelect, props: { options: EIsEnabled._list } }
   ]
 }
 const tableConfig = computed(() => ({
@@ -53,36 +39,26 @@ const tableConfig = computed(() => ({
     { title: '登录账号', dataIndex: 'userName' },
     { title: '用户姓名', dataIndex: 'nickName' },
     {
-      title: '所属部门',
-      dataIndex: 'deptName',
-      resizable: true,
-      width: 150,
+      title: '所属部门', dataIndex: 'deptName', resizable: true, width: 150,
       customRender: ({ record }) => record.dept?.deptName ?? '-'
     },
     { title: '手机号码', dataIndex: 'phonenumber', hideChar: [3, 4] },
     { title: '是否启用', dataIndex: 'isEnabled', type: 'isEnabled' },
     { title: '创建时间', dataIndex: 'createTime', isDateTime: true },
     {
-      title: '操作',
-      actionShowNum: 2,
+      title: '操作', actionShowNum: 2,
       action: ({ record }) => {
-        const btns = [
-          { name: '详情', callback: 'detail' },
-        ]
+        const btns = [ { name: '详情', callback: 'detail' } ]
         if (record.userId !== 1) {
           btns.push(...[
             { name: '编辑', callback: 'edit' },
             { name: '删除', callback: 'delete' },
             { name: record.isEnabled ? '禁用' : '启用', confirm: true, callback: 'toggle' },
             {
-              name: '重置密码',
-              confirm: true,
+              name: '重置密码', confirm: true,
               callback: async () => {
                 const data = await axios.post('/system/user/resetPwd', { userId: record.userId })
-                Modal.success({
-                  title: '重置密码成功',
-                  content: `${record.nickName}的密码已重置为：${data}`
-                })
+                Modal.success({ title: '重置密码成功', content: `${record.nickName}的密码已重置为：${data}` })
               }
             }
           ])
@@ -100,10 +76,7 @@ const roles = ref([])
 const modalConfig = computed(() => ({
   title: '用户',
   width: 800,
-  mode: 'modal',
-  buttonConfig: ({ isAdd, isEdit, isView }) => ({
-    confirmText: isEdit ? '确认修改' : '确认提交'
-  }),
+  buttonConfig: ({ isEdit }) => ({ confirmText: isEdit ? '确认修改' : '确认提交' }),
   formConfig: ({ isAdd, isEdit, isView, detail }) => ({
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
@@ -114,14 +87,8 @@ const modalConfig = computed(() => ({
         fieldName: 'deptId',
         type: EControlType.eTreeSelect,
         props: {
-          remote: {
-            url: '/system/user/deptTree'
-          },
-          fieldNames: {
-            value: 'id',
-            label: 'label',
-            children: 'children'
-          }
+          remote: { url: '/system/user/deptTree' },
+          fieldNames: { value: 'id', label: 'label', children: 'children' }
         }
       },
       {
@@ -143,12 +110,7 @@ const modalConfig = computed(() => ({
         none: !isAdd,
         required: true,
         rules: [
-          {
-            min: 5,
-            max: 20,
-            message: '密码长度 5 至 20 之间',
-            trigger: 'change'
-          },
+          { min: 5, max: 20, message: '密码长度 5 至 20 之间', trigger: 'change' },
           {
             pattern: new RegExp(/^[\w!@#\$%\^&\*\(\)]*$/),
             message: '只能包含数字、大小写字母、下划线及“!@#$%^&*()”特殊字符'
@@ -163,30 +125,10 @@ const modalConfig = computed(() => ({
           message: '请输入正确的手机号码',
           trigger: 'change'
         },
-        props: {
-          maxlength: 11
-        }
+        props: { maxlength: 11 }
       },
-      {
-        label: '邮箱地址',
-        fieldName: 'email',
-        rules: {
-          type: 'email',
-          message: '请输入正确的邮箱地址',
-          trigger: 'change'
-        },
-        props: {
-        }
-      },
-      {
-        label: '用户性别',
-        fieldName: 'sex',
-        type: EControlType.eRadio,
-        props: {
-          useRefresh: false,
-          dictType: 'sys_user_sex'
-        }
-      },
+      { label: '邮箱地址', fieldName: 'email', rules: { type: 'email', message: '请输入正确的邮箱地址', trigger: 'change' } },
+      { label: '用户性别', fieldName: 'sex', type: EControlType.eRadio, props: { dictType: 'sys_user_sex' } },
       {
         label: '岗位',
         fieldName: 'postIds',
@@ -194,11 +136,7 @@ const modalConfig = computed(() => ({
         singleLine: true,
         labelCol: { span: 4 },
         wrapperCol: { span: 20 },
-        props: {
-          options: posts.value,
-          allowClear: true,
-          mode: 'multiple'
-        }
+        props: { options: posts.value, allowClear: true, mode: 'multiple' }
       },
       {
         label: '角色',
@@ -207,11 +145,7 @@ const modalConfig = computed(() => ({
         singleLine: true,
         labelCol: { span: 4 },
         wrapperCol: { span: 20 },
-        props: {
-          options: roles.value,
-          allowClear: true,
-          mode: 'multiple'
-        }
+        props: { options: roles.value, allowClear: true, mode: 'multiple' }
       },
       {
         label: '备注',
@@ -225,18 +159,12 @@ const modalConfig = computed(() => ({
   })
 }))
 
-/**
- * 查询后修改查询结果
- * @param {Array} list 查询结果列表
- */
+/** 查询后修改查询结果 */
 function afterSearch (list) {
   return list.map(item => ({ ...item, selectDisabled: item.userId === 1 }))
 }
 
-/**
- * 弹窗后执行
- * @param {Object} param 其他参数
- */
+/** 弹窗后执行 */
 async function afterOpenModal ({ isAdd, isEdit, isView }) {
   if (posts.value.length === 0 || roles.value.length === 0) {
     const result = await axios.post('/system/user/detail/0')
@@ -245,16 +173,8 @@ async function afterOpenModal ({ isAdd, isEdit, isView }) {
   }
 }
 
-/**
- * 编辑回填、详情展示时，对详情数据修改
- * @param {Object} detail 详情数据
- * @param {Object} param 其他参数
- */
+/** 编辑回填、详情展示时，对详情数据修改 */
 function transformDetail (detail, { isEdit, isView }) {
-  return {
-    ...detail?.user,
-    postIds: detail.postIds,
-    roleIds: detail.roleIds
-  }
+  return { ...detail?.user, postIds: detail.postIds, roleIds: detail.roleIds }
 }
 </script>
