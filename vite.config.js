@@ -56,24 +56,42 @@ export default defineConfig(({ command, mode }) => {
       chunkSizeWarningLimit: 1500, // KB
       rolldownOptions: {
         output: {
-          manualChunks(id) {
-            if (id.includes('node_modules')) {
-              if (id.includes('ant-design-vue')) {
-                return 'antd-chunk'
+          codeSplitting: {
+            groups: [
+              {
+                name: 'antdv',
+                test: /node_modules[\\/]ant-design-vue/,
+                priority: 20
+              },
+              {
+                name: 'wangeditor',
+                test: /node_modules[\\/]@wangeditor/,
+                priority: 15,
+              },
+              {
+                name: 'echarts',
+                test: /node_modules[\\/]echarts/,
+                priority: 12
+              },
+              {
+                name: 'ant-icons',
+                test: /node_modules[\\/]@ant-design[\\/]icons-vue/,
+                priority: 10
+              },
+              {
+                name: 'vue',
+                test: /node_modules[\\/]vue/,
+                priority: 8
+              },
+              {
+                name: 'common',
+                minShareCount: 2,
+                minSize: 20000,
+                test: /node_modules[\\/].*/,
+                priority: 5,
               }
-              if (id.includes('@ant-design/icons-vue')) {
-                return 'ant-icons-chunk'
-              }
-              if (id.includes('vue')) {
-                return 'vue-chunk'
-              }
-              if (id.includes('echarts')) {
-                return 'echarts-chunk'
-              }
-              // 其他第三方
-              return 'vendor-chunk'
-            }
-          }
+            ],
+          },
         },
         // 为了移除 @vueuse/core 等包中包含特殊注释导致打包告警问题，待他们修复后可删除
         onwarn(warning, warn) {
