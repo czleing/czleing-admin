@@ -307,10 +307,10 @@ const handleChange = name => {
 const handleLocalChange = lc => {
   settingStore.setLocale(lc)
 }
-const timer = null
+let timer = null
 const handleColorInput = (e, key) => {
   clearTimeout(timer)
-  setTimeout(() => {
+  timer = setTimeout(() => {
     settingStore.theme.token[key] = e.target.value
   }, 2000)
 }

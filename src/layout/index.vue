@@ -150,7 +150,8 @@ const layoutVars = computed(() => {
     '--c-bgInset': -settingStore.bgBlur + 'px',
     '--c-bgOpacity': settingStore.bgOpacity,
     '--c-bgMixMode': settingStore.bgMixMode,
-  }})
+  }
+})
 
 /**
  * 监听窗体大小变化，自动展开收起左侧菜单栏
