@@ -15,6 +15,7 @@ import {
   Switch,
   Tag,
   Textarea,
+  Tree,
   TreeSelect
 } from 'ant-design-vue'
 import { AIcon } from './global/a-icon'
@@ -43,7 +44,8 @@ export default function install (app) {
     'a-date-picker': DatePicker,
     'a-range-picker': RangePicker,
     'a-form-item-rest': FormItemRest,
-    'a-tag': Tag
+    'a-tag': Tag,
+    'a-tree': Tree,
   };
   for (const [key, value] of Object.entries(antComponents)) {
     if (isDebug) {

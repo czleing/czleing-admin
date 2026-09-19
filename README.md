@@ -93,26 +93,29 @@ npm run preview
 ```
 
 ## 预览
-<img src='./src/doc/login.jpg' alt="light">
-<img src='./src/doc/light.jpg' alt="light">
-<img src='./src/doc/light2.jpg' alt="light">
-<img src='./src/doc/light3.jpg' alt="light">
-<img src='./src/doc/light4.jpg' alt="light">
-<img src='./src/doc/light9.jpg' alt="light">
-<img src='./src/doc/light5.jpg' alt="light">
-<img src='./src/doc/demo-light.jpg' alt="light">
-<img src='./src/doc/demo-dark.jpg' alt="light">
-<img src='./src/doc/chart.png' alt="chart-demo">
-<img src='./src/doc/data-permission.jpg' alt="light">
-<img src='./src/doc/menu-add.png' alt="light">
-<img src='./src/doc/swagger.png' alt="light">
-<img src='./src/doc/notice.jpg' alt="light">
-<img src='./src/doc/dark.jpg' alt="dark">
-<img src='./src/doc/dark2.jpg' alt="dark">
-<img src='./src/doc/light6-1.jpg' alt="light">
-<img src='./src/doc/light6-2.jpg' alt="light">
-<img src='./src/doc/light7.jpg' alt="light">
-<img src='./src/doc/light8.jpg' alt="light">
+<img src='./src/doc/login.jpg' alt="login">
+<img src='./src/doc/setting-1.jpg' alt="setting">
+<img src='./src/doc/setting-2.jpg' alt="setting">
+<img src='./src/doc/setting-3.jpg' alt="setting">
+<img src='./src/doc/light-1.jpg' alt="light">
+<img src='./src/doc/light-2.jpg' alt="light">
+<img src='./src/doc/light-3.jpg' alt="light">
+<img src='./src/doc/dark-1.jpg' alt="dark">
+<img src='./src/doc/dark-2.jpg' alt="dark">
+<img src='./src/doc/dark-3.jpg' alt="dark">
+<img src='./src/doc/user.jpg' alt="user">
+<img src='./src/doc/demo-add-1.jpg' alt="demo">
+<img src='./src/doc/demo-add-2.jpg' alt="demo">
+<img src='./src/doc/dict-type.jpg' alt="dict">
+<img src='./src/doc/dict-data.jpg' alt="dict">
+<img src='./src/doc/search-menu.jpg' alt="menu">
+<img src='./src/doc/menu-add.jpg' alt="menu">
+<img src='./src/doc/data-permission.jpg' alt="permission">
+<img src='./src/doc/gen-import.jpg' alt="gen">
+<img src='./src/doc/gen-fields.jpg' alt="gen">
+<img src='./src/doc/gen-config.jpg' alt="gen">
+<img src='./src/doc/gen-view.jpg' alt="gen">
+<img src='./src/doc/swagger.jpg' alt="swagger">
 
 ## 文档
 [点击进入](./src/doc/README.doc.md)，快速了解

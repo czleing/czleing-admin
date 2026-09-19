@@ -50,6 +50,7 @@ const currActions = computed(() => {
       ...action,
       permission: getPermission(action),
       callback: getCallback(action),
+      class: action.class ?? (action.callback === 'delete' ? 'text-danger' : 'text-info'),
       confirm: action.confirm ?? action.callback === 'delete'
     }
   })
