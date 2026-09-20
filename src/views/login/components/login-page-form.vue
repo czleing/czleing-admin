@@ -123,6 +123,7 @@ async function onSubmitHandle (values) {
     font-size: 26px;
     line-height: 39px;
     margin-bottom: 36px;
+    color: #333;
   }
   &__code {
     height: 32px;
