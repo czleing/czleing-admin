@@ -108,7 +108,7 @@ export const useSettingStore = defineStore('setting', () => {
   const useFooter = ref(false) // 是否使用页脚
   const layoutDivide = ref('line') // 布局块边框样式，'', line, shadow, round
   const useBg = ref(true) // 是否使用背景图片
-  const bgImage = ref(import.meta.env.VITE_APP_CONTEXT_PATH + 'page-bg-4.jpg') // 背景图片，提供预设几张图，和自定义网络地址
+  const bgImage = ref(import.meta.env.VITE_APP_CONTEXT_PATH + 'assets/page-bg-4.jpg') // 背景图片，提供预设几张图，和自定义网络地址
   const bgBlur = ref(0) // 背景模糊大小，0 - 50px
   const bgOpacity = ref(0.2) // 背景透明度 0 - 1
 
@@ -122,7 +122,7 @@ export const useSettingStore = defineStore('setting', () => {
     if (!name) return
     const t = themes.find(item => item.name === name)?.theme
     if (t) {
-      bgImage.value = import.meta.env.VITE_APP_CONTEXT_PATH + t.bgImage
+      bgImage.value = import.meta.env.VITE_APP_CONTEXT_PATH + 'assets/' + t.bgImage
       theme.value = t // { ...t, token: { ...t.token } }
       themeName.value = name
     }

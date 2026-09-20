@@ -230,13 +230,13 @@ const { t } = useI18n()
 const { numFormat } = useNumFormat()
 
 const bgImageOptions = computed(() => [
-  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'page-bg-1.jpg' },
-  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'page-bg-2.jpg' },
-  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'page-bg-3.jpg' },
-  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'page-bg-4.jpg' },
-  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'page-bg-5.jpg' },
-  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'page-bg-6.jpg' },
-  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'page-bg-7.jpg' },
+  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'assets/page-bg-1.jpg' },
+  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'assets/page-bg-2.jpg' },
+  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'assets/page-bg-3.jpg' },
+  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'assets/page-bg-4.jpg' },
+  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'assets/page-bg-5.jpg' },
+  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'assets/page-bg-6.jpg' },
+  { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'assets/page-bg-7.jpg' },
   { src: '' },
 ])
 const bgIsDiy = computed(() => !bgImageOptions.value.map(i => i.src).filter(Boolean).includes(settingStore.bgImage))
