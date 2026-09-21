@@ -204,21 +204,26 @@
           </Field>
         </div>
       </div>
+      <template #extra>
+        <a-popconfirm :title="$t('frame.restoreSettingsConfirm')" @confirm="settingStore.restoreSettings">
+          <a-button :icon="h(UndoOutlined)" size="small">{{ $t('frame.restoreSettings') }}</a-button>
+        </a-popconfirm>
+      </template>
     </CModal>
   </div>
 </template>
 
 <script setup>
+import { useNumFormat } from '@/hooks/useNumFormat.js'
+import useViewTransition from '@/hooks/useViewTransition.js'
 import { langOptions } from '@/locales/index'
 import { useSettingStore } from '@/stores/setting-store.js'
-import { SettingOutlined } from '@ant-design/icons-vue'
+import { SettingOutlined, UndoOutlined } from '@ant-design/icons-vue'
+import { h } from 'vue'
 import Field from './field.vue'
 import Left from './icons/left.vue'
 import TopLeft from './icons/top-left.vue'
 import Top from './icons/top.vue'
-import useViewTransition from '@/hooks/useViewTransition.js'
-import { nextTick } from 'vue'
-import { useNumFormat } from '@/hooks/useNumFormat.js'
 
 
 const settingStore = useSettingStore()

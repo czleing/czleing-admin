@@ -110,6 +110,8 @@ export default {
     bgBlur: '背景模糊度',
     bgOpacity: '背景不透明度',
     bgDiy: '自定义',
+    restoreSettings: '恢复默认设置',
+    restoreSettingsConfirm: '确认恢复默认设置吗？',
   },
   // crud
   crud: {

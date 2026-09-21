@@ -1,6 +1,6 @@
 <template>
   <a-watermark :content="settingStore.useWatermark ? watermark : ''" :rotate="-35" :zIndex="9000">
-    <a-layout class="layout" :style="layoutVars" style="height:100vh;">
+    <a-layout class="layout" style="height:100vh;">
       <a-layout-header
         v-show="!isFullScreen"
         class="layout-header"
@@ -75,6 +75,7 @@
           </div>
         </a-layout-content>
       </a-layout>
+      <div class="bg-overlay" :style="bgVars" />
     </a-layout>
   </a-watermark>
 </template>
@@ -143,7 +144,7 @@ watchSyncEffect(() => {
   }, 'ant-design-vars')
 })
 
-const layoutVars = computed(() => {
+const bgVars = computed(() => {
   return {
     '--c-bgImage': settingStore.useBg ? `url(${settingStore.bgImage})` : 'none',
     '--c-bgBlur': `blur(${settingStore.bgBlur}px)`,
@@ -170,7 +171,7 @@ useWindowSize((width) => {
 }
 .layout {
   background: none;
-  &::after {
+  .bg-overlay {
     position: fixed;
     content: '';
     inset: var(--c-bgInset);

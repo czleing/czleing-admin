@@ -91,12 +91,12 @@ export const useSettingStore = defineStore('setting', () => {
   const topHeaderHeight = ref(50) // 顶部宽度 px
   const firstMenuMode = ref('card') // 顶部菜单模式，card, line
   const firstMenuAlign = ref('start') // 顶部菜单位置，start, center, end
-  const autoOpenChildMenu = ref(false) // 自动打开子菜单(菜单 top-left 布局时，点击一级菜单，自动打开最后一次打开的子菜单或第一个子菜单)
+  const autoOpenChildMenu = ref(true) // 自动打开子菜单(菜单 top-left 布局时，点击一级菜单，自动打开最后一次打开的子菜单或第一个子菜单)
   const useWeather = ref(false) // 是否使用天气组件
   const useTabs = ref(true) // 是否使用 tabs 栏
   const useTabIcon = ref(true) // tabs 栏是否使用图标
   const useTabClose = ref(true) // tabs 栏是否使用关闭按钮
-  const useTabFavorite = ref(false) // 是否启用 Tab 收藏功能
+  const useTabFavorite = ref(true) // 是否启用 Tab 收藏功能
   const tabAnimate = ref('slide-right') // tab 页签动画，'', 'slide-right', 'fade', 'scale'
   const tabType = ref('line') // tab 页签样式， 'tab', 'card', 'line'
   const useDynamicPageTitle = ref(true) // 是否动态设置浏览器标签名，设置为路由上的 meta.title
@@ -108,7 +108,7 @@ export const useSettingStore = defineStore('setting', () => {
   const useFooter = ref(false) // 是否使用页脚
   const layoutDivide = ref('line') // 布局块边框样式，'', line, shadow, round
   const useBg = ref(true) // 是否使用背景图片
-  const bgImage = ref(import.meta.env.VITE_APP_CONTEXT_PATH + 'assets/page-bg-4.jpg') // 背景图片，提供预设几张图，和自定义网络地址
+  const bgImage = ref(import.meta.env.VITE_APP_CONTEXT_PATH + 'assets/page-bg-1.jpg') // 背景图片，提供预设几张图，和自定义网络地址
   const bgBlur = ref(0) // 背景模糊大小，0 - 50px
   const bgOpacity = ref(0.2) // 背景透明度 0 - 1
 
@@ -197,6 +197,13 @@ export const useSettingStore = defineStore('setting', () => {
     l.value = lang
   }
 
+  /** 恢复默认设置 */
+  function restoreSettings () {
+    localStorage.removeItem('CZ_USER_SETTINGS')
+    destroyWatchSysMode()
+    window.location.reload()
+  }
+
   const isLight = computed(() => mode.value === 'light')
   const isDark = computed(() => mode.value === 'dark')
   const themesGetter = computed(() => themes)
@@ -250,7 +257,8 @@ export const useSettingStore = defineStore('setting', () => {
     toggleMode,
     setLocale,
     watchSysMode,
-    destroyWatchSysMode
+    destroyWatchSysMode,
+    restoreSettings
   }
 },
 {

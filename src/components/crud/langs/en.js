@@ -109,6 +109,8 @@ export default {
     bgBlur: 'Blur',
     bgOpacity: 'Opacity',
     bgDiy: 'Customize',
+    restoreSettings: 'Restore default settings',
+    restoreSettingsConfirm: 'Are you sure to restore the default settings?',
   },
   // crud
   crud: {

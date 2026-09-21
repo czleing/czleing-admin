@@ -26,6 +26,9 @@
           </div>
         </slot>
       </template>
+      <template v-if="$slots.extra" #extra>
+        <slot name="extra" />
+      </template>
     </a-drawer>
   </div>
 </template>
