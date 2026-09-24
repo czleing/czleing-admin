@@ -281,13 +281,17 @@ each(range(0, 600, 2), {
 
 // 背景高斯模糊
 @supports (-webkit-backdrop-filter: saturate(180%) blur(20px)) or (backdrop-filter: saturate(180%) blur(20px)) {
+  // 背景高斯模糊
+  .bg-blur {
+    backdrop-filter: saturate(180%) blur(20px);
+  }
   // 背景白色高斯模糊
-  .bg_white_backdrop {
+  .bg-blur-white {
     background-color: rgba(255, 255, 255, .7) !important;
     backdrop-filter: saturate(180%) blur(20px);
   }
   // 背景黑色高斯模糊
-	.bg_black_backdrop {
+	.bg-blur-black {
     background-color: rgba(0, 0, 0, .7) !important;
 	  backdrop-filter: saturate(180%) blur(20px);
 	}
