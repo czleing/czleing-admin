@@ -23,13 +23,17 @@ export async function beforeInterceptor (to, from) {
     }
     if (!routeIniting) {
       routeIniting = true
+      const promises = []
       // 菜单路由未加载，则加载菜单
       if (!menuStore.loaded) {
-        await menuStore.loadMenuToRoute()
+        promises.push(menuStore.loadMenuToRoute())
       }
       // 用户信息不存在，则获取用户信息
       if (authStore.userInfo === null) {
-        await authStore.getUserInfo()
+        promises.push(authStore.getUserInfo())
+      }
+      if (promises.length) {
+        await Promise.all(promises)
       }
       // 动态添加路由后，需要重新发起路由跳转
       return to.fullPath
