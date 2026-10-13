@@ -5,7 +5,9 @@
 - ant-design-vue 组件及图标在 vue template 中会自动导入，无需 import，在 script setup 中则需要手动导入，如：Modal, message...
 - ant-design-vue 内部的 less 变量已注入到全局 less 环境，.less文件、《style lang="less" scoped》 中可直接使用
 - antdv 的 less 变量为编译时变量，不会因页面上主题切换而变化，因主题而变化的变量需要换为 css 变量(运行时变量)，变量参考: src/layout/index.vue
-- CPage 组件只为简化 CRUD 开发，本项目基础模块都是通过该组件实现，但非必选，不适用时使用传统模式开发即可
+- 图标使用 ant-design 图标，不够用时根据自己喜好引入第三方图标库即可
+- 为保持基座干净简洁，本基座未添加 eslint、husky、prettier 等约束及格式化插件，如有必要请自行添加
+- CPage 组件及相关子组件只为简化 CRUD 开发，本项目基础模块都是通过该组件实现，但非必选，不适用时使用传统模式开发即可
 
 ### 2、接口请求
 为避免接口龙飞凤舞情况，前后端统一约定，method 统一使用 post，参数统一使用请求体传参，摒弃`restfull`规范及一接口一封装模式，采用通用的请求方式，如：
