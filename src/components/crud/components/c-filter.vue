@@ -222,7 +222,9 @@ function onRememberHandle () {
 }
 function onSelectCache (id) {
   const cacheData = getCondition(id)
-  Object.assign(formData, cacheData)
+  for (const key in formData) {
+    formData[key] = cacheData[key]
+  }
 }
 function onDeleteCache (id) {
   delCondition(id)
