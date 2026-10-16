@@ -1,9 +1,9 @@
 /**
  * 使用 document viewTransition 过渡动画
+ * 需配合全局样式 ::view-transition-new/old 使用, 参考示例：src\layout\components\header\mode-switch.vue
  */
 export default function useViewTransition () {
   const root = document.documentElement;
-  let maxR = 2000
   
   /**
    * 播放动画
@@ -20,7 +20,6 @@ export default function useViewTransition () {
       changeFn()
       return
     }
-    maxR = parseInt(Math.hypot(window.innerWidth, window.innerHeight) + '');
     const vt = document.startViewTransition(async () => {
       changeFn();
       await nextTick();
@@ -28,6 +27,7 @@ export default function useViewTransition () {
     vt.ready.then(() => {
       let frames = null
       if (animateName === 'circle') {
+        const maxR = parseInt(Math.hypot(window.innerWidth, window.innerHeight) + '');
         const start = `circle(0px at ${x}px ${y}px)`;
         const end = `circle(${maxR}px at ${x}px ${y}px)`;
         frames = [

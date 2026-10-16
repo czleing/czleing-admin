@@ -121,7 +121,7 @@ npm run preview
 [点击进入](./src/doc/README.doc.md)，快速了解
 
 ## 在线预览
-暂无线上地址，可以只启动前端查看部分静态页面：
+暂无线上地址，可以只启动前端查看部分静态内容及示例：
 ```
 1、git clone https://gitee.com/czleing/czleing-admin.git
 2、cd czleing-admin
@@ -129,6 +129,11 @@ npm run preview
 4、npm run dev
 5、访问 http://localhost:3000/ (无需登录，请忽略接口异常)
 ```
+
+## 特别鸣谢
+- 后端借鉴：[若依](https://gitee.com/y_project/RuoYi) spring-boot 单体服务
+- 部分设置项借鉴：[vben-admin](https://github.com/vbenjs/vue-vben-admin)
+- 部分主题、请求封装借鉴：[Vue3-Antd-Plus](https://gitee.com/Z568_568/vue3-antd-plus)
 
 ## 贡献者
 
@@ -142,4 +147,4 @@ czleing
 
 | 微信 | 支付宝 |
 | --- | --- |
-|<img src="./src/doc/wx.jpg" height="150" />|<img src="./src/doc/zfb.jpg" height="150" />|
+|<img src="./src/doc/wx.jpg" height="100" />|<img src="./src/doc/zfb.jpg" height="100" />|

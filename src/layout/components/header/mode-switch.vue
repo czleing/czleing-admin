@@ -11,14 +11,14 @@
 <script setup>
 import useViewTransition from '@/hooks/useViewTransition';
 import { useSettingStore } from '@/stores/setting-store.js'
-const settingStore = useSettingStore()
 
+const settingStore = useSettingStore()
 const { startViewTransition } = useViewTransition()
 
 async function changeMode (e) {
   const x = e.clientX, y = e.clientY;
   startViewTransition({
-    changeFn: settingStore.toggleMode,
+    changeFn: settingStore.toggleMode, // 修改UI
     x, y,
     animateName: settingStore.modeAnimate,
     positive: settingStore.isLight,
