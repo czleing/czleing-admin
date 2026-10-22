@@ -833,7 +833,7 @@ const modalConfig = computed(() => ({
         labelCol: { span: 3 },
         wrapperCol: { span: 21 },
         props: {
-          height: '200px'
+          height: '400px'
         }
       },
       {

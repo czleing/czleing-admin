@@ -83,39 +83,37 @@ const handleDownload = (response) => {
 // 统一处理错误
 const handleRequestError = (error) => {
   // 进行错误处理
+  let msg = ''
   if (error.response) {
     // 服务器响应错误
     let status = error.response.status
-    const msg = error.response.data.message
+    msg = error.response.data.message
     // 在这里可以进行错误处理逻辑，例如弹出错误提示、记录错误日志等
     switch (status) {
-      case 400:
-        // console.error('参数校验失败:', msg)
-        message.error(msg || '参数校验失败')
-        return Promise.reject(msg ?? '参数json解析失败')
-      case 404:
-        const errorMsg = msg || '资源不存在'
-        message.error({ content: errorMsg, key: errorMsg })
-        return Promise.reject({ error: errorMsg, message: errorMsg })
-      case 500:
-        // console.error('服务器内部错误:', msg)
-        message.error(msg || '服务器内部错误')
-        return Promise.reject({ error: '服务器内部错误', message: msg })
-      default:
-        message.error('服务器响应错误')
-        console.error('服务器响应错误:', error.response.data)
+      case 400: msg = msg || '请求参数错误 Bad Request'
+      case 403: msg = msg || '禁止访问 Forbidden'
+      case 404: msg = msg || '资源不存在 Not Found'
+      case 405: msg = msg || '方法不允许 Method Not Allowed'
+      case 408: msg = msg || '请求超时 Request Timeout'
+      case 429: msg = msg || '请求过于频繁 Too Many Requests'
+      case 500: msg = msg || '服务器内部错误 Internal Server Error'
+      case 502: msg = msg || '网关错误 Bad Gateway'
+      case 503: msg = msg || '服务不可用 Service Unavailable'
+      case 504: msg = msg || '网关超时 Gateway Timeout'
+      default:  msg = msg || '服务器响应错误 Service Error'
     }
+    console.error(msg, error.response)
   } else if (error.request) {
-    // 请求未收到响应
-    console.error('请求未收到响应:', error.request)
-    message.error('请求未收到响应')
+    msg = '请求未收到响应'
+    console.error(msg, error.request)
     // 在这里可以进行错误处理逻辑，例如弹出错误提示、记录错误日志等
   } else {
-    // 请求配置出错
-    console.error('请求配置出错:', error.message)
-    message.error('请求配置出错')
+    msg = '请求配置出错'
+    console.error(msg, error.message)
     // 在这里可以进行错误处理逻辑，例如弹出错误提示、记录错误日志等
   }
+  message.error({ content: msg, key: msg })
+  return Promise.reject(new Error(msg)) // 阻止代码往下执行
 }
 
 // 封装请求方法

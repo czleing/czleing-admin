@@ -107,7 +107,7 @@ const emits = defineEmits(['update:value', 'change'])
   border: var(--ant-lineWidth) solid var(--ant-colorBorder);
   border-radius: var(--ant-borderRadius);
   z-index: 1;
-  overflow: hidden;
+  // overflow: hidden;
   &__toolbar {
     border-bottom: var(--ant-lineWidth) solid var(--ant-colorBorder);
   }
