@@ -99,8 +99,8 @@ const treeConfig = {
 | useCache | Boolean | 是否显示暂存按钮 | false |
 | cacheBtnText | String | 暂存按钮文本 | "记住查询" |
 | col | Object | 全局栅格设置（a-col） | { sm:8, lg:6, xxl:4 } |
-| labelCol | Object | 全局 label 栅格 { flex: '80px' }（示例） | { span: 6 } |
-| wrapperCol | Object | 全局控件栅格 { flex: 'auto' }（示例） | { span: 18 } |
+| labelCol | Object | 全局 label 栅格 { flex: '80px' }（示例） | 文本宽度 |
+| wrapperCol | Object | 全局控件栅格 { flex: 'auto' }（示例） | 撑满剩余空间 |
 | buttonsCol | Object | 按钮列栅格 { flex: 'auto' }（示例） | { span: 4 } |
 | buttonsAlign | String | 按钮对齐 left\|center\|right | 'left' |
 | fields | Array | 字段数组，每项为 FieldConfig | 必填（视需求） |
@@ -112,9 +112,9 @@ const treeConfig = {
 | label | String \| Function | 标签文本 | - |
 | fieldName | String | 字段名（提交 key） | - |
 | type | Enum(EControlType) | 控件类型（不填为输入框 eInput） | EControlType.eInput |
-| col | Object | 单项栅格配置 | - |
-| labelCol | Object | 单项布局覆盖，参考 a-form-item | - |
-| wrapperCol | Object | 单项布局覆盖，参考 a-form-item | - |
+| col | Object | 表单项栅格配置 | - |
+| labelCol | Object | 表单项布局覆盖，参考 a-form-item | - |
+| wrapperCol | Object | 表单项布局覆盖，参考 a-form-item | - |
 | props | Object | 传给控件的属性（如 placeholder、options、remote、dictType 等） | - |
 | defaultValue | any | 默认值（设置则会触发初始化查询） | - |
 | ... | - | 其他属性可以根据需要自由扩展 | - |
@@ -268,8 +268,8 @@ const toolsConfig = computed(() => ({
 |---|---:|---|---|
 | layout | String | 表单布局方式，'horizontal' \| 'vertical' \| 'inline' | 'horizontal' |
 | cols | Number | 一行显示几列 | 2 |
-| labelCol | Object | 全局表单项文本部分栅格配置，参考 a-form | { span: 6 } |
-| wrapperCol | Object | 全局表单项文本部分栅格配置，参考 a-form | { span: 18 } |
+| labelCol | Object | 全局表单项文本部分栅格配置，参考 a-form | { flex: '0 0 100px' } |
+| wrapperCol | Object | 全局表单项文本部分栅格配置，参考 a-form | 撑满剩余空间 |
 | fields | Array\<Field> | 表单项字段数组配置 | - |
 | ... | - | 其他属性可以根据需要自由扩展 | - |
 
@@ -293,7 +293,7 @@ const toolsConfig = computed(() => ({
 | singleLine | Boolean | 是否单独占一行 | false |
 | col | Object | 表单项(包含文本和控件)栅格设置，固定宽度可以设置为 { flex: '280px' }，参照 a-col 属性 | 默认根据列数计算 |
 | labelCol | Object | 表单项文本部分栅格设置，参照 a-col，{ flex: '120px' }、{ span: 6 } | - |
-| wrapperCol | Object | 表单项控件部分栅格设置，参照 a-col，{ flex: '1 1 auto' }、{ span: 18 } | - |
+| wrapperCol | Object | 表单项控件部分栅格设置，参照 a-col，{ flex: '1 1 0' }、{ span: 18 } | - |
 | defaultValue | any | 初始值 | - |
 | rules | Object \| Array \| formData => { return {} \|\| [] } | 校验规则，与 \<a-form-item> rules 一致 | - |
 | tooltip | String \| Function | 额外浮窗提示 | - |

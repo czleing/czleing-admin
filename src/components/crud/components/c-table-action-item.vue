@@ -8,7 +8,7 @@
       @confirm="action.callback({ record })"
     >
       <component v-if="action.customRender" :is="action.customRender({ record })" v-hasPermi="action.permission" />
-      <a v-else-if="action.name" v-hasPermi="action.permission" href="javascript:;" :class="action.class">
+      <a v-else-if="action.name || action.icon" v-hasPermi="action.permission" href="javascript:;" :class="action.class">
         <a-icon v-if="action.icon" :type="action.icon" />
         {{ action.name }}
       </a>
@@ -16,7 +16,7 @@
   </template>
   <template v-else>
     <component v-if="action.customRender" :is="action.customRender({ record })" v-hasPermi="action.permission" />
-    <a v-else-if="action.name" v-hasPermi="action.permission" href="javascript:;" :class="action.class" @click="action.callback({ record })">
+    <a v-else-if="action.name || action.icon" v-hasPermi="action.permission" href="javascript:;" :class="action.class" @click="action.callback({ record })">
       <a-icon v-if="action.icon" :type="action.icon" />
       {{ action.name }}
     </a>
@@ -24,6 +24,7 @@
 </template>
 
 <script setup>
+
 const props = defineProps({
   action: Object,
   record: Object

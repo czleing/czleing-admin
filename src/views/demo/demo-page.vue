@@ -84,10 +84,10 @@ const filterConfig = computed(() => ({
   // cacheBtnText: '记住查询', // 暂存按钮文字，默认 '记住查询'
   col: { sm: 8, lg: 6, xxl: 6 }, // 所有表单项栅格设置，默认：{ sm: 8, lg: 6, xxl: 4 }，参照 a-col
   labelCol: { flex: '80px' }, // 所有表单项文本部分栅格设置，默认：文本宽度，单行时可以不用设置，多行时建议设置统一宽度，参照 a-col
-  // wrapperCol: { span: 18 }, // 所有表单项控件部分栅格设置，默认：控件宽度，参照 a-col
-  // buttonsCol: { flex: 'auto' }, // 查询重置等按钮栅格设置，默认：{ flex: '1 1 auto' },
-  // buttonsAlign: 'right', // 查询重置等按钮水平对齐方式，left(默认), center, right, 可以配合 buttonsCol 使用
-  // 一行显示几列由每个字段的 col 决定，默认自适应列数，一行 24 格，每个字段可以设置占用格数，一行不够时自动换行，注：查询重置按钮固定占 4-6 格(使用记住查询时占用6格，否则4格)
+  // wrapperCol: { flex: '1 1 0' }, // 所有表单项控件部分栅格设置，默认：控件宽度，参照 a-col
+  // buttonsCol: { flex: 'auto' }, // 查询重置等按钮栅格设置，默认：{ flex: '1 1 auto' }, 参照 a-col
+  buttonsAlign: 'right', // 查询重置等按钮水平对齐方式，left(默认), center, right, 可以配合 buttonsCol 使用
+  // 一行显示几列由每个字段的 col 决定，默认自适应列数，一行 24 格，每个字段可以设置占用格数，一行不够时自动换行
   // 字段配置
   fields: [
     {
@@ -96,8 +96,8 @@ const filterConfig = computed(() => ({
       // type: EControlType.eInput, // 默认 eInput 可以不设置
       // col: { flex: '280px' }, // 表单项(包含文本和控件)栅格设置，默认响应式分配：{ sm: 8, lg: 6, xxl: 4 }
       // 每个字段的宽度可以很灵活控制，固定宽度、同宽、自适应等 参照 ant-design-vue a-col 的属性
-      // labelCol: { span: 7 }, // 表单项文本部分栅格设置，参照 a-col
-      // wrapperCol: { span: 17 }, // 表单项控件部分栅格设置，参照 a-col
+      // labelCol: { span: 7 }, // 表单项文本部分栅格设置，参照 a-col，默认继承 filterConfig.labelCol
+      // wrapperCol: { span: 17 }, // 表单项控件部分栅格设置，参照 a-col，默认继承 filterConfig.wrapperCol
       props: {
         placeholder: t('demo.pleaseEnterKeyword'), // '请输入姓名/手机号/账号'
       }
@@ -364,30 +364,35 @@ const tableConfig = computed(() => ({
     },
     {
       title: '操作',
-      width: 150,
+      width: 180,
       fixed: 'right',
       actionShowNum: 2, // 展示操作按钮数量，剩余的将收进更多里
       actionMoreText: '更多', // 更多按钮名称，默认"更多"
       // action: 操作列配置，T[] || ({ record }) => T[]
       action: ({ record }) => {
         const btns = [
-          // 预设：edit, detail, delete, toggle
+          // 预设：edit, detail, delete, toggle，预设功能的权限会自动绑定，无需手动设置
+          // 名称和图标至少设置一个
           {
-            name: t('crud.detail'),
-            callback: 'detail'
+            name: t('crud.detail'), // 详情，按钮名称，可选，
+            icon: 'SearchOutlined', // 图标，可选，仅限 /src/components/global/a-icon.js 中已导入的 ant-design 图标
+            callback: 'detail' // 可以使用预设的字符串，也可以使用自定义函数，自定义则代表不使用系统自带的详情弹窗
           },
           {
-            name: t('crud.edit'),
+            name: t('crud.edit'), // 编辑
+            icon: 'EditOutlined',
             callback: 'edit'
           },
           {
-            name: t('crud.delete'),
-            icon: 'DeleteOutlined', // 图标，仅限 /src/components/global/a-icon.js 中已导入的 ant-design 图标
+            name: t('crud.delete'), // 删除
+            icon: 'DeleteOutlined',
             class: 'text-danger', // 按钮class样式名
             callback: 'delete' // 删除操作默认带确认框
           },
           {
             name: record.isEnabled ? t('crud.disabled') : t('crud.enabled'),
+            icon: record.isEnabled ? 'StopOutlined' : 'CheckCircleOutlined',
+            class: record.isEnabled ? 'text-danger' : 'text-success',
             confirm: true,
             callback: 'toggle'
           },
@@ -451,8 +456,8 @@ const modalConfig = computed(() => ({
   formConfig: ({ isAdd, isEdit, isView, detail }) => ({
     // layout: 'horizontal', // 表单布局 horizontal | vertical | inline 默认 horizontal
     // cols: 2, // 一行显示几列，默认 2 列
-    // labelCol: { span: 6 }, // 如果需要固定label宽度，可设为 { flex: '120px' }, 默认 span: 6，参考 ant-design-vue a-col 的属性设置
-    // wrapperCol: { span: 18 }, // 如果需要固定控件宽度，可设为 { flex: '280px' }, 默认 span: 18，参考 ant-design-vue a-col 的属性设置
+    // labelCol: { span: 6 }, // 如果需要固定label宽度，可设为 { flex: '120px' }, 默认 { flex: '0 0 100px' }，参考 ant-design-vue a-col 的属性设置
+    // wrapperCol: { span: 18 }, // 如果需要固定控件宽度，可设为 { flex: '280px' }, 默认 撑满剩余空间={ flex: '1 1 0' }, 不会溢出换行，参考 ant-design-vue a-col 的属性设置
     // 表单字段
     fields: [ // 表单字段数组，可分组
       {
@@ -468,9 +473,9 @@ const modalConfig = computed(() => ({
         // defaultValue: 'xxx', // 默认值
         // rules: [], // 校验规则，与 <a-form-item> 一致， object | array | formData => { return {} || [] }
         // singleLine: true, // 单独占一行，优先级高于 col
-        // col: { span: 12 }, // 表单项(包含文本和控件)栅格设置，固定宽度可以设置为 { flex: '280px' }，参照 a-col 属性，默认根据列数计算
-        // labelCol: { span: 3 }, // 表单项文本部分栅格设置，参照 a-col，{ flex: '120px' }、{ flex: '30%' }
-        // wrapperCol: { span: 21 }, // 表单项控件部分栅格设置，参照 a-col，{ flex: '120px' }、{ flex: '30%' }
+        // col: { span: 12 }, // 当前表单项(包含文本和控件)栅格设置，固定宽度可以设置为 { flex: '280px' }，参照 a-col 属性，默认根据 formConfig.cols 计算
+        // labelCol: { span: 3 }, // 当前表单项文本部分栅格设置，会覆盖 formConfig.labelCol, 参照 a-col，默认继承 formConfig.labelCol
+        // wrapperCol: { span: 21 }, // 当前表单项控件部分栅格设置，会覆盖 formConfig.wrapperCol, 参照 a-col，默认继承 formConfig.wrapperCol
         props: formData => { // 控件属性配置，Object | formData => Object, 没有属性可以不配
           // 根据 type 继承自对应 ant-design-vue 控件的属性和事件
           // placeholder 会默认生成，可以不配
@@ -594,8 +599,6 @@ const modalConfig = computed(() => ({
             fieldName: 'unitName',
             type: EControlType.eInput,
             singleLine: true, // 单独占一行
-            labelCol: { span: 3 },
-            wrapperCol: { span: 21 },
             props: {},
             detailConfig: { // detailConfig 详情时的配置，可对上面(详情时有效的属性)覆盖
               labelCol: undefined,
@@ -817,8 +820,6 @@ const modalConfig = computed(() => ({
         type: EControlType.eTextarea,
         required: true,
         singleLine: true,
-        labelCol: { span: 3 },
-        wrapperCol: { span: 21 },
         props: {
           // rows: 5,
           // maxlength: 100
@@ -830,8 +831,6 @@ const modalConfig = computed(() => ({
         type: EControlType.eEditor,
         required: true,
         singleLine: true,
-        labelCol: { span: 3 },
-        wrapperCol: { span: 21 },
         props: {
           height: '400px'
         }
@@ -840,8 +839,6 @@ const modalConfig = computed(() => ({
         label: '动态表格',
         fieldName: 'table',
         type: EControlType.eTable,
-        labelCol: { span: 3 },
-        wrapperCol: { span: 21 },
         singleLine: true,
         // disabled: true,
         // required: true, // 无效配置，请配置在 props.columns 的每一项里

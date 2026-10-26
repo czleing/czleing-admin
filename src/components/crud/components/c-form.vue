@@ -62,8 +62,8 @@ const props = defineProps({
    * formConfig:
    * layout: 'horizontal', // 表单布局 horizontal | vertical | inline 默认 horizontal
    * cols: 2, // 一行显示几列，默认 2 列
-   * labelCol: { span: 6 }, // 如果需要固定label宽度，可设为 { flex: '120px' }, 默认 span: 6，参考 ant-design-vue a-col 的属性设置
-   * wrapperCol: { span: 18 }, // 如果需要固定控件宽度，可设为 { flex: '280px' }, 默认 span: 18，参考 ant-design-vue a-col 的属性设置
+   * labelCol: { span: 6 }, // 如果需要固定label宽度，可设为 { flex: '120px' }, 默认 { flex: '0 0 100px' }，参考 ant-design-vue a-col 的属性设置
+   * wrapperCol: { span: 18 }, // 如果需要固定控件宽度，可设为 { flex: '280px' }, 默认 撑满剩余空间，参考 ant-design-vue a-col 的属性设置
    * autoReset: { type: Boolean, default: true }, // 提交之后自动清空表单
    * autoClose: { type: Boolean, default: true }, // 提交之后自动关闭弹窗(如果有)
    * removeNoneFields: { type: Boolean, default: true }, // 提交时过滤掉已移除的字段，none = true 的字段
@@ -89,7 +89,7 @@ const closeModal = inject('modal.close', null)
 const formData = reactive({})
 const formRemotes = reactive({}) // 收集组件的 remote 方法，用于需要重新刷新 remote 数据时使用
 const loading = ref(false)
-const { layout = 'horizontal', labelCol = { span: 6 }, wrapperCol = { span: 18 }, cols = 2 } = props.formConfig // 已经解构失去响应式
+const { layout = 'horizontal', labelCol = { flex: '0 0 100px' }, wrapperCol, cols = 2 } = props.formConfig // 已经解构失去响应式
 const isHorizontal = layout === 'horizontal'
 const colSpan = parseInt(24 / cols)
 let dateFields = [] // 收集的日期字段数组，便于统一转换格式

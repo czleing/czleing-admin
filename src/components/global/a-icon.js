@@ -51,9 +51,9 @@ import {
   BellFilled, BookFilled, BugFilled, CalculatorFilled, CalendarFilled, CameraFilled, CarFilled,
   CloudFilled, CodeFilled, CodeSandboxSquareFilled, DollarCircleFilled, FlagFilled, FileFilled,
   GiftFilled, GoldFilled, HeartFilled, HomeFilled, IdcardFilled, InsuranceFilled, PayCircleFilled,
-  PhoneFilled, PictureFilled, PrinterFilled, ProfileFilled, PropertySafetyFilled,
+  PhoneFilled, PictureFilled, PrinterFilled, ProfileFilled, PropertySafetyFilled, CheckCircleOutlined,
   SafetyCertificateFilled, SettingFilled, ShopFilled, ShoppingFilled, SignalFilled, SkinFilled,
-  SoundFilled, StarFilled, TagFilled, TagsFilled, WalletFilled, DeleteOutlined
+  SoundFilled, StarFilled, TagFilled, TagsFilled, WalletFilled, DeleteOutlined, StopOutlined,
 } from '@ant-design/icons-vue'
 
 export const icons = {
@@ -104,9 +104,9 @@ export const icons = {
   BellFilled, BookFilled, BugFilled, CalculatorFilled, CalendarFilled, CameraFilled, CarFilled,
   CloudFilled, CodeFilled, CodeSandboxSquareFilled, DollarCircleFilled, FlagFilled, FileFilled,
   GiftFilled, GoldFilled, HeartFilled, HomeFilled, IdcardFilled, InsuranceFilled, PayCircleFilled,
-  PhoneFilled, PictureFilled, PrinterFilled, ProfileFilled, PropertySafetyFilled,
+  PhoneFilled, PictureFilled, PrinterFilled, ProfileFilled, PropertySafetyFilled, CheckCircleOutlined,
   SafetyCertificateFilled, SettingFilled, ShopFilled, ShoppingFilled, SignalFilled, SkinFilled,
-  SoundFilled, StarFilled, TagFilled, TagsFilled, WalletFilled, DeleteOutlined
+  SoundFilled, StarFilled, TagFilled, TagsFilled, WalletFilled, DeleteOutlined,  StopOutlined
 }
 
 const AIcon = function ({ type }) {

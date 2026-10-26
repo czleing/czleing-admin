@@ -8,7 +8,7 @@
       <!-- 更多 -->
       <a-dropdown>
         <a v-hasPermi="morePermissions" href="javascript:;">
-          {{ column.actionMoreName ?? $t('crud.more') }}
+          {{ column.actionMoreText ?? $t('crud.more') }}
           <DownOutlined />
         </a>
         <template #overlay>
