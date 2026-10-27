@@ -3,7 +3,7 @@
 <template>
   <div class="icons-select">
     <div class="flex-x x-middle">
-      <a-icon v-if="iconName" :type="iconName" class="mr20" style="font-size: 18px;" />
+      <a-icon v-if="modelValue" :type="modelValue" class="mr20" style="font-size: 18px;" />
       <a-button v-if="!disabled" @click="open">请选择</a-button>
     </div>
     <CModal v-if="!disabled" ref="cModal" title="选择图标" width="900" :footer="null" centered>
@@ -12,7 +12,7 @@
           class="icons-select__item"
           v-for="item in iconList"
           :key="item.name"
-          :class="{ 'is-active': item.name === iconName }"
+          :class="{ 'is-active': item.name === modelValue }"
           :title="item.name"
           @click="onSelectHandle(item.name)"
         >
@@ -27,42 +27,26 @@
 import { icons } from '../../global/a-icon'
 
 const props = defineProps({
-  value: String,
   disabled: Boolean
 })
-const iconName = ref()
+const modelValue = defineModel('value')
 const cModal = ref()
 const iconList = computed(() => {
   if (props.disabled) return []
   return Object.keys(icons).map(key => ({ name: key, value: icons[key] }))
 })
 
-watch(
-  () => props.value,
-  () => {
-    iconName.value = props.value
-  },
-  { immediate: true }
-)
-
 function open () {
   cModal.value?.open()
 }
 
 function onSelectHandle (name) {
-  iconName.value = name
+  modelValue.value = name
   cModal.value?.close()
-  emitChange()
-}
-
-const emits = defineEmits(['update:value'])
-
-async function emitChange () {
-  emits('update:value', iconName.value)
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .icons-select {
   &__item {
     margin: 2px;

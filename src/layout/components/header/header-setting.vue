@@ -194,7 +194,7 @@
             <a-switch v-model:checked="settingStore.useWeather" />
           </Field>
           <Field :label="$t('frame.useDynamicPageTitle')">
-            <a-switch v-model:checked="settingStore.useDynamicPageTitle" />
+            <a-switch v-model:checked="settingStore.useDynamicPageTitle" @change="onSwitchPageTitleChange" />
           </Field>
           <Field :label="$t('frame.useWatermark')">
             <a-switch v-model:checked="settingStore.useWatermark" />
@@ -219,6 +219,7 @@ import useViewTransition from '@/hooks/useViewTransition.js'
 import { langOptions } from '@/locales/index'
 import { useSettingStore } from '@/stores/setting-store.js'
 import { SettingOutlined, UndoOutlined } from '@ant-design/icons-vue'
+import settings from '@/config/setting.js'
 import { h } from 'vue'
 import Field from './field.vue'
 import Left from './icons/left.vue'
@@ -233,6 +234,7 @@ const settingModal = ref()
 const currColors = computed(() => Object.entries(settingStore.theme?.token))
 const { t } = useI18n()
 const { numFormat } = useNumFormat()
+const route = useRoute()
 
 const bgImageOptions = computed(() => [
   { src: import.meta.env.VITE_APP_CONTEXT_PATH + 'assets/page-bg-1.jpg' },
@@ -311,6 +313,9 @@ const handleChange = name => {
 }
 const handleLocalChange = lc => {
   settingStore.setLocale(lc)
+}
+const onSwitchPageTitleChange = (checked) => {
+  document.title = (checked ? route.meta?.title + ' | ' : '') + settings.websiteInfo.systemName
 }
 let timer = null
 const handleColorInput = (e, key) => {

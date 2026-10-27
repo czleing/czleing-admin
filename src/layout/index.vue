@@ -47,14 +47,14 @@
             </div>
             <!-- 右侧工作区 -->
             <div
-              class="view-main flex-auto pa10"
+              class="view-main relative flex-auto pa10"
               :class="{
                 'is-radius-bottom': settingStore.layoutDivide === 'round' && settingStore.useTabs,
                 'is-radius-all': settingStore.layoutDivide === 'round' && !settingStore.useTabs,
               }"
               :style="{ 'overflow': isAnimating && settingStore.tabAnimate ? 'hidden' : 'auto' }"
             >
-              <!-- {{ tabsStore.cachedViews }} -->
+            <!-- {{ tabsStore.cachedViews }} -->
               <router-view v-slot="{ Component, route }">
                 <Transition :name="settingStore.tabAnimate" :css="!!settingStore.tabAnimate" @before-enter="isAnimating = true" @after-leave="isAnimating = false">
                   <keep-alive :max="20" :include="tabsStore.cachedViews">

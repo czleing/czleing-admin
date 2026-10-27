@@ -172,10 +172,8 @@ const page = computed(() => {
 const total = computed(() => {
   if (useTotal.value) {
     return dataSource.value?.reduce((t, c) => {
-      currColumns.value.forEach(col => {
-        if (col.useTotal) {
-          t[col.dataIndex] = (t[col.dataIndex] ?? 0) + Number(c[col.dataIndex] ?? 0)
-        }
+      currColumns.value.filter(col => col.useTotal).forEach(col => {
+        t[col.dataIndex] = (t[col.dataIndex] ?? 0) + Number(c[col.dataIndex] ?? 0)
       })
       return t
     }, {}) ?? {}
