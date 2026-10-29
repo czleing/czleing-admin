@@ -476,11 +476,11 @@ const modalConfig = computed(() => ({
         // col: { span: 12 }, // 当前表单项(包含文本和控件)栅格设置，固定宽度可以设置为 { flex: '280px' }，参照 a-col 属性，默认根据 formConfig.cols 计算
         // labelCol: { span: 3 }, // 当前表单项文本部分栅格设置，会覆盖 formConfig.labelCol, 参照 a-col，默认继承 formConfig.labelCol
         // wrapperCol: { span: 21 }, // 当前表单项控件部分栅格设置，会覆盖 formConfig.wrapperCol, 参照 a-col，默认继承 formConfig.wrapperCol
-        props: formData => { // 控件属性配置，Object | formData => Object, 没有属性可以不配
+        props: formData => ({ // 控件属性配置，Object | formData => Object, 没有属性可以不配
           // 根据 type 继承自对应 ant-design-vue 控件的属性和事件
           // placeholder 会默认生成，可以不配
           allowClear: true
-        }
+        })
       },
       {
         label: '隐藏字段', // 类似隐藏域，可以放置一些提交时需要的额外信息，可以在表单联动时动态设置值
