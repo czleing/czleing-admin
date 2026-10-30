@@ -89,7 +89,7 @@ export const useMenuStore = defineStore('menu', {
           //   hasNameRoutes.push(item)
           // }
           let currPath = item.path
-          if (currPath && currPath.indexOf(0) !== '/') {
+          if (currPath && currPath.charAt(0) !== '/') {
             currPath = '/' + currPath
             currPath = (parentPaths.at(-1) ?? '') + currPath
           }
