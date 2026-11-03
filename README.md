@@ -12,9 +12,9 @@
 ## 相关项目
 | 项目 | 说明 | 地址 |
 | --- | --- | --- |
-| czleing-admin(当前项目) | js 版本前端 | [gitee](https://gitee.com/czleing/czleing-admin.git) \| [github](https://github.com/czleing/czleing-admin.git) |
-| czleing-admin-pro | ts 版本前端，工程化能力增强 | [gitee](https://gitee.com/czleing/czleing-admin-pro.git) \| [github](https://github.com/czleing/czleing-admin-pro.git) |
-| czleing-admin-api | spring-boot 单体后端服务 | [gitee](https://gitee.com/czleing/czleing-admin-api.git) \| [github](https://github.com/czleing/czleing-admin-api.git) |
+| czleing-admin(当前项目) | js 版本前端，简单高效，约束少，开发更快 | [gitee](https://gitee.com/czleing/czleing-admin.git) \| [github](https://github.com/czleing/czleing-admin.git) |
+| czleing-admin-pro | ts 版本前端，工程化能力增强，约束多，代码提示更强，更易维护 | [gitee](https://gitee.com/czleing/czleing-admin-pro.git) \| [github](https://github.com/czleing/czleing-admin-pro.git) |
+| czleing-admin-api | java 版本后端，spring-boot 单体服务 | [gitee](https://gitee.com/czleing/czleing-admin-api.git) \| [github](https://github.com/czleing/czleing-admin-api.git) |
 
 ## 环境要求
 - node: 20+
