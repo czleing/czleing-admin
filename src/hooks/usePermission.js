@@ -1,24 +1,30 @@
-import useAuthStore from "@/stores/auth-store"
+import { useAuthStore } from "@/stores/auth-store"
 
 /**
  * 使用权限相关
  */
 export function usePermission () {
-  const { roles, permissions } = useAuthStore()
+  const authStore = useAuthStore()
+  /** 当前用户角色字符串数组（保持响应性） */
+  const roles = computed(() => authStore.roles ?? [])
+  /** 支持的权限字符串数组 ['system:user:add', 'xxx:xxx:xxx']（保持响应性） */
+  const permissions = computed(() => authStore.permissions ?? [])
+  /** 是否拥有所有权限 */
+  const hasAllPermission = computed(() => permissions.value.includes('*:*:*'))
   return {
-    /** 当前用户角色字符串数组 */
     roles,
-    /** 支持的权限字符串数组 ['system:user:add', 'xxx:xxx:xxx'] */
     permissions,
-    /** 判断是否有权限 */
+    hasAllPermission,
+    /** 判断是否有权限，传数组时命中其一即表示有权限 */
     hasPermission (permission) {
       if (!permission) return true
-      return permissions.includes('*:*:*') || permissions.includes(permission)
+      const list = Array.isArray(permission) ? permission : [permission]
+      return hasAllPermission.value || list.some(item => permissions.value.includes(item))
     },
     /** 判断是否有某个角色 */
     hasRole (role) {
       if (!role) return true
-      return roles.includes(role)
+      return roles.value.includes(role)
     }
   }
 }
