@@ -18,7 +18,7 @@ instance.interceptors.request.use((config) => {
     }
     return config
   }, (error) => {
-    return Promise.reject()
+    return Promise.reject(error)
   }
 )
 
@@ -61,56 +61,53 @@ instance.interceptors.response.use((response) => {
 
 // 下载blob二进制文件
 const handleDownload = (response) => {
-  const filename = response.headers['download-filename']
-  const blob = new Blob([response.data])
-  if (window.navigator.msSaveBlob) {
-    // 兼容 IE，使用 msSaveBlob 方法进行下载
-    window.navigator.msSaveBlob(blob, decodeURIComponent(filename))
-  } else {
-    const url = window.URL.createObjectURL(new Blob([response.data]))
-    // 创建一个 <a> 元素
-    const link = document.createElement('a')
-    link.href = window.URL.createObjectURL(blob)
-    link.setAttribute('download', decodeURIComponent(filename))
-    // 模拟点击下载
-    link.click()
-    // 清理 URL 和 <a> 元素
-    link.remove()
-    window.URL.revokeObjectURL(url)
-  }
+  const { data, headers } = response
+  const filename = headers['download-filename']
+  const url = window.URL.createObjectURL(new Blob([data], { type: headers['content-type'] }))
+  // 创建一个 <a> 元素并模拟点击下载
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename ? decodeURIComponent(filename) : 'download'
+  link.click()
+  // 清理 URL 和 <a> 元素
+  link.remove()
+  window.URL.revokeObjectURL(url)
+}
+
+// HTTP 状态码对应的错误提示
+const HTTP_ERROR_MESSAGES = {
+  400: '请求参数错误 Bad Request',
+  401: '未登录或会话已过期,请重新登录',
+  403: '禁止访问 Forbidden',
+  404: '资源不存在 Not Found',
+  405: '方法不允许 Method Not Allowed',
+  408: '请求超时 Request Timeout',
+  429: '请求过于频繁 Too Many Requests',
+  500: '服务器内部错误 Internal Server Error',
+  502: '网关错误 Bad Gateway',
+  503: '服务不可用 Service Unavailable',
+  504: '网关超时 Gateway Timeout'
 }
 
 // 统一处理错误
 const handleRequestError = (error) => {
-  // 进行错误处理
-  let msg = ''
-  if (error.response) {
+  const response = error.response
+  let msg
+  if (response) {
     // 服务器响应错误
-    let status = error.response.status
-    msg = error.response.data.message
-    // 在这里可以进行错误处理逻辑，例如弹出错误提示、记录错误日志等
-    switch (status) {
-      case 400: msg = msg || '请求参数错误 Bad Request'
-      case 403: msg = msg || '禁止访问 Forbidden'
-      case 404: msg = msg || '资源不存在 Not Found'
-      case 405: msg = msg || '方法不允许 Method Not Allowed'
-      case 408: msg = msg || '请求超时 Request Timeout'
-      case 429: msg = msg || '请求过于频繁 Too Many Requests'
-      case 500: msg = msg || '服务器内部错误 Internal Server Error'
-      case 502: msg = msg || '网关错误 Bad Gateway'
-      case 503: msg = msg || '服务不可用 Service Unavailable'
-      case 504: msg = msg || '网关超时 Gateway Timeout'
-      default:  msg = msg || '服务器响应错误 Service Error'
+    const { status } = response
+    if (status === 401) {
+      // HTTP 状态码 401 与业务 code 401 同样处理登录失效
+      useAuthStore().authExpiredHandle()
     }
-    console.error(msg, error.response)
+    msg = response.data?.message || HTTP_ERROR_MESSAGES[status] || '服务器响应错误 Service Error'
+    console.error(msg, response)
   } else if (error.request) {
     msg = '请求未收到响应'
     console.error(msg, error.request)
-    // 在这里可以进行错误处理逻辑，例如弹出错误提示、记录错误日志等
   } else {
     msg = '请求配置出错'
     console.error(msg, error.message)
-    // 在这里可以进行错误处理逻辑，例如弹出错误提示、记录错误日志等
   }
   message.error({ content: msg, key: msg })
   return Promise.reject(new Error(msg)) // 阻止代码往下执行
