@@ -12,9 +12,9 @@
 ## 相关项目
 | 项目 | 说明 | 地址 |
 | --- | --- | --- |
-| czleing-admin(当前项目) | js 版本前端，简单高效，约束少，开发更快 | [gitee](https://gitee.com/czleing/czleing-admin.git) \| [github](https://github.com/czleing/czleing-admin.git) |
-| czleing-admin-pro | ts 版本前端，工程化能力增强，约束多，代码提示更强，更易维护 | [gitee](https://gitee.com/czleing/czleing-admin-pro.git) \| [github](https://github.com/czleing/czleing-admin-pro.git) |
-| czleing-admin-api | java 版本后端，spring-boot 单体服务 | [gitee](https://gitee.com/czleing/czleing-admin-api.git) \| [github](https://github.com/czleing/czleing-admin-api.git) |
+| czleing-admin(当前项目) | JS 版本前端，简单高效，约束少，开发更快 | [gitee](https://gitee.com/czleing/czleing-admin.git) \| [github](https://github.com/czleing/czleing-admin.git) |
+| czleing-admin-pro | TS 版本前端，工程化能力增强，约束多，代码提示更强，更易维护 | [gitee](https://gitee.com/czleing/czleing-admin-pro.git) \| [github](https://github.com/czleing/czleing-admin-pro.git) |
+| czleing-admin-api | Java 版本后端，Spring-Boot 单体服务 | [gitee](https://gitee.com/czleing/czleing-admin-api.git) \| [github](https://github.com/czleing/czleing-admin-api.git) |
 
 ## 环境要求
 - node: 20+
@@ -41,16 +41,17 @@
 - 全局明/暗色模式(提供多种切换动画，丝滑过度)
 - 使用静态路由+动态路由及权限配置(按钮级功能权限 + 数据权限)
 - 多种菜单布局方式
-- 支持标签栏展示多个页面
+- 支持标签栏展示多个页面(多种样式可选、带右键多功能操作及收藏功能)
 - 支持多级路由缓存及刷新
 - 多种丝滑的标签页面切换动画
 - 接口统一使用POST请求，降低沟通成本，统一接口异常拦截处理，业务模块无需关注异常处理
-- 统一路由拦截及校验
+- 统一路由拦截及校验，meta 多功能扩展
 - 支持国际化(vue-i18n 按模块化配置，自动扫描，新增模块无需任何配置)
 - 使用 JavaScript
 - 最新技术栈、前后端分离
 - 线上自动检测版本更新（客户第一时间收到新版本更新通知）
 - 系统管理基础功能（用户、角色、菜单、部门、字典、岗位、登录/错误日志、定时任务/日志、通知公告）
+- 带CRUD、多种表单、弹窗、图表等使用示例
 - 集成SSE消息通知
 - Swagger 接口文档(入口：打开菜单：开发中心 -> 接口文档)
 - CRUD 可视化代码生成，一键生成前后端全部代码及菜单权限，配置化告别传统大量DOM重复堆砌及UI不统一问题
