@@ -32,7 +32,7 @@ export const useAuthStore = defineStore('auth', {
       if (data.account && data.password) {
         await this.loginByAccount(data)
       } else {
-        console.error('未找到匹配的登录方式')
+        throw new Error('未找到匹配的登录方式')
       }
     },
     /**
@@ -49,13 +49,9 @@ export const useAuthStore = defineStore('auth', {
       const result = await axios.post('/login', data)
       // 保存登录令牌，会自动持久化
       this.token = result.token
-      // 加密持久化需要记住的账号
+      // 只记住账号，不存储密码
       const cacheStore = useCacheStore()
-      if (remember) {
-        cacheStore.setLoginAccount({ account, password })
-      } else {
-        cacheStore.setLoginAccount()
-      }
+      cacheStore.setLoginAccount(remember ? { account } : undefined)
       // 登录成功后处理
       await this.loginSuccessHandle()
     },
@@ -63,26 +59,25 @@ export const useAuthStore = defineStore('auth', {
      * 退出登录
      * @returns 
      */
-    logout () {
-      const that = this
+    async logout () {
       const tabStore = useTabsStore()
-      return new Promise((resolve, reject) => {
+      await new Promise(resolve => {
         Modal.confirm({
           title: '退出提示',
           icon: createVNode(ExclamationCircleOutlined),
           content: '确认退出登录吗？',
-          async onOk () {
-            await axios.post('/logout')
-            that.clearAuthInfo()
-            tabStore.clearAllTabs()
-            router.replace({ name: 'login' })
-            resolve()
-          },
-          onCancel () {
-            reject()
-          }
+          onOk: resolve,
+          onCancel: resolve
         })
       })
+      try {
+        await axios.post('/logout')
+      } finally {
+        // 无论服务端注销是否成功，都清除本地登录态，保证用户可退出
+        this.clearAuthInfo()
+        tabStore.clearAllTabs()
+        router.replace({ name: 'login' })
+      }
     },
     /**
      * 清除登录授权信息
@@ -105,16 +100,20 @@ export const useAuthStore = defineStore('auth', {
       ])
       // 跳转
       const redirect = router.currentRoute.value.query.redirect
-      if (redirect) {
-        if (redirect.startsWith('http')) {
-          window.location.href = redirect // 支持同域名其他系统授权登录跳回
-        } else {
-          router.replace(redirect) // 本系统登录跳回
+      if (typeof redirect === 'string') {
+        const url = new URL(redirect, window.location.origin)
+        // 仅允许同源 http(s) 地址，防止开放重定向攻击
+        if (/^https?:$/.test(url.protocol) && url.origin === window.location.origin) {
+          if (redirect.startsWith('http')) {
+            window.location.href = url.href // 支持同域名其他系统授权登录跳回
+          } else {
+            router.replace(redirect) // 本系统登录跳回
+          }
+          return
         }
-      } else {
-        // 跳转到首页
-        router.replace('/')
       }
+      // 跳转到首页
+      router.replace('/')
     },
     /** 登录失效处理，跳转到登录页 或者 弹出登录窗体 */
     authExpiredHandle () {

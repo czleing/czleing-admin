@@ -12,9 +12,10 @@ const app = createApp(App)
 const pinia = createPinia()
 pinia.use(piniaPlugin)
 
-app.use(router).use(pinia).use(directives).use(components).use(i18n)
-app.mount('#app')
-
+// 全局异常处理，必须在 mount 之前设置
 app.config.errorHandler = (err, vm, info) => {
   console.error('[全局异常]', err, vm, info)
 }
+
+app.use(router).use(pinia).use(directives).use(components).use(i18n)
+app.mount('#app')

@@ -13,9 +13,8 @@ export const useDictStore = defineStore('dict', () => {
       types = [types]
     }
     types = types.filter(type => !dictMap[type] || config?.[type]?.force)
-    for (const type of types) {
-      dictMap[type] = await getDatasByType(type, config?.[type]?.force)
-    }
+    // 并行获取，避免串行等待
+    await Promise.all(types.map(type => getDatasByType(type, config?.[type]?.force)))
     return dictMap
   }
 

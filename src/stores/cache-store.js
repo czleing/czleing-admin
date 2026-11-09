@@ -1,4 +1,3 @@
-import { decrypt, encrypt } from '@/utils/jsencrypt'
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
@@ -8,28 +7,17 @@ import { ref, computed } from 'vue'
 export const useCacheStore = defineStore('cache', () => {
   /** 搜索菜单历史 */
   const searchedMenus = ref([]) // [{ path, title, icon }]
-  /** 记录登录用户 */
-  const loginAccount = ref() // { account, password }
+  /** 记录登录用户（出于安全考虑，只记住账号，绝不持久化存储密码） */
+  const loginAccount = ref() // { account }
 
   function getLoginAccount () {
-    if (loginAccount.value) {
-      return {
-        account: loginAccount.value.account,
-        password: decrypt(loginAccount.value.password)
-      }
-    }
-    return undefined
+    if (!loginAccount.value) return undefined
+    // 只返回账号，忽略历史版本可能缓存过的密码字段
+    return { account: loginAccount.value.account }
   }
 
   function setLoginAccount (accountInfo) {
-    if (!accountInfo) {
-      loginAccount.value = undefined
-      return
-    }
-    loginAccount.value = {
-      account: accountInfo.account,
-      password: encrypt(accountInfo.password)
-    }
+    loginAccount.value = accountInfo ? { account: accountInfo.account } : undefined
   }
 
   /** 清除缓存 */
