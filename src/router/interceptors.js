@@ -19,24 +19,31 @@ export async function beforeInterceptor (to, from) {
   const settingStore = useSettingStore()
   if (needLogin) {
     if (import.meta.env.VITE_APP_IGNORE_LOGIN !== 'true' && !authStore.hasLogin) {
-      return { name: 'login' }
+      // 携带 redirect，登录后可跳回原页面
+      return { name: 'login', query: to.fullPath === '/' ? undefined : { redirect: to.fullPath } }
     }
     if (!routeIniting) {
       routeIniting = true
-      const promises = []
-      // 菜单路由未加载，则加载菜单
-      if (!menuStore.loaded) {
-        promises.push(menuStore.loadMenuToRoute())
+      try {
+        const promises = []
+        // 菜单路由未加载，则加载菜单
+        if (!menuStore.loaded) {
+          promises.push(menuStore.loadMenuToRoute())
+        }
+        // 用户信息不存在，则获取用户信息
+        if (authStore.userInfo === null) {
+          promises.push(authStore.getUserInfo())
+        }
+        if (promises.length) {
+          await Promise.all(promises)
+        }
+        // 动态添加路由后，需要重新发起路由跳转
+        return to.fullPath
+      } catch (error) {
+        // 初始化失败时复位标志，允许下次导航重试
+        routeIniting = false
+        throw error
       }
-      // 用户信息不存在，则获取用户信息
-      if (authStore.userInfo === null) {
-        promises.push(authStore.getUserInfo())
-      }
-      if (promises.length) {
-        await Promise.all(promises)
-      }
-      // 动态添加路由后，需要重新发起路由跳转
-      return to.fullPath
     }
   }
   // 路由变化后的菜单相关处理
