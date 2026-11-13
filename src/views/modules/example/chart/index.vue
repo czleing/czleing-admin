@@ -9,8 +9,8 @@
     <h2 class="mt10">一个组件 LineBarChart 搞定各类线柱图</h2>
     <h3 class="mt20">基础柱图</h3>
     <div class="border radius10 pa10 flex-x gap10">
-      <LineBarChart title="最大最小值" :data="mockData" :min-value="200" :max-value="1000" height="200px" :colors="[token.colorPrimary]" :error-color="token.colorError" />
-      <LineBarChart title="目标值" :data="mockData" :y-fields="['sales']" :target-value="3000" units="万" height="200px" :colors="[token.colorPrimary]" :error-color="token.colorError" />
+      <LineBarChart title="最大最小值" :data="mockData" :min-value="200" :max-value="1000" height="200px" :colors="[token.colorPrimary]" />
+      <LineBarChart title="目标值" :data="mockData" :y-fields="['sales']" :target-value="3000" units="万" height="200px" :colors="[token.colorPrimary]" />
     </div>
     <h3 class="mt20">混合线柱图</h3>
     <div class="border radius10 pa10 flex-x gap10">

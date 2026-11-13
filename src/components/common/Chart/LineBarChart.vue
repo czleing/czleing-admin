@@ -110,8 +110,6 @@
     showDownload: { type: Boolean, default: true },
     /** 图表高度 */
     height: { type: String, default: '100%' },
-    /** 错误颜色 */
-    errorColor: { type: String, default: '#fa5050' },
     /** 数据为空展示的文本 */
     emptyText: { type: String, default: 'No data' },
     /** 加载中相关配置，参考：https://echarts.apache.org/en/api.html#echartsInstance.showLoading opts */
@@ -269,13 +267,13 @@
         barMaxWidth: 40,
         itemStyle: {
           color: ({ value }) => {
-            if (props.maxValue && value > props.maxValue) return props.errorColor;
-            if (props.minValue && value < props.minValue) return props.errorColor;
+            if (props.maxValue && value > props.maxValue) return token.value.colorWarning;
+            if (props.minValue && value < props.minValue) return token.value.colorWarning;
             if (props.targetFields && props.targetValue) {
               if (props.targetFields.includes(yField) && value < props.targetValue)
-                return props.errorColor;
+                return token.value.colorError;
             } else if (props.targetValue && value < props.targetValue) {
-              return props.errorColor;
+              return token.value.colorError;
             }
             return props.colors?.[index % props.colors?.length] ?? '#5470c6';
           },
@@ -298,10 +296,10 @@
                   yAxis: props.targetValue,
                   lineStyle: {
                     type: 'dashed',
-                    color: props.errorColor,
+                    color: token.value.colorError,
                   },
                   label: {
-                    color: props.errorColor,
+                    color: token.value.colorError,
                     formatter: `目标值：{c}`,
                   },
                 }
@@ -312,10 +310,10 @@
                   yAxis: props.maxValue,
                   lineStyle: {
                     type: 'dashed',
-                    color: 'orange',
+                    color: token.value.colorWarning,
                   },
                   label: {
-                    color: 'orange',
+                    color: token.value.colorWarning,
                     formatter: `MAX：{c}`,
                   },
                 }
@@ -326,10 +324,10 @@
                   yAxis: props.minValue,
                   lineStyle: {
                     type: 'dashed',
-                    color: 'orange',
+                    color: token.value.colorWarning,
                   },
                   label: {
-                    color: 'orange',
+                    color: token.value.colorWarning,
                     formatter: `MIN：{c}`,
                   },
                 }
