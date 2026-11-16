@@ -3,8 +3,7 @@
 ### 1、基础底座说明
 - 框架使用了自动导入插件，vue、vue-router、vue-i18n、utils、Enum 内部 API 在开发中无需 import, 可直接用
 - ant-design-vue 组件及图标在 vue template 中会自动导入，无需 import，在 script setup 中则需要手动导入，如：Modal, message...
-- ant-design-vue 内部的 less 变量已注入到全局 less 环境，.less文件、《style lang="less" scoped》 中可直接使用
-- antdv 的 less 变量为编译时变量，不会因页面上主题切换而变化，因主题而变化的变量需要换为 css 变量(运行时变量)，变量参考: src/layout/index.vue
+- 框架已将部分 ant-design-vue token 变量实时注入到了全局 css 变量中，规则及详情参考: src/layout/index.vue
 - 图标使用 ant-design 图标，不够用时根据自己喜好引入第三方图标库即可
 - 为保持基座干净简洁，本基座未添加 eslint、husky、prettier 等约束及格式化插件，如有必要请自行添加
 - CPage 组件及相关子组件只为简化 CRUD 开发，本项目基础模块都是通过该组件实现，但非必选，不适用时使用传统模式开发即可
@@ -53,18 +52,17 @@ const xxxObj = await api.post('/xxx/xxx/getXXX', { xxx: 'xxx' })
 
 ### 3、样式
 - 框架中自带了一套基础样式库(原子样式)：`@/assets/css/base.less`，基本可以覆盖90%的场景，无法覆盖的单独写样式即可
-- less、组件中可使用 ant-design 的全局静态变量 @colorPrimary 等，但此变量不会跟随主题动态切换而变化，
-需要跟随变化请使用动态方式获取或使用全局 css 变量，token 内部的变量名参考[官网](https://www.antdv.com/docs/vue/customize-theme-cn)，如下：
+- less、组件中可使用基于 ant-design token 实时变化的全局 CSS 变量，如：`color: var(--ant-colorPrimary);` 参考 `src/layout/index.vue`
 ```js
 import { useThemeToken } from '@/hooks/useThemeToken.js'
 const { token } = useThemeToken()
-// 获取动态颜色
+// JS 中获取动态值
 token.value.colorPrimary
 token.value.colorWarning
 token.value.colorSuccess
 ...
 ```
-或者使用全局 css 变量，css 变量根据主题切换动态变化，变量参考 `layout/index.vue`
+或者使用全局 css 变量，css 变量根据主题切换动态变化
 ```
 --ant-colorText
 --ant-borderRadius

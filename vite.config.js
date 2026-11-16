@@ -3,11 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import { fileURLToPath, URL } from 'node:url'
-import { theme } from 'ant-design-vue'
 import AutoImport from 'unplugin-auto-import/vite'
-
-const { defaultAlgorithm, defaultSeed } = theme
-const mapToken = defaultAlgorithm(defaultSeed)
 
 // 配置项参考：https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
@@ -111,13 +107,5 @@ export default defineConfig(({ command, mode }) => {
         '@': fileURLToPath(new URL('./src', import.meta.url))
       }
     },
-    css: {
-      preprocessorOptions: {
-        less: {
-          // 在 vue、less 中使用主题色： color: @colorPrimary;
-          modifyVars: mapToken // 将 ant-design-vue 中的样式变量作为全局 less 变量，参考：https://next.antdv.com/docs/vue/customize-theme-cn
-        }
-      }
-    }
   }
 })
