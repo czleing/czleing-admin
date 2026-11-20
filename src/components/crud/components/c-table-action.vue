@@ -87,6 +87,3 @@ function getCallback (action) {
 const emits = defineEmits(['action'])
 
 </script>
-
-<style lang="scss" scoped>
-</style>

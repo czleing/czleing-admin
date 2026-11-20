@@ -20,6 +20,3 @@ const routes = computed(() => route.matched.filter(item => item.path !== '/').ma
   icon: item.meta?.icon
 })))
 </script>
-
-<style lang="scss" scoped>
-</style>

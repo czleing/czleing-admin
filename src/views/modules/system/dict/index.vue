@@ -172,6 +172,3 @@ function openDictData (value, record) {
   })
 }
 </script>
-
-<style lang="scss" scoped>
-</style>

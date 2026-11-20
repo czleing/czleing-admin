@@ -65,7 +65,7 @@ function setValue (value) {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .a-tag + .a-tag {
   margin-left: 10px;
 }

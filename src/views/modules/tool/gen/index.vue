@@ -198,6 +198,3 @@ function refresh () {
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
-

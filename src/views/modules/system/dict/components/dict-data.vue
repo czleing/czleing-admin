@@ -242,6 +242,3 @@ function refreshCache () {
   dictStore.initDictByTypes([props.dictType], { [props.dictType]: { force: true } })
 }
 </script>
-
-<style lang="scss" scoped>
-</style>

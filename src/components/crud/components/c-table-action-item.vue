@@ -30,6 +30,3 @@ const props = defineProps({
   record: Object
 })
 </script>
-
-<style lang="scss" scoped>
-</style>

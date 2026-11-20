@@ -129,6 +129,3 @@ defineExpose({
   close
 })
 </script>
-
-<style lang="scss" scoped>
-</style>

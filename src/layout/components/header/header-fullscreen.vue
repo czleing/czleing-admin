@@ -16,6 +16,3 @@ import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons-vu
 const { isFullscreen, toggle } = useFullscreen()
 
 </script>
-
-<style lang="scss" scoped>
-</style>

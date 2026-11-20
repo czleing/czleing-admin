@@ -435,7 +435,7 @@ defineExpose({
 })
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .c-form {
   padding-top: 10px;
   &.is-view {

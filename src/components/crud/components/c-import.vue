@@ -118,6 +118,3 @@ defineExpose({
   open
 })
 </script>
-
-<style lang="scss" scoped>
-</style>

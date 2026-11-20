@@ -188,6 +188,3 @@
     return searchParams
   }
 </script>
-
-<style lang="scss" scoped>
-</style>

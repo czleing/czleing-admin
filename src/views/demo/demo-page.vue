@@ -1023,6 +1023,3 @@ function transformDetail (detail, { isEdit, isView }) {
   return detail
 }
 </script>
-
-<style lang="scss" scoped>
-</style>

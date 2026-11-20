@@ -98,6 +98,3 @@ function onSelectHandle (selectedKeys) {
 
 const emits = defineEmits(['selected'])
 </script>
-
-<style lang="scss" scoped>
-</style>

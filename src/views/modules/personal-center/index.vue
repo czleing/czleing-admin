@@ -196,7 +196,7 @@ async function onPwdSubmitHandle (submitData) {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .personal-center {
   .left {
     width: 300px;

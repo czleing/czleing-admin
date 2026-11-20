@@ -346,6 +346,3 @@ defineExpose({
   setData
 })
 </script>
-
-<style lang="scss" scoped>
-</style>

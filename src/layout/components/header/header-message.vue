@@ -160,7 +160,7 @@ function toDo (item) {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .list-container {
   width: 400px;
   min-height: 440px;

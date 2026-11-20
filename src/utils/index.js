@@ -306,7 +306,7 @@ export function getImageSrcData (text) {
 /** 获取资源全地址 */
 export function getFullUrl (path) {
   if (!path) return ''
-  if (/http.*/.test(path) || path.indexOf(import.meta.env.VITE_APP_RESOURCE_API) === 0) {
+  if (/http.*/.test(path) || path.indexOf(import.meta.env.VITE_APP_RESOURCE_API) === 0 || /\/assets\/.*/.test(path)) {
     return path
   }
   return import.meta.env.VITE_APP_RESOURCE_API + path

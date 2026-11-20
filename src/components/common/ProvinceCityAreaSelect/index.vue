@@ -153,6 +153,3 @@ function isArrArr (value) {
   return value && Array.isArray(value) && value.length && Array.isArray(value[0])
 }
 </script>
-
-<style lang="scss" scoped>
-</style>
