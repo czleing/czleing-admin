@@ -183,7 +183,7 @@ function setData(val) {
 
 // 获取最终的字段配置，将动态的函数形式的值转成具体值
 function getFinalField (field, record) {
-  const props = getFnValue(field.props, record, modelValue.value) ?? {}
+  const props = getFnValue({ ...field.props }, record, modelValue.value) ?? {}
   const disabled = getFnValue(field.disabled, record, modelValue.value)
   const placeholder = getFnValue(props.placeholder, record, modelValue.value)
   if (disabled !== undefined) {
